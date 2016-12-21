@@ -1,0 +1,160 @@
+<!-- 	
+	Personal time monitor data
+	This file makes use of xml format
+	Will be used in later python implementation of the time monitoring app.
+	Will be later replaced by a DB version
+-->
+<?xml version="1.0"?>
+<petimo>
+
+	<titles>
+		<folder name="studium" description="">
+			<categories>
+				<category name="nlp" 	description="" />
+				<category name="mobnet" description="" />
+				<category name="pns"	description="" />
+				<category name="kn2" 	description="" />
+				<category name="se-wqs" description="" />
+			</categories>	
+		</folder>	
+
+		<folder name="hobby" description="">
+			<categories>
+				<category name="python"		description="" />
+				<category name="java" 		description="" />
+				<category name="android"	description="" />
+				<category name="linux" 		description="" />
+			</categories>	
+		</folder>
+	</title>
+
+	<monitoring>
+		<year value="2016">
+
+			<week id="43">
+				<day date="25" month="10" year="2016" id="1">
+					<block category="nlp">
+						<start>10:00</start>
+						<end>10:45</end>
+						<duration>45</duration>
+					</block>
+					<block category="nlp">
+						<start>10:55</start>
+						<end>11:15</end>
+						<duration></duration>
+					</block>
+					<block category="nlp">
+						<start>11:30</start>
+						<end>11:50</end>
+						<duration></duration>
+					</block>
+					<block category="pns">
+						<start>13:30</start>
+						<end>15:10</end>
+						<duration></duration>
+					</block>
+					<block category="nlp">
+						<start>15:20</start>
+						<end>17:00</end>
+						<duration></duration>
+					</block>
+					<block category="mobnet">
+						<start>17:50</start>
+						<end>18:30</end>
+						<duration></duration>
+					</block>
+					<sum></sum>
+				</day>
+
+				<day date="26" month="10" year="2016" id="2">
+					<block category="mobnet">
+						<start>11:40</start>
+						<end>13:30</end>
+						<duration></duration>
+					</block>
+					<block category="se-wqs">
+						<start>14:50</start>
+						<end>15:20</end>
+						<duration></duration>
+					</block>
+					<block category="se-wqs">
+						<start>16:45</start>
+						<end>17:00</end>
+						<duration></duration>
+					</block>
+					<block category="mix">
+						<start>17:15</start>
+						<end>18:00</end>
+						<duration></duration>
+					</block>
+					<block category="se-wqs">
+						<start>18:30</start>
+						<end>19:20</end>
+						<duration></duration>
+					</block>
+					<sum></sum>
+				</day>
+
+				<day date="27" month="10" year="2016" id="3">
+					<block category="se-wqs">
+						<start>8:00</start>
+						<end>9:30</end>
+						<duration></duration>
+					</block>
+					<block category="kn2">
+						<start>11:40</start>
+						<end>13:10</end>
+						<duration></duration>
+					</block>
+					<block category="nlp">
+						<start>15:55</start>
+						<end>17:40</end>
+						<duration></duration>
+					</block>
+					<sum></sum>
+				</day>
+
+				<day date="28" month="10" year="2016" id="4">
+					<block category="mobnet">
+						<start>11:00</start>
+						<end>12:00</end>
+						<duration></duration>
+					</block>
+					<block category="python">
+						<start>16:00</start>
+						<end>18:20</end>
+						<duration></duration>
+					</block>
+					<block category="python">
+						<start>00:47</start>
+						<end>02:50</end>
+						<duration></duration>
+					</block>
+					<sum></sum>	
+				</day>
+
+				<day date="29" month="10" year="2016" id="5">
+					<block category="python">
+						<start>14:40</start>
+						<end>16:40</end>
+						<duration></duration>
+					</block>
+					<block category="python">
+						<start>18:50</start>
+						<end>19:30</end>
+						<duration></duration>
+					</block>
+					<block category="">
+						<start>21:37</start>
+						<end></end>
+						<duration></duration>
+					</block>
+					<sum></sum>	
+				</day>
+				<sum></sum>
+			</week>
+			
+			<sum></sum>
+		</year>
+	</monitoring>
+</petimo>
