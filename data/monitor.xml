@@ -1,9 +1,4 @@
-<!-- 	
-	Personal time monitor data
-	This file makes use of xml format
-	Will be used in later python implementation of the time monitoring app.
-	Will be later replaced by a DB version
--->
+
 <?xml version="1.0"?>
 <petimo>
 
