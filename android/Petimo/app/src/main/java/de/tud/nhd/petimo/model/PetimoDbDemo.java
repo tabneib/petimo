@@ -71,6 +71,9 @@ public class PetimoDbDemo {
             Log.d(TAG, "Dropping tables");
             dbWrapper.dropAll();
             Log.d(TAG, "Dropping tables: done");
+            Log.d(TAG, "Creating tables");
+            dbWrapper.createAll();
+            Log.d(TAG, "Creating tables: done");
             Log.d(TAG, "Inserting Categories");
             for (String[] cat: cats)
                 dbWrapper.insertCategory(cat[0], Integer.parseInt(cat[1]));
@@ -90,7 +93,10 @@ public class PetimoDbDemo {
             Log.d(TAG, "Fetching day");
             MonitorDay mDay = dbWrapper.getDay(Integer.parseInt(DATE));
             Log.d(TAG, "Fetching day: done");
-            System.out.print(mDay.toXml());
+            System.out.println(mDay.toXml(0));
+            System.out.println("----------------------------------------------");
+            dbWrapper.generateXml();
+
 
             return true;
         }

@@ -27,12 +27,17 @@ public class MonitorDay {
      * TODO: comment em
      * @return
      */
-    public String toXml(){
-        String xml = "<MonitorDay date='" + this.date + "'>\n";
+    public String toXml(int indentLevel){
+        String indent = "";
+        for (int i = 1; i <= indentLevel; i++)
+            indent = indent + "\t";
+
+        String xml = indent + "<MonitorDay date='" + this.date + "'>\n";
         for (MonitorBlock block : this.monitorBlocks){
-            xml = xml + "\t"  + block.toXml() + "\n";
+            xml = xml + indent + "\t"  + block.toXml(0) + "\n";
         }
-        xml += "</MonitorDay>";
+        xml = xml + "</MonitorDay>";
+        //System.out.println(xml);
         return xml;
     }
 

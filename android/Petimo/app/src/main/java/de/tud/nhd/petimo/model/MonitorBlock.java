@@ -69,8 +69,12 @@ public class MonitorBlock {
      * TODO comment em
      * @return
      */
-    public String toXml(){
-        String xml = "<MonitorBlock id='" + this.id + "' task='" + this.task + "' category='" +
+    public String toXml(int indentLevel){
+        String indent = "";
+        for (int i = 1; i <= indentLevel; i++)
+            indent = indent + "\t";
+
+        String xml = indent + "<MonitorBlock id='" + this.id + "' task='" + this.task + "' category='" +
                 this.category + "' start='" + this.start + "' end='" + this.end + "' duration='" +
                 this.duration + "' date='" + this.date + "' weekday='" +
                 this.weekDay + "' overnight='" + this.overNight+ "' />";
