@@ -108,7 +108,7 @@ public class PetimoDbWrapper {
     }
 
     //<---------------------------------------------------------------------------------------------
-    // Core - Writing Database
+    // Core - Database - Inserting Data
     //--------------------------------------------------------------------------------------------->
 
 
@@ -184,7 +184,7 @@ public class PetimoDbWrapper {
     }
 
     //<---------------------------------------------------------------------------------------------
-    // Core - Reading Database
+    // Core - Database - Fetching Data
     //--------------------------------------------------------------------------------------------->
 
     public MonitorDay getDay(int date){
@@ -244,9 +244,63 @@ public class PetimoDbWrapper {
         return new MonitorDay(date, monitorBlocks);
     }
 
-
     //<---------------------------------------------------------------------------------------------
-    // Core - Checking Database
+    // Core - Database - Deleting Data
+    //--------------------------------------------------------------------------------------------->
+
+    /**
+     * TODO comment em
+     * @param date
+     * @return
+     */
+    public int removeDay(int date){
+        String selection = PetimoContract.Monitor.COLUMN_NAME_DATE + " = ?";
+        String[] selectionArgs = {Integer.toString(date)};
+        return writableDb.delete(PetimoContract.Monitor.TABLE_NAME, selection, selectionArgs);
+    }
+
+    /**
+     * TODO comment me
+     * @param id
+     * @return
+     */
+    public int removeBlockById(int id){
+        String selection = PetimoContract.Monitor._ID + " = ?";
+        String[] selectionArgs = {Integer.toString(id)};
+        return writableDb.delete(PetimoContract.Monitor.TABLE_NAME, selection, selectionArgs);
+    }
+
+    /**
+     *
+     */
+    public void dropCategories(){
+        String query = "DROP TABLE " + PetimoContract.Categories.TABLE_NAME;
+    }
+
+    /**
+     *
+     */
+    public void dropTasks(){
+        String query = "DROP TABLE " + PetimoContract.Tasks.TABLE_NAME;
+    }
+
+    /**
+     *
+     */
+    public void dropMonitor(){
+        String query = "DROP TABLE " + PetimoContract.Monitor.TABLE_NAME;
+    }
+
+    /**
+     *
+     */
+    public void dropAll(){
+        dropCategories();
+        dropMonitor();
+        dropTasks();
+    }
+    //<---------------------------------------------------------------------------------------------
+    // Core - Database - Checking Status
     //--------------------------------------------------------------------------------------------->
 
     /**

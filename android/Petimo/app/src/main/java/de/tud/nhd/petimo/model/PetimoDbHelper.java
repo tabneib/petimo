@@ -13,15 +13,15 @@ public class PetimoDbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_CATEGORIES =
             "CREATE TABLE " + PetimoContract.Categories.TABLE_NAME + " (" +
                     PetimoContract.Categories._ID + " INTEGER PRIMARY KEY," +
-                    PetimoContract.Categories.COLUMN_NAME_NAME + " TEXT," +
+                    PetimoContract.Categories.COLUMN_NAME_NAME + " TEXT NOT NULL UNIQUE," +
                     PetimoContract.Categories.COLUMN_NAME_PRIORITY + " INTEGER)";
 
     // SQL query to create the Tasks table
     private static final String SQL_CREATE_TASKS =
             "CREATE TABLE " + PetimoContract.Tasks.TABLE_NAME + " (" +
                     PetimoContract.Tasks._ID + " INTEGER PRIMARY KEY," +
-                    PetimoContract.Tasks.COLUMN_NAME_NAME + " TEXT," +
-                    PetimoContract.Tasks.COLUMN_NAME_CATEGORY + " TEXT," +
+                    PetimoContract.Tasks.COLUMN_NAME_NAME + " TEXT NOT NULL UNIQUE," +
+                    PetimoContract.Tasks.COLUMN_NAME_CATEGORY + " TEXT NOT NULL," +
                     PetimoContract.Tasks.COLUMN_NAME_PRIORITY + ")";
 
     // SQL query to create the Monitor table
@@ -29,7 +29,7 @@ public class PetimoDbHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + PetimoContract.Monitor.TABLE_NAME + " (" +
                     PetimoContract.Monitor._ID + " INTEGER PRIMARY KEY," +
                     PetimoContract.Monitor.COLUMN_NAME_TASK + " TEXT NULLABLE," +
-                    PetimoContract.Monitor.COLUMN_NAME_CATEGORY + " TEXT," +
+                    PetimoContract.Monitor.COLUMN_NAME_CATEGORY + " TEXT NOT NULL," +
                     PetimoContract.Monitor.COLUMN_NAME_START + " INTEGER," +
                     PetimoContract.Monitor.COLUMN_NAME_END + " INTEGER," +
                     PetimoContract.Monitor.COLUMN_NAME_DURATION + " INTEGER," +

@@ -68,6 +68,9 @@ public class PetimoDbDemo {
             return false;
         }
         else{
+            Log.d(TAG, "Dropping tables");
+            dbWrapper.dropAll();
+            Log.d(TAG, "Dropping tables: done");
             Log.d(TAG, "Inserting Categories");
             for (String[] cat: cats)
                 dbWrapper.insertCategory(cat[0], Integer.parseInt(cat[1]));
