@@ -108,7 +108,7 @@ public class PetimoDbWrapper {
     }
 
     //<---------------------------------------------------------------------------------------------
-    // Core - Writing
+    // Core - Writing Database
     //--------------------------------------------------------------------------------------------->
 
 
@@ -184,7 +184,7 @@ public class PetimoDbWrapper {
     }
 
     //<---------------------------------------------------------------------------------------------
-    // Core - Reading
+    // Core - Reading Database
     //--------------------------------------------------------------------------------------------->
 
     public MonitorDay getDay(int date){
@@ -244,6 +244,20 @@ public class PetimoDbWrapper {
         return new MonitorDay(date, monitorBlocks);
     }
 
+
+    //<---------------------------------------------------------------------------------------------
+    // Core - Checking Database
+    //--------------------------------------------------------------------------------------------->
+
+    /**
+     * Check if the wrapper is ready to read and write database
+     * @return true if ready, otherwise false
+     */
+    public boolean isReady(){
+        // Wrapper is ready iff both readable and writable databases are not null
+        // TODO verify this approach
+        return (readableDb!=null && writableDb!=null);
+    }
 
     //<---------------------------------------------------------------------------------------------
     // Auxiliary

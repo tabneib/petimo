@@ -64,4 +64,16 @@ public class MonitorBlock {
     public boolean getOverNight() {
         return overNight;
     }
+
+    /**
+     * TODO comment em
+     * @return
+     */
+    public String toXml(){
+        String xml = "<MonitorBlock task='" + this.task + "' category='" + this.category +
+                "' start='" + this.start + "' end='" + this.end + "' duration='" + this.duration +
+                "' date='" + this.date + "' weekday='" + this.weekDay + "' overnight='" +
+                this.overNight+ "' />";
+        return xml;
+    }
 }

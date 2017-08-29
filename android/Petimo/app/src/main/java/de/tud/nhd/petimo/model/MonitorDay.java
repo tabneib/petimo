@@ -14,4 +14,26 @@ public class MonitorDay {
         this.date = date;
         this.monitorBlocks = monitorBlocks;
     }
+
+    public List<MonitorBlock> getMonitorBlocks() {
+        return monitorBlocks;
+    }
+
+    public int getDate() {
+        return date;
+    }
+
+    /**
+     * TODO: comment em
+     * @return
+     */
+    public String toXml(){
+        String xml = "<MonitorDay date='" + this.date + "'>\n";
+        for (MonitorBlock block : this.monitorBlocks){
+            xml = xml + "\t"  + block.toString() + "\n";
+        }
+        xml += "</MonitorDay>";
+        return xml;
+    }
+
 }
