@@ -37,10 +37,14 @@ public class PetimoDbDemo {
 
 
 
-    public PetimoDbDemo(Context context) throws Exception{
-        PetimoDbWrapper.initalize(context);
-        this.dbWrapper = PetimoDbWrapper.getInstance();
-
+    public PetimoDbDemo(Context context){
+        try {
+            PetimoDbWrapper.initalize(context);
+            this.dbWrapper = PetimoDbWrapper.getInstance();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
         // prepare data
         cats.add(cat1);
         cats.add(cat2);

@@ -2,26 +2,32 @@ package de.tud.nhd.petimo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import de.tud.nhd.petimo.model.PetimoDbDemo;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final String TAG = "MainActivity";
+    private Button buttonDemo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        try{
-            PetimoDbDemo demo = new PetimoDbDemo(this);
-            while (!demo.execute()){
-                // Do nothing (busy loop until execution is successful)
-                System.out.println("Attempt to execute Demo: fail");
-            }
+        final PetimoDbDemo demo = new PetimoDbDemo(this);
 
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        buttonDemo = (Button) findViewById(R.id.button_exec_demo);
+        buttonDemo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                demo.execute();
+            }
+        });
+
+
+
 
 
     }

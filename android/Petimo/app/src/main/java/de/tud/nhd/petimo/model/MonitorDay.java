@@ -30,7 +30,7 @@ public class MonitorDay {
     public String toXml(){
         String xml = "<MonitorDay date='" + this.date + "'>\n";
         for (MonitorBlock block : this.monitorBlocks){
-            xml = xml + "\t"  + block.toString() + "\n";
+            xml = xml + "\t"  + block.toXml() + "\n";
         }
         xml += "</MonitorDay>";
         return xml;

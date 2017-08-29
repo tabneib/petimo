@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Petimo</string>
+    <string name="button_exec_demo">Execute Demo</string>
 </resources>

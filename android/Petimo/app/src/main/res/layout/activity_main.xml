@@ -10,8 +10,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="de.tud.nhd.petimo.MainActivity">
 
-    <TextView
+    <Button
+        android:text="@string/button_exec_demo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="443dp"
+        android:id="@+id/button_exec_demo" />
 </RelativeLayout>
