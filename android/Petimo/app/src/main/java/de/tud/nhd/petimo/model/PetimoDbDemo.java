@@ -39,7 +39,7 @@ public class PetimoDbDemo {
 
     public PetimoDbDemo(Context context){
         try {
-            PetimoDbWrapper.initalize(context);
+            PetimoDbWrapper.initialize(context);
             this.dbWrapper = PetimoDbWrapper.getInstance();
         }
         catch (Exception e){

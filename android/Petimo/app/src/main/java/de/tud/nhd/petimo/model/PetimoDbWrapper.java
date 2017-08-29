@@ -35,7 +35,7 @@ public class PetimoDbWrapper {
 
     }
 
-    public static void initalize(Context context) throws Exception{
+    public static void initialize(Context context) throws Exception{
         if(_instance != null)
             throw new Exception("Cannot initialize multiple instances of PetimoDbWrapper!");
         else
