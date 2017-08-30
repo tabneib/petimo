@@ -1,0 +1,109 @@
+
+===============================================================================
+=	P E T I M O  -  M i n i m a l e r  P r o t o t y p		      =
+===============================================================================
+
+	Sortiert nach Priorität	
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	> ID:	1
+	> Name:	
+		Database initialization
+	> Bechreibung:
+		Database design and code for the initialization of the 
+		database and as the base for further database features.
+		
+	> Akzeptanzkriterium:	
+
+	> Geschätzter Aufwand in Story Point:	
+		6	
+	> Entwickler:				
+		nhd
+	> Umgesetzt in Iteration:		
+		1
+	> Tatsächlicher Aufwand:		
+
+	> Velocity (Std/Story Point):
+		
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	> ID:	2
+	> Name:	
+		Basic database features	
+	> Bechreibung:
+		Basic database features are realized as a database 
+		wrapper. This includes inserting single row, drop and 
+		(re)create tables.	
+	> Akzeptanzkriterium:	
+
+	> Geschätzter Aufwand in Story Point:	
+		
+	> Entwickler:				
+		nhd
+	> Umgesetzt in Iteration:		
+		1
+	> Tatsächlicher Aufwand:		
+
+	> Velocity (Std/Story Point): 
+		
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	> ID:	3
+	> Name:	
+		
+	> Bechreibung:
+		
+	> Akzeptanzkriterium:	
+
+	> Geschätzter Aufwand in Story Point:	
+		
+	> Entwickler:				
+		nhd
+	> Umgesetzt in Iteration:		
+		1
+	> Tatsächlicher Aufwand:		
+
+	> Velocity (Std/Story Point):  
+		
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	> ID:	4
+	> Name:	
+		
+	> Bechreibung:
+		
+	> Akzeptanzkriterium:	
+
+	> Geschätzter Aufwand in Story Point:	
+		
+	> Entwickler:				
+		nhd
+	> Umgesetzt in Iteration:		
+		1
+	> Tatsächlicher Aufwand:		
+
+	> Velocity (Std/Story Point):  
+		
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	> ID:	5
+	> Name:	
+		
+	> Bechreibung:
+		
+	> Akzeptanzkriterium:	
+
+	> Geschätzter Aufwand in Story Point:	
+		
+	> Entwickler:				
+		nhd
+	> Umgesetzt in Iteration:		
+		1
+	> Tatsächlicher Aufwand:		
+
+	> Velocity (Std/Story Point): 
