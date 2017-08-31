@@ -15,10 +15,10 @@ import java.util.List;
  * Created by nhd on 28.08.17.
  */
 
-public class PetimoDbWrapper {
+public class PetimoModel {
 
-    private static final String TAG = "PetimoDbWrapper";
-    private static PetimoDbWrapper _instance = null;
+    private static final String TAG = "PetimoModel";
+    private static PetimoModel _instance = null;
     private SQLiteDatabase writableDb = null;
     private SQLiteDatabase readableDb = null;
     private SQLiteOpenHelper dbHelper = null;
@@ -27,7 +27,7 @@ public class PetimoDbWrapper {
     // Init
     // -------------------------------------------------------------------------------------------->
 
-    private PetimoDbWrapper(Context context){
+    private PetimoModel(Context context){
         dbHelper = new PetimoDbHelper(context);
         new GetReadableDbTask(dbHelper).execute((Void) null);
         new GetWritableDbTask(dbHelper).execute((Void) null);
@@ -37,16 +37,16 @@ public class PetimoDbWrapper {
 
     public static void initialize(Context context) throws Exception{
         if(_instance != null)
-            throw new Exception("Cannot initialize multiple instances of PetimoDbWrapper!");
+            throw new Exception("Cannot initialize multiple instances of PetimoModel!");
         else {
-            _instance = new PetimoDbWrapper(context);
+            _instance = new PetimoModel(context);
             Log.d(TAG, "Initialized!");
         }
     }
 
-    public static PetimoDbWrapper getInstance() throws Exception{
+    public static PetimoModel getInstance() throws Exception{
         if (_instance == null)
-            throw new Exception("PetimoDbWrapper is not yet initialized!");
+            throw new Exception("PetimoModel is not yet initialized!");
         else
             return _instance;
     }
@@ -458,12 +458,8 @@ public class PetimoDbWrapper {
                         cursor.getInt(cursor.getColumnIndexOrThrow(
                                 PetimoContract.Monitor.COLUMN_NAME_OVERNIGHT)) + "' />\n";
             }
-
             s = s + "\t</blocks>\n";
-
             s = s + "</petimo>\n";
-
-
             return s;
         }
 

@@ -84,9 +84,10 @@
 		Controller	
 	> Bechreibung:
 		Controller handles user inputs: insertion of categories, 
-		tasks and monitor blocks. All inputs must be checked before
-		"forwarded" to model.
+		tasks and monitor blocks; request for fetching monitor days.
+		All inputs must be checked before "forwarded" to model.
 		Controller updates view immediately or upon response of model.
+
 	> Akzeptanzkriterium:	
 
 	> Geschätzter Aufwand in Story Point:	
