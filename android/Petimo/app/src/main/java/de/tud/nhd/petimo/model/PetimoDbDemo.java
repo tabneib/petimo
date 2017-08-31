@@ -60,7 +60,7 @@ public class PetimoDbDemo {
     }
 
     /**
-     * Init the example database and
+     * Init the example database and run the basic features
      */
     public boolean execute(){
         if (!dbWrapper.isReady()){

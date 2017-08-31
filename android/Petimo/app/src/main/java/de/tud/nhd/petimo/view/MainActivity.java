@@ -1,4 +1,4 @@
-package de.tud.nhd.petimo;
+package de.tud.nhd.petimo.view;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.model.PetimoDbDemo;
 
 public class MainActivity extends AppCompatActivity {

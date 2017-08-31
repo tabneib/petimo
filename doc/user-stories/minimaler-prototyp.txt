@@ -81,7 +81,7 @@
 
 	> ID:	5
 	> Name:	
-		Controller	
+		Controller - Model part
 	> Bechreibung:
 		Controller handles user inputs: insertion of categories, 
 		tasks and monitor blocks; request for fetching monitor days.

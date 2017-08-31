@@ -118,9 +118,14 @@ public class PetimoModel {
      *
      * @param name
      * @param priority
-     * @return the row ID of the newly inserted row, or -1 if an error occurred
+     * @return the row ID of the newly inserted row, -1 if an database error occurred, -2 if  the
+     * category already exists, -3 if the given name is invalid
      */
     public long insertCategory(String name, int priority){
+        if (checkCatExists(name))
+            return -2;
+        if (!checkName(name))
+            return -3;
         ContentValues values = new ContentValues();
         values.put(PetimoContract.Categories.COLUMN_NAME_NAME, name);
         values.put(PetimoContract.Categories.COLUMN_NAME_PRIORITY, priority);
@@ -132,14 +137,16 @@ public class PetimoModel {
      * @param name
      * @param category
      * @param priority
-     * @return the row ID of the newly inserted row, -2 if category does not exist,
-     * or -1 if an error occurred
+     * @return the row ID of the newly inserted row, -1 if a database error occurred, -2 if the
+     * category does not exist, -3 if the task already exists, or -4 if the name is invalid
      */
     public long insertTask(String name, String category, int priority){
-        if (!checkCategoryExist(category)){
-            Log.d(TAG, "Cannot insert new task: MonitorCategory doesn't exist!");
+        if (!checkCatExists(category))
             return -2;
-        }
+        if (checkTaskExists(name, category))
+            return -3;
+        if(!checkName(name))
+            return -4;
         else{
             ContentValues values = new ContentValues();
             values.put(PetimoContract.Tasks.COLUMN_NAME_NAME, name);
@@ -150,7 +157,7 @@ public class PetimoModel {
     }
 
     /**
-     *
+     * TODO comment me
      * @param task
      * @param category
      * @param start
@@ -164,25 +171,20 @@ public class PetimoModel {
      */
     public long insertMonitorBlock(String task, String category, int start, int end,
                                    int duration, int date, int weekDay, int overNight){
-        if (!checkCategoryExist(category)){
-            Log.d(TAG, "Cannot insert new monitor block: MonitorCategory doesn't exist!");
+        if (!checkCatExists(category))
             return -2;
-        }
-        else if (task != null && !checkTaskExist(task)){
+        if (task != null && !checkTaskExists(task, category))
             return -3;
-        }
-        else{
-            ContentValues values = new ContentValues();
-            values.put(PetimoContract.Monitor.COLUMN_NAME_TASK, task);
-            values.put(PetimoContract.Monitor.COLUMN_NAME_CATEGORY, category);
-            values.put(PetimoContract.Monitor.COLUMN_NAME_START, start);
-            values.put(PetimoContract.Monitor.COLUMN_NAME_END, end);
-            values.put(PetimoContract.Monitor.COLUMN_NAME_DURATION, duration);
-            values.put(PetimoContract.Monitor.COLUMN_NAME_DATE, date);
-            values.put(PetimoContract.Monitor.COLUMN_NAME_WEEKDAY, weekDay);
-            values.put(PetimoContract.Monitor.COLUMN_NAME_OVERNIGHT, overNight);
-            return writableDb.insert(PetimoContract.Monitor.TABLE_NAME, null, values);
-        }
+        ContentValues values = new ContentValues();
+        values.put(PetimoContract.Monitor.COLUMN_NAME_TASK, task);
+        values.put(PetimoContract.Monitor.COLUMN_NAME_CATEGORY, category);
+        values.put(PetimoContract.Monitor.COLUMN_NAME_START, start);
+        values.put(PetimoContract.Monitor.COLUMN_NAME_END, end);
+        values.put(PetimoContract.Monitor.COLUMN_NAME_DURATION, duration);
+        values.put(PetimoContract.Monitor.COLUMN_NAME_DATE, date);
+        values.put(PetimoContract.Monitor.COLUMN_NAME_WEEKDAY, weekDay);
+        values.put(PetimoContract.Monitor.COLUMN_NAME_OVERNIGHT, overNight);
+        return writableDb.insert(PetimoContract.Monitor.TABLE_NAME, null, values);
     }
 
     //<---------------------------------------------------------------------------------------------
@@ -201,25 +203,18 @@ public class PetimoModel {
         Cursor cursor = readableDb.query(
                 PetimoContract.Monitor.TABLE_NAME,
                 PetimoContract.Monitor.getAllColumns(),
-                selection,
-                null,
-                null,
-                null,
-                sortOrder
-        );
+                selection, null, null, null, sortOrder);
 
         List<MonitorBlock> monitorBlocks = new ArrayList<>();
-
-        // Iterate the cursor and extract the monitor blocks
         while (cursor.moveToNext())
             monitorBlocks.add(getBlockFromCursor(cursor));
         cursor.close();
-
         return new MonitorDay(date, monitorBlocks);
     }
 
     /**
      * TODO comment me
+     * TODO throw this into an async task !
      * @param startDate
      * @param endDate
      * @return
@@ -276,17 +271,34 @@ public class PetimoModel {
         return tasks;
     }
 
+    /**
+     * TODO comment me
+     * @param catName
+     * @return
+     */
+    public List<String> getTaskNamesByCat(String catName){
+        String selection = PetimoContract.Tasks.COLUMN_NAME_CATEGORY + " = ?";
+        String[] selectionArgs = {catName};
+        List<String> taskNames = new ArrayList<>();
+        Cursor cursor = readableDb.query(PetimoContract.Tasks.TABLE_NAME,
+                PetimoContract.Tasks.getAllColumns(), selection,
+                selectionArgs, null, null, null);
+
+        while (cursor.moveToNext())
+            taskNames.add(cursor.getString(cursor.getColumnIndexOrThrow(
+                    PetimoContract.Tasks.COLUMN_NAME_NAME)));
+        cursor.close();
+        return taskNames;
+    }
 
     /**
-     * Pre-fetch categories
-     * This is to avoid querying the database for categories multiple times.
+     * TODO comment em
+     * @return
      */
-    private List<MonitorCategory> fetchAllCategories(){
+    public List<MonitorCategory> getAllCategories(){
         List<MonitorCategory> categories = new ArrayList<>();
-
         Cursor cursor = readableDb.query(PetimoContract.Categories.TABLE_NAME,
                 PetimoContract.Categories.getAllColumns(), null, null, null, null, null, null);
-
 
         while(cursor.moveToNext()){
             Log.d(TAG, "pre-fetching categories: " + cursor.getString(cursor.getColumnIndexOrThrow(
@@ -308,7 +320,23 @@ public class PetimoModel {
      * TODO comment me
      * @return
      */
-    private List<MonitorTask> fetchAllTasks(){
+    public List<String> getAllCatNames(){
+        List<String> catNames = new ArrayList<>();
+        Cursor cursor = readableDb.query(PetimoContract.Categories.TABLE_NAME,
+                PetimoContract.Categories.getAllColumns(), null, null, null, null, null, null);
+
+        while(cursor.moveToNext())
+            catNames.add(cursor.getString(cursor.getColumnIndexOrThrow(
+                    PetimoContract.Categories.COLUMN_NAME_NAME)));
+        cursor.close();
+        return catNames;
+    }
+
+    /**
+     * TODO comment me
+     * @return
+     */
+    public List<MonitorTask> getAllTasks(){
         List<MonitorTask> tasks = new ArrayList<>();
 
         Cursor cursor = readableDb.query(PetimoContract.Tasks.TABLE_NAME,
@@ -318,6 +346,23 @@ public class PetimoModel {
             tasks.add(getTaskFromCursor(cursor));
         cursor.close();
         return tasks;
+    }
+
+    /**
+     * TODO comment em
+     * @return
+     */
+    public List<String> getAllTaskName(){
+        List<String> taskNames = new ArrayList<>();
+
+        Cursor cursor = readableDb.query(PetimoContract.Tasks.TABLE_NAME,
+                PetimoContract.Tasks.getAllColumns(), null, null, null, null, null, null);
+
+        while(cursor.moveToNext())
+            taskNames.add(cursor.getString(cursor.getColumnIndexOrThrow(
+                    PetimoContract.Tasks.COLUMN_NAME_NAME)));
+        cursor.close();
+        return taskNames;
     }
 
     //<---------------------------------------------------------------------------------------------
@@ -409,26 +454,45 @@ public class PetimoModel {
     }
 
     /**
+     * Check if a category with the given name exists
+     * @param name
+     * @return
+     */
+    public boolean checkCatExists(String name){
+        return this.getAllCatNames().contains(name);
+    }
+
+    /**
+     * TODO comment em
+     * @param task
+     * @param category
+     * @return
+     */
+    public boolean checkTaskExists(String task, String category){
+        return this.getTaskNamesByCat(category).contains(task);
+    }
+
+    /**
      * TODO comment me
      */
     public void generateXml(){
         new ToXmlTask().execute((Void) null);
     }
 
-    private class ToXmlTask extends AsyncTask<Void,Void,String>{
+    private class ToXmlTask extends AsyncTask<Void, Void, String>{
 
         @Override
         protected String doInBackground(Void... params) {
             String s = "<petimo>\n";
             // Categories
             s = s + "\t<categories>\n";
-            for (MonitorCategory cat : fetchAllCategories())
+            for (MonitorCategory cat : getAllCategories())
                 s = s + cat.toXml(2) + "\n";
             s = s + "\t<categories>\n\n";
 
             // Tasks
             s = s + "\t<tasks>\n";
-            for (MonitorTask task : fetchAllTasks())
+            for (MonitorTask task : getAllTasks())
                 s = s + task.toXml(2) + "\n";
             s = s + "\t<tasks>\n\n";
 
@@ -522,18 +586,16 @@ public class PetimoModel {
     }
 
     /**
-     *
-     * @param category
+     * TODO comment me
+     * @param name
      * @return
      */
-    public boolean checkCategoryExist(String category){
-        // TODO: implement em
-        return true;
-    }
+    private boolean checkName(String name){
+        boolean result = true;
+        if (name.isEmpty())
+            result = false;
+        // TODO: Check if the name does not contain only backspaces
 
-    public boolean checkTaskExist(String task){
-        // TODO: implement me
-        return true;
+        return result;
     }
-
 }
