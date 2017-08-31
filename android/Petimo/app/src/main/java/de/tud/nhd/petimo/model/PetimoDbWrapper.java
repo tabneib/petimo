@@ -23,10 +23,6 @@ public class PetimoDbWrapper {
     private SQLiteDatabase readableDb = null;
     private SQLiteOpenHelper dbHelper = null;
 
-    private List<Category> categories ;
-    private List<Task> tasks;
-
-
     //<---------------------------------------------------------------------------------------------
     // Init
     // -------------------------------------------------------------------------------------------->
@@ -81,8 +77,6 @@ public class PetimoDbWrapper {
         protected void onPostExecute(SQLiteDatabase d) {
             super.onPostExecute(d);
             readableDb = d;
-            preFetchCategories();
-            preFetchTasks();
         }
     }
 
@@ -143,7 +137,7 @@ public class PetimoDbWrapper {
      */
     public long insertTask(String name, String category, int priority){
         if (!checkCategoryExist(category)){
-            Log.d(TAG, "Cannot insert new task: Category doesn't exist!");
+            Log.d(TAG, "Cannot insert new task: MonitorCategory doesn't exist!");
             return -2;
         }
         else{
@@ -171,7 +165,7 @@ public class PetimoDbWrapper {
     public long insertMonitorBlock(String task, String category, int start, int end,
                                    int duration, int date, int weekDay, int overNight){
         if (!checkCategoryExist(category)){
-            Log.d(TAG, "Cannot insert new monitor block: Category doesn't exist!");
+            Log.d(TAG, "Cannot insert new monitor block: MonitorCategory doesn't exist!");
             return -2;
         }
         else if (task != null && !checkTaskExist(task)){
@@ -195,6 +189,11 @@ public class PetimoDbWrapper {
     // Core - Database - Fetching Data
     //--------------------------------------------------------------------------------------------->
 
+    /**
+     * TODO comment em
+     * @param date
+     * @return
+     */
     public MonitorDay getDay(int date){
         String selection = PetimoContract.Monitor.COLUMN_NAME_DATE + " = " + date;
         String sortOrder = PetimoContract.Monitor.COLUMN_NAME_START + " ASC";
@@ -212,39 +211,78 @@ public class PetimoDbWrapper {
         List<MonitorBlock> monitorBlocks = new ArrayList<>();
 
         // Iterate the cursor and extract the monitor blocks
-        while (cursor.moveToNext()){
-            monitorBlocks.add(
-                    new MonitorBlock(
-                            cursor.getInt(cursor.getColumnIndexOrThrow(PetimoContract.Monitor._ID)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(
-                                    PetimoContract.Monitor.COLUMN_NAME_TASK)),
-                            cursor.getString(cursor.getColumnIndexOrThrow(
-                                    PetimoContract.Monitor.COLUMN_NAME_CATEGORY)),
-                            cursor.getInt(cursor.getColumnIndexOrThrow(
-                                    PetimoContract.Monitor.COLUMN_NAME_START)),
-                            cursor.getInt(cursor.getColumnIndexOrThrow(
-                                    PetimoContract.Monitor.COLUMN_NAME_END)),
-                            cursor.getInt(cursor.getColumnIndexOrThrow(
-                                    PetimoContract.Monitor.COLUMN_NAME_DURATION)),
-                            cursor.getInt(cursor.getColumnIndexOrThrow(
-                                    PetimoContract.Monitor.COLUMN_NAME_DATE)),
-                            cursor.getInt(cursor.getColumnIndexOrThrow(
-                                    PetimoContract.Monitor.COLUMN_NAME_WEEKDAY)),
-                            cursor.getInt(cursor.getColumnIndexOrThrow(
-                                    PetimoContract.Monitor.COLUMN_NAME_OVERNIGHT))
-                    )
-            );
-        }
+        while (cursor.moveToNext())
+            monitorBlocks.add(getBlockFromCursor(cursor));
         cursor.close();
 
         return new MonitorDay(date, monitorBlocks);
     }
 
     /**
-     * TODO
+     * TODO comment me
+     * @param startDate
+     * @param endDate
+     * @return
      */
-    private void preFetchCategories(){
-        this.categories = new ArrayList<>();
+    public List<MonitorDay> getDaysByRange(int startDate, int endDate){
+        String selection = PetimoContract.Monitor.COLUMN_NAME_DATE + " BETWEEN ? AND ?";
+        String[] selectionArgs = {Integer.toString(startDate), Integer.toString(endDate)};
+        String sortOrder = PetimoContract.Monitor.COLUMN_NAME_DATE + " ASC";
+        Cursor cursor = readableDb.query(PetimoContract.Monitor.TABLE_NAME,
+                PetimoContract.Monitor.getAllColumns(), selection,
+                selectionArgs, null, null, sortOrder);
+
+        List<MonitorDay> days = new ArrayList<>();
+        List<MonitorBlock> tmpBlocks = new ArrayList<>();
+        int tmpDay = 0;
+        while (cursor.moveToNext()){
+            if (tmpDay != 0){
+                // Check if the cursor moves to the next date
+                if (cursor.getInt(cursor.getColumnIndexOrThrow(
+                        PetimoContract.Monitor.COLUMN_NAME_DATE)) != tmpDay){
+                    days.add(new MonitorDay(tmpDay, tmpBlocks));
+                    // Update the tmp date and empty the
+                    tmpDay = cursor.getInt(cursor.getColumnIndexOrThrow(
+                            PetimoContract.Monitor.COLUMN_NAME_DATE));
+                    tmpBlocks.clear();
+                }
+            }
+            else
+                tmpDay = cursor.getInt(cursor.getColumnIndexOrThrow(
+                        PetimoContract.Monitor.COLUMN_NAME_DATE));
+
+            tmpBlocks.add(getBlockFromCursor(cursor));
+        }
+        cursor.close();
+        return days;
+    }
+
+    /**
+     * TODO comment me
+     * @param catName
+     * @return
+     */
+    public List<MonitorTask> getTasksByCat(String catName){
+        String selection = PetimoContract.Tasks.COLUMN_NAME_CATEGORY + " = ?";
+        String[] selectionArgs = {catName};
+        List<MonitorTask> tasks = new ArrayList<>();
+        Cursor cursor = readableDb.query(PetimoContract.Tasks.TABLE_NAME,
+                PetimoContract.Tasks.getAllColumns(), selection,
+                selectionArgs, null, null, null);
+
+        while (cursor.moveToNext())
+            tasks.add(getTaskFromCursor(cursor));
+        cursor.close();
+        return tasks;
+    }
+
+
+    /**
+     * Pre-fetch categories
+     * This is to avoid querying the database for categories multiple times.
+     */
+    private List<MonitorCategory> fetchAllCategories(){
+        List<MonitorCategory> categories = new ArrayList<>();
 
         Cursor cursor = readableDb.query(PetimoContract.Categories.TABLE_NAME,
                 PetimoContract.Categories.getAllColumns(), null, null, null, null, null, null);
@@ -254,7 +292,7 @@ public class PetimoDbWrapper {
             Log.d(TAG, "pre-fetching categories: " + cursor.getString(cursor.getColumnIndexOrThrow(
                     PetimoContract.Categories.COLUMN_NAME_NAME)));
 
-            this.categories.add(new Category(
+            categories.add(new MonitorCategory(
                     cursor.getInt(cursor.getColumnIndexOrThrow(
                             PetimoContract.Categories._ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(
@@ -262,28 +300,24 @@ public class PetimoDbWrapper {
                     cursor.getInt(cursor.getColumnIndexOrThrow(
                             PetimoContract.Categories.COLUMN_NAME_PRIORITY))));
         }
+        cursor.close();
+        return categories;
     }
 
     /**
-     * TODO
+     * TODO comment me
+     * @return
      */
-    private void preFetchTasks(){
-        this.tasks = new ArrayList<>();
+    private List<MonitorTask> fetchAllTasks(){
+        List<MonitorTask> tasks = new ArrayList<>();
 
         Cursor cursor = readableDb.query(PetimoContract.Tasks.TABLE_NAME,
                 PetimoContract.Tasks.getAllColumns(), null, null, null, null, null, null);
 
-        while(cursor.moveToNext()){
-            this.tasks.add(new Task(
-                    cursor.getInt(cursor.getColumnIndexOrThrow(
-                            PetimoContract.Tasks._ID)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(
-                            PetimoContract.Tasks.COLUMN_NAME_NAME)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(
-                            PetimoContract.Tasks.COLUMN_NAME_CATEGORY)),
-                    cursor.getInt(cursor.getColumnIndexOrThrow(
-                            PetimoContract.Tasks.COLUMN_NAME_PRIORITY))));
-        }
+        while(cursor.moveToNext())
+            tasks.add(getTaskFromCursor(cursor));
+        cursor.close();
+        return tasks;
     }
 
     //<---------------------------------------------------------------------------------------------
@@ -388,13 +422,13 @@ public class PetimoDbWrapper {
             String s = "<petimo>\n";
             // Categories
             s = s + "\t<categories>\n";
-            for (Category cat : categories)
+            for (MonitorCategory cat : fetchAllCategories())
                 s = s + cat.toXml(2) + "\n";
             s = s + "\t<categories>\n\n";
 
             // Tasks
             s = s + "\t<tasks>\n";
-            for (Task task : tasks)
+            for (MonitorTask task : fetchAllTasks())
                 s = s + task.toXml(2) + "\n";
             s = s + "\t<tasks>\n\n";
 
@@ -447,6 +481,51 @@ public class PetimoDbWrapper {
     //--------------------------------------------------------------------------------------------->
 
     /**
+     * Return a monitor block from the given cursor. The cursor must have moved to the corresponding
+     * position
+     * @param cursor the given cursor
+     * @return a monitor block from the given cursor
+     */
+    private MonitorBlock getBlockFromCursor(Cursor cursor){
+        return new MonitorBlock(
+                cursor.getInt(cursor.getColumnIndexOrThrow(PetimoContract.Monitor._ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(
+                        PetimoContract.Monitor.COLUMN_NAME_TASK)),
+                cursor.getString(cursor.getColumnIndexOrThrow(
+                        PetimoContract.Monitor.COLUMN_NAME_CATEGORY)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(
+                        PetimoContract.Monitor.COLUMN_NAME_START)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(
+                        PetimoContract.Monitor.COLUMN_NAME_END)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(
+                        PetimoContract.Monitor.COLUMN_NAME_DURATION)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(
+                        PetimoContract.Monitor.COLUMN_NAME_DATE)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(
+                        PetimoContract.Monitor.COLUMN_NAME_WEEKDAY)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(
+                        PetimoContract.Monitor.COLUMN_NAME_OVERNIGHT)));
+    }
+
+    /**
+     * Return a monitor task from the given cursor. The cursor must have moved to the corresponding
+     * position
+     * @param cursor the given cursor
+     * @return a monitor task from the given cursor
+     */
+    private MonitorTask getTaskFromCursor(Cursor cursor){
+        return new MonitorTask(
+                cursor.getInt(cursor.getColumnIndexOrThrow(
+                        PetimoContract.Tasks._ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(
+                        PetimoContract.Tasks.COLUMN_NAME_NAME)),
+                cursor.getString(cursor.getColumnIndexOrThrow(
+                        PetimoContract.Tasks.COLUMN_NAME_CATEGORY)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(
+                        PetimoContract.Tasks.COLUMN_NAME_PRIORITY)));
+    }
+
+    /**
      *
      * @param category
      * @return
@@ -460,6 +539,5 @@ public class PetimoDbWrapper {
         // TODO: implement me
         return true;
     }
-
 
 }

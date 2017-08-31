@@ -4,15 +4,16 @@ package de.tud.nhd.petimo.model;
  * Created by nhd on 29.08.17.
  */
 
-public class Category {
+public class MonitorTask {
     private final int id;
     private final String name;
+    private final String category;
     private final int priority;
 
-
-    public Category(int id, String name, int priority) {
+    public MonitorTask(int id, String name, String category, int priority) {
         this.id = id;
         this.name = name;
+        this.category = category;
         this.priority = priority;
     }
 
@@ -22,6 +23,10 @@ public class Category {
 
     public String getName() {
         return name;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public int getPriority() {
@@ -37,8 +42,9 @@ public class Category {
         for (int i = 1; i <= indentLevel; i++)
             indent = indent + "\t";
 
-        String xml = indent + "<Category id='" + this.id + "' name='" +
-                this.name + "' priority='" + this.priority + "' />";
+        String xml = indent + "<MonitorCategory id='" + this.id + "' name='" +
+                this.name + "' category='" + this.category + "' priority='"
+                + this.priority + "' />";
         return xml;
     }
 }
