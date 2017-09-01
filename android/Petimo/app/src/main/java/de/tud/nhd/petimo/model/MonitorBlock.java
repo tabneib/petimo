@@ -9,14 +9,14 @@ public class MonitorBlock {
     private int id;
     private String task;
     private String category;
-    private int start;
-    private int end;
-    private int duration;
+    private long start;
+    private long end;
+    private long duration;
     private int date;
     private int weekDay;
     private boolean overNight;
 
-    public MonitorBlock(int id, String task, String category, int start, int end, int duration,
+    public MonitorBlock(int id, String task, String category, long start, long end, long duration,
                         int date, int weekDay, int overNight) {
         this.id = id;
         this.task = task;
@@ -41,15 +41,15 @@ public class MonitorBlock {
         return category;
     }
 
-    public int getStart() {
+    public long getStart() {
         return start;
     }
 
-    public int getEnd() {
+    public long getEnd() {
         return end;
     }
 
-    public int getDuration() {
+    public long getDuration() {
         return duration;
     }
 

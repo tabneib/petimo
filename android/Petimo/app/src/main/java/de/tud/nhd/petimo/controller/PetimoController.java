@@ -21,7 +21,6 @@ public class PetimoController {
     private PetimoDbWrapper dbWrapper;
     private PetimoSharedPref sharedPref;
 
-    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
     //<---------------------------------------------------------------------------------------------
     // Init
@@ -90,25 +89,25 @@ public class PetimoController {
      */
     public void addBlockManually(String inputTask, String inputCat,
                                  String inputStart, String inputEnd, String inputDate){
-        if (getTimeFromStr(inputStart, inputDate) == -1){
+        long start = TimeUtils.getTimeFromStr(inputStart, inputDate);
+        if (start == -1){
             // TODO update view: notify user about invalid input start time
             return;
         }
-        if (getTimeFromStr(inputEnd, inputDate) == -1){
+        long end = TimeUtils.getTimeFromStr(inputEnd, inputDate);
+        if (end == -1){
             // TODO update view: notify user about invalid input end time
             return;
         }
-        if (getDateFromStr(inputDate) == -1){
+        if (TimeUtils.getDateFromStr(inputDate) == -1){
             // TODO update view: notify user about invalid input date
             return;
         }
-        int start = (int) getTimeFromStr(inputStart, inputDate);
-        int end = (int) getTimeFromStr(inputEnd, inputDate);
-        int date = (int) getDateFromStr(inputDate);
+        int date = (int) TimeUtils.getDateFromStr(inputDate);
 
         long returnCode = this.dbWrapper.insertMonitorBlock(
-                inputTask, inputCat, start, end, end - start, date, getWeekDay(date),
-                isOverNight(date, start, end));
+                inputTask, inputCat, start, end, end - start, date, TimeUtils.getWeekDay(date),
+                isOverNight(inputDate, inputStart, inputEnd));
         // TODO update view: notify the user according to the return code
     }
 
@@ -148,10 +147,8 @@ public class PetimoController {
      * @return the live monitoring date as an integer
      */
     private int getLiveDate(Date date){
-        int dateInt = Integer.parseInt(dateFormat.format(date));
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        int hours = cal.get(Calendar.HOUR_OF_DAY);
+        int dateInt = TimeUtils.getDateInt(date);
+        int hours = TimeUtils.getHourFromDate(date);
         if (0 <= hours && hours <= sharedPref.getOvThreshold())
             // the user is working overnight
             dateInt--;
@@ -161,41 +158,11 @@ public class PetimoController {
     /**
      *
      * @param date
-     * @return
-     */
-    private long getDateFromStr(String date){
-        //TODO implement me
-        return Integer.parseInt(date);
-    }
-
-    /**
-     * Return the time as number of minutes from the start of the given day.
-     * @param time
-     * @param date
-     * @return
-     */
-    private long getTimeFromStr(String time, String date){
-        //TODO implement me
-        return 0;
-    }
-    /**
-     *
-     * @param date
-     * @return
-     */
-    private int getWeekDay(int date){
-        // TODO implement me. For now it's always sunday :)
-        return 8;
-    }
-
-    /**
-     *
-     * @param date
-     * @param start
+     * @param start the start time string in 'HH:MM
      * @param end
      * @return
      */
-    private int isOverNight(int date, int start, int end){
+    public int isOverNight(String date, String start, String end){
         // TODO implement me. For now never overnight, good boy :)
         return 0;
     }

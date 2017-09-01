@@ -169,8 +169,8 @@ public class PetimoDbWrapper {
      * @return the row ID of the newly inserted row,-3 if task does not exist,
      * -2 if category does not exist, or -1 if an error occurred
      */
-    public long insertMonitorBlock(String task, String category, int start, int end,
-                                   int duration, int date, int weekDay, int overNight){
+    public long insertMonitorBlock(String task, String category, long start, long end,
+                                   long duration, int date, int weekDay, int overNight){
         if (!checkCatExists(category))
             return -2;
         if (task != null && !checkTaskExists(task, category))
@@ -231,22 +231,22 @@ public class PetimoDbWrapper {
         List<MonitorBlock> tmpBlocks = new ArrayList<>();
         int tmpDay = 0;
         while (cursor.moveToNext()){
-            if (tmpDay != 0){
-                // Check if the cursor moves to the next date
-                if (cursor.getInt(cursor.getColumnIndexOrThrow(
-                        PetimoContract.Monitor.COLUMN_NAME_DATE)) != tmpDay){
-                    days.add(new MonitorDay(tmpDay, tmpBlocks));
-                    // Update the tmp date and empty the
-                    tmpDay = cursor.getInt(cursor.getColumnIndexOrThrow(
-                            PetimoContract.Monitor.COLUMN_NAME_DATE));
-                    tmpBlocks.clear();
-                }
-            }
-            else
+            if (tmpDay == 0)
+                // The very first iteration
                 tmpDay = cursor.getInt(cursor.getColumnIndexOrThrow(
                         PetimoContract.Monitor.COLUMN_NAME_DATE));
-
-            tmpBlocks.add(getBlockFromCursor(cursor));
+            // Check if the cursor moves to the next date
+            if (cursor.getInt(cursor.getColumnIndexOrThrow(
+                    PetimoContract.Monitor.COLUMN_NAME_DATE)) != tmpDay){
+                // Moved to the next date
+                days.add(new MonitorDay(tmpDay, tmpBlocks));
+                // Update the tmp date and empty the
+                tmpDay = cursor.getInt(cursor.getColumnIndexOrThrow(
+                        PetimoContract.Monitor.COLUMN_NAME_DATE));
+                tmpBlocks.clear();
+            }
+            else
+                tmpBlocks.add(getBlockFromCursor(cursor));
         }
         cursor.close();
         return days;
@@ -553,11 +553,11 @@ public class PetimoDbWrapper {
                         PetimoContract.Monitor.COLUMN_NAME_TASK)),
                 cursor.getString(cursor.getColumnIndexOrThrow(
                         PetimoContract.Monitor.COLUMN_NAME_CATEGORY)),
-                cursor.getInt(cursor.getColumnIndexOrThrow(
+                cursor.getLong(cursor.getColumnIndexOrThrow(
                         PetimoContract.Monitor.COLUMN_NAME_START)),
-                cursor.getInt(cursor.getColumnIndexOrThrow(
+                cursor.getLong(cursor.getColumnIndexOrThrow(
                         PetimoContract.Monitor.COLUMN_NAME_END)),
-                cursor.getInt(cursor.getColumnIndexOrThrow(
+                cursor.getLong(cursor.getColumnIndexOrThrow(
                         PetimoContract.Monitor.COLUMN_NAME_DURATION)),
                 cursor.getInt(cursor.getColumnIndexOrThrow(
                         PetimoContract.Monitor.COLUMN_NAME_DATE)),

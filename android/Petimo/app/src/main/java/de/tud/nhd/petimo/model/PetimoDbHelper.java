@@ -30,7 +30,7 @@ public class PetimoDbHelper extends SQLiteOpenHelper {
                     PetimoContract.Monitor._ID + " INTEGER PRIMARY KEY," +
                     PetimoContract.Monitor.COLUMN_NAME_TASK + " TEXT NULLABLE," +
                     PetimoContract.Monitor.COLUMN_NAME_CATEGORY + " TEXT NOT NULL," +
-                    PetimoContract.Monitor.COLUMN_NAME_START + " INTEGER," +
+                    PetimoContract.Monitor.COLUMN_NAME_START + " LONG," +
                     PetimoContract.Monitor.COLUMN_NAME_END + " INTEGER," +
                     PetimoContract.Monitor.COLUMN_NAME_DURATION + " INTEGER," +
                     PetimoContract.Monitor.COLUMN_NAME_DATE + " INTEGER," +
