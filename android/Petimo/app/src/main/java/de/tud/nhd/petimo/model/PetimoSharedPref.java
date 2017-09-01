@@ -96,13 +96,6 @@ public class PetimoSharedPref {
     }
 
     // Read
-    /**
-     * Return the start time string of the ongoing monitor
-     * @return the start time string, or null if there is no ongoing monitor
-     */
-    public String getMonitorStart(){
-        return monitorPref.getString(MONITOR_LIVE_START, null);
-    }
 
     /**
      * Return the category string of the ongoing monitor
@@ -118,6 +111,22 @@ public class PetimoSharedPref {
      */
     public String getMonitorTask(){
         return monitorPref.getString(MONITOR_LIVE_TASK, null);
+    }
+
+    /**
+     * Return the date of the ongoing monitor
+     * @return the date, or 0 if there is no ongoing monitor
+     */
+    public int getMonitorDate(){
+        return monitorPref.getInt(MONITOR_LIVE_DATE, 0);
+    }
+
+    /**
+     * Return the start time of the ongoing monitor
+     * @return the start time, or 0 if there is no ongoing monitor
+     */
+    public long getMonitorStart(){
+        return monitorPref.getLong(MONITOR_LIVE_START, 0);
     }
 
     /**

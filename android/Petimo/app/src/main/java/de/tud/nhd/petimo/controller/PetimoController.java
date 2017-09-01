@@ -4,8 +4,7 @@ package de.tud.nhd.petimo.controller;
 import android.content.Context;
 import android.util.Log;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.sql.Time;
 import java.util.Date;
 
 import de.tud.nhd.petimo.model.PetimoDbWrapper;
@@ -89,6 +88,10 @@ public class PetimoController {
      */
     public void addBlockManually(String inputTask, String inputCat,
                                  String inputStart, String inputEnd, String inputDate){
+        if (TimeUtils.getDateFromStr(inputDate) == -1){
+            // TODO update view: notify user about invalid input date
+            return;
+        }
         long start = TimeUtils.getTimeFromStr(inputStart, inputDate);
         if (start == -1){
             // TODO update view: notify user about invalid input start time
@@ -99,12 +102,11 @@ public class PetimoController {
             // TODO update view: notify user about invalid input end time
             return;
         }
-        if (TimeUtils.getDateFromStr(inputDate) == -1){
-            // TODO update view: notify user about invalid input date
+        if (end <= start){
+            // TODO update view:notify user about invalid input start and end time
             return;
         }
         int date = (int) TimeUtils.getDateFromStr(inputDate);
-
         long returnCode = this.dbWrapper.insertMonitorBlock(
                 inputTask, inputCat, start, end, end - start, date, TimeUtils.getWeekDay(date),
                 isOverNight(inputDate, inputStart, inputEnd));
@@ -129,9 +131,14 @@ public class PetimoController {
         else{
             // Case there's an ongoing monitor
             // In this case all the parameters are ignored.
-            /*long returnCode = this.dbWrapper.insertMonitorBlock(
-                    inputTask, inputCat, start, end, end - start, date, getWeekDay(date),
-                    isOverNight(date, start, end));*/
+            long start = sharedPref.getMonitorStart();
+            long end = current.getTime();
+            int date = sharedPref.getMonitorDate();
+            long returnCode = this.dbWrapper.insertMonitorBlock(
+                    sharedPref.getMonitorTask(), sharedPref.getMonitorCat(),
+                    sharedPref.getMonitorStart(), end, end - start,
+                    sharedPref.getMonitorDate(), TimeUtils.getWeekDay(date),
+                    isOverNight(date, start, end));
             // TODO update view: notify the user according to the return code
         }
     }
@@ -147,7 +154,7 @@ public class PetimoController {
      * @return the live monitoring date as an integer
      */
     private int getLiveDate(Date date){
-        int dateInt = TimeUtils.getDateInt(date);
+        int dateInt = TimeUtils.getDateIntFromDate(date);
         int hours = TimeUtils.getHourFromDate(date);
         if (0 <= hours && hours <= sharedPref.getOvThreshold())
             // the user is working overnight
@@ -158,11 +165,23 @@ public class PetimoController {
     /**
      *
      * @param date
-     * @param start the start time string in 'HH:MM
+     * @param start the start time string in 'HH:MM' format
      * @param end
      * @return
      */
     public int isOverNight(String date, String start, String end){
+        return isOverNight(Integer.parseInt(date),
+                TimeUtils.getTimeFromStr(start, date), TimeUtils.getTimeFromStr(end,date));
+    }
+
+    /**
+     *
+     * @param date
+     * @param start
+     * @param end
+     * @return
+     */
+    public int isOverNight(int date, long start, long end){
         // TODO implement me. For now never overnight, good boy :)
         return 0;
     }

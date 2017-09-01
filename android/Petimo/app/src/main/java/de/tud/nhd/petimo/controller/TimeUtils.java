@@ -23,7 +23,7 @@ public class TimeUtils {
         return cal.get(Calendar.HOUR_OF_DAY);
     }
 
-    public static int getDateInt(Date date){
+    public static int getDateIntFromDate(Date date){
         return Integer.parseInt(dateFormat.format(date));
     }
 
@@ -39,7 +39,7 @@ public class TimeUtils {
     }
 
     /**
-     * Return the time as number of minutes from the start of the given day.
+     * Return the time as milliseconds from the given string of 'HH:MM' format
      * @param time
      * @param date
      * @return
