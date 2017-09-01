@@ -86,7 +86,6 @@
 		Controller handles user inputs: insertion of categories, 
 		tasks and monitor blocks; request for fetching monitor days.
 		All inputs must be checked before "forwarded" to model.
-		Controller updates view immediately or upon response of model.
 
 	> Akzeptanzkriterium:	
 

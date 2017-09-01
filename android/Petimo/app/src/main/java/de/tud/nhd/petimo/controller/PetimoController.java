@@ -4,9 +4,10 @@ package de.tud.nhd.petimo.controller;
 import android.content.Context;
 import android.util.Log;
 
-import java.sql.Time;
 import java.util.Date;
+import java.util.List;
 
+import de.tud.nhd.petimo.model.MonitorDay;
 import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
 
@@ -54,7 +55,7 @@ public class PetimoController {
     }
 
     //<---------------------------------------------------------------------------------------------
-    //  Core - Handle User inputs
+    //  Core - Inputting
     // -------------------------------------------------------------------------------------------->
 
     /**
@@ -142,6 +143,26 @@ public class PetimoController {
             // TODO update view: notify the user according to the return code
         }
     }
+
+    //<---------------------------------------------------------------------------------------------
+    //  Core - Outputting
+    // -------------------------------------------------------------------------------------------->
+
+    /**
+     *
+     * @param inputStartDate
+     * @param inputEndDate
+     * @return the list of all satisfied monitor days, or null if the inputs are invalid
+     */
+    public List<MonitorDay> getDaysFromRange(String inputStartDate, String inputEndDate){
+        long startDate = TimeUtils.getDateFromStr(inputStartDate);
+        long endDate = TimeUtils.getDateFromStr(inputEndDate);
+        if (startDate == -1 || endDate == -1)
+            return null;
+        else
+            return this.dbWrapper.getDaysByRange((int) startDate, (int) endDate);
+    }
+
 
     //<---------------------------------------------------------------------------------------------
     //  Auxiliary
