@@ -1,7 +1,11 @@
 package de.tud.nhd.petimo.controller;
 
+
 import android.content.Context;
 import android.util.Log;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
@@ -15,6 +19,8 @@ public class PetimoController {
     private static PetimoController _instance;
     private PetimoDbWrapper dbWrapper;
     private PetimoSharedPref sharedPref;
+
+    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
     //<---------------------------------------------------------------------------------------------
     // Init
@@ -74,7 +80,7 @@ public class PetimoController {
     }
 
     /**
-     * TODO: Check for invalid information - Time in the future; Time conflictsa with other blocks
+     * TODO: Check for invalid information - Time in the future; Time conflicts with other blocks
      * @param inputTask
      * @param inputCat
      * @param inputStart
@@ -101,21 +107,34 @@ public class PetimoController {
 
         long returnCode = this.dbWrapper.insertMonitorBlock(
                 inputTask, inputCat, start, end, end - start, date, getWeekDay(date),
-                checkOverNight(date, start, end));
+                isOverNight(date, start, end));
         // TODO update view: notify the user according to the return code
     }
 
     /**
      *
+     * We assume that the input category, task are correct because the user has to choose them from
+     * a drop down menu.
+     * @param inputCat
      * @param inputTask
      */
-    public void addBlockLive(String inputCat, String inputTask, String inputDate){
+    public void addBlockLive(String inputCat, String inputTask){
 
+        if (!sharedPref.isMonitoring()){
+            Date current = new Date();
+
+            sharedPref.setLiveMonitor(inputCat, inputTask, getLiveDate(current), current.getTime());
+        }
     }
 
     //<---------------------------------------------------------------------------------------------
     //  Auxiliary
     // -------------------------------------------------------------------------------------------->
+
+    private int getLiveDate(Date date){
+        // TODO implement me !
+        return 0
+    }
 
     /**
      *
@@ -154,7 +173,7 @@ public class PetimoController {
      * @param end
      * @return
      */
-    private int checkOverNight(int date, int start, int end){
+    private int isOverNight(int date, int start, int end){
         // TODO implement me. For now never overnight, good boy :)
         return 0;
     }

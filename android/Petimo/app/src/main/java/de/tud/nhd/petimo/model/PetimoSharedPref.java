@@ -12,8 +12,20 @@ import de.tud.nhd.petimo.R;
 
 public class PetimoSharedPref {
     private static final String TAG = "PetimoSharedPref";
-    private final String LIVE_MONITOR_STATUS =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.LIVE_MONITOR_STATUS";
+    private final String MONITOR_LIVE_DATE =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LIVE_DATE";
+    private final String MONITOR_LIVE_START =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LIVE_START";
+    private final String MONITOR_LIVE_CAT =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LIVE_CAT";
+    private final String MONITOR_LIVE_TASK =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LIVE_TASK";
+
+    private final String SETTINGS_OVERNIGHT_THRESHOLD =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_OVERNIGHT_THRESHOLD";
+
+    private final int DEFAULT_OVERNIGHT_THRESHOLD = 6;
+
 
     private static PetimoSharedPref _instance;
     private Context context;
@@ -27,13 +39,13 @@ public class PetimoSharedPref {
     // Init
     // -------------------------------------------------------------------------------------------->
 
-    private PetimoSharedPref(Context context){
-        this.context = context;
+    private PetimoSharedPref(Context c){
+        this.context = c;
         // TODO get monitor data from shared preferences
-        this.settingPref = context.getSharedPreferences(
-                context.getString(R.string.preference_file_settings), Context.MODE_PRIVATE);
-        this.monitorPref = context.getSharedPreferences(
-                context.getString(R.string.preference_file_monitor), Context.MODE_PRIVATE);
+        this.settingPref = this.context.getSharedPreferences(
+                this.context.getString(R.string.preference_file_settings), Context.MODE_PRIVATE);
+        this.monitorPref = this.context.getSharedPreferences(
+                this.context.getString(R.string.preference_file_monitor), Context.MODE_PRIVATE);
         this.settingsEditor = settingPref.edit();
         this.monitorEditor = monitorPref.edit();
     }
@@ -54,4 +66,83 @@ public class PetimoSharedPref {
             return _instance;
     }
 
+    //<---------------------------------------------------------------------------------------------
+    // Monitor Preferences
+    // -------------------------------------------------------------------------------------------->
+
+    // Write
+    /**
+     * Save information about the ongoing monitor into the preferences
+     * @param category  category of the ongoing monitor
+     * @param task      task of the ongoing monitor
+     * @param date      date of the ongoing monitor
+     * @param start     start of the ongoing monitor
+     */
+    public void setLiveMonitor(String category, String task, int date, long start){
+        monitorEditor.putString(MONITOR_LIVE_CAT, category);
+        monitorEditor.putString(MONITOR_LIVE_TASK, task);
+        monitorEditor.putInt(MONITOR_LIVE_DATE, date);
+        monitorEditor.putLong(MONITOR_LIVE_START, start);
+    }
+
+    /**
+     * Clear all saved preferences about the ongoing live monitor
+     */
+    public void clearLiveMonitor(){
+        monitorEditor.remove(MONITOR_LIVE_CAT);
+        monitorEditor.remove(MONITOR_LIVE_TASK);
+        monitorEditor.remove(MONITOR_LIVE_DATE);
+        monitorEditor.remove(MONITOR_LIVE_START);
+    }
+
+    // Read
+    /**
+     * Return the start time string of the ongoing monitor
+     * @return the start time string, or null if there is no ongoing monitor
+     */
+    public String getMonitorStart(){
+        return monitorPref.getString(MONITOR_LIVE_START, null);
+    }
+
+    /**
+     * Return the category string of the ongoing monitor
+     * @return the category string, or null if there is no ongoing monitor
+     */
+    public String getMonitorCat(){
+        return monitorPref.getString(MONITOR_LIVE_CAT, null);
+    }
+
+    /**
+     * Return the task string of the ongoing monitor
+     * @return the task string, or null if there is no ongoing monitor
+     */
+    public String getMonitorTask(){
+        return monitorPref.getString(MONITOR_LIVE_TASK, null);
+    }
+
+    /**
+     * Check if there is an ongoing live monitor
+     * @return true if there is an ongoing live monitor, false otherwise
+     */
+    public boolean isMonitoring(){
+        return !monitorPref.getString(MONITOR_LIVE_START, "NONE").equals("NONE");
+    }
+
+
+    //<---------------------------------------------------------------------------------------------
+    // Settings Preferences
+    // -------------------------------------------------------------------------------------------->
+
+    // Write
+
+
+    // Read
+
+    /**
+     * Get the overnight threshold
+     * @return the threshold
+     */
+    public int getOvThreshold(){
+        return settingPref.getInt(SETTINGS_OVERNIGHT_THRESHOLD, DEFAULT_OVERNIGHT_THRESHOLD);
+    }
 }
