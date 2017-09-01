@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import de.tud.nhd.petimo.model.PetimoDbWrapper;
@@ -119,11 +120,20 @@ public class PetimoController {
      * @param inputTask
      */
     public void addBlockLive(String inputCat, String inputTask){
-
+        Date current = new Date();
         if (!sharedPref.isMonitoring()){
-            Date current = new Date();
-
+            // Case there is no ongoing monitor
             sharedPref.setLiveMonitor(inputCat, inputTask, getLiveDate(current), current.getTime());
+            // TODO: update view: Notify the user about the ongoing monitor
+            return;
+        }
+        else{
+            // Case there's an ongoing monitor
+            // In this case all the parameters are ignored.
+            /*long returnCode = this.dbWrapper.insertMonitorBlock(
+                    inputTask, inputCat, start, end, end - start, date, getWeekDay(date),
+                    isOverNight(date, start, end));*/
+            // TODO update view: notify the user according to the return code
         }
     }
 
@@ -131,9 +141,21 @@ public class PetimoController {
     //  Auxiliary
     // -------------------------------------------------------------------------------------------->
 
+    /**
+     * The live monitoring date is the day before if the monitor starts between midnight and the
+     * overnight threshold.
+     * @param date the date object that capture the start time of the monitor
+     * @return the live monitoring date as an integer
+     */
     private int getLiveDate(Date date){
-        // TODO implement me !
-        return 0
+        int dateInt = Integer.parseInt(dateFormat.format(date));
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int hours = cal.get(Calendar.HOUR_OF_DAY);
+        if (0 <= hours && hours <= sharedPref.getOvThreshold())
+            // the user is working overnight
+            dateInt--;
+        return dateInt;
     }
 
     /**
