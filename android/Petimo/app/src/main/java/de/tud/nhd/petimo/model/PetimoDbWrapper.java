@@ -15,10 +15,10 @@ import java.util.List;
  * Created by nhd on 28.08.17.
  */
 
-public class PetimoModel {
+public class PetimoDbWrapper {
 
-    private static final String TAG = "PetimoModel";
-    private static PetimoModel _instance = null;
+    private static final String TAG = "PetimoDbWrapper";
+    private static PetimoDbWrapper _instance = null;
     private SQLiteDatabase writableDb = null;
     private SQLiteDatabase readableDb = null;
     private SQLiteOpenHelper dbHelper = null;
@@ -27,7 +27,7 @@ public class PetimoModel {
     // Init
     // -------------------------------------------------------------------------------------------->
 
-    private PetimoModel(Context context){
+    private PetimoDbWrapper(Context context){
         dbHelper = new PetimoDbHelper(context);
         new GetReadableDbTask(dbHelper).execute((Void) null);
         new GetWritableDbTask(dbHelper).execute((Void) null);
@@ -37,16 +37,16 @@ public class PetimoModel {
 
     public static void initialize(Context context) throws Exception{
         if(_instance != null)
-            throw new Exception("Cannot initialize multiple instances of PetimoModel!");
+            throw new Exception("Cannot initialize multiple instances of PetimoDbWrapper!");
         else {
-            _instance = new PetimoModel(context);
+            _instance = new PetimoDbWrapper(context);
             Log.d(TAG, "Initialized!");
         }
     }
 
-    public static PetimoModel getInstance() throws Exception{
+    public static PetimoDbWrapper getInstance() throws Exception{
         if (_instance == null)
-            throw new Exception("PetimoModel is not yet initialized!");
+            throw new Exception("PetimoDbWrapper is not yet initialized!");
         else
             return _instance;
     }

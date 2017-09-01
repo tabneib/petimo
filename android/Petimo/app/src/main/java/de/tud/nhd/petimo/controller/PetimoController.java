@@ -1,10 +1,10 @@
 package de.tud.nhd.petimo.controller;
 
 import android.content.Context;
-import android.support.annotation.IntegerRes;
 import android.util.Log;
 
-import de.tud.nhd.petimo.model.PetimoModel;
+import de.tud.nhd.petimo.model.PetimoDbWrapper;
+import de.tud.nhd.petimo.model.PetimoSharedPref;
 
 /**
  * Created by nhd on 31.08.17.
@@ -13,7 +13,8 @@ import de.tud.nhd.petimo.model.PetimoModel;
 public class PetimoController {
     private static final String TAG = "PetimoController";
     private static PetimoController _instance;
-    private PetimoModel model;
+    private PetimoDbWrapper dbWrapper;
+    private PetimoSharedPref sharedPref;
 
     //<---------------------------------------------------------------------------------------------
     // Init
@@ -21,8 +22,10 @@ public class PetimoController {
 
     private PetimoController(Context context){
         try{
-            PetimoModel.initialize(context);
-            this.model = PetimoModel.getInstance();
+            PetimoDbWrapper.initialize(context);
+            this.dbWrapper = PetimoDbWrapper.getInstance();
+            PetimoSharedPref.initialize(context);
+            this.sharedPref = PetimoSharedPref.getInstance();
         }
         catch (Exception e){
             e.printStackTrace();
@@ -40,7 +43,7 @@ public class PetimoController {
 
     public static PetimoController getInstance() throws Exception{
         if (_instance == null)
-            throw new Exception("PetimoModel is not yet initialized!");
+            throw new Exception("PetimoController is not yet initialized!");
         else
             return _instance;
     }
@@ -55,7 +58,7 @@ public class PetimoController {
      * @param priority
      */
     public void addCategory(String name, int priority){
-        long returnCode = this.model.insertCategory(name, priority);
+        long returnCode = this.dbWrapper.insertCategory(name, priority);
         // TODO update view: notify the user according to the return code
     }
 
@@ -66,12 +69,12 @@ public class PetimoController {
      * @param priority
      */
     public void addTask(String name, String category, int priority){
-        long returnCode = this.model.insertTask(name, category, priority);
+        long returnCode = this.dbWrapper.insertTask(name, category, priority);
         // TODO update view: notify the user according to the return code
     }
 
     /**
-     *
+     * TODO: Check for invalid information - Time in the future; Time conflictsa with other blocks
      * @param inputTask
      * @param inputCat
      * @param inputStart
@@ -81,26 +84,35 @@ public class PetimoController {
     public void addBlockManually(String inputTask, String inputCat,
                                  String inputStart, String inputEnd, String inputDate){
         if (getTimeFromStr(inputStart, inputDate) == -1){
-            // TODO update view: notify user about invalid input time
+            // TODO update view: notify user about invalid input start time
             return;
         }
         if (getTimeFromStr(inputEnd, inputDate) == -1){
-            // TODO update view: notify user about invalid input time
+            // TODO update view: notify user about invalid input end time
             return;
         }
         if (getDateFromStr(inputDate) == -1){
-            // TODO update view: notify user about invalid input time
+            // TODO update view: notify user about invalid input date
             return;
         }
         int start = (int) getTimeFromStr(inputStart, inputDate);
         int end = (int) getTimeFromStr(inputEnd, inputDate);
         int date = (int) getDateFromStr(inputDate);
 
-        long returnCode = this.model.insertMonitorBlock(
+        long returnCode = this.dbWrapper.insertMonitorBlock(
                 inputTask, inputCat, start, end, end - start, date, getWeekDay(date),
                 checkOverNight(date, start, end));
         // TODO update view: notify the user according to the return code
     }
+
+    /**
+     *
+     * @param inputTask
+     */
+    public void addBlockLive(String inputCat, String inputTask, String inputDate){
+
+    }
+
     //<---------------------------------------------------------------------------------------------
     //  Auxiliary
     // -------------------------------------------------------------------------------------------->

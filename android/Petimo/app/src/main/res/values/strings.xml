@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Petimo</string>
     <string name="button_exec_demo">Execute Demo</string>
+    <string name="preference_file_settings">de.tud.nhd.PREFERENCE_FILE_SETTINGS</string>
+    <string name="preference_file_monitor">de.tud.nhd.PREFERENCE_FILE_MONITOR</string>
 </resources>

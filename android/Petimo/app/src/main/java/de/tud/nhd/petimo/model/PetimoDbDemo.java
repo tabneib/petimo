@@ -13,7 +13,7 @@ import java.util.List;
 public class PetimoDbDemo {
 
     private final String TAG = "PetimoDemo";
-    PetimoModel dbWrapper;
+    PetimoDbWrapper dbWrapper;
 
     private final String DATE = "20170829";
     private final String[] cat1 = {"work", "10"};
@@ -39,8 +39,8 @@ public class PetimoDbDemo {
 
     public PetimoDbDemo(Context context){
         try {
-            PetimoModel.initialize(context);
-            this.dbWrapper = PetimoModel.getInstance();
+            PetimoDbWrapper.initialize(context);
+            this.dbWrapper = PetimoDbWrapper.getInstance();
         }
         catch (Exception e){
             e.printStackTrace();

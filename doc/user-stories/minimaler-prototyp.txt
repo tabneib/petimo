@@ -97,7 +97,7 @@
 	> Umgesetzt in Iteration:		
 		2
 	> Tatsächlicher Aufwand:		
-
+		2.5 + 
 	> Velocity (Hours/Story Point):  
 	
 	> Status: 
