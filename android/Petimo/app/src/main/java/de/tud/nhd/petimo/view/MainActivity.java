@@ -2,6 +2,7 @@ package de.tud.nhd.petimo.view;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,8 +18,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final PetimoDbDemo demo = new PetimoDbDemo(this);
 
+        Toolbar toolBar = (Toolbar) findViewById(R.id.activity_main_toolbar);
+        setSupportActionBar(toolBar);
+
+        // Demo
+        final PetimoDbDemo demo = new PetimoDbDemo(this);
         buttonDemo = (Button) findViewById(R.id.button_exec_demo);
         buttonDemo.setOnClickListener(new View.OnClickListener() {
             @Override

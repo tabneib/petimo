@@ -96,11 +96,11 @@
 	> Umgesetzt in Iteration:		
 		2
 	> Tatsächlicher Aufwand:		
-		2.5 + 
+		2.5 + 4.5 = 7
 	> Velocity (Hours/Story Point):  
-	
+		2.33
 	> Status: 
-		[Open]	
+		[Closed]	
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
