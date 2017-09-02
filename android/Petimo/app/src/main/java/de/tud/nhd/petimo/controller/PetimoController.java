@@ -62,10 +62,10 @@ public class PetimoController {
      * TODO comment em
      * @param name
      * @param priority
+     * @return The corresponding response code
      */
-    public void addCategory(String name, int priority){
-        long returnCode = this.dbWrapper.insertCategory(name, priority);
-        // TODO update view: notify the user according to the return code
+    public ResponseCode addCategory(String name, int priority){
+        return this.dbWrapper.insertCategory(name, priority);
     }
 
     /**
@@ -74,9 +74,8 @@ public class PetimoController {
      * @param category
      * @param priority
      */
-    public void addTask(String name, String category, int priority){
-        long returnCode = this.dbWrapper.insertTask(name, category, priority);
-        // TODO update view: notify the user according to the return code
+    public ResponseCode addTask(String name, String category, int priority){
+        return this.dbWrapper.insertTask(name, category, priority);
     }
 
     /**
@@ -86,32 +85,24 @@ public class PetimoController {
      * @param inputStart
      * @param inputEnd
      * @param inputDate
+     * @return
      */
-    public void addBlockManually(String inputTask, String inputCat,
-                                 String inputStart, String inputEnd, String inputDate){
-        if (TimeUtils.getDateFromStr(inputDate) == -1){
-            // TODO update view: notify user about invalid input date
-            return;
-        }
+    public ResponseCode addBlockManually(String inputTask, String inputCat,
+                                         String inputStart, String inputEnd, String inputDate){
+        if (TimeUtils.getDateFromStr(inputDate) == -1)
+            return ResponseCode.INVALID_INPUT_STRING_DATE;
         long start = TimeUtils.getTimeFromStr(inputStart, inputDate);
-        if (start == -1){
-            // TODO update view: notify user about invalid input start time
-            return;
-        }
+        if (start == -1)
+            return ResponseCode.INVALID_INPUT_STRING_TIME;
         long end = TimeUtils.getTimeFromStr(inputEnd, inputDate);
-        if (end == -1){
-            // TODO update view: notify user about invalid input end time
-            return;
-        }
-        if (end <= start){
-            // TODO update view:notify user about invalid input start and end time
-            return;
-        }
+        if (end == -1)
+            return ResponseCode.INVALID_INPUT_STRING_TIME;
+        if (end <= start)
+            return ResponseCode.INVALID_TIME;
         int date = (int) TimeUtils.getDateFromStr(inputDate);
-        long returnCode = this.dbWrapper.insertMonitorBlock(
+        return this.dbWrapper.insertMonitorBlock(
                 inputTask, inputCat, start, end, end - start, date, TimeUtils.getWeekDay(date),
                 isOverNight(inputDate, inputStart, inputEnd));
-        // TODO update view: notify the user according to the return code
     }
 
     /**
@@ -120,14 +111,14 @@ public class PetimoController {
      * a drop down menu.
      * @param inputCat
      * @param inputTask
+     * @return the corresponding response code
      */
-    public void addBlockLive(String inputCat, String inputTask){
+    public ResponseCode addBlockLive(String inputCat, String inputTask){
         Date current = new Date();
         if (!sharedPref.isMonitoring()){
             // Case there is no ongoing monitor
             sharedPref.setLiveMonitor(inputCat, inputTask, getLiveDate(current), current.getTime());
-            // TODO: update view: Notify the user about the ongoing monitor
-            return;
+            return ResponseCode.OK;
         }
         else{
             // Case there's an ongoing monitor
@@ -135,12 +126,11 @@ public class PetimoController {
             long start = sharedPref.getMonitorStart();
             long end = current.getTime();
             int date = sharedPref.getMonitorDate();
-            long returnCode = this.dbWrapper.insertMonitorBlock(
+            return this.dbWrapper.insertMonitorBlock(
                     sharedPref.getMonitorTask(), sharedPref.getMonitorCat(),
                     sharedPref.getMonitorStart(), end, end - start,
                     sharedPref.getMonitorDate(), TimeUtils.getWeekDay(date),
                     isOverNight(date, start, end));
-            // TODO update view: notify the user according to the return code
         }
     }
 
@@ -161,6 +151,18 @@ public class PetimoController {
             return null;
         else
             return this.dbWrapper.getDaysByRange((int) startDate, (int) endDate);
+    }
+
+
+    //<---------------------------------------------------------------------------------------------
+    //  Core - GUI updating
+    // -------------------------------------------------------------------------------------------->
+
+    /**
+     *
+     */
+    public boolean isMonitoring(){
+        return sharedPref.isMonitoring();
     }
 
 

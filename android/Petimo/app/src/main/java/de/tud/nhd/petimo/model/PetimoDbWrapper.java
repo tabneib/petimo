@@ -11,6 +11,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.tud.nhd.petimo.controller.ResponseCode;
+
 /**
  * Created by nhd on 28.08.17.
  */
@@ -118,18 +120,20 @@ public class PetimoDbWrapper {
      *
      * @param name
      * @param priority
-     * @return the row ID of the newly inserted row, -1 if an database error occurred, -2 if  the
-     * category already exists, -3 if the given name is invalid
+     * @return The corresponding response code
      */
-    public long insertCategory(String name, int priority){
-        if (checkCatExists(name))
-            return -2;
+    public ResponseCode insertCategory(String name, int priority){
         if (!checkName(name))
-            return -3;
+            return ResponseCode.INVALID_INPUT_STRING_NAME;
+        if (checkCatExists(name))
+            return ResponseCode.INVALID_CATEGORY;
         ContentValues values = new ContentValues();
         values.put(PetimoContract.Categories.COLUMN_NAME_NAME, name);
         values.put(PetimoContract.Categories.COLUMN_NAME_PRIORITY, priority);
-        return writableDb.insert(PetimoContract.Categories.TABLE_NAME, null, values);
+        if(writableDb.insert(PetimoContract.Categories.TABLE_NAME, null, values) == -1)
+            return ResponseCode.DB_ERROR;
+        else
+            return ResponseCode.OK;
     }
 
     /**
@@ -137,22 +141,24 @@ public class PetimoDbWrapper {
      * @param name
      * @param category
      * @param priority
-     * @return the row ID of the newly inserted row, -1 if a database error occurred, -2 if the
-     * category does not exist, -3 if the task already exists, or -4 if the name is invalid
+     * @return the corresponding response code
      */
-    public long insertTask(String name, String category, int priority){
-        if (!checkCatExists(category))
-            return -2;
-        if (checkTaskExists(name, category))
-            return -3;
+    public ResponseCode insertTask(String name, String category, int priority){
         if(!checkName(name))
-            return -4;
+            return ResponseCode.INVALID_INPUT_STRING_NAME;
+        if (!checkCatExists(category))
+            return ResponseCode.INVALID_CATEGORY;
+        if (checkTaskExists(name, category))
+            return ResponseCode.INVALID_TASK;
         else{
             ContentValues values = new ContentValues();
             values.put(PetimoContract.Tasks.COLUMN_NAME_NAME, name);
             values.put(PetimoContract.Tasks.COLUMN_NAME_CATEGORY, category);
             values.put(PetimoContract.Tasks.COLUMN_NAME_PRIORITY, priority);
-            return writableDb.insert(PetimoContract.Tasks.TABLE_NAME, null, values);
+            if(writableDb.insert(PetimoContract.Tasks.TABLE_NAME, null, values) == -1)
+                return ResponseCode.DB_ERROR;
+            else
+                return ResponseCode.OK;
         }
     }
 
@@ -166,15 +172,14 @@ public class PetimoDbWrapper {
      * @param date
      * @param weekDay
      * @param overNight
-     * @return the row ID of the newly inserted row,-3 if task does not exist,
-     * -2 if category does not exist, or -1 if an error occurred
+     * @return The corresponding response code
      */
-    public long insertMonitorBlock(String task, String category, long start, long end,
+    public ResponseCode insertMonitorBlock(String task, String category, long start, long end,
                                    long duration, int date, int weekDay, int overNight){
         if (!checkCatExists(category))
-            return -2;
+            return ResponseCode.INVALID_CATEGORY;
         if (task != null && !checkTaskExists(task, category))
-            return -3;
+            return ResponseCode.INVALID_TASK;
         ContentValues values = new ContentValues();
         values.put(PetimoContract.Monitor.COLUMN_NAME_TASK, task);
         values.put(PetimoContract.Monitor.COLUMN_NAME_CATEGORY, category);
@@ -184,7 +189,11 @@ public class PetimoDbWrapper {
         values.put(PetimoContract.Monitor.COLUMN_NAME_DATE, date);
         values.put(PetimoContract.Monitor.COLUMN_NAME_WEEKDAY, weekDay);
         values.put(PetimoContract.Monitor.COLUMN_NAME_OVERNIGHT, overNight);
-        return writableDb.insert(PetimoContract.Monitor.TABLE_NAME, null, values);
+        if (writableDb.insert(PetimoContract.Monitor.TABLE_NAME, null, values) == -1)
+            return ResponseCode.DB_ERROR;
+        else
+            return ResponseCode.OK;
+
     }
 
     //<---------------------------------------------------------------------------------------------
