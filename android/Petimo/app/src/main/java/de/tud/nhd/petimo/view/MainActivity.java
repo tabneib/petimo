@@ -1,18 +1,23 @@
 package de.tud.nhd.petimo.view;
 
+import android.net.Uri;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.widget.Button;
-
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.view.fragments.OffModeFragment;
+import de.tud.nhd.petimo.view.fragments.OnModeFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        OffModeFragment.OnFragmentInteractionListener {
 
-    public final String TAG = "MainActivity";
-    private Button buttonDemo;
-    private PetimoController controller;
+    final String TAG = "MainActivity";
+    PetimoController controller;
+    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+    private OffModeFragment offModeFragment = new OffModeFragment();
+    private OnModeFragment onModeFragment = new OnModeFragment();
 
 
     @Override
@@ -31,19 +36,11 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        // Choose the displaying mode on start up
         if (controller.isMonitoring())
-            displayOnMode();
+            displayOnMode(true);
         else
-            displayOffMode();
-        // Demo
-        /*final PetimoDbDemo demo = new PetimoDbDemo(this);
-        buttonDemo = (Button) findViewById(R.id.button_exec_demo);
-        buttonDemo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                demo.execute();
-            }
-        });*/
+            displayOffMode(true);
 
 
     }
@@ -51,16 +48,36 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Display the off mode (no ongoing live monitor)
      */
-    public void displayOffMode(){
-
-
+    public void displayOffMode(boolean isOnCreate){
+        if (isOnCreate){
+            fragmentTransaction.add(R.id.activity_main, offModeFragment);
+            fragmentTransaction.commit();
+        }
+        else{
+            fragmentTransaction.remove(onModeFragment);
+            fragmentTransaction.add(R.id.activity_main, offModeFragment);
+            fragmentTransaction.commit();
+        }
     }
 
     /**
      * Display the on mode (there is ongoing live monitor)
      */
-    public void displayOnMode(){
-
+    public void displayOnMode(boolean isOnCreate){
+        if (isOnCreate){
+            fragmentTransaction.add(R.id.activity_main, onModeFragment);
+            fragmentTransaction.commit();
+        }
+        else{
+            fragmentTransaction.remove(offModeFragment);
+            fragmentTransaction.add(R.id.activity_main, onModeFragment);
+            fragmentTransaction.commit();
+        }
     }
 
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        //do nothing
+    }
 }

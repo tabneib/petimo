@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="de.tud.nhd.petimo.view.fragments.OffModeFragment">
+
+
+    <TextView
+        android:text="@string/text_view_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="68dp"
+        android:id="@+id/textViewCat"
+        android:layout_marginLeft="8dp" />
+
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewCat"
+        android:layout_alignStart="@+id/textViewCat"
+        android:layout_marginTop="8dp"
+        android:id="@+id/spinnerCat"
+        android:entries="@array/spinner_default" />
+
+    <TextView
+        android:text="@string/text_view_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinnerCat"
+        android:layout_alignStart="@+id/textViewCat"
+        android:layout_marginTop="8dp"
+        android:id="@+id/textViewTask" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewTask"
+        android:layout_alignStart="@+id/textViewCat"
+        android:layout_marginTop="8dp"
+        android:entries="@array/spinner_default"
+        android:id="@+id/spinnerTask" />
+
+    <Button
+        android:text="@string/button_start_monitor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_alignTop="@+id/textViewCat"
+        android:layout_alignBottom="@+id/spinnerTask"
+        android:layout_alignParentRight="true"
+        android:id="@+id/buttonStart" />
+
+
+</RelativeLayout>

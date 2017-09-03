@@ -153,7 +153,29 @@ public class PetimoController {
             return this.dbWrapper.getDaysByRange((int) startDate, (int) endDate);
     }
 
+    /**
+     *
+     * @return
+     */
+    public List<String> getAllCatNames(){
+        return dbWrapper.getAllCatNames();
+    }
 
+    /**
+     *
+     * @return
+     */
+    public List<String> getAllTaskNames(){
+        return dbWrapper.getAllTaskName();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isDbReady(){
+        return dbWrapper.isReady();
+    }
     //<---------------------------------------------------------------------------------------------
     //  Core - GUI updating
     // -------------------------------------------------------------------------------------------->
