@@ -5,8 +5,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.view.asynctasks.WaitForDb;
 import de.tud.nhd.petimo.view.fragments.OffModeFragment;
 import de.tud.nhd.petimo.view.fragments.OnModeFragment;
 
@@ -41,9 +44,8 @@ public class MainActivity extends AppCompatActivity implements
             displayOnMode(true);
         else
             displayOffMode(true);
-
-
     }
+
 
     /**
      * Display the off mode (no ongoing live monitor)
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements
         if (isOnCreate){
             fragmentTransaction.add(R.id.activity_main, offModeFragment);
             fragmentTransaction.commit();
+            new WaitForDb(offModeFragment, controller).execute((Void) null);
         }
         else{
             fragmentTransaction.remove(onModeFragment);
@@ -80,4 +83,9 @@ public class MainActivity extends AppCompatActivity implements
     public void onFragmentInteraction(Uri uri) {
         //do nothing
     }
+
+
+    private void log(String msg){
+        Log.d(TAG, msg);
+   }
 }

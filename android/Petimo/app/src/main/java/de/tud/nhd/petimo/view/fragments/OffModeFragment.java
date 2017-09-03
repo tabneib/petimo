@@ -1,10 +1,9 @@
 package de.tud.nhd.petimo.view.fragments;
 
-import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +21,12 @@ import de.tud.nhd.petimo.controller.PetimoController;
  */
 public class OffModeFragment extends Fragment {
 
+    private final String TAG = "OffModeFragment";
     private OnFragmentInteractionListener mListener;
     Spinner catSpinner;
     Spinner taskSpinner;
     PetimoController controller;
+
 
     public OffModeFragment() {
         // Required empty public constructor
@@ -42,13 +43,16 @@ public class OffModeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        catSpinner = (Spinner) getView().findViewById(R.id.spinnerCat);
+        taskSpinner = (Spinner) getView().findViewById(R.id.spinnerTask);
         try {
             this.controller = PetimoController.getInstance();
         }
         catch (Exception e){
             e.printStackTrace();
         }
-        new WaitForDb().execute((Void) null);
+
+
     }
 
 
@@ -63,23 +67,30 @@ public class OffModeFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.d(TAG, "onDetach");
+
         mListener = null;
     }
 
+
+
     /**
-     *
+     * Update the contents of the spinners with data from the database
      */
-    private void setSpinners(){
-        catSpinner = (Spinner) getView().findViewById(R.id.spinnerCat);
-        taskSpinner = (Spinner) getView().findViewById(R.id.spinnerTask);
-        ArrayAdapter<String> catSpinnerAdapter = new ArrayAdapter<String>(this.getContext(),
-                R.layout.support_simple_spinner_dropdown_item, controller.getAllCatNames());
-        ArrayAdapter<String> taskSpinnerAdapter = new ArrayAdapter<String>(this.getContext(),
-                R.layout.support_simple_spinner_dropdown_item, controller.getAllTaskNames());
-        catSpinner.setAdapter(catSpinnerAdapter);
-        taskSpinner.setAdapter(taskSpinnerAdapter);
-        catSpinnerAdapter.notifyDataSetChanged();
-        taskSpinnerAdapter.notifyDataSetChanged();
+    public void setSpinners(){
+        getActivity().runOnUiThread(new Runnable(){
+            @Override
+            public void run(){
+                ArrayAdapter<String> catSpinnerAdapter = new ArrayAdapter<String>(getContext(),
+                        R.layout.support_simple_spinner_dropdown_item, controller.getAllCatNames());
+                ArrayAdapter<String> taskSpinnerAdapter = new ArrayAdapter<String>(getContext(),
+                        R.layout.support_simple_spinner_dropdown_item, controller.getAllTaskNames());
+                catSpinner.setAdapter(catSpinnerAdapter);
+                taskSpinner.setAdapter(taskSpinnerAdapter);
+                catSpinnerAdapter.notifyDataSetChanged();
+                taskSpinnerAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     /**
@@ -97,20 +108,6 @@ public class OffModeFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private class WaitForDb extends AsyncTask<Void, Void, Void>{
-        @Override
-        protected Void doInBackground(Void... params) {
-            while (!controller.isDbReady()){
-                try{
-                    Thread.sleep(20);
-                    System.out.println("is db ready?");
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-            setSpinners();
-            return null;
-        }
-    }
+
+
 }
