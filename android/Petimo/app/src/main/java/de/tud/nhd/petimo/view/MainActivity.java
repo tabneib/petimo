@@ -5,15 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.Toast;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.view.fragments.OffModeFragment;
-import de.tud.nhd.petimo.view.fragments.OnFragmentInteractionListener;
+import de.tud.nhd.petimo.view.fragments.OnMainActivityFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.OnModeFragment;
 
-public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements OnMainActivityFragmentInteractionListener {
 
     final String TAG = "MainActivity";
     PetimoController controller;
@@ -80,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
 
     @Override
-    public void onStartButtonClicked(String inputCat, String inputTask) {
+    public void onConfirmStartButtonClicked(String inputCat, String inputTask) {
         // Start the monitor
         controller.addBlockLive(inputCat, inputTask);
         // Switch to OnModeFragment
@@ -89,13 +88,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
 
     @Override
-    public void onStopButtonClicked() {
+    public void onConfirmStopButtonClicked() {
         // Stop the monitor
         controller.addBlockLive(null, null);
         // Switch to OnModeFragment
         displayOffMode(false);
-
-
     }
 
 

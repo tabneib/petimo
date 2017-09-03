@@ -3,8 +3,8 @@ package de.tud.nhd.petimo.view.fragments;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +14,17 @@ import android.widget.Spinner;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStartDialogFragment;
 
 /**
- * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
+ * {@link OnMainActivityFragmentInteractionListener} interface
  * to handle interaction events.
  */
 public class OffModeFragment extends Fragment {
 
     private final String TAG = "OffModeFragment";
-    private OnFragmentInteractionListener mListener;
+    private OnMainActivityFragmentInteractionListener mListener;
     Spinner catSpinner;
     Spinner taskSpinner;
     Button startButton;
@@ -45,10 +45,10 @@ public class OffModeFragment extends Fragment {
             e.printStackTrace();
         }
         try {
-            mListener = (OnFragmentInteractionListener) getActivity();
+            mListener = (OnMainActivityFragmentInteractionListener) getActivity();
         } catch (ClassCastException e) {
             throw new ClassCastException(getActivity().toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnMainActivityFragmentInteractionListener");
         }
     }
 
@@ -78,11 +78,15 @@ public class OffModeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if (mListener != null){
-                    mListener.onStartButtonClicked(catSpinner.getSelectedItem().toString(),
-                            taskSpinner.getSelectedItem().toString());
 
-                }
+                DialogFragment dialogFragment = new ConfirmStartDialogFragment();
+                Bundle args = new Bundle();
+                args.putString(ConfirmStartDialogFragment.CATEGORY,
+                        catSpinner.getSelectedItem().toString());
+                args.putString(ConfirmStartDialogFragment.TASK,
+                        taskSpinner.getSelectedItem().toString());
+                dialogFragment.setArguments(args);
+                dialogFragment.show(getFragmentManager(), null);
             }
         });
 

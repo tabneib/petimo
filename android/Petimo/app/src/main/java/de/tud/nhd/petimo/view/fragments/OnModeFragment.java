@@ -1,7 +1,6 @@
 package de.tud.nhd.petimo.view.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,20 +9,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStopDialogFragment;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
+ * {@link OnMainActivityFragmentInteractionListener} interface
  * to handle interaction events.
  */
 public class OnModeFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
+    private OnMainActivityFragmentInteractionListener mListener;
     private PetimoController controller;
 
     private TextView textViewMonitoring;
@@ -46,10 +44,10 @@ public class OnModeFragment extends Fragment {
             e.printStackTrace();
         }
         try {
-            mListener = (OnFragmentInteractionListener) getActivity();
+            mListener = (OnMainActivityFragmentInteractionListener) getActivity();
         } catch (ClassCastException e) {
             throw new ClassCastException(getActivity().toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnMainActivityFragmentInteractionListener");
         }
     }
 
@@ -77,14 +75,19 @@ public class OnModeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if(mListener != null){
-                    mListener.onStopButtonClicked();
-                }
+                new ConfirmStopDialogFragment().show(getFragmentManager(),null);
             }
         });
 
         // Update view
-        textViewMonitoring.setText("< " + textViewMonitoring.getText() + " >");
+        textViewMonitoring.setText(
+                "< " + getString(R.string.onmodefragment_text_view_monitoring) + " >");
+        String[] monitorInfo = controller.getLiveMonitorInfo();
+        textViewCatTask.setText(monitorInfo[0] + " / " + monitorInfo[1]);
+        textViewDate.setText(
+                getString(R.string.onmodefragment_text_view_date) + " " + monitorInfo[2]);
+        textViewStartTime.setText(
+                getString(R.string.onmodefragment_text_view_starttime) + " " + monitorInfo[3]);
     }
 
     @Override
@@ -92,4 +95,5 @@ public class OnModeFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
 }

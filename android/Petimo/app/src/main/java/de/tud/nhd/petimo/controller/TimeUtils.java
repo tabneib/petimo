@@ -10,7 +10,8 @@ import java.util.Date;
 
 public class TimeUtils {
 
-    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
     /**
      *
@@ -39,6 +40,15 @@ public class TimeUtils {
     }
 
     /**
+     *
+     * @param date
+     * @return
+     */
+    public static String getDateStrFromInt(int date){
+        // TODO
+        return Integer.toString(date);
+    }
+    /**
      * Return the time as milliseconds from the given string of 'HH:MM' format
      * @param time
      * @param date
@@ -48,6 +58,16 @@ public class TimeUtils {
         //TODO implement me
         return 0;
     }
+
+    /**
+     * Return the time string of 'HH:MM' format from the given long value
+     * @param time
+     * @return
+     */
+    public static String getTimeStrFromLong(long time){
+        return timeFormat.format(new Date(time));
+    }
+
     /**
      *
      * @param date

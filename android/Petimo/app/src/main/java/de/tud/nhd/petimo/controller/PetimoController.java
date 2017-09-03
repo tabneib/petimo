@@ -171,6 +171,20 @@ public class PetimoController {
     }
 
     /**
+     * Return a string of size 4 containing all information of the ongoing monitor.
+     * The information includes: Category, Task, Date, Start time
+     * @return  the string, or null if there is no ongoing monitor
+     */
+    public String[] getLiveMonitorInfo(){
+        if (!isMonitoring())
+            return null;
+        else
+            return new String[] {sharedPref.getMonitorCat(), sharedPref.getMonitorTask(),
+                    TimeUtils.getDateStrFromInt(sharedPref.getMonitorDate()),
+                    TimeUtils.getTimeStrFromLong(sharedPref.getMonitorStart())};
+    }
+
+    /**
      *
      * @return
      */

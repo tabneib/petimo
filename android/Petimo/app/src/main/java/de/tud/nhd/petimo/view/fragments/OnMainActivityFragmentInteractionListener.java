@@ -10,19 +10,17 @@ package de.tud.nhd.petimo.view.fragments;
  * to the activity and potentially other fragments contained in that
  * activity.
  */
-public interface OnFragmentInteractionListener {
+public interface OnMainActivityFragmentInteractionListener {
 
     /**
      * Call-back method which is called when the start monitor button is clicked
      * @param inputCat
      * @param inputTask
      */
-    void onStartButtonClicked(String inputCat, String inputTask);
+    void onConfirmStartButtonClicked(String inputCat, String inputTask);
 
     /**
-     * Call-back method which is called when the stop monitor button is clicked
-     * @param inputCat
-     * @param inputTask
+     * Call-back method which is called when the stop confirm button is clicked
      */
-    void onStopButtonClicked();
+    void onConfirmStopButtonClicked();
 }
