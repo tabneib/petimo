@@ -1,6 +1,7 @@
 package de.tud.nhd.petimo.view.fragments;
 
-import android.net.Uri;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import de.tud.nhd.petimo.R;
@@ -16,7 +18,7 @@ import de.tud.nhd.petimo.controller.PetimoController;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OffModeFragment.OnFragmentInteractionListener} interface
+ * {@link OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
 public class OffModeFragment extends Fragment {
@@ -25,6 +27,7 @@ public class OffModeFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     Spinner catSpinner;
     Spinner taskSpinner;
+    Button startButton;
     PetimoController controller;
 
 
@@ -32,6 +35,22 @@ public class OffModeFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            this.controller = PetimoController.getInstance();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        try {
+            mListener = (OnFragmentInteractionListener) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,44 +59,39 @@ public class OffModeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_off_mode, container, false);
     }
 
+
+
     @Override
     public void onStart() {
         super.onStart();
         catSpinner = (Spinner) getView().findViewById(R.id.spinnerCat);
         taskSpinner = (Spinner) getView().findViewById(R.id.spinnerTask);
-        try {
-            this.controller = PetimoController.getInstance();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
+        startButton = (Button) getView().findViewById(R.id.buttonStart);
 
     }
-
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.d(TAG, "onDetach");
+    public void onResume() {
+        super.onResume();
+        new WaitForDb().execute((Void) null);
+        startButton.setOnClickListener(new View.OnClickListener(){
 
-        mListener = null;
+            @Override
+            public void onClick(View v) {
+                if (mListener != null){
+                    mListener.onStartButtonClicked(catSpinner.getSelectedItem().toString(),
+                            taskSpinner.getSelectedItem().toString());
+
+                }
+            }
+        });
+
     }
-
-
 
     /**
      * Update the contents of the spinners with data from the database
      */
-    public void setSpinners(){
+    private void setSpinners(){
         getActivity().runOnUiThread(new Runnable(){
             @Override
             public void run(){
@@ -93,21 +107,24 @@ public class OffModeFragment extends Fragment {
         });
     }
 
+
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * Busy loop until the db wrapper is ready. This is only done when the app is starting up
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    private class WaitForDb extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            while (!controller.isDbReady()){
+                try{
+                    Thread.sleep(20);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            setSpinners();
+            return null;
+        }
     }
-
-
-
 }

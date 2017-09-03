@@ -3,14 +3,23 @@
     <string name="button_exec_demo">Execute Demo</string>
     <string name="preference_file_settings">de.tud.nhd.PREFERENCE_FILE_SETTINGS</string>
     <string name="preference_file_monitor">de.tud.nhd.PREFERENCE_FILE_MONITOR</string>
+    <string name="loading_text">loading..</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="text_view_category">Category:</string>
-    <string name="text_view_task">Task:</string>
-    <string name="button_start_monitor">Start Monitor</string>
-    <string name="Text_view_recent_monitors">Recent monitors:</string>
+    <!-- OffModeFragment -->
+    <string name="offmodefragment_text_view_category">Category:</string>
+    <string name="offmodefragment_text_view_task">Task:</string>
+    <string name="offmodefragment_button_startmonitor">Start Monitor</string>
+    <string name="offmodefragment_text_view_recentmonitors">Recent monitors:</string>
     <string-array name ="spinner_default">
         <item>No data</item>
     </string-array>
+
+    <!-- OnModeFragment -->
+    <string name="onmodefragment_text_view_monitoring">Monitoring</string>
+    <string name="onmodefragment_text_view_date">Date:</string>
+    <string name="onmodefragment_text_view_starttime">Start time:</string>
+    <string name="onmodefragment_button_stopmonitor">Stop Monitor</string>
+
+
+
 </resources>

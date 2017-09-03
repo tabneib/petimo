@@ -126,6 +126,7 @@ public class PetimoController {
             long start = sharedPref.getMonitorStart();
             long end = current.getTime();
             int date = sharedPref.getMonitorDate();
+            sharedPref.clearLiveMonitor();
             return this.dbWrapper.insertMonitorBlock(
                     sharedPref.getMonitorTask(), sharedPref.getMonitorCat(),
                     sharedPref.getMonitorStart(), end, end - start,

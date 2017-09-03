@@ -1,24 +1,23 @@
 package de.tud.nhd.petimo.view;
 
-import android.net.Uri;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.Toast;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.view.asynctasks.WaitForDb;
 import de.tud.nhd.petimo.view.fragments.OffModeFragment;
+import de.tud.nhd.petimo.view.fragments.OnFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.OnModeFragment;
 
-public class MainActivity extends AppCompatActivity implements
-        OffModeFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 
     final String TAG = "MainActivity";
     PetimoController controller;
-    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+    FragmentTransaction fragmentTransaction;
     private OffModeFragment offModeFragment = new OffModeFragment();
     private OnModeFragment onModeFragment = new OnModeFragment();
 
@@ -51,10 +50,10 @@ public class MainActivity extends AppCompatActivity implements
      * Display the off mode (no ongoing live monitor)
      */
     public void displayOffMode(boolean isOnCreate){
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (isOnCreate){
             fragmentTransaction.add(R.id.activity_main, offModeFragment);
             fragmentTransaction.commit();
-            new WaitForDb(offModeFragment, controller).execute((Void) null);
         }
         else{
             fragmentTransaction.remove(onModeFragment);
@@ -67,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements
      * Display the on mode (there is ongoing live monitor)
      */
     public void displayOnMode(boolean isOnCreate){
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (isOnCreate){
             fragmentTransaction.add(R.id.activity_main, onModeFragment);
             fragmentTransaction.commit();
@@ -80,8 +80,22 @@ public class MainActivity extends AppCompatActivity implements
 
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-        //do nothing
+    public void onStartButtonClicked(String inputCat, String inputTask) {
+        // Start the monitor
+        controller.addBlockLive(inputCat, inputTask);
+        // Switch to OnModeFragment
+        displayOnMode(false);
+
+    }
+
+    @Override
+    public void onStopButtonClicked() {
+        // Stop the monitor
+        controller.addBlockLive(null, null);
+        // Switch to OnModeFragment
+        displayOffMode(false);
+
+
     }
 
 

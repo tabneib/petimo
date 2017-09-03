@@ -83,6 +83,7 @@ public class PetimoSharedPref {
         monitorEditor.putString(MONITOR_LIVE_TASK, task);
         monitorEditor.putInt(MONITOR_LIVE_DATE, date);
         monitorEditor.putLong(MONITOR_LIVE_START, start);
+        monitorEditor.apply();
     }
 
     /**
@@ -93,6 +94,7 @@ public class PetimoSharedPref {
         monitorEditor.remove(MONITOR_LIVE_TASK);
         monitorEditor.remove(MONITOR_LIVE_DATE);
         monitorEditor.remove(MONITOR_LIVE_START);
+        monitorEditor.apply();
     }
 
     // Read
@@ -134,7 +136,7 @@ public class PetimoSharedPref {
      * @return true if there is an ongoing live monitor, false otherwise
      */
     public boolean isMonitoring(){
-        return !monitorPref.getString(MONITOR_LIVE_START, "NONE").equals("NONE");
+        return !(monitorPref.getLong(MONITOR_LIVE_START, -1) == -1);
     }
 
 
