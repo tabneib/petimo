@@ -10,17 +10,18 @@ import de.tud.nhd.petimo.controller.PetimoController;
 public class MainActivity extends AppCompatActivity {
 
     final String TAG = "MainActivity";
+    Toolbar toolBar;
     PetimoController controller;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolBar = (Toolbar) findViewById(R.id.activity_main_toolbar);
+        toolBar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolBar);
 
+        // Initialize the controller
         try {
             PetimoController.initialize(this);
             this.controller = PetimoController.getInstance();
@@ -28,8 +29,13 @@ public class MainActivity extends AppCompatActivity {
         catch (Exception e){
             e.printStackTrace();
         }
+    }
 
-        // Choose the displaying mode on start up
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Choose the displaying mode
         if (controller.isMonitoring())
             displayOnMode();
         else

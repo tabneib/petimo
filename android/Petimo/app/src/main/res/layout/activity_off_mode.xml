@@ -22,8 +22,7 @@
         android:layout_height="match_parent"
         android:id="@+id/activity_off_mode_fragment_container"
         android:layout_below="@+id/activity_off_mode_toolbar"
-        android:layout_marginTop="8dp"
-        ></FrameLayout>
+        android:layout_marginTop="8dp" />
 
 
 </RelativeLayout>
