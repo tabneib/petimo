@@ -5,9 +5,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.controller.ResponseCode;
 import de.tud.nhd.petimo.view.fragments.OnMainActivityFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.OnModeFragment;
 
@@ -47,9 +49,10 @@ public class OnModeActivity extends AppCompatActivity
     @Override
     public void onConfirmStopButtonClicked() {
         // Stop the monitor
-        controller.addBlockLive(null, null);
+        ResponseCode resCode = controller.addBlockLive(null, null);
+        Log.d(TAG, resCode.toString());
         // Switch to OffModeActivity
-        Intent intent = new Intent(this, OffModeActivity.class);
+        Intent intent = new Intent(this, MonitorResultActivity.class);
         startActivity(intent);
     }
 }

@@ -6,6 +6,7 @@
     <string name="loading_text">loading..</string>
     <string name="confirm_yes">Yes</string>
     <string name="confirm_no">No</string>
+    <string name="confirm_ok">OK</string>
 
     <!-- OffModeFragment -->
     <string name="offmodefragment_text_view_category">Category:</string>
@@ -29,5 +30,8 @@
     <string name="confirmstartdialog_message">To be monitored</string>
     <string name="confirmstartdialog_yes">Start</string>
     <string name="confirmstartdialog_no">Cancel</string>
+
+    <!-- MonitorResultActivity -->
+    <string name="MonitorResultActivity"> Back </string>
 
 </resources>

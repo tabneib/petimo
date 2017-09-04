@@ -1,5 +1,7 @@
 package de.tud.nhd.petimo.controller;
 
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,6 +12,7 @@ import java.util.Date;
 
 public class TimeUtils {
 
+    private static final String TAG = "TimeUtils";
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
     private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
@@ -48,13 +51,23 @@ public class TimeUtils {
         // TODO
         return Integer.toString(date);
     }
+
+    /**
+     * Get the integer that represents today date
+     * TODO also consider the overNightThreshold ;)
+     */
+    public static int getTodayDate(){
+        int date = Integer.parseInt(dateFormat.format(new Date()));
+        return date;
+    }
+
     /**
      * Return the time as milliseconds from the given string of 'HH:MM' format
      * @param time
      * @param date
      * @return
      */
-    public static long getTimeFromStr(String time, String date){
+    public static long getMsTimeFromStr(String time, String date){
         //TODO implement me
         return 0;
     }
@@ -64,10 +77,20 @@ public class TimeUtils {
      * @param time
      * @return
      */
-    public static String getTimeStrFromLong(long time){
+    public static String getDayTimeFromMsTime(long time){
         return timeFormat.format(new Date(time));
     }
 
+    /**
+     * Return the duration of 'HH:MM' format from the given duration in milliseconds
+     * @param time
+     * @return
+     */
+    public static String getTimeFromMs(long time){
+        int hours = (int) time/360000;
+        int minutes = (int) (time - hours*360000)/6000;
+        return hours + ":" + minutes;
+    }
     /**
      *
      * @param date
@@ -77,6 +100,4 @@ public class TimeUtils {
         // TODO implement me. For now it's always sunday :)
         return 8;
     }
-
-
 }

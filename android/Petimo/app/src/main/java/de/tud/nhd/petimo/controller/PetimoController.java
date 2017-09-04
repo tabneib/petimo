@@ -7,6 +7,7 @@ import android.util.Log;
 import java.util.Date;
 import java.util.List;
 
+import de.tud.nhd.petimo.model.MonitorBlock;
 import de.tud.nhd.petimo.model.MonitorDay;
 import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
@@ -91,10 +92,10 @@ public class PetimoController {
                                          String inputStart, String inputEnd, String inputDate){
         if (TimeUtils.getDateFromStr(inputDate) == -1)
             return ResponseCode.INVALID_INPUT_STRING_DATE;
-        long start = TimeUtils.getTimeFromStr(inputStart, inputDate);
+        long start = TimeUtils.getMsTimeFromStr(inputStart, inputDate);
         if (start == -1)
             return ResponseCode.INVALID_INPUT_STRING_TIME;
-        long end = TimeUtils.getTimeFromStr(inputEnd, inputDate);
+        long end = TimeUtils.getMsTimeFromStr(inputEnd, inputDate);
         if (end == -1)
             return ResponseCode.INVALID_INPUT_STRING_TIME;
         if (end <= start)
@@ -126,12 +127,11 @@ public class PetimoController {
             long start = sharedPref.getMonitorStart();
             long end = current.getTime();
             int date = sharedPref.getMonitorDate();
+            String cat = sharedPref.getMonitorCat();
+            String task = sharedPref.getMonitorTask();
             sharedPref.clearLiveMonitor();
-            return this.dbWrapper.insertMonitorBlock(
-                    sharedPref.getMonitorTask(), sharedPref.getMonitorCat(),
-                    sharedPref.getMonitorStart(), end, end - start,
-                    sharedPref.getMonitorDate(), TimeUtils.getWeekDay(date),
-                    isOverNight(date, start, end));
+            return this.dbWrapper.insertMonitorBlock(task, cat,start, end, end - start,
+                    date, TimeUtils.getWeekDay(date), isOverNight(date, start, end));
         }
     }
 
@@ -152,6 +152,41 @@ public class PetimoController {
             return null;
         else
             return this.dbWrapper.getDaysByRange((int) startDate, (int) endDate);
+    }
+
+    /**
+     *
+     * @param startDate
+     * @param endDate
+     * @return the list of all satisfied monitor days
+     */
+    public List<MonitorDay> getDaysFromRange(int startDate, int endDate){
+        return this.dbWrapper.getDaysByRange(startDate, endDate);
+    }
+
+    /**
+     *
+     * @param inputStartDate
+     * @param inputEndDate
+     * @return the list of all satisfied monitor blocks, or null if the inputs are invalid
+     */
+    public List<MonitorBlock> getBlocksFromRange(String inputStartDate, String inputEndDate){
+        long startDate = TimeUtils.getDateFromStr(inputStartDate);
+        long endDate = TimeUtils.getDateFromStr(inputEndDate);
+        if (startDate == -1 || endDate == -1)
+            return null;
+        else
+            return this.dbWrapper.getBlocksByRange((int) startDate, (int) endDate);
+    }
+
+    /**
+     *
+     * @param startDate
+     * @param endDate
+     * @return the list of all satisfied monitor blocks
+     */
+    public List<MonitorBlock> getBlocksFromRange(int startDate, int endDate){
+        return this.dbWrapper.getBlocksByRange(startDate, endDate);
     }
 
     /**
@@ -181,7 +216,7 @@ public class PetimoController {
         else
             return new String[] {sharedPref.getMonitorCat(), sharedPref.getMonitorTask(),
                     TimeUtils.getDateStrFromInt(sharedPref.getMonitorDate()),
-                    TimeUtils.getTimeStrFromLong(sharedPref.getMonitorStart())};
+                    TimeUtils.getDayTimeFromMsTime(sharedPref.getMonitorStart())};
     }
 
     /**
@@ -231,7 +266,7 @@ public class PetimoController {
      */
     public int isOverNight(String date, String start, String end){
         return isOverNight(Integer.parseInt(date),
-                TimeUtils.getTimeFromStr(start, date), TimeUtils.getTimeFromStr(end,date));
+                TimeUtils.getMsTimeFromStr(start, date), TimeUtils.getMsTimeFromStr(end,date));
     }
 
     /**

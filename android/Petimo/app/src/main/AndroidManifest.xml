@@ -16,7 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.activities.DemoActivity" />
-        <activity android:name=".view.activities.ShowResultActivity" />
+        <activity android:name=".view.activities.MonitorResultActivity" />
         <activity android:name=".view.activities.OnModeActivity" />
         <activity android:name=".view.activities.OffModeActivity"></activity>
     </application>

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tud.nhd.petimo.controller.ResponseCode;
+import de.tud.nhd.petimo.controller.TimeUtils;
 
 /**
  * Created by nhd on 28.08.17.
@@ -176,10 +177,15 @@ public class PetimoDbWrapper {
      */
     public ResponseCode insertMonitorBlock(String task, String category, long start, long end,
                                    long duration, int date, int weekDay, int overNight){
-        if (!checkCatExists(category))
+        if (!checkCatExists(category)) {
+            Log.d(TAG, "Invalid category: " + category);
             return ResponseCode.INVALID_CATEGORY;
-        if (task != null && !checkTaskExists(task, category))
+        }
+        if (task != null && !checkTaskExists(task, category)){
+            Log.d(TAG, "Invalid task: " + task);
             return ResponseCode.INVALID_TASK;
+        }
+
         ContentValues values = new ContentValues();
         values.put(PetimoContract.Monitor.COLUMN_NAME_TASK, task);
         values.put(PetimoContract.Monitor.COLUMN_NAME_CATEGORY, category);
@@ -191,8 +197,12 @@ public class PetimoDbWrapper {
         values.put(PetimoContract.Monitor.COLUMN_NAME_OVERNIGHT, overNight);
         if (writableDb.insert(PetimoContract.Monitor.TABLE_NAME, null, values) == -1)
             return ResponseCode.DB_ERROR;
-        else
+        else {
+            Log.d(TAG, " Inserted Block: \nDate: " + date + "\nstart: " + start + "\nend: " +
+                    end + "\ncat: " + category + "\ntask: " + task + "\nduration: " +
+                    TimeUtils.getTimeFromMs(duration));
             return ResponseCode.OK;
+        }
 
     }
 
@@ -231,7 +241,7 @@ public class PetimoDbWrapper {
     public List<MonitorDay> getDaysByRange(int startDate, int endDate){
         String selection = PetimoContract.Monitor.COLUMN_NAME_DATE + " BETWEEN ? AND ?";
         String[] selectionArgs = {Integer.toString(startDate), Integer.toString(endDate)};
-        String sortOrder = PetimoContract.Monitor.COLUMN_NAME_DATE + " ASC";
+        String sortOrder = PetimoContract.Monitor.COLUMN_NAME_DATE + " DESC";
         Cursor cursor = readableDb.query(PetimoContract.Monitor.TABLE_NAME,
                 PetimoContract.Monitor.getAllColumns(), selection,
                 selectionArgs, null, null, sortOrder);
@@ -259,6 +269,32 @@ public class PetimoDbWrapper {
         }
         cursor.close();
         return days;
+    }
+
+    /**
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public List<MonitorBlock> getBlocksByRange(int startDate, int endDate){
+        String selection = PetimoContract.Monitor.COLUMN_NAME_DATE + " BETWEEN ? AND ?";
+        String[] selectionArgs = {Integer.toString(startDate), Integer.toString(endDate)};
+        String sortOrder = PetimoContract.Monitor.COLUMN_NAME_DATE + " DESC , " +
+                            PetimoContract.Monitor.COLUMN_NAME_START + " DESC";
+        Cursor cursor = readableDb.query(PetimoContract.Monitor.TABLE_NAME,
+                PetimoContract.Monitor.getAllColumns(), selection,
+                selectionArgs, null, null, sortOrder);
+
+        Log.d(TAG, "Is about to generate block list");
+        List<MonitorBlock> blocks = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            blocks.add(getBlockFromCursor(cursor));
+        }
+
+        cursor.close();
+        Log.d(TAG, "BlockList size ==================> " + blocks.size());
+        return blocks;
     }
 
     /**

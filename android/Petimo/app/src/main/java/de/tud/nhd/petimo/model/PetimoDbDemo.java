@@ -50,6 +50,8 @@ public class PetimoDbDemo {
         cats.add(cat2);
         tasks.add(task1);
         tasks.add(task2);
+        tasks.add(task3);
+        tasks.add(task4);
         blocks.add(block1);
         blocks.add(block2);
         blocks.add(block3);
