@@ -8,15 +8,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".view.MainActivity">
+        <activity android:name=".view.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.DemoActivity" />
-        <activity android:name=".view.ShowResultActivity"></activity>
+        <activity android:name=".view.activities.DemoActivity" />
+        <activity android:name=".view.activities.ShowResultActivity" />
+        <activity android:name=".view.activities.OnModeActivity" />
+        <activity android:name=".view.activities.OffModeActivity"></activity>
     </application>
 
 </manifest>
