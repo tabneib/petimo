@@ -6,6 +6,10 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.tud.nhd.petimo.controller.exception.DbErrorException;
+import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
+import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
+
 /**
  * Created by nhd on 29.08.17.
  */
@@ -78,18 +82,40 @@ public class PetimoDbDemo {
             Log.d(TAG, "Creating tables: done");
             Log.d(TAG, "Inserting Categories");
             for (String[] cat: cats)
-                dbWrapper.insertCategory(cat[0], Integer.parseInt(cat[1]));
+                try {
+                    dbWrapper.insertCategory(cat[0], Integer.parseInt(cat[1]));
+                } catch (DbErrorException e) {
+                    e.printStackTrace();
+                } catch (InvalidInputNameException e) {
+                    e.printStackTrace();
+                } catch (InvalidCategoryException e) {
+                    e.printStackTrace();
+                }
             Log.d(TAG, "Inserting Categories: done");
             Log.d(TAG, "Inserting Tasks");
             for (String[] task: tasks)
-                dbWrapper.insertTask(task[0], task[1], Integer.parseInt(task[2]));
+                try {
+                    dbWrapper.insertTask(task[0], task[1], Integer.parseInt(task[2]));
+                } catch (DbErrorException e) {
+                    e.printStackTrace();
+                } catch (InvalidInputNameException e) {
+                    e.printStackTrace();
+                } catch (InvalidCategoryException e) {
+                    e.printStackTrace();
+                }
             Log.d(TAG, "Inserting Tasks: done");
             Log.d(TAG, "Inserting Monitor Blocks");
             for (String[] block: blocks)
-                dbWrapper.insertMonitorBlock(block[0], block[1], Integer.parseInt(block[2]),
-                        Integer.parseInt(block[3]), Integer.parseInt(block[4]),
-                        Integer.parseInt(block[5]), Integer.parseInt(block[6]),
-                        Integer.parseInt(block[7]));
+                try {
+                    dbWrapper.insertMonitorBlock(block[0], block[1], Integer.parseInt(block[2]),
+                            Integer.parseInt(block[3]), Integer.parseInt(block[4]),
+                            Integer.parseInt(block[5]), Integer.parseInt(block[6]),
+                            Integer.parseInt(block[7]));
+                } catch (DbErrorException e) {
+                    e.printStackTrace();
+                } catch (InvalidCategoryException e) {
+                    e.printStackTrace();
+                }
             Log.d(TAG, "Inserting Monitor Blocks: done");
 
             Log.d(TAG, "Fetching day");

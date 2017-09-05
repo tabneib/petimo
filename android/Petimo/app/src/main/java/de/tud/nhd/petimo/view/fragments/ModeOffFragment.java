@@ -82,10 +82,12 @@ public class ModeOffFragment extends Fragment {
 
                 DialogFragment dialogFragment = new ConfirmStartDialogFragment();
                 Bundle args = new Bundle();
-                args.putString(ConfirmStartDialogFragment.CATEGORY,
-                        catSpinner.getSelectedItem().toString());
-                args.putString(ConfirmStartDialogFragment.TASK,
-                        taskSpinner.getSelectedItem().toString());
+                if (catSpinner.getSelectedItem() != null)
+                    args.putString(ConfirmStartDialogFragment.CATEGORY,
+                            catSpinner.getSelectedItem().toString());
+                if (taskSpinner.getSelectedItem() != null)
+                    args.putString(ConfirmStartDialogFragment.TASK,
+                            taskSpinner.getSelectedItem().toString());
                 dialogFragment.setArguments(args);
                 dialogFragment.show(getFragmentManager(), null);
             }
