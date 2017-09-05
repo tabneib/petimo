@@ -8,17 +8,17 @@ import android.support.v7.widget.Toolbar;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.view.fragments.OffModeFragment;
-import de.tud.nhd.petimo.view.fragments.OnMainActivityFragmentInteractionListener;
+import de.tud.nhd.petimo.view.fragments.ModeOffFragment;
+import de.tud.nhd.petimo.view.fragments.OnModeFragmentInteractionListener;
 
 public class OffModeActivity extends AppCompatActivity
-        implements OnMainActivityFragmentInteractionListener {
+        implements OnModeFragmentInteractionListener {
 
     final String TAG = "OffModeActivity";
     PetimoController controller;
     FragmentTransaction fragmentTransaction;
     Toolbar toolBar;
-    private OffModeFragment offModeFragment = new OffModeFragment();
+    private ModeOffFragment modeOffFragment = new ModeOffFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +35,9 @@ public class OffModeActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        // Fill the view with the OffModeFragment
+        // Fill the view with the ModeOffFragment
         fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.activity_off_mode_fragment_container, offModeFragment);
+        fragmentTransaction.add(R.id.activity_off_mode_fragment_container, modeOffFragment);
         fragmentTransaction.commit();
     }
 

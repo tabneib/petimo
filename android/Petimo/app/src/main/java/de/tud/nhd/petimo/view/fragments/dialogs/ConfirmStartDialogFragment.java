@@ -9,11 +9,11 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.view.fragments.OnMainActivityFragmentInteractionListener;
+import de.tud.nhd.petimo.view.fragments.OnModeFragmentInteractionListener;
 
 public class ConfirmStartDialogFragment extends DialogFragment {
 
-    OnMainActivityFragmentInteractionListener mListener;
+    OnModeFragmentInteractionListener mListener;
     public static final String CATEGORY = "category";
     public static final String TASK = "task";
 
@@ -23,10 +23,10 @@ public class ConfirmStartDialogFragment extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mListener = (OnMainActivityFragmentInteractionListener) getActivity();
+            mListener = (OnModeFragmentInteractionListener) getActivity();
         } catch (ClassCastException e) {
             throw new ClassCastException(getActivity().toString()
-                    + " must implement OnMainActivityFragmentInteractionListener");
+                    + " must implement OnModeFragmentInteractionListener");
         }
     }
 

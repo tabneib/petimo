@@ -8,7 +8,7 @@
     <string name="confirm_no">No</string>
     <string name="confirm_ok">OK</string>
 
-    <!-- OffModeFragment -->
+    <!-- ModeOffFragment -->
     <string name="offmodefragment_text_view_category">Category:</string>
     <string name="offmodefragment_text_view_task">Task:</string>
     <string name="offmodefragment_button_startmonitor">Start Monitor</string>
@@ -17,7 +17,7 @@
         <item>No data</item>
     </string-array>
 
-    <!-- OnModeFragment -->
+    <!-- ModeOnFragment -->
     <string name="onmodefragment_text_view_monitoring">Monitoring</string>
     <string name="onmodefragment_text_view_date">Date:</string>
     <string name="onmodefragment_text_view_starttime">Start time:</string>

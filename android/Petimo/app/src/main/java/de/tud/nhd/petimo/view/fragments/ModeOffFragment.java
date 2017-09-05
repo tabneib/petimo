@@ -5,10 +5,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -19,20 +19,20 @@ import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStartDialogFragment;
 
 /**
  * Activities that contain this fragment must implement the
- * {@link OnMainActivityFragmentInteractionListener} interface
+ * {@link OnModeFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class OffModeFragment extends Fragment {
+public class ModeOffFragment extends Fragment {
 
-    private final String TAG = "OffModeFragment";
-    private OnMainActivityFragmentInteractionListener mListener;
+    private final String TAG = "ModeOffFragment";
+    private OnModeFragmentInteractionListener mListener;
     Spinner catSpinner;
     Spinner taskSpinner;
     Button startButton;
     PetimoController controller;
 
 
-    public OffModeFragment() {
+    public ModeOffFragment() {
         // Required empty public constructor
     }
 
@@ -46,10 +46,10 @@ public class OffModeFragment extends Fragment {
             e.printStackTrace();
         }
         try {
-            mListener = (OnMainActivityFragmentInteractionListener) getActivity();
+            mListener = (OnModeFragmentInteractionListener) getActivity();
         } catch (ClassCastException e) {
             throw new ClassCastException(getActivity().toString()
-                    + " must implement OnMainActivityFragmentInteractionListener");
+                    + " must implement OnModeFragmentInteractionListener");
         }
     }
 
@@ -91,22 +91,48 @@ public class OffModeFragment extends Fragment {
             }
         });
 
+        catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                updateTaskSpinner();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 
     /**
-     * Update the contents of the spinners with data from the database
+     * Initialize the contents of the category spinner with data from the database
      */
-    private void setSpinners(){
+    private void initCatSpinner(){
         getActivity().runOnUiThread(new Runnable(){
             @Override
             public void run(){
                 ArrayAdapter<String> catSpinnerAdapter = new ArrayAdapter<String>(getContext(),
                         R.layout.support_simple_spinner_dropdown_item, controller.getAllCatNames());
-                ArrayAdapter<String> taskSpinnerAdapter = new ArrayAdapter<String>(getContext(),
-                        R.layout.support_simple_spinner_dropdown_item, controller.getAllTaskNames());
+
                 catSpinner.setAdapter(catSpinnerAdapter);
-                taskSpinner.setAdapter(taskSpinnerAdapter);
                 catSpinnerAdapter.notifyDataSetChanged();
+
+            }
+        });
+    }
+
+    /**
+     * Update the contents of the task spinner according to the selected item of the cat spinner
+     */
+    private void updateTaskSpinner(){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayAdapter<String> taskSpinnerAdapter = new ArrayAdapter<String>(getContext(),
+                        R.layout.support_simple_spinner_dropdown_item,
+                        controller.getTaskNameByCat(catSpinner.getSelectedItem().toString()));
+                taskSpinner.setAdapter(taskSpinnerAdapter);
                 taskSpinnerAdapter.notifyDataSetChanged();
             }
         });
@@ -128,7 +154,7 @@ public class OffModeFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-            setSpinners();
+            initCatSpinner();
             return null;
         }
     }

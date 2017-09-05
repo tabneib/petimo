@@ -16,12 +16,12 @@ import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStopDialogFragment;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OnMainActivityFragmentInteractionListener} interface
+ * {@link OnModeFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class OnModeFragment extends Fragment {
+public class ModeOnFragment extends Fragment {
 
-    private OnMainActivityFragmentInteractionListener mListener;
+    private OnModeFragmentInteractionListener mListener;
     private PetimoController controller;
 
     private TextView textViewMonitoring;
@@ -30,7 +30,7 @@ public class OnModeFragment extends Fragment {
     private TextView textViewStartTime;
     private Button buttonStop;
 
-    public OnModeFragment() {
+    public ModeOnFragment() {
         // Required empty public constructor
     }
 
@@ -44,10 +44,10 @@ public class OnModeFragment extends Fragment {
             e.printStackTrace();
         }
         try {
-            mListener = (OnMainActivityFragmentInteractionListener) getActivity();
+            mListener = (OnModeFragmentInteractionListener) getActivity();
         } catch (ClassCastException e) {
             throw new ClassCastException(getActivity().toString()
-                    + " must implement OnMainActivityFragmentInteractionListener");
+                    + " must implement OnModeFragmentInteractionListener");
         }
     }
 

@@ -10,17 +10,17 @@ import android.util.Log;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.controller.ResponseCode;
-import de.tud.nhd.petimo.view.fragments.OnMainActivityFragmentInteractionListener;
-import de.tud.nhd.petimo.view.fragments.OnModeFragment;
+import de.tud.nhd.petimo.view.fragments.ModeOnFragment;
+import de.tud.nhd.petimo.view.fragments.OnModeFragmentInteractionListener;
 
 public class OnModeActivity extends AppCompatActivity
-    implements OnMainActivityFragmentInteractionListener {
+    implements OnModeFragmentInteractionListener {
 
     final String TAG = "OnModeActivity";
     PetimoController controller;
     FragmentTransaction fragmentTransaction;
     Toolbar toolBar;
-    private OnModeFragment onModeFragment = new OnModeFragment();
+    private ModeOnFragment modeOnFragment = new ModeOnFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +35,9 @@ public class OnModeActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        // Fill the view with the OnModeFragment
+        // Fill the view with the ModeOnFragment
         fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.activity_on_mode_fragment_container, onModeFragment);
+        fragmentTransaction.add(R.id.activity_on_mode_fragment_container, modeOnFragment);
         fragmentTransaction.commit();
     }
 

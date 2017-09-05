@@ -10,7 +10,7 @@ package de.tud.nhd.petimo.view.fragments;
  * to the activity and potentially other fragments contained in that
  * activity.
  */
-public interface OnMainActivityFragmentInteractionListener {
+public interface OnModeFragmentInteractionListener {
 
     /**
      * Call-back method which is called when the start monitor button is clicked

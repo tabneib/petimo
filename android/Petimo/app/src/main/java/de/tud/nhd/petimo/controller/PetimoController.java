@@ -181,6 +181,14 @@ public class PetimoController {
 
     /**
      *
+     * @param catName
+     * @return
+     */
+    public List<String> getTaskNameByCat(String catName){
+        return dbWrapper.getTaskNamesByCat(catName);
+    }
+    /**
+     *
      * @param startDate
      * @param endDate
      * @return the list of all satisfied monitor blocks
