@@ -1,6 +1,5 @@
 package de.tud.nhd.petimo.view.activities;
 
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
@@ -50,12 +49,14 @@ public class MainActivity extends AppCompatActivity implements OnModeFragmentInt
 
         // Set the action bar
         toolBar = (Toolbar) findViewById(R.id.activity_main_toolbar);
+        toolBar.setNavigationIcon(R.drawable.ic_drawer);
         setSupportActionBar(toolBar);
 
         modeOffFragment = new ModeOffFragment();
         modeOnFragment = new ModeOnFragment();
 
         title = drawerTitle = getTitle();
+        Log.d(TAG, "Title ======> " + title);
         titleList = getResources().getStringArray(R.array.navigation_titles);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -70,14 +71,14 @@ public class MainActivity extends AppCompatActivity implements OnModeFragmentInt
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getActionBar().setTitle(drawerTitle);
+                toolBar.setTitle(drawerTitle);
                 invalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                getActionBar().setTitle(title);
+                toolBar.setTitle(title);
                 invalidateOptionsMenu();
             }
         };
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements OnModeFragmentInt
         // Set the drawer toggle as the DrawerListener
         drawerLayout.addDrawerListener(drawerToggle);
 
+       // toolBar.
         //toolBar.setDisplayHomeAsUpEnabled(true);
         //toolBar.setHomeButtonEnabled(true);
 
@@ -247,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements OnModeFragmentInt
 
         public void setTitle(CharSequence title) {
             CharSequence mTitle = title;
-            getActionBar().setTitle(mTitle);
+            toolBar.setTitle(mTitle);
         }
     }
 
