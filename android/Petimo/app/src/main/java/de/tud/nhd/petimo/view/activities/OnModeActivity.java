@@ -10,6 +10,8 @@ import android.util.Log;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.controller.ResponseCode;
+import de.tud.nhd.petimo.controller.exception.DbErrorException;
+import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.view.fragments.ModeOnFragment;
 import de.tud.nhd.petimo.view.fragments.OnModeFragmentInteractionListener;
 
@@ -49,7 +51,14 @@ public class OnModeActivity extends AppCompatActivity
     @Override
     public void onConfirmStopButtonClicked() {
         // Stop the monitor
-        ResponseCode resCode = controller.addBlockLive(null, null);
+        ResponseCode resCode = null;
+        try {
+            resCode = controller.addBlockLive(null, null);
+        } catch (DbErrorException e) {
+            // TODO
+        } catch (InvalidCategoryException e) {
+            // TODO
+        }
         Log.d(TAG, resCode.toString());
         // Switch to OffModeActivity
         Intent intent = new Intent(this, MonitorResultActivity.class);

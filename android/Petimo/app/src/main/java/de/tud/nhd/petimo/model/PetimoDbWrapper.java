@@ -13,6 +13,9 @@ import java.util.List;
 
 import de.tud.nhd.petimo.controller.ResponseCode;
 import de.tud.nhd.petimo.controller.TimeUtils;
+import de.tud.nhd.petimo.controller.exception.DbErrorException;
+import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
+import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
 
 /**
  * Created by nhd on 28.08.17.
@@ -123,16 +126,18 @@ public class PetimoDbWrapper {
      * @param priority
      * @return The corresponding response code
      */
-    public ResponseCode insertCategory(String name, int priority){
+    public ResponseCode insertCategory(String name, int priority)
+            throws DbErrorException, InvalidInputNameException, InvalidCategoryException {
         if (!checkName(name))
-            return ResponseCode.INVALID_INPUT_STRING_NAME;
+            throw new InvalidInputNameException(
+                    "Invalid input category name: " + name + " - please use other name");
         if (checkCatExists(name))
-            return ResponseCode.INVALID_CATEGORY;
+            throw new InvalidCategoryException("Category already exists: " + name);
         ContentValues values = new ContentValues();
         values.put(PetimoContract.Categories.COLUMN_NAME_NAME, name);
         values.put(PetimoContract.Categories.COLUMN_NAME_PRIORITY, priority);
         if(writableDb.insert(PetimoContract.Categories.TABLE_NAME, null, values) == -1)
-            return ResponseCode.DB_ERROR;
+            throw new DbErrorException("Some DB error has occured, please try again");
         else
             return ResponseCode.OK;
     }
@@ -144,20 +149,23 @@ public class PetimoDbWrapper {
      * @param priority
      * @return the corresponding response code
      */
-    public ResponseCode insertTask(String name, String category, int priority){
+    public ResponseCode insertTask(String name, String category, int priority)
+            throws DbErrorException, InvalidInputNameException, InvalidCategoryException {
         if(!checkName(name))
-            return ResponseCode.INVALID_INPUT_STRING_NAME;
+            throw new InvalidInputNameException("The input task name is invalid: " + name +
+                    " - please use other name");
         if (!checkCatExists(category))
-            return ResponseCode.INVALID_CATEGORY;
+            throw new InvalidCategoryException("Category already exists: " + name);
         if (checkTaskExists(name, category))
-            return ResponseCode.INVALID_TASK;
+            throw new InvalidCategoryException("Task already exists for the given category: "
+                    + category + " / " + name);
         else{
             ContentValues values = new ContentValues();
             values.put(PetimoContract.Tasks.COLUMN_NAME_NAME, name);
             values.put(PetimoContract.Tasks.COLUMN_NAME_CATEGORY, category);
             values.put(PetimoContract.Tasks.COLUMN_NAME_PRIORITY, priority);
             if(writableDb.insert(PetimoContract.Tasks.TABLE_NAME, null, values) == -1)
-                return ResponseCode.DB_ERROR;
+                throw new DbErrorException("Some DB error has occured, please try again");
             else
                 return ResponseCode.OK;
         }
@@ -175,15 +183,18 @@ public class PetimoDbWrapper {
      * @param overNight
      * @return The corresponding response code
      */
-    public ResponseCode insertMonitorBlock(String task, String category, long start, long end,
-                                   long duration, int date, int weekDay, int overNight){
+    public ResponseCode insertMonitorBlock(
+            String task, String category, long start, long end,
+            long duration, int date, int weekDay, int overNight)
+            throws DbErrorException, InvalidCategoryException {
         if (!checkCatExists(category)) {
             Log.d(TAG, "Invalid category: " + category);
-            return ResponseCode.INVALID_CATEGORY;
+            throw new InvalidCategoryException("Category already exists: " + category);
         }
         if (task != null && !checkTaskExists(task, category)){
             Log.d(TAG, "Invalid task: " + task);
-            return ResponseCode.INVALID_TASK;
+            throw new InvalidCategoryException("Task already exists for the given category: "
+                    + category + " / " + task);
         }
 
         ContentValues values = new ContentValues();
@@ -196,7 +207,7 @@ public class PetimoDbWrapper {
         values.put(PetimoContract.Monitor.COLUMN_NAME_WEEKDAY, weekDay);
         values.put(PetimoContract.Monitor.COLUMN_NAME_OVERNIGHT, overNight);
         if (writableDb.insert(PetimoContract.Monitor.TABLE_NAME, null, values) == -1)
-            return ResponseCode.DB_ERROR;
+            throw new DbErrorException("Some DB error has occured, please try again");
         else {
             Log.d(TAG, " Inserted Block: \nDate: " + date + "\nstart: " + start + "\nend: " +
                     end + "\ncat: " + category + "\ntask: " + task + "\nduration: " +

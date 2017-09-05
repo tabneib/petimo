@@ -8,6 +8,9 @@ import android.support.v7.widget.Toolbar;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.controller.exception.DbErrorException;
+import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
+import de.tud.nhd.petimo.controller.exception.InvalidInputDateException;
 import de.tud.nhd.petimo.view.fragments.ModeOffFragment;
 import de.tud.nhd.petimo.view.fragments.OnModeFragmentInteractionListener;
 
@@ -44,7 +47,13 @@ public class OffModeActivity extends AppCompatActivity
     @Override
     public void onConfirmStartButtonClicked(String inputCat, String inputTask) {
         // Start the monitor
-        controller.addBlockLive(inputCat, inputTask);
+        try {
+            controller.addBlockLive(inputCat, inputTask);
+        } catch (InvalidCategoryException e){
+            // TODO
+        } catch (DbErrorException e){
+            // TODO
+        }
         // Switch to OnModeActivity
         Intent intent = new Intent(this, OnModeActivity.class);
         startActivity(intent);

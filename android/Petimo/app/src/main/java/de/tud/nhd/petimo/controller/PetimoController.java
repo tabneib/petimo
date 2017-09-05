@@ -7,6 +7,12 @@ import android.util.Log;
 import java.util.Date;
 import java.util.List;
 
+import de.tud.nhd.petimo.controller.exception.DbErrorException;
+import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
+import de.tud.nhd.petimo.controller.exception.InvalidInputDateException;
+import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
+import de.tud.nhd.petimo.controller.exception.InvalidInputTimeException;
+import de.tud.nhd.petimo.controller.exception.InvalidTimeException;
 import de.tud.nhd.petimo.model.MonitorBlock;
 import de.tud.nhd.petimo.model.MonitorDay;
 import de.tud.nhd.petimo.model.PetimoDbWrapper;
@@ -65,7 +71,8 @@ public class PetimoController {
      * @param priority
      * @return The corresponding response code
      */
-    public ResponseCode addCategory(String name, int priority){
+    public ResponseCode addCategory(String name, int priority)
+            throws DbErrorException, InvalidCategoryException, InvalidInputNameException {
         return this.dbWrapper.insertCategory(name, priority);
     }
 
@@ -75,7 +82,8 @@ public class PetimoController {
      * @param category
      * @param priority
      */
-    public ResponseCode addTask(String name, String category, int priority){
+    public ResponseCode addTask(String name, String category, int priority)
+            throws DbErrorException, InvalidCategoryException, InvalidInputNameException {
         return this.dbWrapper.insertTask(name, category, priority);
     }
 
@@ -88,18 +96,21 @@ public class PetimoController {
      * @param inputDate
      * @return
      */
-    public ResponseCode addBlockManually(String inputTask, String inputCat,
-                                         String inputStart, String inputEnd, String inputDate){
+    public ResponseCode addBlockManually(
+            String inputTask, String inputCat, String inputStart, String inputEnd, String inputDate)
+            throws DbErrorException, InvalidInputDateException,
+            InvalidInputTimeException, InvalidTimeException, InvalidCategoryException {
         if (TimeUtils.getDateFromStr(inputDate) == -1)
-            return ResponseCode.INVALID_INPUT_STRING_DATE;
+            throw new InvalidInputDateException("The input date is invalid: " + inputDate);
         long start = TimeUtils.getMsTimeFromStr(inputStart, inputDate);
         if (start == -1)
-            return ResponseCode.INVALID_INPUT_STRING_TIME;
+            throw new InvalidInputTimeException("The input start time is invalid: " + inputStart);
         long end = TimeUtils.getMsTimeFromStr(inputEnd, inputDate);
         if (end == -1)
-            return ResponseCode.INVALID_INPUT_STRING_TIME;
+            throw new InvalidInputTimeException("The input end time is invalid: " + inputEnd);
         if (end <= start)
-            return ResponseCode.INVALID_TIME;
+            throw new InvalidTimeException(
+                    "End time lays before start time: " + inputEnd + " < " + inputStart);
         int date = (int) TimeUtils.getDateFromStr(inputDate);
         return this.dbWrapper.insertMonitorBlock(
                 inputTask, inputCat, start, end, end - start, date, TimeUtils.getWeekDay(date),
@@ -114,7 +125,8 @@ public class PetimoController {
      * @param inputTask
      * @return the corresponding response code
      */
-    public ResponseCode addBlockLive(String inputCat, String inputTask){
+    public ResponseCode addBlockLive(String inputCat, String inputTask)
+            throws DbErrorException, InvalidCategoryException {
         Date current = new Date();
         if (!sharedPref.isMonitoring()){
             // Case there is no ongoing monitor
