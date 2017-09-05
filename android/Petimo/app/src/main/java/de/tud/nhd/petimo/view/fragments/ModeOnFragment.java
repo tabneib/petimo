@@ -3,6 +3,7 @@ package de.tud.nhd.petimo.view.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStopDialogFragment;
  * to handle interaction events.
  */
 public class ModeOnFragment extends Fragment {
+
+    private final String TAG = "ModeOnFragment";
 
     private OnModeFragmentInteractionListener mListener;
     private PetimoController controller;
@@ -82,6 +85,7 @@ public class ModeOnFragment extends Fragment {
         // Update view
         textViewMonitoring.setText(
                 "< " + getString(R.string.onmodefragment_text_view_monitoring) + " >");
+        Log.d(TAG, "Controller is null ===> " + (controller==null));
         String[] monitorInfo = controller.getLiveMonitorInfo();
         textViewCatTask.setText(monitorInfo[0] + " / " + monitorInfo[1]);
         textViewDate.setText(

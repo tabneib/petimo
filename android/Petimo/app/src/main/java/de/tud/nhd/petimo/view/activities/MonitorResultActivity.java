@@ -30,7 +30,7 @@ public class MonitorResultActivity extends AppCompatActivity
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MonitorResultActivity.this, OffModeActivity.class);
+                Intent intent = new Intent(MonitorResultActivity.this, MainActivity.class);
                 MonitorResultActivity.this.startActivity(intent);
             }
         });
