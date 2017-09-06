@@ -1,12 +1,15 @@
 package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
+import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.MonitorCategory;
 import de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment;
 import de.tud.nhd.petimo.view.fragments.lists.MonitorTaskListFragment;
@@ -21,6 +24,7 @@ public class MonitorCategoryRecyclerViewAdapter extends
 
     private final List<MonitorCategory> catList;
     private MonitorCategoryListFragment fragment;
+    private int count = 0;
 
     public MonitorCategoryRecyclerViewAdapter(
             MonitorCategoryListFragment fragment, List<MonitorCategory> items) {
@@ -43,8 +47,8 @@ public class MonitorCategoryRecyclerViewAdapter extends
 
         // Setup the sub-fragment that displays the list of corresponding tasks
         fragment.getActivity().getSupportFragmentManager().beginTransaction().
-                add(holder.taskListContainerID, MonitorTaskListFragment.newInstance(
-                        1, catList.get(position).getName())).commit();
+                add(holder.taskListContainer.getId(), MonitorTaskListFragment.newInstance(1,
+                        catList.get(position).getName())).commit();
 
        // TODO setup listener for dragging to delete category
     }
@@ -61,14 +65,16 @@ public class MonitorCategoryRecyclerViewAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder {
         public View view;
         public TextView catTextView;
-        public int taskListContainerID;
+        public FrameLayout taskListContainer;
         public MonitorCategory category;
 
         public ViewHolder(View view) {
             super(view);
             this.view = view;
             this.catTextView = (TextView) view.findViewById(R.id.textViewCatName);
-            this.taskListContainerID = R.id.task_list_container;
+            this.taskListContainer = (FrameLayout) view.findViewById(R.id.task_list_container);
+            taskListContainer.setId(taskListContainer.getId() + count);
+            count++;
         }
 
         @Override

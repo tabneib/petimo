@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     tools:context="de.tud.nhd.petimo.view.fragments.DemoFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <Button
+        android:id="@+id/button_demo"
+        android:text="@string/button_exec_demo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </FrameLayout>
