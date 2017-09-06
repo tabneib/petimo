@@ -20,8 +20,7 @@ import de.tud.nhd.petimo.view.fragments.lists.adapters.MonitorBlockRecyclerViewA
 /**
  * A fragment representing a list of Monitor blocks.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
+ *
  */
 public class MonitorBlockListFragment extends Fragment {
 
@@ -31,9 +30,10 @@ public class MonitorBlockListFragment extends Fragment {
     private static final String ARG_END_DATE = "end-date";
     // Use linear layout as default
     private int mColumnCount = 1;
+    // Default values for date range: today blocks
     private int mStartDate = TimeUtils.getTodayDate();
     private int mEndDate = TimeUtils.getTodayDate();
-    private OnListFragmentInteractionListener mListener;
+
 
     PetimoController controller;
 
@@ -45,7 +45,7 @@ public class MonitorBlockListFragment extends Fragment {
     }
 
     // TODO: Customize parameter initialization
-    public static MonitorBlockListFragment newInstance(int columnCount, int startDate, int endDate){
+    public static MonitorBlockListFragment newInstance(int columnCount, int startDate, int endDate) {
         MonitorBlockListFragment fragment = new MonitorBlockListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
@@ -64,10 +64,9 @@ public class MonitorBlockListFragment extends Fragment {
             mStartDate = getArguments().getInt(ARG_START_DATE);
             mEndDate = getArguments().getInt(ARG_END_DATE);
         }
-        try{
+        try {
             controller = PetimoController.getInstance();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -88,7 +87,7 @@ public class MonitorBlockListFragment extends Fragment {
             }
             Log.d(TAG, "Date range: " + mStartDate + " -> " + mEndDate);
             recyclerView.setAdapter(new MonitorBlockRecyclerViewAdapter(
-                    controller.getBlocksFromRange(mStartDate, mEndDate), mListener));
+                    controller.getBlocksFromRange(mStartDate, mEndDate)));
         }
         return view;
     }
@@ -97,32 +96,10 @@ public class MonitorBlockListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(MonitorBlock item);
     }
 }

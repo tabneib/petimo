@@ -22,9 +22,14 @@ import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.controller.ResponseCode;
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
+import de.tud.nhd.petimo.view.fragments.DemoFragment;
+import de.tud.nhd.petimo.view.fragments.EditBlocksFragment;
+import de.tud.nhd.petimo.view.fragments.EditTasksFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOffFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOnFragment;
 import de.tud.nhd.petimo.view.fragments.OnModeFragmentInteractionListener;
+import de.tud.nhd.petimo.view.fragments.SettingFragment;
+import de.tud.nhd.petimo.view.fragments.StatisticsFragment;
 
 public class MainActivity extends AppCompatActivity implements OnModeFragmentInteractionListener{
 
@@ -32,8 +37,8 @@ public class MainActivity extends AppCompatActivity implements OnModeFragmentInt
     Toolbar toolBar;
     PetimoController controller;
 
-    ModeOffFragment modeOffFragment;
-    ModeOnFragment modeOnFragment;
+    //ModeOffFragment modeOffFragment;
+    //ModeOnFragment modeOnFragment;
 
     private CharSequence drawerTitle;
     private CharSequence title;
@@ -52,17 +57,11 @@ public class MainActivity extends AppCompatActivity implements OnModeFragmentInt
         toolBar.setNavigationIcon(R.drawable.ic_drawer);
         setSupportActionBar(toolBar);
 
-        modeOffFragment = new ModeOffFragment();
-        modeOnFragment = new ModeOnFragment();
-
         title = drawerTitle = getTitle();
-        Log.d(TAG, "Title ======> " + title);
         titleList = getResources().getStringArray(R.array.navigation_titles);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        Log.d(TAG, "drawerLayout is null ===> " + (drawerLayout == null));
         drawerList = (ListView) findViewById(R.id.left_drawer);
-        Log.d(TAG, "drawerList is null ===> " + (drawerList == null));
         drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, titleList));
         drawerList.setOnItemClickListener(new OnDrawerItemClickListener());
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
@@ -138,38 +137,32 @@ public class MainActivity extends AppCompatActivity implements OnModeFragmentInt
         switch (position) {
             case 1:
                 //Monitored Tasks
-                 // TODO remove me
-                //TODO
+                displayFragment(EditBlocksFragment.getInstance());
                 break;
             case 2:
                 //Statistics
-                displayFragment(modeOffFragment); // TODO remove me
-                //TODO
+                displayFragment(StatisticsFragment.getInstance());
                 break;
             case 3:
                 //Manage Tasks
-                displayFragment(modeOffFragment); // TODO remove me
-                //TODO
+                displayFragment(EditTasksFragment.getInstance());
                 break;
             case 4:
                 //Setting
-                displayFragment(modeOffFragment); // TODO remove me
-                //TODO
+                displayFragment(SettingFragment.getInstance());
                 break;
             case 5:
                 //Demo
-                displayFragment(modeOffFragment); // TODO remove me
-                //TODO
+                displayFragment(DemoFragment.getInstance());
                 break;
             default:
                 //Monitor
-                Log.d(TAG, " Monitoring?  ===> " + controller.isMonitoring());
                 if (controller.isMonitoring())
-                    // Display the ModeOnFragment (there is ongoing live monitor)
-                    displayFragment(modeOnFragment);
+                    // There is ongoing live monitor
+                    displayFragment(ModeOnFragment.getInstance());
                 else
-                    // Display the ModeOffFragment (no ongoing live monitor)
-                    displayFragment(modeOffFragment);
+                    // No ongoing live monitor
+                    displayFragment(ModeOffFragment.getInstance());
         }
         // Highlight the selected item on the navigation drawer,
         // update the title

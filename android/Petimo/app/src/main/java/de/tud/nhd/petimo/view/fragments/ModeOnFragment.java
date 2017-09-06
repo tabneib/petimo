@@ -22,7 +22,8 @@ import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStopDialogFragment;
  */
 public class ModeOnFragment extends Fragment {
 
-    private final String TAG = "ModeOnFragment";
+    private static final String TAG = "ModeOnFragment";
+    private static ModeOnFragment _instance;
 
     private OnModeFragmentInteractionListener mListener;
     private PetimoController controller;
@@ -37,6 +38,15 @@ public class ModeOnFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * Return an (unique) instance of {@link ModeOnFragment}, if not yet exists then initialize it
+     * @return the ModeOnFragment instance
+     */
+    public static ModeOnFragment getInstance(){
+        if(_instance == null)
+            return new ModeOnFragment();
+        else return _instance;
+    }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

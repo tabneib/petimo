@@ -15,27 +15,20 @@ import de.tud.nhd.petimo.view.fragments.lists.MonitorBlockListFragment;
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link MonitorBlock} and makes a call to the
- * specified {@link MonitorBlockListFragment.OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
+ * {@link RecyclerView.Adapter} that can display a {@link MonitorBlock}
  */
 public class MonitorBlockRecyclerViewAdapter extends RecyclerView.Adapter<MonitorBlockRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = "RecyclerViewAdapter";
     private final List<MonitorBlock> inputBlockList;
-    private final MonitorBlockListFragment.OnListFragmentInteractionListener mListener;
 
     /**
      * Construct the adapter. Is the given block list is null then the adapter will query the
      * database by every view holder binding.
      * @param inputBlockList
-     * @param listener
      */
-    public MonitorBlockRecyclerViewAdapter(
-            List<MonitorBlock> inputBlockList,
-            MonitorBlockListFragment.OnListFragmentInteractionListener listener) {
+    public MonitorBlockRecyclerViewAdapter(List<MonitorBlock> inputBlockList) {
         this.inputBlockList = inputBlockList;
-        mListener = listener;
     }
 
     @Override
@@ -47,43 +40,33 @@ public class MonitorBlockRecyclerViewAdapter extends RecyclerView.Adapter<Monito
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        if (inputBlockList != null){
-            Log.d(TAG, "Binding ViewHolder at position ====> " + position );
-            holder.mItem = inputBlockList.get(position);
-            String timeInfo = "[+] " +
-                    TimeUtils.getDateStrFromInt(inputBlockList.get(position).getDate()) +
-                    " " + TimeUtils.getDayTimeFromMsTime(inputBlockList.get(position).getStart()) +
-                    " -> " + TimeUtils.getDayTimeFromMsTime(inputBlockList.get(position).getEnd()) +
-                    " : " + TimeUtils.getTimeFromMs(inputBlockList.get(position).getDuration());
-            Log.d(TAG, timeInfo);
+        Log.d(TAG, "Binding ViewHolder at position ====> " + position );
+        holder.mItem = inputBlockList.get(position);
+        String timeInfo = "[+] " +
+                TimeUtils.getDateStrFromInt(inputBlockList.get(position).getDate()) +
+                " " + TimeUtils.getDayTimeFromMsTime(inputBlockList.get(position).getStart()) +
+                " -> " + TimeUtils.getDayTimeFromMsTime(inputBlockList.get(position).getEnd()) +
+                " : " + TimeUtils.getTimeFromMs(inputBlockList.get(position).getDuration());
+        Log.d(TAG, timeInfo);
 
-            holder.mTimeView.setText(timeInfo);
+        holder.mTimeView.setText(timeInfo);
 
-            String monitorInfo = "    " + inputBlockList.get(position).getCategory() + " / " +
-                    inputBlockList.get(position).getTask();
-            Log.d(TAG, monitorInfo);
-            holder.mDataView.setText(monitorInfo);
+        String monitorInfo = "    " + inputBlockList.get(position).getCategory() + " / " +
+                inputBlockList.get(position).getTask();
+        Log.d(TAG, monitorInfo);
+        holder.mDataView.setText(monitorInfo);
 
-            // work around the "final" issue
-            final MonitorBlock thisItem = inputBlockList.get(position);
+        // work around the "final" issue
+        final MonitorBlock thisItem = inputBlockList.get(position);
 
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (null != mListener) {
-                        // Notify the active callbacks interface (the activity, if the
-                        // fragment is attached to one) that an item has been selected.
-                        mListener.onListFragmentInteraction(thisItem);
-                    }
-                }
-            });
-        }
-        else{
-            // TODO - unbound list
-        }
-
-
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // do nothing
+            }
+        });
     }
+
 
     @Override
     public int getItemCount() {

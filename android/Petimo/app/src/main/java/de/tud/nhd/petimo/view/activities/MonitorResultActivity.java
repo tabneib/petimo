@@ -13,8 +13,7 @@ import de.tud.nhd.petimo.model.MonitorBlock;
 import de.tud.nhd.petimo.view.fragments.lists.MonitorBlockListFragment;
 
 // TODO implement me
-public class MonitorResultActivity extends AppCompatActivity
-        implements MonitorBlockListFragment.OnListFragmentInteractionListener{
+public class MonitorResultActivity extends AppCompatActivity {
 
     private final String TAG = "MonitorResultActivity";
 
@@ -47,8 +46,4 @@ public class MonitorResultActivity extends AppCompatActivity
         super.onResume();
     }
 
-    @Override
-    public void onListFragmentInteraction(MonitorBlock item) {
-
-    }
 }

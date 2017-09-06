@@ -24,6 +24,7 @@ import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStartDialogFragment;
  */
 public class ModeOffFragment extends Fragment {
 
+    private static ModeOffFragment _instance;
     private final String TAG = "ModeOffFragment";
     private OnModeFragmentInteractionListener mListener;
     Spinner catSpinner;
@@ -34,6 +35,16 @@ public class ModeOffFragment extends Fragment {
 
     public ModeOffFragment() {
         // Required empty public constructor
+    }
+
+    /**
+     * Return an (unique) instance of {@link ModeOffFragment}, if not yet exists then initialize it
+     * @return the ModeOffFragment instance
+     */
+    public static ModeOffFragment getInstance(){
+        if(_instance == null)
+            return new ModeOffFragment();
+        else return _instance;
     }
 
     @Override
