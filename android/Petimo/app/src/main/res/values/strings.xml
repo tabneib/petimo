@@ -48,6 +48,7 @@
 
 
     <!-- EditTaskFragment -->
+    <string name="editTaskFragment_add_cat">New Category</string>
     <string name="editTaskFragment_add_task">New Task</string>
 
     <!-- TODO: Remove or change this placeholder text -->

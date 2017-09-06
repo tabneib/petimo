@@ -309,9 +309,9 @@ public class PetimoDbWrapper {
     }
 
     /**
-     * TODO comment me
-     * @param catName
-     * @return
+     * Return all tasks the belong to the given category
+     * @param catName name of the category
+     * @return  the list of all corresponding tasks
      */
     public List<MonitorTask> getTasksByCat(String catName){
         String selection = PetimoContract.Tasks.COLUMN_NAME_CATEGORY + " = ?";
@@ -324,6 +324,7 @@ public class PetimoDbWrapper {
         while (cursor.moveToNext())
             tasks.add(getTaskFromCursor(cursor));
         cursor.close();
+        Log.d(TAG, "number of tasks that belong to '" + catName + "' ======> " + tasks.size());
         return tasks;
     }
 

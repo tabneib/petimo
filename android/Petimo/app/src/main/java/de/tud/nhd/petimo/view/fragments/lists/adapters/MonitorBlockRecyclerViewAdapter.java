@@ -2,6 +2,7 @@ package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class MonitorBlockRecyclerViewAdapter extends RecyclerView.Adapter<Monito
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         Log.d(TAG, "Binding ViewHolder at position ====> " + position );
         holder.mItem = inputBlockList.get(position);
         String timeInfo = "[+] " +
@@ -56,17 +57,16 @@ public class MonitorBlockRecyclerViewAdapter extends RecyclerView.Adapter<Monito
         Log.d(TAG, monitorInfo);
         holder.mDataView.setText(monitorInfo);
 
-        // work around the "final" issue
-        final MonitorBlock thisItem = inputBlockList.get(position);
-
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // do nothing
             }
         });
-    }
 
+
+
+    }
 
     @Override
     public int getItemCount() {

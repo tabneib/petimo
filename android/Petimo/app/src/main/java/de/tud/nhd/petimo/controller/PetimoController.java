@@ -14,9 +14,12 @@ import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputTimeException;
 import de.tud.nhd.petimo.controller.exception.InvalidTimeException;
 import de.tud.nhd.petimo.model.MonitorBlock;
+import de.tud.nhd.petimo.model.MonitorCategory;
 import de.tud.nhd.petimo.model.MonitorDay;
+import de.tud.nhd.petimo.model.MonitorTask;
 import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
+import de.tud.nhd.petimo.view.activities.MainActivity;
 
 /**
  * Created by nhd on 31.08.17.
@@ -27,6 +30,7 @@ public class PetimoController {
     private static PetimoController _instance;
     private PetimoDbWrapper dbWrapper;
     private PetimoSharedPref sharedPref;
+    private static Context context;
 
 
     //<---------------------------------------------------------------------------------------------
@@ -45,6 +49,23 @@ public class PetimoController {
         }
     }
 
+    /**
+     *
+     * @param kontext
+     */
+    public static void setContext(Context kontext){
+        context = kontext;
+    }
+
+    public static PetimoController getInstance(){
+        if (_instance == null){
+            _instance = new PetimoController(context);
+            return _instance;
+        }
+        else
+            return _instance;
+    }
+
     public static void initialize(Context context) throws Exception{
         if(_instance != null)
             throw new Exception("Cannot initialize multiple instances of Controller!");
@@ -54,12 +75,14 @@ public class PetimoController {
         }
     }
 
+    /*
     public static PetimoController getInstance() throws Exception{
         if (_instance == null)
             throw new Exception("PetimoController is not yet initialized!");
         else
             return _instance;
     }
+    */
 
     //<---------------------------------------------------------------------------------------------
     //  Core - Inputting
@@ -192,6 +215,23 @@ public class PetimoController {
     }
 
     /**
+     * Get a list of all categories
+     * @return the list of {@link MonitorCategory} objects
+     */
+    public List<MonitorCategory> getAllCats(){
+        return dbWrapper.getAllCategories();
+    }
+
+    /**
+     * Return all tasks the belong to the given category
+     * @param cat name of the category
+     * @return  the list of all corresponding tasks
+     */
+    public List<MonitorTask> getAllTasks(String cat){
+        return dbWrapper.getTasksByCat(cat);
+    }
+
+    /**
      *
      * @param catName
      * @return
@@ -224,6 +264,7 @@ public class PetimoController {
     public List<String> getAllTaskNames(){
         return dbWrapper.getAllTaskName();
     }
+
 
     /**
      * Return a string of size 4 containing all information of the ongoing monitor.

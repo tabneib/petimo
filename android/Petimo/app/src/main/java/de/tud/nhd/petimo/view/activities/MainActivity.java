@@ -91,18 +91,9 @@ public class MainActivity extends AppCompatActivity implements OnModeFragmentInt
 
 
         // Initialize the controller
-        try {
-            PetimoController.initialize(this);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        try{
-            this.controller = PetimoController.getInstance();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        PetimoController.setContext(this);
+        this.controller = PetimoController.getInstance();
+
     }
 
     @Override

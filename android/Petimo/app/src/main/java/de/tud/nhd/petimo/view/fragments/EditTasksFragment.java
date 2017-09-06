@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.tud.nhd.petimo.R;
+import de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment;
+import de.tud.nhd.petimo.view.fragments.lists.MonitorTaskListFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,4 +38,13 @@ public class EditTasksFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_edit_tasks, container, false);
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Display the list of categories and tasks
+        getActivity().getSupportFragmentManager().beginTransaction().add(
+                R.id.tasks_list_fragment_container,
+                MonitorCategoryListFragment.getInstance()).commit();
+    }
 }

@@ -9,7 +9,6 @@ import android.widget.Button;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.TimeUtils;
-import de.tud.nhd.petimo.model.MonitorBlock;
 import de.tud.nhd.petimo.view.fragments.lists.MonitorBlockListFragment;
 
 // TODO implement me
