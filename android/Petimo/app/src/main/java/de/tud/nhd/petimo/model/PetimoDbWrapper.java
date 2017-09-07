@@ -340,6 +340,37 @@ public class PetimoDbWrapper {
     }
 
     /**
+     * Get a task object
+     * @param taskName
+     * @param catName
+     * @return
+     */
+    public MonitorTask getTaskByName(String taskName, String catName){
+        MonitorTask task = null;
+        String selection = PetimoContract.Tasks.COLUMN_NAME_NAME + " = ? AND " +
+                PetimoContract.Tasks.COLUMN_NAME_CATEGORY + " = ?";
+        String[] selectionArgs = {taskName, catName};
+        Cursor cursor = readableDb.query(PetimoContract.Tasks.TABLE_NAME,
+                PetimoContract.Tasks.getAllColumns(),
+                selection, selectionArgs, null, null, null, null);
+
+        while(cursor.moveToNext()){
+
+            task = new MonitorTask(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(
+                            PetimoContract.Tasks._ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(
+                            PetimoContract.Tasks.COLUMN_NAME_NAME)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(
+                            PetimoContract.Tasks.COLUMN_NAME_CATEGORY)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(
+                            PetimoContract.Tasks.COLUMN_NAME_PRIORITY)));
+        }
+        cursor.close();
+        return task;
+    }
+
+    /**
      * Return all tasks the belong to the given category
      * @param catName name of the category
      * @return  the list of all corresponding tasks

@@ -289,6 +289,16 @@ public class PetimoController {
         Log.d(TAG, "is about to getCatByName ====> " + catName);
         return dbWrapper.getCatByName(catName);
     }
+
+    /**
+     *
+     * @param taskName
+     * @param catName
+     * @return
+     */
+    public MonitorTask getTaskByName(String taskName, String catName){
+        return dbWrapper.getTaskByName(taskName, catName);
+    }
     /**
      *
      * @return

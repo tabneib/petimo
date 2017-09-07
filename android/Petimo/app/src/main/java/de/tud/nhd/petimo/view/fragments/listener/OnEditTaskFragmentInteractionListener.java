@@ -5,6 +5,7 @@ package de.tud.nhd.petimo.view.fragments.listener;
  */
 
 import de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment;
+import de.tud.nhd.petimo.view.fragments.lists.adapters.MonitorCategoryRecyclerViewAdapter;
 
 /**
  * This interface must be implemented by activities that contain this
@@ -22,7 +23,13 @@ public interface OnEditTaskFragmentInteractionListener {
             MonitorCategoryListFragment catListFragment, String inputCat, int priority);
 
     /**
-     * Call-back method which is called when the stop confirm button is clicked
+     * Call-back method which is called when the user confirm adding a new task
+     * @param viewHolder
+     * @param inputCat
+     * @param inputTask
+     * @param priority
      */
-    void onConfirmAddingTaskStopButtonClicked();
+    void onConfirmAddingTaskStopButtonClicked(
+            MonitorCategoryRecyclerViewAdapter.ViewHolder viewHolder,
+            String inputCat, String inputTask, int priority);
 }

@@ -7,11 +7,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.MonitorCategory;
+import de.tud.nhd.petimo.view.fragments.dialogs.AddTaskDialogFragment;
 import de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment;
 
 import java.util.List;
@@ -41,13 +43,23 @@ public class MonitorCategoryRecyclerViewAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         Log.d(TAG, "catList size ===> " + catList.size());
         Log.d(TAG, "gonna bind position ====> " + position +" ====> "
                 + catList.get(position).getName());
 
         holder.catTextView.setText(catList.get(position).getName());
+        holder.newTaskButton.setOnClickListener(new View.OnClickListener(){
 
+            @Override
+            public void onClick(View v) {
+                AddTaskDialogFragment dialogFragment = new AddTaskDialogFragment();
+                dialogFragment.catListFragment = fragment;
+                dialogFragment.viewHolder = holder;
+                dialogFragment.category = catList.get(position).getName();
+                dialogFragment.show(fragment.getActivity().getSupportFragmentManager(), null);
+            }
+        });
 
         // Nesting fragments inside RecyclerView is not recommended, so I use recyclerView directly
 
@@ -151,6 +163,7 @@ public class MonitorCategoryRecyclerViewAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder {
         public View view;
         public TextView catTextView;
+        public Button newTaskButton;
         public RecyclerView taskListRecyclerView;
         // Each ViewHolder must have its own MonitorTaskRecyclerViewAdapter
         public MonitorTaskRecyclerViewAdapter taskAdapter;
@@ -160,7 +173,21 @@ public class MonitorCategoryRecyclerViewAdapter extends
 
             this.view = view;
             this.catTextView = (TextView) view.findViewById(R.id.textViewCatName);
+            this.newTaskButton = (Button) view.findViewById(R.id.button_add_task);
             this.taskListRecyclerView = (RecyclerView) view.findViewById(R.id.task_list_recycler_view);
+        }
+
+        /**
+         * Update the view in case there is some item newly added
+         * @param taskName
+         */
+        public void updateView(String taskName, String catName){
+            Log.d(TAG, "ViewHolder is gonna update with (" + taskName + ", " + catName + ")");
+            Log.d(TAG, "ViewHolder updated the taskList by adding ====> "
+                    + PetimoController.getInstance().getTaskByName(taskName, catName));
+            this.taskAdapter.taskList.add(0,
+                    PetimoController.getInstance().getTaskByName(taskName, catName));
+            taskAdapter.notifyItemInserted(0);
         }
 
         @Override

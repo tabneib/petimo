@@ -34,6 +34,7 @@ import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListen
 import de.tud.nhd.petimo.view.fragments.SettingFragment;
 import de.tud.nhd.petimo.view.fragments.StatisticsFragment;
 import de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment;
+import de.tud.nhd.petimo.view.fragments.lists.adapters.MonitorCategoryRecyclerViewAdapter;
 
 public class MainActivity extends AppCompatActivity
         implements OnModeFragmentInteractionListener, OnEditTaskFragmentInteractionListener{
@@ -219,7 +220,6 @@ public class MainActivity extends AppCompatActivity
     public void onConfirmAddingCatButtonClicked(
             MonitorCategoryListFragment catListFragment, String inputCat, int priority) {
 
-        Log.d(TAG, "Confirm to add new Cat =====> " + inputCat + " - priority  ===> " + priority);
         try{
             controller.addCategory(inputCat, priority);
         }
@@ -252,8 +252,33 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onConfirmAddingTaskStopButtonClicked() {
-        // TODO
+    public void onConfirmAddingTaskStopButtonClicked(
+            MonitorCategoryRecyclerViewAdapter.ViewHolder viewHolder,
+            String inputCat, String inputTask, int priority) {
+
+        // Add new task
+        try{
+            controller.addTask(inputTask, inputCat, priority);
+        }
+        catch (InvalidInputNameException e){
+            e.printStackTrace();
+            // TODO
+        }
+        catch (InvalidCategoryException e){
+            e.printStackTrace();
+            // TODO
+        }
+        catch (DbErrorException e){
+            e.printStackTrace();
+            // TODO
+        }
+        // TODO display a snack bar to notify the usr
+        // Just for now: display a Toast
+        Toast.makeText(this, "Added new category: " + inputCat, Toast.LENGTH_LONG).show();
+
+        // Update the recyclerView
+        viewHolder.updateView(inputTask, inputCat);
+
     }
 
 
