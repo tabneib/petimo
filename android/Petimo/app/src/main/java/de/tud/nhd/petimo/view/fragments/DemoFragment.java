@@ -30,8 +30,10 @@ public class DemoFragment extends Fragment {
      * @return the DemoFragment instance
      */
     public static DemoFragment getInstance(){
-        if (_instance == null)
-            return new DemoFragment();
+        if (_instance == null){
+            _instance = new DemoFragment();
+            return _instance;
+        }
         else
             return _instance;
     }

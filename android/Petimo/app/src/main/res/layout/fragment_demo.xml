@@ -6,7 +6,7 @@
 
     <Button
         android:id="@+id/button_demo"
-        android:text="@string/button_exec_demo"
+        android:text="@string/button_execute_demo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

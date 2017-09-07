@@ -24,8 +24,10 @@ public class SettingFragment extends Fragment {
      * @return the SettingFragment instance
      */
     public static SettingFragment getInstance(){
-        if (_instance == null)
-            return new SettingFragment();
+        if (_instance == null){
+            _instance = new SettingFragment();
+            return _instance;
+        }
         else
             return _instance;
     }

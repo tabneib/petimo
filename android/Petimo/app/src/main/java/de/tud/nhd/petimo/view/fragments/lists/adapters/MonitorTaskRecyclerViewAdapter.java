@@ -18,7 +18,7 @@ import java.util.List;
 public class MonitorTaskRecyclerViewAdapter extends
         RecyclerView.Adapter<MonitorTaskRecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = "TaskRecyclerViewAdapter";
+    private static final String TAG = "TaskAdapter";
     private final List<MonitorTask> taskList;
 
     public MonitorTaskRecyclerViewAdapter(List<MonitorTask> items) {
@@ -29,16 +29,18 @@ public class MonitorTaskRecyclerViewAdapter extends
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_monitortask, parent, false);
+                .inflate(R.layout.list_item_monitortask, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Log.d(TAG, "Binding task ====>  " + taskList.get(position).getName());
+        Log.d(TAG, "I am gonna binding position =====> " + position);
         holder.task = taskList.get(position);
         holder.taskNameTextView.setText(taskList.get(position).getName());
 
+
+        Log.d(TAG, "Done binding, position =====> " + position);
         // TODO setup listener to support deleting task by swiping
     }
 

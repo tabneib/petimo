@@ -6,7 +6,7 @@
 
 
     <TextView
-        android:text="@string/offmodefragment_text_view_category"
+        android:text="@string/colon_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -25,7 +25,7 @@
         android:entries="@array/spinner_default" />
 
     <TextView
-        android:text="@string/offmodefragment_text_view_task"
+        android:text="@string/colon_task"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/spinnerCat"
@@ -43,7 +43,7 @@
         android:id="@+id/spinnerTask" />
 
     <Button
-        android:text="@string/offmodefragment_button_startmonitor"
+        android:text="@string/button_start_monitor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="8dp"

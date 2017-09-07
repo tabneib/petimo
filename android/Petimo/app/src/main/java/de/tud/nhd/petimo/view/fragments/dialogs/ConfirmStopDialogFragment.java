@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.view.fragments.OnModeFragmentInteractionListener;
+import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 
 public class ConfirmStopDialogFragment extends DialogFragment {
 
@@ -29,14 +29,14 @@ public class ConfirmStopDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.confirmstopdialog_message)
-                .setPositiveButton(R.string.confirm_yes, new DialogInterface.OnClickListener(){
+        builder.setMessage(R.string.message_confirm_stop_monitor)
+                .setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mListener.onConfirmStopButtonClicked();
                     }
                 })
-                .setNegativeButton(R.string.confirm_no, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // do nothing

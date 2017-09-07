@@ -2,7 +2,6 @@ package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.TimeUtils;
 import de.tud.nhd.petimo.model.MonitorBlock;
-import de.tud.nhd.petimo.view.fragments.lists.MonitorBlockListFragment;
 
 import java.util.List;
 
@@ -35,7 +33,7 @@ public class MonitorBlockRecyclerViewAdapter extends RecyclerView.Adapter<Monito
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_monitorblock, parent, false);
+                .inflate(R.layout.list_item_monitorblock, parent, false);
         return new ViewHolder(view);
     }
 

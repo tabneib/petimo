@@ -25,8 +25,10 @@ public class EditBlocksFragment extends Fragment {
      * @return the EditBlocksFragment instance
      */
     public static EditBlocksFragment getInstance(){
-        if (_instance == null)
-            return new EditBlocksFragment();
+        if (_instance == null){
+            _instance = new EditBlocksFragment();
+            return _instance;
+        }
         else
             return _instance;
     }

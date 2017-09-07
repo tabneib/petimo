@@ -1,13 +1,13 @@
 <resources>
+
+    <!-- configuration & system strings #########################################################-->
     <string name="app_name">Petimo</string>
-    <string name="button_exec_demo">Execute Demo</string>
     <string name="preference_file_settings">de.tud.nhd.PREFERENCE_FILE_SETTINGS</string>
     <string name="preference_file_monitor">de.tud.nhd.PREFERENCE_FILE_MONITOR</string>
-    <string name="loading_text">loading..</string>
-    <string name="confirm_yes">Yes</string>
-    <string name="confirm_no">No</string>
-    <string name="confirm_ok">OK</string>
 
+
+    <string name="drawer_open">Drawer Opened</string>
+    <string name="drawer_close">Drawer Closed</string>
     <!-- Please adapt MainActivity after changing this array ! -->
     <string-array name="navigation_titles">
         <item>Monitor</item>
@@ -17,41 +17,64 @@
         <item>Setting</item>
         <item>Demo</item>
     </string-array>
-    <string name="drawer_open">Drawer Opened</string>
-    <string name="drawer_close">Drawer Closed</string>
+
+    <string-array name="priorities">
+        <item>Lowest</item>
+        <item>Low</item>
+        <item>Normal</item>
+        <item>High</item>
+        <item>Highest</item>
+    </string-array>
+
+    <!-- Common short text with colon ###########################################################-->
+    <string name="colon_category">Category:</string>
+    <string name="colon_task">Task:</string>
+    <string name="colon_priority">Priority:</string>
+    <string name="colon_new_category">New Category:</string>
+    <string name="colon_new_task">New Task:</string>
+    <string name="colon_start_time">Start time:</string>
+    <string name="colon_recent_monitors">Recent monitors:</string>
+    <string name="colon_date">Date:</string>
+
+    <!-- Common button text -->
+    <string name="button_stop_monitor">Stop Monitor</string>
+    <string name="button_start_monitor">Start Monitor</string>
+    <string name="button_execute_demo">Execute Demo</string>
+
+    <string name="button_start">Start</string>
+    <string name="button_ok">OK</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_create">Create</string>
+
+    <string name="button_cancel">Cancel</string>
+    <string name="button_no">No</string>
+    <string name="button_back"> Back </string>
+
+    <string name="button_new_category">New Category</string>
+    <string name="button_new_task">New Task</string>
+
+
+    <!-- Common message #########################################################################-->
+    <string name="message_confirm_stop_monitor">Stop the monitor?</string>
+    <string name="message_confirm_start_monitor">To be monitored:</string>
+
+
+
+    <!-- Other strings ##########################################################################-->
+    <string name="loading_text">loading..</string>
+    <string name="hello_blank_fragment">Under construction</string>
+
+
+    <!-- Individual Strings #####################################################################-->
 
     <!-- ModeOffFragment -->
-    <string name="offmodefragment_text_view_category">Category:</string>
-    <string name="offmodefragment_text_view_task">Task:</string>
-    <string name="offmodefragment_button_startmonitor">Start Monitor</string>
-    <string name="offmodefragment_text_view_recentmonitors">Recent monitors:</string>
     <string-array name="spinner_default">
         <item>No data</item>
     </string-array>
 
     <!-- ModeOnFragment -->
     <string name="onmodefragment_text_view_monitoring">Monitoring</string>
-    <string name="onmodefragment_text_view_date">Date:</string>
-    <string name="onmodefragment_text_view_starttime">Start time:</string>
-    <string name="onmodefragment_button_stopmonitor">Stop Monitor</string>
-
-    <!-- ConfirmStopDialogFragment-->
-    <string name="confirmstopdialog_message">Stop the monitor?</string>
-
-    <!-- ConfirmStartDialogFragment-->
-    <string name="confirmstartdialog_message">To be monitored</string>
-    <string name="confirmstartdialog_yes">Start</string>
-    <string name="confirmstartdialog_no">Cancel</string>
-
-    <!-- MonitorResultActivity -->
-    <string name="MonitorResultActivity"> Back </string>
 
 
-    <!-- EditTaskFragment -->
-    <string name="editTaskFragment_add_cat">New Category</string>
-    <string name="editTaskFragment_add_task">New Task</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

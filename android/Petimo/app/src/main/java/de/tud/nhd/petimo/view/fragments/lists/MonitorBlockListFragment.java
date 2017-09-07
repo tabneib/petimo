@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.controller.TimeUtils;
-import de.tud.nhd.petimo.model.MonitorBlock;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.MonitorBlockRecyclerViewAdapter;
 
 /**
@@ -74,7 +73,7 @@ public class MonitorBlockListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_monitorblock_list, container, false);
+        View view = inflater.inflate(R.layout.list_monitorblock, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {

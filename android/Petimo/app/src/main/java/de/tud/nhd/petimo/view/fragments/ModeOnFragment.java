@@ -13,6 +13,7 @@ import android.widget.TextView;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStopDialogFragment;
+import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,8 +44,10 @@ public class ModeOnFragment extends Fragment {
      * @return the ModeOnFragment instance
      */
     public static ModeOnFragment getInstance(){
-        if(_instance == null)
-            return new ModeOnFragment();
+        if(_instance == null){
+            _instance = new ModeOnFragment();
+            return _instance;
+        }
         else return _instance;
     }
     @Override
@@ -99,9 +102,9 @@ public class ModeOnFragment extends Fragment {
         String[] monitorInfo = controller.getLiveMonitorInfo();
         textViewCatTask.setText(monitorInfo[0] + " / " + monitorInfo[1]);
         textViewDate.setText(
-                getString(R.string.onmodefragment_text_view_date) + " " + monitorInfo[2]);
+                getString(R.string.colon_date) + " " + monitorInfo[2]);
         textViewStartTime.setText(
-                getString(R.string.onmodefragment_text_view_starttime) + " " + monitorInfo[3]);
+                getString(R.string.colon_start_time) + " " + monitorInfo[3]);
     }
 
     @Override

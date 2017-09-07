@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:background="@color/colorPrimary">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/categoryBlockHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -22,20 +22,23 @@
                 android:text="@string/loading_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="80"
                 android:layout_marginTop="4dp"
                 android:layout_marginLeft="4dp"/>
 
             <Button
                 android:id="@+id/button_add_task"
-                android:text="@string/editTaskFragment_add_task"
+                android:text="@string/button_new_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:textSize="13dp"
                 android:layout_marginRight="4dp"
                 android:layout_toRightOf="@+id/textViewCatName"
                 android:layout_alignParentRight="true"/>
 
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/task_list_container"

@@ -2,21 +2,30 @@ package de.tud.nhd.petimo.view.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import de.tud.nhd.petimo.R;
+import de.tud.nhd.petimo.model.PetimoContract;
+import de.tud.nhd.petimo.view.fragments.dialogs.AddCatDialogFragment;
 import de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment;
-import de.tud.nhd.petimo.view.fragments.lists.MonitorTaskListFragment;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class EditTasksFragment extends Fragment {
 
+
+    private static final String TAG = "EditTaskFragment";
     private static EditTasksFragment _instance;
+    private Button addCatButton;
+    private MonitorCategoryListFragment catListFragment;
+
     public EditTasksFragment() {
         // Required empty public constructor
     }
@@ -26,8 +35,11 @@ public class EditTasksFragment extends Fragment {
      * @return the EditTaskFragment instance
      */
     public static EditTasksFragment getInstance(){
-        if(_instance == null)
-            return new EditTasksFragment();
+        if(_instance == null){
+            _instance = new EditTasksFragment();
+            Log.d(TAG, "Initialized ! =====> " + _instance);
+            return _instance;
+        }
         else return _instance;
     }
 
@@ -38,13 +50,25 @@ public class EditTasksFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_edit_tasks, container, false);
     }
 
-
     @Override
-    public void onStart() {
-        super.onStart();
-        // Display the list of categories and tasks
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        catListFragment = MonitorCategoryListFragment.getInstance();
         getActivity().getSupportFragmentManager().beginTransaction().add(
-                R.id.tasks_list_fragment_container,
-                MonitorCategoryListFragment.getInstance()).commit();
+                R.id.tasks_list_fragment_container, catListFragment).commit();
+
+
+        addCatButton = (Button) this.getActivity().findViewById(R.id.button_add_task);
+        addCatButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                AddCatDialogFragment dialogFragment = new AddCatDialogFragment();
+                dialogFragment.catListFragment = catListFragment;
+                dialogFragment.show(getActivity().getSupportFragmentManager(), null);
+            }
+        });
+
     }
 }

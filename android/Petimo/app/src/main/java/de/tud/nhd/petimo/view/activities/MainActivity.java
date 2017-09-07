@@ -16,22 +16,27 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.controller.ResponseCode;
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
+import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
 import de.tud.nhd.petimo.view.fragments.DemoFragment;
 import de.tud.nhd.petimo.view.fragments.EditBlocksFragment;
 import de.tud.nhd.petimo.view.fragments.EditTasksFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOffFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOnFragment;
-import de.tud.nhd.petimo.view.fragments.OnModeFragmentInteractionListener;
+import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
+import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.SettingFragment;
 import de.tud.nhd.petimo.view.fragments.StatisticsFragment;
+import de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment;
 
-public class MainActivity extends AppCompatActivity implements OnModeFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity
+        implements OnModeFragmentInteractionListener, OnEditTaskFragmentInteractionListener{
 
     final String TAG = "MainActivity";
     Toolbar toolBar;
@@ -199,6 +204,52 @@ public class MainActivity extends AppCompatActivity implements OnModeFragmentInt
         Intent intent = new Intent(this, MonitorResultActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    public void onConfirmAddingCatButtonClicked(
+            MonitorCategoryListFragment catListFragment, String inputCat, int priority) {
+
+        Log.d(TAG, "Confirm to add new Cat =====> " + inputCat + " - priority  ===> " + priority);
+        try{
+            controller.addCategory(inputCat, priority);
+        }
+        catch (DbErrorException e){
+            // TODO Notify the user !
+        }
+        catch (InvalidCategoryException e){
+            // TODO Check for this during the user is typing !
+        }
+        catch(InvalidInputNameException e){
+            // TODO Check for this during the user is typing !
+        }
+
+        // TODO display a snack bar to notify the usr
+        // Just for now: display a Toast
+        Toast.makeText(this, "Added new category: " + inputCat, Toast.LENGTH_LONG).show();
+
+        // Update the recyclerView
+        catListFragment.updateView(inputCat);
+
+
+        /* Hard-coded: Re-add the whole MonitorCategoryListFragment
+        getActivity().getSupportFragmentManager().beginTransaction().
+                remove(MonitorCategoryListFragment.getInstance()).commit();
+
+        getActivity().getSupportFragmentManager().beginTransaction().add(
+                R.id.tasks_list_fragment_container,
+                MonitorCategoryListFragment.getInstance()).commit();*/
+
+    }
+
+    @Override
+    public void onConfirmAddingTaskStopButtonClicked() {
+        // TODO
+    }
+
+
+    //--------------------------------------------------------------------------------------------->
+    //  Drawer
+    //<---------------------------------------------------------------------------------------------
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {

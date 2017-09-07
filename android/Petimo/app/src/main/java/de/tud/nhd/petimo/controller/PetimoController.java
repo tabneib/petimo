@@ -26,11 +26,13 @@ import de.tud.nhd.petimo.view.activities.MainActivity;
  */
 
 public class PetimoController {
+
     private static final String TAG = "PetimoController";
     private static PetimoController _instance;
     private PetimoDbWrapper dbWrapper;
     private PetimoSharedPref sharedPref;
     private static Context context;
+
 
 
     //<---------------------------------------------------------------------------------------------
@@ -66,6 +68,7 @@ public class PetimoController {
             return _instance;
     }
 
+    /*
     public static void initialize(Context context) throws Exception{
         if(_instance != null)
             throw new Exception("Cannot initialize multiple instances of Controller!");
@@ -75,7 +78,7 @@ public class PetimoController {
         }
     }
 
-    /*
+
     public static PetimoController getInstance() throws Exception{
         if (_instance == null)
             throw new Exception("PetimoController is not yet initialized!");
@@ -257,6 +260,16 @@ public class PetimoController {
         return dbWrapper.getAllCatNames();
     }
 
+
+    /**
+     *
+     * @param catName
+     * @return
+     */
+    public MonitorCategory getCatByName(String catName){
+        Log.d(TAG, "is about to getCatByName ====> " + catName);
+        return dbWrapper.getCatByName(catName);
+    }
     /**
      *
      * @return
@@ -341,4 +354,6 @@ public class PetimoController {
         // TODO implement me. For now never overnight, good boy :)
         return 0;
     }
+
+
 }

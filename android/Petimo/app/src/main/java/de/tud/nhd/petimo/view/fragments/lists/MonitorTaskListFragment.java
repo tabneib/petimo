@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ import de.tud.nhd.petimo.view.fragments.lists.adapters.MonitorTaskRecyclerViewAd
  */
 public class MonitorTaskListFragment extends Fragment {
 
-
+    private static final String TAG = "TaskListFragment";
     private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String ARG_PARENT_CATEGORY = "parent-category";
     // default is linear layout
@@ -59,7 +60,7 @@ public class MonitorTaskListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_monitortask_list, container, false);
+        View view = inflater.inflate(R.layout.list_monitortask, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -70,8 +71,10 @@ public class MonitorTaskListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+            Log.d(TAG, "gonna set my Task Adapter, parentCat =====> " + parentCat);
             recyclerView.setAdapter(new MonitorTaskRecyclerViewAdapter(
                     PetimoController.getInstance().getAllTasks(parentCat)));
+            Log.d(TAG, "Adapter set ! parentCat =====> " + parentCat);
         }
         return view;
     }

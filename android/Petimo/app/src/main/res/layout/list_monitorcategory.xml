@@ -10,4 +10,4 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment"
-    tools:listitem="@layout/fragment_monitorcategory" />
+    tools:listitem="@layout/list_item_monitorcategory" />

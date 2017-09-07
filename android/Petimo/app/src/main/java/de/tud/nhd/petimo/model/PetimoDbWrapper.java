@@ -308,6 +308,36 @@ public class PetimoDbWrapper {
         return blocks;
     }
 
+
+    /**
+     * Get the category object from the given category name
+     * @param catName the name of the category
+     * @return the category object
+     */
+    public MonitorCategory getCatByName(String catName){
+        MonitorCategory category = null;
+        String selection = PetimoContract.Categories.COLUMN_NAME_NAME + " = ?";
+        String[] selectionArgs = {catName};
+        Cursor cursor = readableDb.query(PetimoContract.Categories.TABLE_NAME,
+                PetimoContract.Categories.getAllColumns(),
+                selection, selectionArgs, null, null, null, null);
+
+        while(cursor.moveToNext()){
+            Log.d(TAG, "pre-fetching categories: " + cursor.getString(cursor.getColumnIndexOrThrow(
+                    PetimoContract.Categories.COLUMN_NAME_NAME)));
+
+            category = new MonitorCategory(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(
+                            PetimoContract.Categories._ID)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(
+                            PetimoContract.Categories.COLUMN_NAME_NAME)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(
+                            PetimoContract.Categories.COLUMN_NAME_PRIORITY)));
+        }
+        cursor.close();
+        return category;
+    }
+
     /**
      * Return all tasks the belong to the given category
      * @param catName name of the category

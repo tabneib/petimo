@@ -25,8 +25,10 @@ public class StatisticsFragment extends Fragment {
      * @return the StatisticsFragment instance
      */
     public static StatisticsFragment getInstance(){
-        if (_instance == null)
-            return new StatisticsFragment();
+        if (_instance == null){
+            _instance = new StatisticsFragment();
+            return _instance;
+        }
         else
             return _instance;
     }

@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStartDialogFragment;
+import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 
 /**
  * Activities that contain this fragment must implement the
@@ -42,8 +43,10 @@ public class ModeOffFragment extends Fragment {
      * @return the ModeOffFragment instance
      */
     public static ModeOffFragment getInstance(){
-        if(_instance == null)
-            return new ModeOffFragment();
+        if(_instance == null){
+            _instance = new ModeOffFragment();
+            return _instance;
+        }
         else return _instance;
     }
 
@@ -112,7 +115,7 @@ public class ModeOffFragment extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                // TODO implement or remove
             }
         });
 

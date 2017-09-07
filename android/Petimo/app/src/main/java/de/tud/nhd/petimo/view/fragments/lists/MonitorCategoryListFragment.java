@@ -6,12 +6,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.model.MonitorCategory;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.MonitorCategoryRecyclerViewAdapter;
 
 /**
@@ -19,9 +23,11 @@ import de.tud.nhd.petimo.view.fragments.lists.adapters.MonitorCategoryRecyclerVi
  */
 public class MonitorCategoryListFragment extends Fragment {
 
+    private static final String TAG = "CatListFragment";
     private static MonitorCategoryListFragment _instance;
+    private MonitorCategoryRecyclerViewAdapter adapter;
     private int mColumnCount = 1;
-    PetimoController controller;
+    private List<MonitorCategory> catList;
 
 
     /**
@@ -36,27 +42,27 @@ public class MonitorCategoryListFragment extends Fragment {
      * @return the unique instance
      */
     public static MonitorCategoryListFragment getInstance(){
-        if (_instance == null)
-            return new MonitorCategoryListFragment();
-        else
+
+        // TODO: I still cannot figure out the cause of this bug, so I comment out the code fragment
+        return new MonitorCategoryListFragment();
+
+        /*if (_instance == null) {
+            _instance = new MonitorCategoryListFragment();
             return _instance;
+        }
+        else
+            return _instance;*/
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try{
-            controller = PetimoController.getInstance();
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_monitorcategory_list, container, false);
+        View view = inflater.inflate(R.layout.list_monitorcategory, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -67,8 +73,9 @@ public class MonitorCategoryListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(
-                    new MonitorCategoryRecyclerViewAdapter(this, controller.getAllCats()));
+            this.catList = PetimoController.getInstance().getAllCats();
+            this.adapter = new MonitorCategoryRecyclerViewAdapter(this, catList);
+            recyclerView.setAdapter(adapter);
         }
         return view;
     }
@@ -82,6 +89,23 @@ public class MonitorCategoryListFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    /**
+     * Update the recyclerView in case a new category is added into the data
+     * @param newCatName Name of the newly added category
+     */
+    public void updateView(String newCatName){
+        // Update the data stored in the adapter by adding the newly added category to the beginning
+        // of the item list
+        Log.d(TAG, "stored adapter is null ====> " + (adapter==null));
+        Log.d(TAG, "stored catList size ====> " + catList.size());
+
+        Log.d(TAG, "New cat object ====> " + PetimoController.getInstance().getCatByName(newCatName));
+        adapter.catList.add(0, PetimoController.getInstance().getCatByName(newCatName));
+        // Then notify the adapter about the change to adapt the view
+        adapter.notifyItemInserted(0);
+        //adapter.notifyDataSetChanged();
     }
 
 }

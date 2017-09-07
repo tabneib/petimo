@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list"
-    android:name="de.tud.nhd.petimo.view.fragments.MonitorBlockListFragment"
+    android:name="de.tud.nhd.petimo.view.fragments.lists.MonitorTaskListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="de.tud.nhd.petimo.view.fragments.lists.MonitorBlockListFragment"
-    tools:listitem="@layout/fragment_monitorblock" />
+    tools:context="de.tud.nhd.petimo.view.fragments.lists.MonitorTaskListFragment"
+    tools:listitem="@layout/list_item_monitortask" />
