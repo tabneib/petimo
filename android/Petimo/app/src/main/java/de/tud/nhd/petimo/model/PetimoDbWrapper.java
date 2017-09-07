@@ -11,6 +11,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.controller.ResponseCode;
 import de.tud.nhd.petimo.controller.TimeUtils;
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
@@ -144,24 +145,24 @@ public class PetimoDbWrapper {
 
     /**
      *
-     * @param name
+     * @param catName
      * @param category
      * @param priority
      * @return the corresponding response code
      */
-    public ResponseCode insertTask(String name, String category, int priority)
+    public ResponseCode insertTask(String catName, String category, int priority)
             throws DbErrorException, InvalidInputNameException, InvalidCategoryException {
-        if(!checkName(name))
-            throw new InvalidInputNameException("The input task name is invalid: " + name +
-                    " - please use other name");
+        if(!checkName(catName))
+            throw new InvalidInputNameException("The input task catName is invalid: " + catName +
+                    " - please use other catName");
         if (!checkCatExists(category))
-            throw new InvalidCategoryException("Category already exists: " + name);
-        if (checkTaskExists(name, category))
+            throw new InvalidCategoryException("Category already exists: " + catName);
+        if (checkTaskExists(catName, category))
             throw new InvalidCategoryException("Task already exists for the given category: "
-                    + category + " / " + name);
+                    + category + " / " + catName);
         else{
             ContentValues values = new ContentValues();
-            values.put(PetimoContract.Tasks.COLUMN_NAME_NAME, name);
+            values.put(PetimoContract.Tasks.COLUMN_NAME_NAME, catName);
             values.put(PetimoContract.Tasks.COLUMN_NAME_CATEGORY, category);
             values.put(PetimoContract.Tasks.COLUMN_NAME_PRIORITY, priority);
             if(writableDb.insert(PetimoContract.Tasks.TABLE_NAME, null, values) == -1)
@@ -478,7 +479,30 @@ public class PetimoDbWrapper {
         return writableDb.delete(PetimoContract.Monitor.TABLE_NAME, selection, selectionArgs);
     }
 
+    /**
+     * Remove a monitor task
+     * @param taskName
+     * @param catName
+     * @return
+     */
+    public int removeTask(String taskName, String catName){
+        String selection = PetimoContract.Tasks.COLUMN_NAME_NAME + " = ? AND " +
+                PetimoContract.Tasks.COLUMN_NAME_CATEGORY + " = ? ";
+        String[] selectionArgs = {taskName, catName};
+        return writableDb.delete(PetimoContract.Tasks.TABLE_NAME, selection, selectionArgs);
+    }
 
+    /**
+     * Remove a monitor category
+     * @param catName
+     * @return
+     */
+    public int removeCategory(String catName){
+        String selection = PetimoContract.Tasks.COLUMN_NAME_NAME + " = ? ";
+
+        String[] selectionArgs = {catName};
+        return writableDb.delete(PetimoContract.Categories.TABLE_NAME, selection, selectionArgs);
+    }
     //<---------------------------------------------------------------------------------------------
     // Core - Database - Tables
     //--------------------------------------------------------------------------------------------->

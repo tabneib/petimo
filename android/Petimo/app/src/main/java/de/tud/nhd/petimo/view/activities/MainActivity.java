@@ -99,6 +99,9 @@ public class MainActivity extends AppCompatActivity
         PetimoController.setContext(this);
         this.controller = PetimoController.getInstance();
 
+
+        // Choose the displaying mode
+        chooseDisplay(0);
     }
 
     @Override
@@ -118,8 +121,6 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        // Choose the displaying mode
-        chooseDisplay(0);
     }
 
 
@@ -153,18 +154,27 @@ public class MainActivity extends AppCompatActivity
                 break;
             default:
                 //Monitor
-                if (controller.isMonitoring())
-                    // There is ongoing live monitor
-                    displayFragment(ModeOnFragment.getInstance());
-                else
-                    // No ongoing live monitor
-                    displayFragment(ModeOffFragment.getInstance());
+                chooseModeToDisplay();
+
         }
         // Highlight the selected item on the navigation drawer,
         // update the title
         drawerList.setItemChecked(position, true);
     }
 
+
+    /**
+     * Choose the monitor mode (on/off) to display
+     */
+    private void chooseModeToDisplay(){
+        if (controller.isMonitoring())
+            // There is ongoing live monitor
+            displayFragment(ModeOnFragment.getInstance());
+        else
+            // No ongoing live monitor
+            displayFragment(ModeOffFragment.getInstance());
+
+    }
     /**
      *
      * @param fragment

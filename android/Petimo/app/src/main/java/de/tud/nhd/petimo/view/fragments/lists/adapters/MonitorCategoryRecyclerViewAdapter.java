@@ -2,18 +2,17 @@ package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.MonitorCategory;
 import de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment;
-import de.tud.nhd.petimo.view.fragments.lists.MonitorTaskListFragment;
 
 import java.util.List;
 
@@ -52,9 +51,54 @@ public class MonitorCategoryRecyclerViewAdapter extends
 
         // Nesting fragments inside RecyclerView is not recommended, so I use recyclerView directly
 
+        Log.d(TAG, "Input list size ====> " + PetimoController.getInstance().
+                getAllTasks(catList.get(position).getName()).size());
+        holder.taskAdapter = new MonitorTaskRecyclerViewAdapter(
+                PetimoController.getInstance().getAllTasks(catList.get(position).getName()));
+
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                        // Do nothing
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                        // Delete the task
+                        Log.d(TAG, "viewHolder position =====> " + viewHolder.getLayoutPosition());
+                        Log.d(TAG, "taskList size ===> " + holder.taskAdapter.taskList.size());
+                        Log.d(TAG, "gonna delete this task ====> (" +
+                                holder.taskAdapter.taskList.get(viewHolder.getLayoutPosition()).getName() +
+                            ", " + holder.taskAdapter.taskList.get(
+                                viewHolder.getLayoutPosition()).getCategory() + ")");
+
+
+                        PetimoController.getInstance().removeTask(
+                                holder.taskAdapter.taskList.get(viewHolder.getLayoutPosition()).getName(),
+                                holder.taskAdapter.taskList.get(
+                                        viewHolder.getLayoutPosition()).getCategory());
+
+                        Log.d(TAG, "taskList size ===> " + holder.taskAdapter.taskList.size());
+                        holder.taskAdapter.notifyItemRemoved(viewHolder.getLayoutPosition());
+                        //adapter.notifyItemRangeRemoved(viewHolder.getOldPosition(),1);
+                        holder.taskAdapter.taskList.remove(viewHolder.getLayoutPosition());
+
+                    }
+                };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(holder.taskListRecyclerView);
+
         holder.taskListRecyclerView.setLayoutManager(new LinearLayoutManager(fragment.getActivity()));
-        holder.taskListRecyclerView.setAdapter(new MonitorTaskRecyclerViewAdapter(
-                PetimoController.getInstance().getAllTasks(catList.get(position).getName())));
+        holder.taskListRecyclerView.setAdapter(holder.taskAdapter);
+
+
+
+
+
+
 
         // Setup the sub-fragment that displays the list of corresponding tasks
         /*MonitorTaskListFragment taskListFragment = (MonitorTaskListFragment) fragment.getActivity().
@@ -108,14 +152,15 @@ public class MonitorCategoryRecyclerViewAdapter extends
         public View view;
         public TextView catTextView;
         public RecyclerView taskListRecyclerView;
+        // Each ViewHolder must have its own MonitorTaskRecyclerViewAdapter
+        public MonitorTaskRecyclerViewAdapter taskAdapter;
 
         public ViewHolder(View view) {
             super(view);
+
             this.view = view;
             this.catTextView = (TextView) view.findViewById(R.id.textViewCatName);
             this.taskListRecyclerView = (RecyclerView) view.findViewById(R.id.task_list_recycler_view);
-
-
         }
 
         @Override

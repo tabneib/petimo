@@ -173,6 +173,25 @@ public class PetimoController {
         }
     }
 
+    /**
+     * Remove a monitor task
+     * @param taskName
+     * @param catName
+     * @return
+     */
+    public int removeTask(String taskName, String catName){
+        return this.dbWrapper.removeTask(taskName, catName);
+    }
+
+    /**
+     * Remove a monitor catefory
+     * @param catName
+     * @return
+     */
+    public int removeCategory(String catName){
+        return this.dbWrapper.removeCategory(catName);
+    }
+
     //<---------------------------------------------------------------------------------------------
     //  Core - Outputting
     // -------------------------------------------------------------------------------------------->

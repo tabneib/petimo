@@ -19,7 +19,7 @@ public class MonitorTaskRecyclerViewAdapter extends
         RecyclerView.Adapter<MonitorTaskRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = "TaskAdapter";
-    private final List<MonitorTask> taskList;
+    public List<MonitorTask> taskList;
 
     public MonitorTaskRecyclerViewAdapter(List<MonitorTask> items) {
         taskList = items;
@@ -35,13 +35,8 @@ public class MonitorTaskRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Log.d(TAG, "I am gonna binding position =====> " + position);
         holder.task = taskList.get(position);
         holder.taskNameTextView.setText(taskList.get(position).getName());
-
-
-        Log.d(TAG, "Done binding, position =====> " + position);
-        // TODO setup listener to support deleting task by swiping
     }
 
     @Override

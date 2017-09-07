@@ -6,10 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -62,7 +64,7 @@ public class MonitorCategoryListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.list_monitorcategory, container, false);
+        final View view = inflater.inflate(R.layout.list_monitorcategory, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -73,9 +75,35 @@ public class MonitorCategoryListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+
+            ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
+                    new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                @Override
+                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    // Do nothing
+                    return false;
+                }
+
+                @Override
+                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                    // Delete the category
+                    PetimoController.getInstance().removeCategory(
+                            adapter.catList.get(viewHolder.getLayoutPosition()).getName());
+                    adapter.notifyItemRemoved(viewHolder.getLayoutPosition());
+                    //adapter.notifyItemRangeRemoved(viewHolder.getOldPosition(),1);
+                    adapter.catList.remove(viewHolder.getLayoutPosition());
+
+
+                }
+            };
+
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+            itemTouchHelper.attachToRecyclerView(recyclerView);
+
             this.catList = PetimoController.getInstance().getAllCats();
             this.adapter = new MonitorCategoryRecyclerViewAdapter(this, catList);
             recyclerView.setAdapter(adapter);
+
         }
         return view;
     }
