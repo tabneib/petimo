@@ -40,8 +40,8 @@
 
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/task_list_container"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/task_list_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/categoryBlockHeader"/>

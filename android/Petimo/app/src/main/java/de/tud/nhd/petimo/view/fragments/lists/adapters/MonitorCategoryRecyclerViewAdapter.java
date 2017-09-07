@@ -1,5 +1,6 @@
 package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
+import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.MonitorCategory;
 import de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment;
 import de.tud.nhd.petimo.view.fragments.lists.MonitorTaskListFragment;
@@ -24,13 +26,12 @@ public class MonitorCategoryRecyclerViewAdapter extends
     private static final String TAG = "CatAdapter";
     public List<MonitorCategory> catList;
     private MonitorCategoryListFragment fragment;
-    private int count = 0;
-    private MonitorTaskListFragment taskListFragment;
+
 
     public MonitorCategoryRecyclerViewAdapter(
             MonitorCategoryListFragment fragment, List<MonitorCategory> items) {
-        catList = items;
         this.fragment = fragment;
+        this.catList = items;
     }
 
     @Override
@@ -42,23 +43,51 @@ public class MonitorCategoryRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Log.d(TAG, "gonna bind position ====> " + position +" ====> " + catList.get(position).getName());
-        holder.category = catList.get(position);
+        Log.d(TAG, "catList size ===> " + catList.size());
+        Log.d(TAG, "gonna bind position ====> " + position +" ====> "
+                + catList.get(position).getName());
 
         holder.catTextView.setText(catList.get(position).getName());
 
-        // Setup the sub-fragment that displays the list of corresponding tasks
 
-        fragment.getActivity().getSupportFragmentManager().beginTransaction().
-                add(holder.taskListContainer.getId(), MonitorTaskListFragment.newInstance(
-                        1, catList.get(position).getName())).commit();
+        // Nesting fragments inside RecyclerView is not recommended, so I use recyclerView directly
+
+        holder.taskListRecyclerView.setLayoutManager(new LinearLayoutManager(fragment.getActivity()));
+        holder.taskListRecyclerView.setAdapter(new MonitorTaskRecyclerViewAdapter(
+                PetimoController.getInstance().getAllTasks(catList.get(position).getName())));
+
+        // Setup the sub-fragment that displays the list of corresponding tasks
+        /*MonitorTaskListFragment taskListFragment = (MonitorTaskListFragment) fragment.getActivity().
+                getSupportFragmentManager().findFragmentByTag(
+                TAG + "-" + catList.get(position).getName());*/
+
+
+        /*
+        if (taskListFragment == null) {
+            // Generate an unique id for the container
+            int genId = View.generateViewId();
+            Log.d(TAG, "Generated ID  =====> " + genId);
+            holder.taskListRecyclerView.setId(genId);
+            Log.d(TAG, "TaskListFragment for this postition not yet created, so create, id ===> "+
+            holder.taskListRecyclerView.getId());
+            fragment.getActivity().getSupportFragmentManager().beginTransaction().
+                    add(holder.taskListRecyclerView.getId(), MonitorTaskListFragment.newInstance(
+                            1, catList.get(position).getName()),
+                            TAG + "-" + catList.get(position).getName()).commit();
+        }
+        else{
+            Log.d(TAG, "TaskListFragment for this postition already created, id ===> "+
+                    holder.taskListRecyclerView.getId());
+            fragment.getActivity().getSupportFragmentManager().beginTransaction().
+                    replace(holder.taskListRecyclerView.getId(), taskListFragment).commit();
+        }*/
 
         /*if (taskListFragment == null) {
             Log.d(TAG, "gonna setup the sub-fragment to display tasks");
             taskListFragment =
                     MonitorTaskListFragment.newInstance(1, catList.get(position).getName());
             fragment.getActivity().getSupportFragmentManager().beginTransaction().
-                    add(holder.taskListContainer.getId(), taskListFragment).commit();
+                    add(holder.taskListRecyclerView.getId(), taskListFragment).commit();
         }
         else
             Log.d(TAG, "sub-fragment already setup for this position !");*/
@@ -78,19 +107,15 @@ public class MonitorCategoryRecyclerViewAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder {
         public View view;
         public TextView catTextView;
-        public FrameLayout taskListContainer;
-        public MonitorCategory category;
+        public RecyclerView taskListRecyclerView;
 
         public ViewHolder(View view) {
             super(view);
             this.view = view;
             this.catTextView = (TextView) view.findViewById(R.id.textViewCatName);
-            this.taskListContainer = (FrameLayout) view.findViewById(R.id.task_list_container);
+            this.taskListRecyclerView = (RecyclerView) view.findViewById(R.id.task_list_recycler_view);
 
-            // Hard-coded for now by adding a large number (10000) to the id.
-            // TODO: Solve the issue with ID varying in a more generic way !
-            taskListContainer.setId(taskListContainer.getId() + 10000 + count);
-            count++;
+
         }
 
         @Override

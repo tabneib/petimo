@@ -102,7 +102,9 @@ public class MonitorCategoryListFragment extends Fragment {
         Log.d(TAG, "stored catList size ====> " + catList.size());
 
         Log.d(TAG, "New cat object ====> " + PetimoController.getInstance().getCatByName(newCatName));
-        adapter.catList.add(0, PetimoController.getInstance().getCatByName(newCatName));
+        //adapter.catList.add(0, PetimoController.getInstance().getCatByName(newCatName));
+        // This is for logging purpose
+        this.catList.add(0, PetimoController.getInstance().getCatByName(newCatName));
         // Then notify the adapter about the change to adapt the view
         adapter.notifyItemInserted(0);
         //adapter.notifyDataSetChanged();

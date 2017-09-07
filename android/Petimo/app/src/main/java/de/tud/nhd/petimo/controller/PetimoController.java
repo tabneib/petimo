@@ -4,9 +4,11 @@ package de.tud.nhd.petimo.controller;
 import android.content.Context;
 import android.util.Log;
 
+import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.List;
 
+import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputDateException;
@@ -32,8 +34,6 @@ public class PetimoController {
     private PetimoDbWrapper dbWrapper;
     private PetimoSharedPref sharedPref;
     private static Context context;
-
-
 
     //<---------------------------------------------------------------------------------------------
     // Init
@@ -354,6 +354,5 @@ public class PetimoController {
         // TODO implement me. For now never overnight, good boy :)
         return 0;
     }
-
 
 }

@@ -18,6 +18,7 @@ import de.tud.nhd.petimo.view.fragments.lists.adapters.MonitorTaskRecyclerViewAd
 
 /**
  * A fragment representing a list of Items.
+ * TODO : DELETE THIS !
  */
 public class MonitorTaskListFragment extends Fragment {
 
