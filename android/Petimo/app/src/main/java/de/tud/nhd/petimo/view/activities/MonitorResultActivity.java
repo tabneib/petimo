@@ -34,9 +34,8 @@ public class MonitorResultActivity extends AppCompatActivity {
         });
         blockListFragment = MonitorBlockListFragment.newInstance(
                 1, TimeUtils.getTodayDate()-1, TimeUtils.getTodayDate());
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.activity_monitor_result_fragment_container, blockListFragment);
-        fragmentTransaction.commit();
+        getSupportFragmentManager().beginTransaction().add(
+                R.id.activity_monitor_result_fragment_container, blockListFragment).commit();
 
     }
 

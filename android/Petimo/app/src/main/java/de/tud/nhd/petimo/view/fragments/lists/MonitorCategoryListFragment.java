@@ -126,15 +126,20 @@ public class MonitorCategoryListFragment extends Fragment {
     public void updateView(String newCatName){
         // Update the data stored in the adapter by adding the newly added category to the beginning
         // of the item list
-        Log.d(TAG, "stored adapter is null ====> " + (adapter==null));
-        Log.d(TAG, "stored catList size ====> " + catList.size());
 
-        Log.d(TAG, "New cat object ====> " + PetimoController.getInstance().getCatByName(newCatName));
+        Log.d(TAG, "New cat object ====> " +
+                PetimoController.getInstance().getCatByName(newCatName).getName());
         //adapter.catList.add(0, PetimoController.getInstance().getCatByName(newCatName));
         // This is for logging purpose
+        Log.d(TAG, "Before: catList in Fragment - size =====> " + catList.size());
+        Log.d(TAG, "Before: catList in Adapter - size =====> " + this.adapter.catList.size());
         this.catList.add(0, PetimoController.getInstance().getCatByName(newCatName));
+
+        //this.adapter.catList.add(0, PetimoController.getInstance().getCatByName(newCatName));
+        Log.d(TAG, "After: catList in Fragment - size =====> " + catList.size());
+        Log.d(TAG, "After: catList in Adapter - size =====> " + this.adapter.catList.size());
         // Then notify the adapter about the change to adapt the view
-        adapter.notifyItemInserted(0);
+        this.adapter.notifyItemInserted(0);
         //adapter.notifyDataSetChanged();
     }
 

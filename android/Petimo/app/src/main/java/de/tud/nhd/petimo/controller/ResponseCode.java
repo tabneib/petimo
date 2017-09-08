@@ -11,5 +11,5 @@ public enum ResponseCode {
     INVALID_TASK,
     INVALID_CATEGORY,
     DB_ERROR,*/
-    OK;
+    OK
 }

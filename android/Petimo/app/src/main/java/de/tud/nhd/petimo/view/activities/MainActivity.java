@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
 
@@ -184,6 +183,28 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().
                 replace(R.id.content_frame, fragment).commit();
     }
+
+    private void displayFragment(Fragment fragment, String tag){
+
+        Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(tag);
+        if(oldFragment == null){
+            Log.d(TAG, "No old fragment instance found, creating new one");
+            getSupportFragmentManager().beginTransaction().
+                    add(R.id.content_frame, fragment, tag).commit();
+        }
+        else{
+            Log.d(TAG, "Old fragment instance found, use it");
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.content_frame, fragment, tag).commit();
+            getSupportFragmentManager().beginTransaction().
+                    add(R.id.content_frame, fragment, tag).commit();
+        }
+
+    }
+
+    //--------------------------------------------------------------------------------------------->
+    // Handle Callback Listeners
+    //<---------------------------------------------------------------------------------------------
 
     @Override
     public void onConfirmStartButtonClicked(String inputCat, String inputTask) {
@@ -301,7 +322,8 @@ public class MainActivity extends AppCompatActivity
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle your other action bar items...
+        // Handle other action bar items..
+
         return super.onOptionsItemSelected(item);
     }
 

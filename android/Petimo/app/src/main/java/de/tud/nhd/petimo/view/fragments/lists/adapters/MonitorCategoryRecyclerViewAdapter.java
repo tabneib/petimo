@@ -44,27 +44,30 @@ public class MonitorCategoryRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        Log.d(TAG, "catList size ===> " + catList.size());
         Log.d(TAG, "gonna bind position ====> " + position +" ====> "
                 + catList.get(position).getName());
+        Log.d(TAG, "Adapter's catList size ====> " + this.catList.size());
 
+        holder.catName = catList.get(position).getName();
         holder.catTextView.setText(catList.get(position).getName());
         holder.newTaskButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
+
                 AddTaskDialogFragment dialogFragment = new AddTaskDialogFragment();
                 dialogFragment.catListFragment = fragment;
                 dialogFragment.viewHolder = holder;
-                dialogFragment.category = catList.get(position).getName();
+                // This is a bug! The value of position will be fixed at this point,
+                // Hence it is nor updated upon adding new categor => yield wrong category name
+                //dialogFragment.category = catList.get(position).getName();
+                dialogFragment.category = holder.catName;
                 dialogFragment.show(fragment.getActivity().getSupportFragmentManager(), null);
             }
         });
 
         // Nesting fragments inside RecyclerView is not recommended, so I use recyclerView directly
 
-        Log.d(TAG, "Input list size ====> " + PetimoController.getInstance().
-                getAllTasks(catList.get(position).getName()).size());
         holder.taskAdapter = new MonitorTaskRecyclerViewAdapter(
                 PetimoController.getInstance().getAllTasks(catList.get(position).getName()));
 
@@ -79,14 +82,6 @@ public class MonitorCategoryRecyclerViewAdapter extends
                     @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                         // Delete the task
-                        Log.d(TAG, "viewHolder position =====> " + viewHolder.getLayoutPosition());
-                        Log.d(TAG, "taskList size ===> " + holder.taskAdapter.taskList.size());
-                        Log.d(TAG, "gonna delete this task ====> (" +
-                                holder.taskAdapter.taskList.get(viewHolder.getLayoutPosition()).getName() +
-                            ", " + holder.taskAdapter.taskList.get(
-                                viewHolder.getLayoutPosition()).getCategory() + ")");
-
-
                         PetimoController.getInstance().removeTask(
                                 holder.taskAdapter.taskList.get(viewHolder.getLayoutPosition()).getName(),
                                 holder.taskAdapter.taskList.get(
@@ -165,6 +160,7 @@ public class MonitorCategoryRecyclerViewAdapter extends
         public TextView catTextView;
         public Button newTaskButton;
         public RecyclerView taskListRecyclerView;
+        public String catName;
         // Each ViewHolder must have its own MonitorTaskRecyclerViewAdapter
         public MonitorTaskRecyclerViewAdapter taskAdapter;
 

@@ -44,11 +44,12 @@ public class ModeOnFragment extends Fragment {
      * @return the ModeOnFragment instance
      */
     public static ModeOnFragment getInstance(){
-        if(_instance == null){
+        return new ModeOnFragment();
+        /*if(_instance == null){
             _instance = new ModeOnFragment();
             return _instance;
         }
-        else return _instance;
+        else return _instance;*/
     }
     @Override
     public void onAttach(Context context) {

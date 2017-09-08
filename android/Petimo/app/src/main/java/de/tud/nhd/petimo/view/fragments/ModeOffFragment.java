@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListen
 public class ModeOffFragment extends Fragment {
 
     private static ModeOffFragment _instance;
-    private final String TAG = "ModeOffFragment";
+    private static final String TAG = "ModeOffFragment";
     private OnModeFragmentInteractionListener mListener;
     Spinner catSpinner;
     Spinner taskSpinner;
@@ -44,10 +45,12 @@ public class ModeOffFragment extends Fragment {
      */
     public static ModeOffFragment getInstance(){
         if(_instance == null){
+            Log.d(TAG, "New instance created !!!");
             _instance = new ModeOffFragment();
-            return _instance;
         }
-        else return _instance;
+
+        Log.d(TAG, "Return instance  !!!");
+        return _instance;
     }
 
     @Override
