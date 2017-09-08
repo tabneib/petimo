@@ -15,8 +15,8 @@ import android.widget.Spinner;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
-import de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment;
-import de.tud.nhd.petimo.view.fragments.lists.adapters.MonitorCategoryRecyclerViewAdapter;
+import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
+import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,8 +30,8 @@ public class AddTaskDialogFragment extends DialogFragment {
     private Button positiveButton;
     private Button negativeButton;
 
-    public MonitorCategoryListFragment catListFragment = null;
-    public MonitorCategoryRecyclerViewAdapter.ViewHolder viewHolder = null;
+    public CategoryListFragment catListFragment = null;
+    public CategoryRecyclerViewAdapter.ViewHolder viewHolder = null;
     public String category;
 
     @Override

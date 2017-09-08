@@ -24,20 +24,24 @@ import de.tud.nhd.petimo.controller.ResponseCode;
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
+import de.tud.nhd.petimo.model.MonitorBlock;
+import de.tud.nhd.petimo.model.MonitorDay;
 import de.tud.nhd.petimo.view.fragments.DemoFragment;
 import de.tud.nhd.petimo.view.fragments.EditBlocksFragment;
 import de.tud.nhd.petimo.view.fragments.EditTasksFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOffFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOnFragment;
+import de.tud.nhd.petimo.view.fragments.listener.OnEditDayFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.SettingFragment;
 import de.tud.nhd.petimo.view.fragments.StatisticsFragment;
-import de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment;
-import de.tud.nhd.petimo.view.fragments.lists.adapters.MonitorCategoryRecyclerViewAdapter;
+import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
+import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapter;
 
 public class MainActivity extends AppCompatActivity
-        implements OnModeFragmentInteractionListener, OnEditTaskFragmentInteractionListener{
+        implements OnModeFragmentInteractionListener, OnEditTaskFragmentInteractionListener,
+        OnEditDayFragmentInteractionListener {
 
     final String TAG = "MainActivity";
     Toolbar toolBar;
@@ -239,7 +243,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConfirmAddingCatButtonClicked(
-            MonitorCategoryListFragment catListFragment, String inputCat, int priority) {
+            CategoryListFragment catListFragment, String inputCat, int priority) {
 
         try{
             controller.addCategory(inputCat, priority);
@@ -262,19 +266,19 @@ public class MainActivity extends AppCompatActivity
         catListFragment.updateView(inputCat);
 
 
-        /* Hard-coded: Re-add the whole MonitorCategoryListFragment
+        /* Hard-coded: Re-add the whole CategoryListFragment
         getActivity().getSupportFragmentManager().beginTransaction().
-                remove(MonitorCategoryListFragment.getInstance()).commit();
+                remove(CategoryListFragment.getInstance()).commit();
 
         getActivity().getSupportFragmentManager().beginTransaction().add(
                 R.id.tasks_list_fragment_container,
-                MonitorCategoryListFragment.getInstance()).commit();*/
+                CategoryListFragment.getInstance()).commit();*/
 
     }
 
     @Override
     public void onConfirmAddingTaskStopButtonClicked(
-            MonitorCategoryRecyclerViewAdapter.ViewHolder viewHolder,
+            CategoryRecyclerViewAdapter.ViewHolder viewHolder,
             String inputCat, String inputTask, int priority) {
 
         // Add new task
@@ -299,6 +303,12 @@ public class MainActivity extends AppCompatActivity
 
         // Update the recyclerView
         viewHolder.updateView(inputTask, inputCat);
+
+    }
+
+
+    @Override
+    public void onRemovingMonitorBlock(MonitorBlock item) {
 
     }
 

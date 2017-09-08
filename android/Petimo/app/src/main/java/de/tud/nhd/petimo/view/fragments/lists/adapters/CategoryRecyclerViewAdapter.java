@@ -14,23 +14,23 @@ import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.MonitorCategory;
 import de.tud.nhd.petimo.view.fragments.dialogs.AddTaskDialogFragment;
-import de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment;
+import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
 import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link de.tud.nhd.petimo.model.MonitorCategory}
  */
-public class MonitorCategoryRecyclerViewAdapter extends
-        RecyclerView.Adapter<MonitorCategoryRecyclerViewAdapter.ViewHolder> {
+public class CategoryRecyclerViewAdapter extends
+        RecyclerView.Adapter<CategoryRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = "CatAdapter";
     public List<MonitorCategory> catList;
-    private MonitorCategoryListFragment fragment;
+    private CategoryListFragment fragment;
 
 
-    public MonitorCategoryRecyclerViewAdapter(
-            MonitorCategoryListFragment fragment, List<MonitorCategory> items) {
+    public CategoryRecyclerViewAdapter(
+            CategoryListFragment fragment, List<MonitorCategory> items) {
         this.fragment = fragment;
         this.catList = items;
     }
@@ -38,7 +38,7 @@ public class MonitorCategoryRecyclerViewAdapter extends
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_monitorcategory, parent, false);
+                .inflate(R.layout.list_item_category, parent, false);
         return new ViewHolder(view);
     }
 
@@ -68,7 +68,7 @@ public class MonitorCategoryRecyclerViewAdapter extends
 
         // Nesting fragments inside RecyclerView is not recommended, so I use recyclerView directly
 
-        holder.taskAdapter = new MonitorTaskRecyclerViewAdapter(
+        holder.taskAdapter = new TaskRecyclerViewAdapter(
                 PetimoController.getInstance().getAllTasks(catList.get(position).getName()));
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
@@ -100,9 +100,6 @@ public class MonitorCategoryRecyclerViewAdapter extends
 
         holder.taskListRecyclerView.setLayoutManager(new LinearLayoutManager(fragment.getActivity()));
         holder.taskListRecyclerView.setAdapter(holder.taskAdapter);
-
-
-
 
 
 
@@ -161,8 +158,8 @@ public class MonitorCategoryRecyclerViewAdapter extends
         public Button newTaskButton;
         public RecyclerView taskListRecyclerView;
         public String catName;
-        // Each ViewHolder must have its own MonitorTaskRecyclerViewAdapter
-        public MonitorTaskRecyclerViewAdapter taskAdapter;
+        // Each ViewHolder must have its own TaskRecyclerViewAdapter
+        public TaskRecyclerViewAdapter taskAdapter;
 
         public ViewHolder(View view) {
             super(view);

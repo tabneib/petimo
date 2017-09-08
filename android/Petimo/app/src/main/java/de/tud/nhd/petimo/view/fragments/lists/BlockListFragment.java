@@ -14,14 +14,14 @@ import android.view.ViewGroup;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.controller.TimeUtils;
-import de.tud.nhd.petimo.view.fragments.lists.adapters.MonitorBlockRecyclerViewAdapter;
+import de.tud.nhd.petimo.view.fragments.lists.adapters.BlockRecyclerViewAdapter;
 
 /**
  * A fragment representing a list of Monitor blocks.
  * <p/>
  *
  */
-public class MonitorBlockListFragment extends Fragment {
+public class BlockListFragment extends Fragment {
 
     private static final String TAG = "BlockListFragment";
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -40,12 +40,12 @@ public class MonitorBlockListFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public MonitorBlockListFragment() {
+    public BlockListFragment() {
     }
 
     // TODO: Customize parameter initialization
-    public static MonitorBlockListFragment newInstance(int columnCount, int startDate, int endDate) {
-        MonitorBlockListFragment fragment = new MonitorBlockListFragment();
+    public static BlockListFragment newInstance(int columnCount, int startDate, int endDate) {
+        BlockListFragment fragment = new BlockListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         args.putInt(ARG_START_DATE, startDate);
@@ -85,7 +85,7 @@ public class MonitorBlockListFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             Log.d(TAG, "Date range: " + mStartDate + " -> " + mEndDate);
-            recyclerView.setAdapter(new MonitorBlockRecyclerViewAdapter(
+            recyclerView.setAdapter(new BlockRecyclerViewAdapter(
                     controller.getBlocksFromRange(mStartDate, mEndDate)));
         }
         return view;

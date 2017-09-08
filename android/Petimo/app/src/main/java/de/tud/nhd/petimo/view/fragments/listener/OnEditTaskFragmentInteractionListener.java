@@ -4,8 +4,8 @@ package de.tud.nhd.petimo.view.fragments.listener;
  * Created by nhd on 03.09.17.
  */
 
-import de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment;
-import de.tud.nhd.petimo.view.fragments.lists.adapters.MonitorCategoryRecyclerViewAdapter;
+import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
+import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapter;
 
 /**
  * This interface must be implemented by activities that contain this
@@ -20,7 +20,7 @@ public interface OnEditTaskFragmentInteractionListener {
      * @param inputCat name of the category to be added
      */
     void onConfirmAddingCatButtonClicked(
-            MonitorCategoryListFragment catListFragment, String inputCat, int priority);
+            CategoryListFragment catListFragment, String inputCat, int priority);
 
     /**
      * Call-back method which is called when the user confirm adding a new task
@@ -30,6 +30,6 @@ public interface OnEditTaskFragmentInteractionListener {
      * @param priority
      */
     void onConfirmAddingTaskStopButtonClicked(
-            MonitorCategoryRecyclerViewAdapter.ViewHolder viewHolder,
+            CategoryRecyclerViewAdapter.ViewHolder viewHolder,
             String inputCat, String inputTask, int priority);
 }

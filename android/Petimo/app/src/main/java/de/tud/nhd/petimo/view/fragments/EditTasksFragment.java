@@ -11,9 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.model.PetimoContract;
 import de.tud.nhd.petimo.view.fragments.dialogs.AddCatDialogFragment;
-import de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment;
+import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,7 +23,7 @@ public class EditTasksFragment extends Fragment {
     private static final String TAG = "EditTaskFragment";
     private static EditTasksFragment _instance;
     private Button addCatButton;
-    private MonitorCategoryListFragment catListFragment;
+    private CategoryListFragment catListFragment;
 
     public EditTasksFragment() {
         // Required empty public constructor
@@ -54,7 +53,7 @@ public class EditTasksFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        catListFragment = MonitorCategoryListFragment.getInstance();
+        catListFragment = CategoryListFragment.getInstance();
         getActivity().getSupportFragmentManager().beginTransaction().add(
                 R.id.tasks_list_fragment_container, catListFragment).commit();
 

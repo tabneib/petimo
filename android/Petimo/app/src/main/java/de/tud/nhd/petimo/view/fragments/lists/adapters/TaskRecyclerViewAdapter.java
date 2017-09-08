@@ -15,13 +15,13 @@ import java.util.List;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link de.tud.nhd.petimo.model.MonitorTask}
  */
-public class MonitorTaskRecyclerViewAdapter extends
-        RecyclerView.Adapter<MonitorTaskRecyclerViewAdapter.ViewHolder> {
+public class TaskRecyclerViewAdapter extends
+        RecyclerView.Adapter<TaskRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = "TaskAdapter";
     public List<MonitorTask> taskList;
 
-    public MonitorTaskRecyclerViewAdapter(List<MonitorTask> items) {
+    public TaskRecyclerViewAdapter(List<MonitorTask> items) {
         taskList = items;
         Log.d(TAG, "tagList size ====> " + taskList.size());
     }
@@ -29,7 +29,7 @@ public class MonitorTaskRecyclerViewAdapter extends
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_monitortask, parent, false);
+                .inflate(R.layout.list_item_task, parent, false);
         return new ViewHolder(view);
     }
 

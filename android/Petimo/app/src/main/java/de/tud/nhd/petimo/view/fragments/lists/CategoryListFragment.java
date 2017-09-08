@@ -11,23 +11,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.List;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.MonitorCategory;
-import de.tud.nhd.petimo.view.fragments.lists.adapters.MonitorCategoryRecyclerViewAdapter;
+import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapter;
 
 /**
  * A fragment representing a list of Items.
  */
-public class MonitorCategoryListFragment extends Fragment {
+public class CategoryListFragment extends Fragment {
 
     private static final String TAG = "CatListFragment";
-    private static MonitorCategoryListFragment _instance;
-    private MonitorCategoryRecyclerViewAdapter adapter;
+    private static CategoryListFragment _instance;
+    private CategoryRecyclerViewAdapter adapter;
     private int mColumnCount = 1;
     private List<MonitorCategory> catList;
 
@@ -36,20 +35,20 @@ public class MonitorCategoryListFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public MonitorCategoryListFragment() {
+    public CategoryListFragment() {
     }
 
     /**
      * Get the (unique) instance of this fragment, if not yet exists, then initialize it
      * @return the unique instance
      */
-    public static MonitorCategoryListFragment getInstance(){
+    public static CategoryListFragment getInstance(){
 
         // TODO: I still cannot figure out the cause of this bug, so I comment out the code fragment
-        return new MonitorCategoryListFragment();
+        return new CategoryListFragment();
 
         /*if (_instance == null) {
-            _instance = new MonitorCategoryListFragment();
+            _instance = new CategoryListFragment();
             return _instance;
         }
         else
@@ -79,7 +78,8 @@ public class MonitorCategoryListFragment extends Fragment {
             ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
                     new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
                 @Override
-                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                      RecyclerView.ViewHolder target) {
                     // Do nothing
                     return false;
                 }
@@ -101,7 +101,7 @@ public class MonitorCategoryListFragment extends Fragment {
             itemTouchHelper.attachToRecyclerView(recyclerView);
 
             this.catList = PetimoController.getInstance().getAllCats();
-            this.adapter = new MonitorCategoryRecyclerViewAdapter(this, catList);
+            this.adapter = new CategoryRecyclerViewAdapter(this, catList);
             recyclerView.setAdapter(adapter);
 
         }

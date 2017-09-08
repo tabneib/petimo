@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -192,6 +193,14 @@ public class PetimoController {
         return this.dbWrapper.removeCategory(catName);
     }
 
+    /**
+     * Remove a monitor block
+     * @param id id of the block to be removed
+     * @return
+     */
+    public int removeBlock(int id){
+        return this.dbWrapper.removeBlockById(id);
+    }
     //<---------------------------------------------------------------------------------------------
     //  Core - Outputting
     // -------------------------------------------------------------------------------------------->
@@ -215,10 +224,34 @@ public class PetimoController {
      *
      * @param startDate
      * @param endDate
-     * @return the list of all satisfied monitor days
+     * @param displayEmptyDay
+     * @return the list of all satisfied monitor days in DESC order
      */
-    public List<MonitorDay> getDaysFromRange(int startDate, int endDate){
-        return this.dbWrapper.getDaysByRange(startDate, endDate);
+    public List<MonitorDay> getDaysFromRange(int startDate, int endDate, boolean displayEmptyDay){
+
+        if(!displayEmptyDay)
+            // The list will not contain empty days
+            return this.dbWrapper.getDaysByRange(startDate, endDate);
+        else {
+            ArrayList<MonitorDay> dayList =
+                    (ArrayList<MonitorDay>) this.dbWrapper.getDaysByRange(startDate, endDate);
+            List<MonitorDay> resultList = new ArrayList<>();
+            Log.d(TAG, "dayList size =====> " + dayList.size());
+            Log.d(TAG, "dayList is empty =====> " + (dayList.isEmpty()));
+            Log.d(TAG, "from " + startDate + " to " + endDate);
+            for (int day = endDate; day >= startDate; day--) {
+                Log.d(TAG, "day ====> " + day);
+                if(!dayList.isEmpty() && dayList.get(0).getDate() == day) {
+                    // Insert the Monitor Day returned from DB
+                    resultList.add(dayList.get(0));
+                    dayList.remove(0);
+                }
+                else
+                    // Insert a MonitorDay with empty block list
+                    resultList.add(new MonitorDay(day, new ArrayList<MonitorBlock>()));
+            }
+            return resultList;
+        }
     }
 
     /**

@@ -251,6 +251,7 @@ public class PetimoDbWrapper {
      * @return
      */
     public List<MonitorDay> getDaysByRange(int startDate, int endDate){
+        Log.d(TAG, "Range ====> " + startDate + " -> " + endDate);
         String selection = PetimoContract.Monitor.COLUMN_NAME_DATE + " BETWEEN ? AND ?";
         String[] selectionArgs = {Integer.toString(startDate), Integer.toString(endDate)};
         String sortOrder = PetimoContract.Monitor.COLUMN_NAME_DATE + " DESC";
@@ -261,16 +262,22 @@ public class PetimoDbWrapper {
         List<MonitorDay> days = new ArrayList<>();
         List<MonitorBlock> tmpBlocks = new ArrayList<>();
         int tmpDay = 0;
+        boolean cursorMoved = false;
         while (cursor.moveToNext()){
+            cursorMoved = true;
+            Log.d(TAG, "Cursor is movinggggggg");
             if (tmpDay == 0)
                 // The very first iteration
                 tmpDay = cursor.getInt(cursor.getColumnIndexOrThrow(
                         PetimoContract.Monitor.COLUMN_NAME_DATE));
+            Log.d(TAG, "tmpDay =====> " + tmpDay);
             // Check if the cursor moves to the next date
             if (cursor.getInt(cursor.getColumnIndexOrThrow(
                     PetimoContract.Monitor.COLUMN_NAME_DATE)) != tmpDay){
                 // Moved to the next date
                 days.add(new MonitorDay(tmpDay, tmpBlocks));
+                Log.d(TAG, "Just added a new day object date/blockListSize===> "
+                        + tmpDay + tmpBlocks.size());
                 // Update the tmp date and empty the
                 tmpDay = cursor.getInt(cursor.getColumnIndexOrThrow(
                         PetimoContract.Monitor.COLUMN_NAME_DATE));
@@ -279,7 +286,17 @@ public class PetimoDbWrapper {
             else
                 tmpBlocks.add(getBlockFromCursor(cursor));
         }
+
+        if (cursorMoved){
+            // Case there was some data fetched, so we have to add the last fetched day which is
+            // "skipped" in the while loop above
+            days.add(new MonitorDay(tmpDay, tmpBlocks));
+            Log.d(TAG, "Just added a new day object date/blockListSize===> "
+                    + tmpDay + tmpBlocks.size());
+        }
+
         cursor.close();
+        Log.d(TAG, "FINISHED! dayList size =====> " + days.size());
         return days;
     }
 

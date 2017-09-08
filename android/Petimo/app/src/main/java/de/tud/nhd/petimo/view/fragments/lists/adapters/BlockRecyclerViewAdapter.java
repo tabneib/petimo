@@ -16,42 +16,43 @@ import java.util.List;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link MonitorBlock}
  */
-public class MonitorBlockRecyclerViewAdapter extends RecyclerView.Adapter<MonitorBlockRecyclerViewAdapter.ViewHolder> {
+public class BlockRecyclerViewAdapter extends
+        RecyclerView.Adapter<BlockRecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = "RecyclerViewAdapter";
-    private final List<MonitorBlock> inputBlockList;
+    private static final String TAG = "BlockAdapter";
+    public List<MonitorBlock> blockList;
 
     /**
      * Construct the adapter. Is the given block list is null then the adapter will query the
      * database by every view holder binding.
-     * @param inputBlockList
+     * @param blockList
      */
-    public MonitorBlockRecyclerViewAdapter(List<MonitorBlock> inputBlockList) {
-        this.inputBlockList = inputBlockList;
+    public BlockRecyclerViewAdapter(List<MonitorBlock> blockList) {
+        Log.d(TAG, "New Block Adapter ! blockList size =====> " + blockList.size());
+        this.blockList = blockList;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_monitorblock, parent, false);
+                .inflate(R.layout.list_item_block, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Log.d(TAG, "Binding ViewHolder at position ====> " + position );
-        holder.mItem = inputBlockList.get(position);
-        String timeInfo = "[+] " +
-                TimeUtils.getDateStrFromInt(inputBlockList.get(position).getDate()) +
-                " " + TimeUtils.getDayTimeFromMsTime(inputBlockList.get(position).getStart()) +
-                " -> " + TimeUtils.getDayTimeFromMsTime(inputBlockList.get(position).getEnd()) +
-                " : " + TimeUtils.getTimeFromMs(inputBlockList.get(position).getDuration());
+        holder.mItem = blockList.get(position);
+        String timeInfo = "► " +
+               TimeUtils.getDayTimeFromMsTime(blockList.get(position).getStart()) +
+                " -> " + TimeUtils.getDayTimeFromMsTime(blockList.get(position).getEnd()) +
+                " : " + TimeUtils.getTimeFromMs(blockList.get(position).getDuration());
         Log.d(TAG, timeInfo);
 
         holder.mTimeView.setText(timeInfo);
 
-        String monitorInfo = "    " + inputBlockList.get(position).getCategory() + " / " +
-                inputBlockList.get(position).getTask();
+        String monitorInfo = "    " + blockList.get(position).getCategory() + " / " +
+                blockList.get(position).getTask();
         Log.d(TAG, monitorInfo);
         holder.mDataView.setText(monitorInfo);
 
@@ -68,7 +69,7 @@ public class MonitorBlockRecyclerViewAdapter extends RecyclerView.Adapter<Monito
 
     @Override
     public int getItemCount() {
-        return inputBlockList.size();
+        return blockList.size();
     }
 
 

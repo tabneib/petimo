@@ -1,5 +1,7 @@
 package de.tud.nhd.petimo.model;
 
+import android.util.Log;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,7 @@ import java.util.List;
  */
 
 public class MonitorDay {
+    private static final String TAG = "MonitorBlock";
     private List<MonitorBlock> monitorBlocks;
     private int date;
 
@@ -19,10 +22,42 @@ public class MonitorDay {
         return monitorBlocks;
     }
 
+    /**
+     * Remove the a block from this day
+     * @param position the position in the block list to be deleted
+     * @return true if removed, false if nothing is remove
+     */
+    public boolean removeBlock(int position){
+        Log.d(TAG, "Trying to remove the Block at position ====> " + position);
+        if (monitorBlocks == null || monitorBlocks.isEmpty()
+                || monitorBlocks.size() < position + 1)
+            return false;
+        monitorBlocks.remove(position);
+        return true;
+    }
     public int getDate() {
         return date;
     }
 
+    /**
+     * Calculate the total duration of all monitored blocks of this day
+     * @return the total duration
+     */
+    public int getDuration(){
+        int duration = 0;
+        if (!monitorBlocks.isEmpty())
+            for (MonitorBlock block : monitorBlocks)
+                duration += block.getDuration();
+        return duration;
+    }
+    /**
+     * Information about this day as a string
+     * @return the info string
+     */
+    public String getInfo(){
+        String info = "Total Duration: " + getDuration();
+        return info;
+    }
     /**
      * TODO: comment em
      * @return

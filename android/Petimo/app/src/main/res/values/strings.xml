@@ -26,6 +26,8 @@
         <item>Highest</item>
     </string-array>
 
+    <!-- Common short text ######################################################################-->
+
     <!-- Common short text with colon ###########################################################-->
     <string name="colon_category">Category:</string>
     <string name="colon_task">Task:</string>
@@ -35,6 +37,9 @@
     <string name="colon_start_time">Start time:</string>
     <string name="colon_recent_monitors">Recent monitors:</string>
     <string name="colon_date">Date:</string>
+    <string name="colon_from">From:</string>
+    <string name="colon_to">To:</string>
+
 
     <!-- Common button text -->
     <string name="button_stop_monitor">Stop Monitor</string>
@@ -52,6 +57,10 @@
 
     <string name="button_new_category">New Category</string>
     <string name="button_new_task">New Task</string>
+    <string name="button_new_block">New Block</string>
+
+
+    <string name="button_show">Show</string>
 
 
     <!-- Common message #########################################################################-->

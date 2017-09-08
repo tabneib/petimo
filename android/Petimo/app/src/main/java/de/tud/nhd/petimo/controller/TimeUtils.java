@@ -48,8 +48,12 @@ public class TimeUtils {
      * @return
      */
     public static String getDateStrFromInt(int date){
-        // TODO
-        return Integer.toString(date);
+        String result ="";
+        String dateStr = Integer.toString(date);
+        result = dateStr.substring(6,8) + ".";
+        result = result + dateStr.substring(4,6) + ".";
+        result = result + dateStr.substring(0,4);
+        return result;
     }
 
     /**

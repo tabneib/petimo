@@ -15,7 +15,7 @@ import android.widget.Spinner;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
-import de.tud.nhd.petimo.view.fragments.lists.MonitorCategoryListFragment;
+import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
 public class AddCatDialogFragment extends DialogFragment {
 
@@ -24,7 +24,7 @@ public class AddCatDialogFragment extends DialogFragment {
     private Button positiveButton;
     private Button negativeButton;
     private Spinner prioritySpinner;
-    public MonitorCategoryListFragment catListFragment = null;
+    public CategoryListFragment catListFragment = null;
 
     @Override
     public void onAttach(Context context) {

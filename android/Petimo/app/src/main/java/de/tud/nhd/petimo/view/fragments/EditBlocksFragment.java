@@ -2,19 +2,24 @@ package de.tud.nhd.petimo.view.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import de.tud.nhd.petimo.R;
+import de.tud.nhd.petimo.view.fragments.lists.DayListFragment;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class EditBlocksFragment extends Fragment {
 
+    private static final String TAG = "EditBlocksFragment";
     private static EditBlocksFragment _instance;
+
 
     public EditBlocksFragment() {
         // Required empty public constructor
@@ -40,4 +45,12 @@ public class EditBlocksFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_edit_blocks, container, false);
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Log.d(TAG, "Gonna add DayListFragment to its container !!");
+        getActivity().getSupportFragmentManager().beginTransaction().add(
+                R.id.day_list_fragment_container, DayListFragment.newInstance()).commit();
+    }
 }
