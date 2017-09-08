@@ -1,13 +1,16 @@
 package de.tud.nhd.petimo.view.fragments;
 
 
+import android.app.DatePickerDialog;
+import java.util.Calendar;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.view.fragments.lists.DayListFragment;
@@ -19,7 +22,9 @@ public class EditBlocksFragment extends Fragment {
 
     private static final String TAG = "EditBlocksFragment";
     private static EditBlocksFragment _instance;
-
+    Button fromDateButton;
+    Button toDateButton;
+    Calendar myCalendar = Calendar.getInstance();
 
     public EditBlocksFragment() {
         // Required empty public constructor
@@ -49,7 +54,58 @@ public class EditBlocksFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Log.d(TAG, "Gonna add DayListFragment to its container !!");
+        // Setup DatePicker dialogs
+        fromDateButton = (Button) view.findViewById(R.id.button_date_from);
+        toDateButton = (Button) view.findViewById(R.id.button_date_to);
+
+
+
+
+
+        fromDateButton.setOnClickListener(new View.OnClickListener(){
+
+            DatePickerDialog.OnDateSetListener onDateSetListener =
+                    new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int month,
+                                              int dayOfMonth) {
+                            // TODO Auto-generated method stub
+                            myCalendar.set(Calendar.YEAR, year);
+                            myCalendar.set(Calendar.MONTH, month);
+                            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        }
+
+            };
+
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(getActivity(), onDateSetListener, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+
+        toDateButton.setOnClickListener(new View.OnClickListener(){
+
+            DatePickerDialog.OnDateSetListener onDateSetListener =
+                    new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                            myCalendar.set(Calendar.YEAR, year);
+                            myCalendar.set(Calendar.MONTH, month);
+                            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        }
+                    };
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(getActivity(), onDateSetListener, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        // Fill in the fragment to display day list
         getActivity().getSupportFragmentManager().beginTransaction().add(
                 R.id.day_list_fragment_container, DayListFragment.newInstance()).commit();
     }

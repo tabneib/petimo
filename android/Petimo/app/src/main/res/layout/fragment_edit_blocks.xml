@@ -18,6 +18,7 @@
             android:text="@string/loading_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#111"
             android:id="@+id/button_date_from" />
         <TextView
             android:text="@string/colon_to"
@@ -27,6 +28,7 @@
             android:text="@string/loading_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#111"
             android:id="@+id/button_date_to" />
         <Button
             android:id="@+id/button_display_day_range"
