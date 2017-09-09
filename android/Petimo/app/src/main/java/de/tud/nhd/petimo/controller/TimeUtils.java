@@ -2,6 +2,7 @@ package de.tud.nhd.petimo.controller;
 
 import android.util.Log;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,6 +19,8 @@ public class TimeUtils {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
     private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
+    private static final SimpleDateFormat dateStrFormat = new SimpleDateFormat("dd.MM.yyyy");
+
 
     /**
      *
@@ -30,8 +33,32 @@ public class TimeUtils {
         return cal.get(Calendar.HOUR_OF_DAY);
     }
 
+    /**
+     *
+     * @param date
+     * @return
+     */
     public static int getDateIntFromDate(Date date){
         return Integer.parseInt(dateFormat.format(date));
+    }
+
+
+    /**
+     *
+     * @param calendar
+     * @return
+     */
+    public static int getDateIntFromCalendatr(Calendar calendar){
+        return Integer.parseInt(dateFormat.format(new Date(calendar.getTimeInMillis())));
+    }
+
+    /**
+     *
+     * @param calendar
+     * @return
+     */
+    public static String getDateStrFromCalendar(Calendar calendar){
+        return dateStrFormat.format(new Date(calendar.getTimeInMillis()));
     }
 
 
@@ -104,13 +131,20 @@ public class TimeUtils {
         int minutes = (int) (timeInMinutes % 60);
         return hours + ":" + minutes;
     }
+
     /**
-     *
-     * @param date
-     * @return
+     * Determine the week day of the given date
+     * @param date the integer representation of the given date, in yyyyMMdd format
+     * @return day of week, start from sunday as value 1
      */
     public static int getWeekDay(int date){
-        // TODO implement me. For now it's always sunday :)
-        return 8;
+        Calendar calendar = Calendar.getInstance();
+        try {
+            calendar.setTime(new SimpleDateFormat("yyyyMMdd").parse(Integer.toString(date)));
+        }
+        catch (ParseException e){
+            e.printStackTrace();
+        }
+        return calendar.get(Calendar.DAY_OF_WEEK);
     }
 }

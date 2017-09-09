@@ -250,7 +250,7 @@ public class PetimoDbWrapper {
      * @param endDate
      * @return
      */
-    public List<MonitorDay> getDaysByRange(int startDate, int endDate){
+    public ArrayList<MonitorDay> getDaysByRange(int startDate, int endDate){
         String selection = PetimoContract.Monitor.COLUMN_NAME_DATE + " BETWEEN ? AND ?";
         String[] selectionArgs = {Integer.toString(startDate), Integer.toString(endDate)};
         String sortOrder = PetimoContract.Monitor.COLUMN_NAME_DATE + " DESC";
@@ -258,8 +258,8 @@ public class PetimoDbWrapper {
                 PetimoContract.Monitor.getAllColumns(), selection,
                 selectionArgs, null, null, sortOrder);
 
-        List<MonitorDay> days = new ArrayList<>();
-        List<MonitorBlock> tmpBlocks = new ArrayList<>();
+        ArrayList<MonitorDay> days = new ArrayList<>();
+        ArrayList<MonitorBlock> tmpBlocks = new ArrayList<>();
         int tmpDay = 0;
         boolean cursorMoved = false;
         while (cursor.moveToNext()){

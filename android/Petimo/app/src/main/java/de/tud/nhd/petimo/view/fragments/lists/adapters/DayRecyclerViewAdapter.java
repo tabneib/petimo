@@ -31,7 +31,7 @@ public class DayRecyclerViewAdapter extends
         RecyclerView.Adapter<DayRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = "DayAdapter";
-    private final List<MonitorDay> dayList;
+    public List<MonitorDay> dayList;
     private final OnEditDayFragmentInteractionListener mListener;
     private Fragment fragment;
 
@@ -51,18 +51,14 @@ public class DayRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        Log.d(TAG, "Gonna bind position ====> " + position);
-        Log.d(TAG, "Holder.textViewInfo ID ====> " + holder.textViewInfo.getId());
         holder.monitorDay = dayList.get(position);
         holder.textViewDate.setText(TimeUtils.getDateStrFromInt(dayList.get(position).getDate()));
         holder.textViewInfo.setText(dayList.get(position).getInfo());
 
         // The adapter for the recyclerView that displays the given list of monitor blocks
-        /*Log.d(TAG, "Day/Input BlockList size =====> " + dayList.get(position).getDate() + "/" +
-                dayList.get(position).getMonitorBlocks().size());*/
         holder.blockAdapter =
                 new BlockRecyclerViewAdapter(dayList.get(position).getMonitorBlocks());
-        // Set adapter for the recyclerview displaying block list
+        // Set adapter for the recyclerView displaying block list
         ItemTouchHelper.SimpleCallback simpleCallback =
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT){
 
@@ -94,10 +90,13 @@ public class DayRecyclerViewAdapter extends
                                     public void onClick(DialogInterface dialog, int which) {
 
                                         // Remove the block from the database
-                                        PetimoController.getInstance().removeBlock(holder.monitorDay.getMonitorBlocks().
+                                        PetimoController.getInstance().
+                                                removeBlock(holder.monitorDay.getMonitorBlocks().
                                                 get(vHolder.getLayoutPosition()).getId());
-                                        holder.blockAdapter.blockList.remove(vHolder.getLayoutPosition());
-                                        holder.blockAdapter.notifyItemRemoved(vHolder.getLayoutPosition());
+                                        holder.blockAdapter.blockList.remove(
+                                                vHolder.getLayoutPosition());
+                                        holder.blockAdapter.notifyItemRemoved(
+                                                vHolder.getLayoutPosition());
                                         //Update the displayed info of the corresponding day
                                         holder.textViewInfo.setText(holder.monitorDay.getInfo());
                                     }
@@ -144,7 +143,6 @@ public class DayRecyclerViewAdapter extends
             buttonAddBlock = (Button) view.findViewById(R.id.button_add_block);
             recyclerView = (RecyclerView) view.findViewById(R.id.block_list_recyclerview);
         }
-
 
         @Override
         public String toString() {

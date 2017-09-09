@@ -8,4 +8,4 @@
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
     tools:context="de.tud.nhd.petimo.view.fragments.lists.BlockListFragment"
-    tools:listitem="@layout/list_item_block" />
+    tools:listitem="@layout/list_item_block"/>

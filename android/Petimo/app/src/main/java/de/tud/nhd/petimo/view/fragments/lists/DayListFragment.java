@@ -10,10 +10,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+
+import java.util.ArrayList;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.controller.TimeUtils;
+import de.tud.nhd.petimo.model.MonitorDay;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditDayFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.DayRecyclerViewAdapter;
 
@@ -30,6 +34,7 @@ public class DayListFragment extends Fragment {
     private static final String FROM_DATE = "from-date";
     private static final String TO_DATE = "to-date";
 
+
     // default is linear layout
     private int mColumnCount = 1;
     // default is the last 1 week
@@ -38,7 +43,7 @@ public class DayListFragment extends Fragment {
 
     private OnEditDayFragmentInteractionListener mListener;
 
-    private DayRecyclerViewAdapter adapter;
+    public DayRecyclerViewAdapter adapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the

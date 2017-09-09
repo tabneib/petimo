@@ -227,7 +227,7 @@ public class PetimoController {
      * @param displayEmptyDay
      * @return the list of all satisfied monitor days in DESC order
      */
-    public List<MonitorDay> getDaysFromRange(int startDate, int endDate, boolean displayEmptyDay){
+    public ArrayList<MonitorDay> getDaysFromRange(int startDate, int endDate, boolean displayEmptyDay){
 
         if(!displayEmptyDay)
             // The list will not contain empty days
@@ -235,7 +235,7 @@ public class PetimoController {
         else {
             ArrayList<MonitorDay> dayList =
                     (ArrayList<MonitorDay>) this.dbWrapper.getDaysByRange(startDate, endDate);
-            List<MonitorDay> resultList = new ArrayList<>();
+            ArrayList<MonitorDay> resultList = new ArrayList<>();
             Log.d(TAG, "dayList size =====> " + dayList.size());
             for (int day = endDate; day >= startDate; day--) {
                 Log.d(TAG, "day ====> " + day);
