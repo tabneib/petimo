@@ -69,6 +69,8 @@ public class PetimoDbDemo {
                 calendar.get(Calendar.DAY_OF_MONTH) - 1, 0, 0, 0);
         Log.d(TAG, "After: Calendar.day ===> " + calendar.get(Calendar.DAY_OF_MONTH));
         long yesterdayBeginTime = calendar.getTimeInMillis();
+        Log.d(TAG, "yesterdayBeginTime ===> " + yesterdayBeginTime);
+
 
         // Minutes from 00:00
         times[0] = 480;     // 8:00
@@ -91,7 +93,10 @@ public class PetimoDbDemo {
 
         // Convert to ms
         for (int i = 0; i < times.length; i++) {
-            times[i] = times[i] * 60 * 100 + yesterdayBeginTime;
+            Log.d(TAG, TimeUtils.getTimeFromMs(times[i]*60*1000) + " -> " +
+                    ((times[i] * 60 * 1000) + yesterdayBeginTime));
+
+            times[i] = (times[i] * 60 * 1000) + yesterdayBeginTime;
 
         }
 

@@ -47,7 +47,7 @@ public class TimeUtils {
 
     /**
      * Return the string representation from the given date.
-     * @param date
+     * @param date  the integer representation of the date, in YYYYMMDD format
      * @return
      */
     public static String getDateStrFromInt(int date){
@@ -99,10 +99,9 @@ public class TimeUtils {
      * @return
      */
     public static String getTimeFromMs(long time){
-        long timeInMinutes = time / (100 * 60);
+        long timeInMinutes = time / (1000 * 60);
         int hours = (int) (timeInMinutes / 60);
         int minutes = (int) (timeInMinutes % 60);
-        Log.d(TAG, "getTimeFromMs ===> " + time + " -> " + hours + ":" + minutes);
         return hours + ":" + minutes;
     }
     /**
