@@ -63,9 +63,16 @@
     <string name="button_show">Show</string>
 
 
+    <!-- Titles #################################################################################-->
+    <string name="title_remove_category">Remove Category</string>
+    <string name="title_remove_task">Remove Task</string>
+    <string name="title_remove_block">Remove Block</string>
+
     <!-- Common message #########################################################################-->
     <string name="message_confirm_stop_monitor">Stop the monitor?</string>
     <string name="message_confirm_start_monitor">To be monitored:</string>
+    <string name="message_confirm_remove">Are you sure to remove&#160;</string>
+
 
 
     <!-- Other strings ##########################################################################-->

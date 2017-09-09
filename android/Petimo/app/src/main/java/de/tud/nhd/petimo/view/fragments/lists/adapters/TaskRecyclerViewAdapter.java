@@ -45,7 +45,7 @@ public class TaskRecyclerViewAdapter extends
     }
 
     /**
-     * ViewHolder that holds a task item to display
+     * BlockListViewHolder that holds a task item to display
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;

@@ -17,7 +17,7 @@ import java.util.List;
  * {@link RecyclerView.Adapter} that can display a {@link MonitorBlock}
  */
 public class BlockRecyclerViewAdapter extends
-        RecyclerView.Adapter<BlockRecyclerViewAdapter.ViewHolder> {
+        RecyclerView.Adapter<BlockRecyclerViewAdapter.BlockListViewHolder> {
 
     private static final String TAG = "BlockAdapter";
     public List<MonitorBlock> blockList;
@@ -33,28 +33,28 @@ public class BlockRecyclerViewAdapter extends
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BlockListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_block, parent, false);
-        return new ViewHolder(view);
+        return new BlockListViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        Log.d(TAG, "Binding ViewHolder at position ====> " + position );
-        holder.mItem = blockList.get(position);
+    public void onBindViewHolder(final BlockListViewHolder holder, int position) {
+        Log.d(TAG, "Binding BlockListViewHolder at position ====> " + position );
+        holder.monitorBlock = blockList.get(position);
         String timeInfo = "► " +
                TimeUtils.getDayTimeFromMsTime(blockList.get(position).getStart()) +
                 " -> " + TimeUtils.getDayTimeFromMsTime(blockList.get(position).getEnd()) +
                 " : " + TimeUtils.getTimeFromMs(blockList.get(position).getDuration());
         Log.d(TAG, timeInfo);
 
-        holder.mTimeView.setText(timeInfo);
+        holder.textViewTime.setText(timeInfo);
 
         String monitorInfo = "    " + blockList.get(position).getCategory() + " / " +
                 blockList.get(position).getTask();
         Log.d(TAG, monitorInfo);
-        holder.mDataView.setText(monitorInfo);
+        holder.textViewData.setText(monitorInfo);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,23 +73,23 @@ public class BlockRecyclerViewAdapter extends
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class BlockListViewHolder extends RecyclerView.ViewHolder {
         public View mView;
-        public TextView mTimeView;
-        public TextView mDataView;
-        public MonitorBlock mItem;
+        public TextView textViewTime;
+        public TextView textViewData;
+        public MonitorBlock monitorBlock;
 
-        public ViewHolder(View view) {
+        public BlockListViewHolder(View view) {
             super(view);
             mView = view;
-            mTimeView = (TextView) view.findViewById(R.id.fragment_monitorblock_time);
-            mDataView = (TextView) view.findViewById(R.id.fragment_monitorblock_monitor_data);
+            textViewTime = (TextView) view.findViewById(R.id.fragment_monitorblock_time);
+            textViewData = (TextView) view.findViewById(R.id.fragment_monitorblock_monitor_data);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mTimeView.getText() +
-                    " ==> " + mDataView.getText() + "'";
+            return super.toString() + " '" + textViewTime.getText() +
+                    " ==> " + textViewData.getText() + "'";
         }
     }
 }

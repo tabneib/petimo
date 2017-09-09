@@ -1,8 +1,11 @@
 package de.tud.nhd.petimo.view.fragments.lists;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -86,14 +89,41 @@ public class CategoryListFragment extends Fragment {
 
                 @Override
                 public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                    // Delete the category
-                    PetimoController.getInstance().removeCategory(
-                            adapter.catList.get(viewHolder.getLayoutPosition()).getName());
-                    adapter.notifyItemRemoved(viewHolder.getLayoutPosition());
-                    //adapter.notifyItemRangeRemoved(viewHolder.getOldPosition(),1);
-                    adapter.catList.remove(viewHolder.getLayoutPosition());
+                    AlertDialog.Builder builder;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        builder = new AlertDialog.Builder(getActivity(),
+                                android.R.style.Theme_Material_Dialog_Alert);
+                    } else {
+                        builder = new AlertDialog.Builder(getActivity());
+                    }
+                    final CategoryRecyclerViewAdapter.ViewHolder vHolder =
+                            (CategoryRecyclerViewAdapter.ViewHolder) viewHolder;
+                    builder.setTitle(
+                            getActivity().getString(R.string.title_remove_category))
+                            .setMessage(getActivity().
+                                    getString(R.string.message_confirm_remove) +
+                                        vHolder.catName + "?")
+                            .setPositiveButton(android.R.string.yes,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
 
-
+                                            // Delete the category
+                                            PetimoController.getInstance().removeCategory(
+                                                    adapter.catList.get(
+                                                            vHolder.getLayoutPosition()).getName());
+                                            adapter.notifyItemRemoved(vHolder.getLayoutPosition());
+                                            adapter.catList.remove(vHolder.getLayoutPosition());
+                                        }
+                                    })
+                            .setNegativeButton(
+                                    android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            adapter.notifyDataSetChanged();
+                                            // do nothing
+                                        }
+                                    })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
             };
 

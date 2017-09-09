@@ -1,6 +1,9 @@
 package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
+import android.content.DialogInterface;
+import android.os.Build;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -15,7 +18,6 @@ import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.controller.TimeUtils;
 import de.tud.nhd.petimo.model.MonitorDay;
-import de.tud.nhd.petimo.model.PetimoContract;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditDayFragmentInteractionListener;
 
 import java.util.List;
@@ -73,13 +75,42 @@ public class DayRecyclerViewAdapter extends
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                // Remove the block from the database
-                PetimoController.getInstance().removeBlock(holder.monitorDay.getMonitorBlocks().
-                                get(viewHolder.getLayoutPosition()).getId());
-                holder.blockAdapter.blockList.remove(viewHolder.getLayoutPosition());
-                holder.blockAdapter.notifyItemRemoved(viewHolder.getLayoutPosition());
-                //Update the displayed info of the corresponding day
-                holder.textViewInfo.setText(holder.monitorDay.getInfo());
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(fragment.getActivity(),
+                            android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(fragment.getActivity());
+                }
+                final BlockRecyclerViewAdapter.BlockListViewHolder vHolder =
+                        (BlockRecyclerViewAdapter.BlockListViewHolder) viewHolder;
+                builder.setTitle(
+                        fragment.getActivity().getString(R.string.title_remove_block))
+                        .setMessage(fragment.getActivity().
+                                getString(R.string.message_confirm_remove) + "\n"
+                                + vHolder.textViewData.getText() + "?")
+                        .setPositiveButton(android.R.string.yes,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        // Remove the block from the database
+                                        PetimoController.getInstance().removeBlock(holder.monitorDay.getMonitorBlocks().
+                                                get(vHolder.getLayoutPosition()).getId());
+                                        holder.blockAdapter.blockList.remove(vHolder.getLayoutPosition());
+                                        holder.blockAdapter.notifyItemRemoved(vHolder.getLayoutPosition());
+                                        //Update the displayed info of the corresponding day
+                                        holder.textViewInfo.setText(holder.monitorDay.getInfo());
+                                    }
+                                })
+                        .setNegativeButton(
+                                android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        holder.blockAdapter.notifyDataSetChanged();
+                                        // do nothing
+                                    }
+                                })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         };
 

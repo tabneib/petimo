@@ -1,5 +1,8 @@
 package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
+import android.content.DialogInterface;
+import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -74,24 +77,56 @@ public class CategoryRecyclerViewAdapter extends
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
                     @Override
-                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    public boolean onMove(RecyclerView recyclerView,
+                                          RecyclerView.ViewHolder viewHolder,
+                                          RecyclerView.ViewHolder target) {
                         // Do nothing
                         return false;
                     }
 
                     @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                        // Delete the task
-                        PetimoController.getInstance().removeTask(
-                                holder.taskAdapter.taskList.get(viewHolder.getLayoutPosition()).getName(),
-                                holder.taskAdapter.taskList.get(
-                                        viewHolder.getLayoutPosition()).getCategory());
 
-                        Log.d(TAG, "taskList size ===> " + holder.taskAdapter.taskList.size());
-                        holder.taskAdapter.notifyItemRemoved(viewHolder.getLayoutPosition());
-                        //adapter.notifyItemRangeRemoved(viewHolder.getOldPosition(),1);
-                        holder.taskAdapter.taskList.remove(viewHolder.getLayoutPosition());
+                        AlertDialog.Builder builder;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            builder = new AlertDialog.Builder(fragment.getActivity(),
+                                    android.R.style.Theme_Material_Dialog_Alert);
+                        } else {
+                            builder = new AlertDialog.Builder(fragment.getActivity());
+                        }
+                        final TaskRecyclerViewAdapter.ViewHolder vHolder =
+                                (TaskRecyclerViewAdapter.ViewHolder) viewHolder;
+                        builder.setTitle(
+                                fragment.getActivity().getString(R.string.title_remove_task))
+                                .setMessage(fragment.getActivity().
+                                        getString(R.string.message_confirm_remove)
+                                        + vHolder.taskNameTextView.getText() + "?")
+                                .setPositiveButton(android.R.string.yes,
+                                        new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
 
+                                        // Delete the task
+                                        PetimoController.getInstance().removeTask(
+                                                holder.taskAdapter.taskList.get(
+                                                        vHolder.getLayoutPosition()).getName(),
+                                                holder.taskAdapter.taskList.get(
+                                                        vHolder.getLayoutPosition()).getCategory());
+
+                                        holder.taskAdapter.
+                                                notifyItemRemoved(vHolder.getLayoutPosition());
+                                        holder.taskAdapter.
+                                                taskList.remove(vHolder.getLayoutPosition());
+                                    }
+                                })
+                                .setNegativeButton(
+                                        android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        holder.taskAdapter.notifyDataSetChanged();
+                                        // do nothing
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
                     }
                 };
 
@@ -150,7 +185,7 @@ public class CategoryRecyclerViewAdapter extends
 
 
     /**
-     * ViewHolder that hold the view of a block displaying a category
+     * BlockListViewHolder that hold the view of a block displaying a category
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public View view;
@@ -158,7 +193,7 @@ public class CategoryRecyclerViewAdapter extends
         public Button newTaskButton;
         public RecyclerView taskListRecyclerView;
         public String catName;
-        // Each ViewHolder must have its own TaskRecyclerViewAdapter
+        // Each BlockListViewHolder must have its own TaskRecyclerViewAdapter
         public TaskRecyclerViewAdapter taskAdapter;
 
         public ViewHolder(View view) {
@@ -175,8 +210,8 @@ public class CategoryRecyclerViewAdapter extends
          * @param taskName
          */
         public void updateView(String taskName, String catName){
-            Log.d(TAG, "ViewHolder is gonna update with (" + taskName + ", " + catName + ")");
-            Log.d(TAG, "ViewHolder updated the taskList by adding ====> "
+            Log.d(TAG, "BlockListViewHolder is gonna update with (" + taskName + ", " + catName + ")");
+            Log.d(TAG, "BlockListViewHolder updated the taskList by adding ====> "
                     + PetimoController.getInstance().getTaskByName(taskName, catName));
             this.taskAdapter.taskList.add(0,
                     PetimoController.getInstance().getTaskByName(taskName, catName));
