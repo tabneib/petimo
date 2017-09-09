@@ -4,6 +4,8 @@ import android.util.Log;
 
 import java.util.List;
 
+import de.tud.nhd.petimo.controller.TimeUtils;
+
 /**
  * Created by nhd on 28.08.17.
  */
@@ -27,6 +29,7 @@ public class MonitorDay {
      * @param position the position in the block list to be deleted
      * @return true if removed, false if nothing is remove
      */
+    //unused
     public boolean removeBlock(int position){
         Log.d(TAG, "Trying to remove the Block at position ====> " + position);
         if (monitorBlocks == null || monitorBlocks.isEmpty()
@@ -55,7 +58,7 @@ public class MonitorDay {
      * @return the info string
      */
     public String getInfo(){
-        String info = "Total Duration: " + getDuration();
+        String info = "Total Duration: " + TimeUtils.getTimeFromMs(getDuration());
         return info;
     }
     /**

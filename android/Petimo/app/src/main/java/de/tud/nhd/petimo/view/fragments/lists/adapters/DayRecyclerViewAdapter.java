@@ -56,8 +56,8 @@ public class DayRecyclerViewAdapter extends
         holder.textViewInfo.setText(dayList.get(position).getInfo());
 
         // The adapter for the recyclerView that displays the given list of monitor blocks
-        Log.d(TAG, "Day/Input BlockList size =====> " + dayList.get(position).getDate() + "/" +
-                dayList.get(position).getMonitorBlocks().size());
+        /*Log.d(TAG, "Day/Input BlockList size =====> " + dayList.get(position).getDate() + "/" +
+                dayList.get(position).getMonitorBlocks().size());*/
         holder.blockAdapter =
                 new BlockRecyclerViewAdapter(dayList.get(position).getMonitorBlocks());
         // Set adapter for the recyclerview displaying block list

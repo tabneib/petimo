@@ -237,12 +237,12 @@ public class PetimoController {
                     (ArrayList<MonitorDay>) this.dbWrapper.getDaysByRange(startDate, endDate);
             List<MonitorDay> resultList = new ArrayList<>();
             Log.d(TAG, "dayList size =====> " + dayList.size());
-            Log.d(TAG, "dayList is empty =====> " + (dayList.isEmpty()));
-            Log.d(TAG, "from " + startDate + " to " + endDate);
             for (int day = endDate; day >= startDate; day--) {
                 Log.d(TAG, "day ====> " + day);
                 if(!dayList.isEmpty() && dayList.get(0).getDate() == day) {
                     // Insert the Monitor Day returned from DB
+                    Log.d(TAG, "Day/BlockList.size  ====> " + dayList.get(0).getDate() +
+                    " / " + dayList.get(0).getMonitorBlocks().size());
                     resultList.add(dayList.get(0));
                     dayList.remove(0);
                 }

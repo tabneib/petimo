@@ -5,6 +5,7 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by nhd on 01.09.17.
@@ -13,8 +14,10 @@ import java.util.Date;
 public class TimeUtils {
 
     private static final String TAG = "TimeUtils";
+
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
     private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+
 
     /**
      *
@@ -43,12 +46,12 @@ public class TimeUtils {
     }
 
     /**
-     *
+     * Return the string representation from the given date.
      * @param date
      * @return
      */
     public static String getDateStrFromInt(int date){
-        String result ="";
+        String result;
         String dateStr = Integer.toString(date);
         result = dateStr.substring(6,8) + ".";
         result = result + dateStr.substring(4,6) + ".";
@@ -82,7 +85,12 @@ public class TimeUtils {
      * @return
      */
     public static String getDayTimeFromMsTime(long time){
-        return timeFormat.format(new Date(time));
+        //Calendar calendar = Calendar.getInstance();
+        String result = "";
+        Date date = new Date(time);
+        result = dateFormat.format(date) + " - " + timeFormat.format(date);
+        Log.d(TAG, "getDayTimeFromMsTime:" + time + " -> " + result);
+        return timeFormat.format(date);
     }
 
     /**
@@ -91,8 +99,10 @@ public class TimeUtils {
      * @return
      */
     public static String getTimeFromMs(long time){
-        int hours = (int) time/360000;
-        int minutes = (int) (time - hours*360000)/6000;
+        long timeInMinutes = time / (100 * 60);
+        int hours = (int) (timeInMinutes / 60);
+        int minutes = (int) (timeInMinutes % 60);
+        Log.d(TAG, "getTimeFromMs ===> " + time + " -> " + hours + ":" + minutes);
         return hours + ":" + minutes;
     }
     /**
