@@ -289,11 +289,7 @@ public class PetimoDbWrapper {
             // "skipped" in the while loop above
             days.add(new MonitorDay(tmpDay, tmpBlocks));
         }
-
         cursor.close();
-        Log.d(TAG, "getDaysByRange: dayList size =====> " + days.size());
-        for (MonitorDay day : days)
-            Log.d(TAG, "getDaysByRange: " + day.getDate() + " has block size ==> " + day.getMonitorBlocks().size());
         return days;
     }
 
@@ -312,14 +308,11 @@ public class PetimoDbWrapper {
                 PetimoContract.Monitor.getAllColumns(), selection,
                 selectionArgs, null, null, sortOrder);
 
-        Log.d(TAG, "Is about to generate block list");
         List<MonitorBlock> blocks = new ArrayList<>();
         while (cursor.moveToNext()) {
             blocks.add(getBlockFromCursor(cursor));
         }
-
         cursor.close();
-        Log.d(TAG, "BlockList size ==================> " + blocks.size());
         return blocks;
     }
 
@@ -367,9 +360,7 @@ public class PetimoDbWrapper {
         Cursor cursor = readableDb.query(PetimoContract.Tasks.TABLE_NAME,
                 PetimoContract.Tasks.getAllColumns(),
                 selection, selectionArgs, null, null, null, null);
-
         while(cursor.moveToNext()){
-
             task = new MonitorTask(
                     cursor.getInt(cursor.getColumnIndexOrThrow(
                             PetimoContract.Tasks._ID)),

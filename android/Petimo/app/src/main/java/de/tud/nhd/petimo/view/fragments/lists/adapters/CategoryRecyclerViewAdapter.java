@@ -210,12 +210,12 @@ public class CategoryRecyclerViewAdapter extends
          * @param taskName
          */
         public void updateView(String taskName, String catName){
-            Log.d(TAG, "BlockListViewHolder is gonna update with (" + taskName + ", " + catName + ")");
-            Log.d(TAG, "BlockListViewHolder updated the taskList by adding ====> "
-                    + PetimoController.getInstance().getTaskByName(taskName, catName));
             this.taskAdapter.taskList.add(0,
                     PetimoController.getInstance().getTaskByName(taskName, catName));
             taskAdapter.notifyItemInserted(0);
+            this.taskAdapter.taskList.clear();
+            this.taskAdapter.taskList.addAll(PetimoController.getInstance().getAllTasks(catName));
+            this.taskAdapter.notifyDataSetChanged();
         }
 
         @Override

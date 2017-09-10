@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.tud.nhd.petimo.R;
@@ -154,23 +155,21 @@ public class CategoryListFragment extends Fragment {
      * @param newCatName Name of the newly added category
      */
     public void updateView(String newCatName){
-        // Update the data stored in the adapter by adding the newly added category to the beginning
-        // of the item list
-
-        Log.d(TAG, "New cat object ====> " +
-                PetimoController.getInstance().getCatByName(newCatName).getName());
-        //adapter.catList.add(0, PetimoController.getInstance().getCatByName(newCatName));
-        // This is for logging purpose
-        Log.d(TAG, "Before: catList in Fragment - size =====> " + catList.size());
-        Log.d(TAG, "Before: catList in Adapter - size =====> " + this.adapter.catList.size());
+        // Update the category list of the recyclerView and force it to rebind all items
         this.catList.add(0, PetimoController.getInstance().getCatByName(newCatName));
-
-        //this.adapter.catList.add(0, PetimoController.getInstance().getCatByName(newCatName));
-        Log.d(TAG, "After: catList in Fragment - size =====> " + catList.size());
-        Log.d(TAG, "After: catList in Adapter - size =====> " + this.adapter.catList.size());
-        // Then notify the adapter about the change to adapt the view
         this.adapter.notifyItemInserted(0);
-        //adapter.notifyDataSetChanged();
+        this.adapter.notifyDataSetChanged();
+
+        this.catList.clear();
+        this.catList.addAll(PetimoController.getInstance().getAllCats());
+        // bug: this.catList now points to other arrayList object, while adapter.catList still
+        // points to the old object
+        //this.catList = new ArrayList<>(PetimoController.getInstance().getAllCats());
+        this.adapter.notifyDataSetChanged();
+
+        // Old approach: add the new cat to the top of the recyclerView
+        //this.catList.add(0, PetimoController.getInstance().getCatByName(newCatName));
+        //this.adapter.notifyItemInserted(0);
     }
 
 }
