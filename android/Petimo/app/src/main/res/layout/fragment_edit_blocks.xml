@@ -2,49 +2,69 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.tud.nhd.petimo.view.fragments.EditBlocksFragment">
+    tools:context="de.tud.nhd.petimo.view.fragments.EditBlocksFragment"
+    android:clipToPadding="false"
+    android:animateLayoutChanges="true">
 
-    <LinearLayout
-        android:id="@+id/header"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:text="@string/colon_from"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
-            android:text="@string/loading_text"
-            android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/parentContainer">
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#111"
-            android:id="@+id/button_date_from" />
-        <TextView
-            android:text="@string/colon_to"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
-            android:text="@string/loading_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#111"
-            android:id="@+id/button_date_to" />
-        <Button
-            android:id="@+id/button_display_day_range"
-            android:layout_gravity="right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/button_show"/>
-    </LinearLayout>
+            android:orientation="horizontal">
 
-    <FrameLayout
-        android:id="@+id/day_list_fragment_container"
-        android:layout_below="@id/header"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+            <TextView
+                android:text="@string/colon_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Button
+                android:text="@string/loading_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#111"
+                android:id="@+id/button_date_from" />
+            <TextView
+                android:text="@string/colon_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Button
+                android:text="@string/loading_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#111"
+                android:id="@+id/button_date_to" />
+            <Button
+                android:id="@+id/button_display_day_range"
+                android:layout_gravity="right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_show"/>
+            <Button
+                android:text=".."
+                android:id="@+id/button_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/drop_down_menu_container"
+            android:layout_below="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/day_list_fragment_container"
+            android:layout_below="@id/drop_down_menu_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
 
-    </FrameLayout>
+        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

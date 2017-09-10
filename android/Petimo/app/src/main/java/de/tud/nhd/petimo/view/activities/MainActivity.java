@@ -2,6 +2,7 @@ package de.tud.nhd.petimo.view.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import de.tud.nhd.petimo.R;
@@ -31,6 +33,7 @@ import de.tud.nhd.petimo.view.fragments.EditBlocksFragment;
 import de.tud.nhd.petimo.view.fragments.EditTasksFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOffFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOnFragment;
+import de.tud.nhd.petimo.view.fragments.listener.OnEditBlocksMenuFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditDayFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
@@ -41,7 +44,7 @@ import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapt
 
 public class MainActivity extends AppCompatActivity
         implements OnModeFragmentInteractionListener, OnEditTaskFragmentInteractionListener,
-        OnEditDayFragmentInteractionListener {
+        OnEditDayFragmentInteractionListener, OnEditBlocksMenuFragmentInteractionListener {
 
     final String TAG = "MainActivity";
     Toolbar toolBar;
@@ -335,6 +338,11 @@ public class MainActivity extends AppCompatActivity
         // Handle other action bar items..
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 
 

@@ -11,11 +11,15 @@ import java.util.Date;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
@@ -32,8 +36,13 @@ public class EditBlocksFragment extends Fragment {
     Button fromDateButton;
     Button toDateButton;
     Button showButton;
+    Button menuButton;
+    RelativeLayout menuContainer;
+    RelativeLayout listContainer;
+    RelativeLayout parentContainer;
     Calendar fromCalendar = Calendar.getInstance();
     Calendar toCalendar = Calendar.getInstance();
+    boolean menuOpened = false;
 
     public EditBlocksFragment() {
         // Required empty public constructor
@@ -63,10 +72,17 @@ public class EditBlocksFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        menuContainer = (RelativeLayout) view.findViewById(R.id.drop_down_menu_container);
+        listContainer = (RelativeLayout) view.findViewById(R.id.day_list_fragment_container);
+        parentContainer = (RelativeLayout) view.findViewById(R.id.parentContainer) ;
+
+        menuButton = (Button) view.findViewById(R.id.button_menu);
+
         // Setup DatePicker dialogs and update textViews accordingly
         fromDateButton = (Button) view.findViewById(R.id.button_date_from);
         toDateButton = (Button) view.findViewById(R.id.button_date_to);
         showButton = (Button) view.findViewById(R.id.button_display_day_range);
+
 
         // default date range is the last 1 week
         fromCalendar.setTime(new Date());
@@ -138,6 +154,36 @@ public class EditBlocksFragment extends Fragment {
                 }
             }
         });
+
+        //TODO
+        menuButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                if (!menuOpened){
+                    EditBlocksMenuFragment fragment =
+                            EditBlocksMenuFragment.newInstance();
+                    getActivity().getSupportFragmentManager().beginTransaction().add(
+                            menuContainer.getId(), fragment ,
+                            TAG + "-menu").commit();
+                    menuOpened = true;
+
+
+                }
+                else{
+                    EditBlocksMenuFragment fragment = (EditBlocksMenuFragment)
+                            getActivity().getSupportFragmentManager().
+                                    findFragmentByTag(TAG + "-menu");
+
+                    if (fragment != null){
+                        getActivity().getSupportFragmentManager().beginTransaction().
+                                remove(fragment).commit();
+                    }
+                    menuOpened = false;
+                }
+            }
+        });
+
 
         // Fill in the fragment to display day list
         getActivity().getSupportFragmentManager().beginTransaction().add(
