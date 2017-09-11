@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.List;
 
-import de.tud.nhd.petimo.controller.TimeUtils;
+import de.tud.nhd.petimo.utils.TimeUtils;
 
 /**
  * Created by nhd on 28.08.17.

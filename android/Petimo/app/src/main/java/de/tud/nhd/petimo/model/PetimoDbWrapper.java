@@ -11,9 +11,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.controller.ResponseCode;
-import de.tud.nhd.petimo.controller.TimeUtils;
+import de.tud.nhd.petimo.utils.TimeUtils;
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;

@@ -1,4 +1,4 @@
-package de.tud.nhd.petimo.controller;
+package de.tud.nhd.petimo.utils;
 
 import android.util.Log;
 
@@ -116,7 +116,6 @@ public class TimeUtils {
         String result = "";
         Date date = new Date(time);
         result = dateFormat.format(date) + " - " + timeFormat.format(date);
-        Log.d(TAG, "getDayTimeFromMsTime:" + time + " -> " + result);
         return timeFormat.format(date);
     }
 

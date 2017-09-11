@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.controller.TimeUtils;
+import de.tud.nhd.petimo.utils.TimeUtils;
 import de.tud.nhd.petimo.model.MonitorBlock;
 
 import java.util.List;
@@ -28,7 +28,6 @@ public class BlockRecyclerViewAdapter extends
      * @param blockList
      */
     public BlockRecyclerViewAdapter(List<MonitorBlock> blockList) {
-        Log.d(TAG, "New Block Adapter ! blockList size =====> " + blockList.size());
         this.blockList = blockList;
     }
 
@@ -41,19 +40,17 @@ public class BlockRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(final BlockListViewHolder holder, int position) {
-        Log.d(TAG, "Binding BlockListViewHolder at position ====> " + position );
         holder.monitorBlock = blockList.get(position);
         String timeInfo = "► " +
                TimeUtils.getDayTimeFromMsTime(blockList.get(position).getStart()) +
                 " -> " + TimeUtils.getDayTimeFromMsTime(blockList.get(position).getEnd()) +
                 " : " + TimeUtils.getTimeFromMs(blockList.get(position).getDuration());
-        Log.d(TAG, timeInfo);
+        //Log.d(TAG, timeInfo);
 
         holder.textViewTime.setText(timeInfo);
 
         String monitorInfo = "    " + blockList.get(position).getCategory() + " / " +
                 blockList.get(position).getTask();
-        Log.d(TAG, monitorInfo);
         holder.textViewData.setText(monitorInfo);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {

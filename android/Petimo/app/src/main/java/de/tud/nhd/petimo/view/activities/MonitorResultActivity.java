@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.controller.TimeUtils;
+import de.tud.nhd.petimo.utils.TimeUtils;
 import de.tud.nhd.petimo.view.fragments.lists.BlockListFragment;
 
 // TODO implement me

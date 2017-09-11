@@ -230,15 +230,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onConfirmStopButtonClicked() {
         // Stop the monitor
-        ResponseCode resCode = null;
         try {
-            resCode = controller.addBlockLive(null, null);
+            // update the monitored task list
+            controller.updateMonitoredTaskList();
+            // add the monitored block
+            controller.addBlockLive(null, null);
         } catch (DbErrorException e) {
             // TODO
         } catch (InvalidCategoryException e) {
             // TODO
         }
-        Log.d(TAG, resCode.toString());
         // Switch to OffModeActivity
         Intent intent = new Intent(this, MonitorResultActivity.class);
         startActivity(intent);

@@ -4,13 +4,20 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 import de.tud.nhd.petimo.R;
+import de.tud.nhd.petimo.utils.StringParsingException;
+import de.tud.nhd.petimo.utils.StringUtils;
 
 /**
  * Created by nhd on 01.09.17.
  */
 
 public class PetimoSharedPref {
+
     private static final String TAG = "PetimoSharedPref";
     private final String MONITOR_LIVE_DATE =
             "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LIVE_DATE";
@@ -20,6 +27,8 @@ public class PetimoSharedPref {
             "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LIVE_CAT";
     private final String MONITOR_LIVE_TASK =
             "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LIVE_TASK";
+    private final String MONITOR_MONITORED_TASKS =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_MONITORED_TASKS";
 
     private final String SETTINGS_OVERNIGHT_THRESHOLD =
             "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_OVERNIGHT_THRESHOLD";
@@ -35,6 +44,9 @@ public class PetimoSharedPref {
     private SharedPreferences.Editor settingsEditor;
     private SharedPreferences.Editor monitorEditor;
 
+    public static final String TIME = "time";
+    public static final String FREQUENCY = "frequency";
+    public static final String NONE = "none";
     //<---------------------------------------------------------------------------------------------
     // Init
     // -------------------------------------------------------------------------------------------->
@@ -97,6 +109,61 @@ public class PetimoSharedPref {
         monitorEditor.apply();
     }
 
+    /**
+     * Save or update information about monitored task
+     * @param category  the category of the given monitored task
+     * @param task  the
+     */
+    public void updateMonitoredTask(String category, String task, long time){
+        ArrayList<String[]> monitoredTasks = this.getMonitored(this.NONE);
+        boolean notExist = true;
+        if (monitoredTasks!=null){
+            for (String[] item : monitoredTasks){
+                if(item[0].equals(category) && item[1].equals(task)){
+                    // update time
+                    item[2] = Long.toHexString(time);
+                    // update frequency;
+                    item[3] = Integer.toString(Integer.parseInt(item[3]) + 1);
+                    notExist = false;
+                    break;
+                }
+            }
+            if (notExist){
+                // Add a new item to the monitored task list
+                monitoredTasks.add(
+                        new String[]{category, task, Long.toHexString(time), Integer.toString(1)});
+            }
+        }
+        else{
+            // initialize
+            monitoredTasks = new ArrayList<String[]>();
+            monitoredTasks.add(
+                    new String[]{category, task, Long.toHexString(time), Integer.toString(1)});
+        }
+
+        monitorEditor.remove(MONITOR_MONITORED_TASKS);
+        monitorEditor.putString(MONITOR_MONITORED_TASKS, StringUtils.encode(monitoredTasks, 4));
+        monitorEditor.apply();
+    }
+
+    /**
+     * Remove a task from the list of save monitored tasks
+     * @param category
+     * @param task
+     * @return
+     */
+    public boolean removeMonitoredTask(String category, String task){
+        ArrayList<String[]> monitoredTasks = this.getMonitored(this.NONE);
+        if (monitoredTasks!=null) {
+            for (String[] item : monitoredTasks) {
+                if (item[0].equals(category) && item[1].equals(task)) {
+                    monitoredTasks.remove(item);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     // Read
 
     /**
@@ -139,6 +206,58 @@ public class PetimoSharedPref {
         return !(monitorPref.getLong(MONITOR_LIVE_START, -1) == -1);
     }
 
+    /**
+     * Return a list of all monitored tasks
+     * @return  the list of monitored tasks, or null if there is no saved monitored task or
+     *          some error occurs
+     */
+    public ArrayList<String[]> getMonitored(String sortOpt){
+
+        //monitorEditor.remove(MONITOR_MONITORED_TASKS).apply();
+        try{
+            ArrayList<String[]> monitoredTaskList = StringUtils.parse(
+                    monitorPref.getString(MONITOR_MONITORED_TASKS, null), 4);
+            switch (sortOpt){
+                case TIME:
+                    // DESC sort by time
+                    Collections.sort(monitoredTaskList,
+                            Collections.<String[]>reverseOrder(new Comparator<String[]>() {
+                        @Override
+                        public int compare(String[] o1, String[] o2) {
+                            if (Long.parseLong(o1[2],16) > Long.parseLong(o2[2]))
+                                return 1;
+                            else if (Long.parseLong(o1[2],16) < Long.parseLong(o2[2]))
+                                return -1;
+                            else
+                                return 0;
+                        }
+                    }));
+                    return monitoredTaskList;
+
+                case FREQUENCY:
+                    // DESC sort by frequency
+                    Collections.sort(monitoredTaskList,
+                            Collections.<String[]>reverseOrder(new Comparator<String[]>() {
+                                @Override
+                                public int compare(String[] o1, String[] o2) {
+                                    if (Integer.parseInt(o1[3]) > Integer.parseInt(o2[3]))
+                                        return 1;
+                                    else if (Integer.parseInt(o1[3]) < Integer.parseInt(o2[3]))
+                                        return -1;
+                                    else
+                                        return 0;
+                                }
+                            }));
+                    return monitoredTaskList;
+                default:
+                    return monitoredTaskList;
+            }
+        }
+        catch (StringParsingException e){
+            Log.d(TAG, e.getMessage());
+            return null;
+        }
+    }
 
     //<---------------------------------------------------------------------------------------------
     // Settings Preferences

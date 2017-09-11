@@ -4,12 +4,10 @@ package de.tud.nhd.petimo.controller;
 import android.content.Context;
 import android.util.Log;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputDateException;
@@ -22,7 +20,7 @@ import de.tud.nhd.petimo.model.MonitorDay;
 import de.tud.nhd.petimo.model.MonitorTask;
 import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
-import de.tud.nhd.petimo.view.activities.MainActivity;
+import de.tud.nhd.petimo.utils.TimeUtils;
 
 /**
  * Created by nhd on 31.08.17.
@@ -200,6 +198,16 @@ public class PetimoController {
      */
     public int removeBlock(int id){
         return this.dbWrapper.removeBlockById(id);
+    }
+
+
+    /**
+     * Update the saved list of monitored tasks.
+     * This must be called just before stopping the monitor
+     */
+    public void updateMonitoredTaskList(){
+        this.sharedPref.updateMonitoredTask(this.sharedPref.getMonitorCat(),
+                this.sharedPref.getMonitorTask(), System.currentTimeMillis());
     }
     //<---------------------------------------------------------------------------------------------
     //  Core - Outputting
