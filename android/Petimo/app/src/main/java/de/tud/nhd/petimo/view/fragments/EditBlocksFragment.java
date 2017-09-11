@@ -11,6 +11,7 @@ import java.util.Date;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -163,9 +164,10 @@ public class EditBlocksFragment extends Fragment {
                 if (!menuOpened){
                     EditBlocksMenuFragment fragment =
                             EditBlocksMenuFragment.newInstance();
-                    getActivity().getSupportFragmentManager().beginTransaction().add(
-                            menuContainer.getId(), fragment ,
-                            TAG + "-menu").commit();
+                    FragmentTransaction ft =
+                            getActivity().getSupportFragmentManager().beginTransaction();
+                    ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
+                    ft.add(menuContainer.getId(), fragment, TAG + "-menu").commit();
                     menuOpened = true;
 
 
@@ -176,8 +178,10 @@ public class EditBlocksFragment extends Fragment {
                                     findFragmentByTag(TAG + "-menu");
 
                     if (fragment != null){
-                        getActivity().getSupportFragmentManager().beginTransaction().
-                                remove(fragment).commit();
+                        FragmentTransaction ft =
+                                getActivity().getSupportFragmentManager().beginTransaction();
+                        ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
+                        ft.remove(fragment).commit();
                     }
                     menuOpened = false;
                 }
