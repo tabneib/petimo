@@ -32,7 +32,6 @@ public class ModeOffFragment extends Fragment {
     Spinner catSpinner;
     Spinner taskSpinner;
     Button startButton;
-    PetimoController controller;
 
 
     public ModeOffFragment() {
@@ -56,12 +55,6 @@ public class ModeOffFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try {
-            this.controller = PetimoController.getInstance();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
         try {
             mListener = (OnModeFragmentInteractionListener) getActivity();
         } catch (ClassCastException e) {
@@ -132,7 +125,8 @@ public class ModeOffFragment extends Fragment {
             @Override
             public void run(){
                 ArrayAdapter<String> catSpinnerAdapter = new ArrayAdapter<String>(getContext(),
-                        R.layout.support_simple_spinner_dropdown_item, controller.getAllCatNames());
+                        R.layout.support_simple_spinner_dropdown_item,
+                        PetimoController.getInstance().getAllCatNames());
 
                 catSpinner.setAdapter(catSpinnerAdapter);
                 catSpinnerAdapter.notifyDataSetChanged();
@@ -150,7 +144,8 @@ public class ModeOffFragment extends Fragment {
             public void run() {
                 ArrayAdapter<String> taskSpinnerAdapter = new ArrayAdapter<String>(getContext(),
                         R.layout.support_simple_spinner_dropdown_item,
-                        controller.getTaskNameByCat(catSpinner.getSelectedItem().toString()));
+                        PetimoController.getInstance().getTaskNameByCat(
+                                catSpinner.getSelectedItem().toString()));
                 taskSpinner.setAdapter(taskSpinnerAdapter);
                 taskSpinnerAdapter.notifyDataSetChanged();
             }
@@ -160,12 +155,13 @@ public class ModeOffFragment extends Fragment {
 
     /**
      * Busy loop until the db wrapper is ready. This is only done when the app is starting up
+     * in Off Mode
      */
     private class WaitForDb extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
-            while (!controller.isDbReady()){
+            while (!PetimoController.getInstance().isDbReady()){
                 try{
                     Thread.sleep(20);
                 }

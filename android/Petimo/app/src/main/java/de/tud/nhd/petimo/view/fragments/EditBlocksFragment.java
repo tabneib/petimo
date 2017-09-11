@@ -9,7 +9,9 @@ import java.util.Date;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,15 +159,18 @@ public class EditBlocksFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (!menuOpened){
-                    EditBlocksMenuFragment fragment =
-                            EditBlocksMenuFragment.newInstance();
-                    FragmentTransaction ft =
-                            getActivity().getSupportFragmentManager().beginTransaction();
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
                     ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
-                    ft.add(menuContainer.getId(), fragment, TAG + "-menu").commit();
+                    EditBlocksMenuFragment fragment = (EditBlocksMenuFragment)
+                            fm.findFragmentByTag(TAG + "-menu");
+                    if(fragment == null) {
+                        fragment = EditBlocksMenuFragment.newInstance();
+                        ft.add(menuContainer.getId(), fragment, TAG + "-menu").commit();
+                    }
+                    else
+                        ft.detach(fragment).attach(fragment).commit();
                     menuOpened = true;
-
-
                 }
                 else{
                     EditBlocksMenuFragment fragment = (EditBlocksMenuFragment)
@@ -175,8 +180,8 @@ public class EditBlocksFragment extends Fragment {
                     if (fragment != null){
                         FragmentTransaction ft =
                                 getActivity().getSupportFragmentManager().beginTransaction();
-                        ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
-                        ft.remove(fragment).commit();
+                        //ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
+                        ft.detach(fragment).commit();
                     }
                     menuOpened = false;
                 }

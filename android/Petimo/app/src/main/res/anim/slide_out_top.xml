@@ -7,8 +7,8 @@
         android:valueTo="0"
         android:duration="500" /> -->
     <translate xmlns:android="http://schemas.android.com/apk/res/android"
-        android:fromYDelta="0"
-        android:toYDelta="-100"
+        android:fromYDelta="0%"
+        android:toYDelta="-100%"
         android:interpolator="@android:anim/decelerate_interpolator"
         android:duration="@android:integer/config_mediumAnimTime"/>
 </set>
