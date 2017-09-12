@@ -72,11 +72,14 @@
     <string name="title_remove_task">Remove Task</string>
     <string name="title_remove_block">Remove Block</string>
     <string name="title_monitored_tasks">Monitored Tasks</string>
+    <string name="title_clear_monitored_task_list">Clear Monitored Task List</string>
 
     <!-- Messages ###############################################################################-->
     <string name="message_confirm_stop_monitor">Stop the monitor?</string>
     <string name="message_confirm_start_monitor">To be monitored:</string>
     <string name="message_confirm_remove">Are you sure to remove&#160;</string>
+    <string name="message_confirm_clear_monitored_task_list">List of monitored tasks can help you choosing task faster. Are you sure
+    to clear it?</string>
 
 
     <!-- Option text ############################################################################-->

@@ -1,14 +1,18 @@
 package de.tud.nhd.petimo.view.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 
@@ -20,6 +24,7 @@ import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.view.activities.MainActivity;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.MonitoredTaskListFragment;
+import de.tud.nhd.petimo.view.fragments.lists.adapters.TaskRecyclerViewAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +39,7 @@ public class ModeOffMenuFragment extends Fragment {
     private OnModeFragmentInteractionListener mListener;
     RadioButton radioButtonTime;
     RadioButton radioButtonFreq;
+    Button buttonClear;
 
     public ModeOffMenuFragment() {
         // Required empty public constructor
@@ -53,6 +59,7 @@ public class ModeOffMenuFragment extends Fragment {
 
         radioButtonFreq = (RadioButton) getView().findViewById(R.id.radioButtonFreq);
         radioButtonTime = (RadioButton) getView().findViewById(R.id.radioButtonTime);
+        buttonClear = (Button) getView().findViewById(R.id.buttonClear);
 
         // update the selection of radioButtons
         Log.d(TAG, "PetimoController.getInstance().getUsrMonitoredTasksSortOrder() ===> " +
@@ -92,7 +99,44 @@ public class ModeOffMenuFragment extends Fragment {
             }
         });
 
+        buttonClear.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(getActivity(),
+                            android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(getActivity());
+                }
+
+                builder.setTitle(
+                        getActivity().getString(R.string.title_clear_monitored_task_list))
+                        .setMessage(getActivity().
+                                getString(R.string.message_confirm_clear_monitored_task_list))
+                        .setPositiveButton(android.R.string.yes,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        // Delete the saved monitored task
+                                        PetimoController.getInstance().clearMonitoredTaskList();
+                                        updateMonitoredTaskList();
+
+                                    }
+                                })
+                        .setNegativeButton(
+                                android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                       // do nothing
+                                    }
+                                })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+         });
     }
+
 
     /**
      * Update the monitored Task List upon a change of sort order
@@ -107,8 +151,9 @@ public class ModeOffMenuFragment extends Fragment {
                      (MonitoredTaskListFragment) modeOffFragment.getChildFragmentManager().
                              findFragmentByTag(ModeOffFragment.TASK_LIST_FRAGMENT_TAG);
             if (taskListFragment != null){
-                taskListFragment.adapter.monitoredTaskList =
-                        new ArrayList<>(PetimoController.getInstance().getMonitoredTasks());
+                taskListFragment.adapter.monitoredTaskList.clear();
+                taskListFragment.adapter.monitoredTaskList.addAll(
+                        PetimoController.getInstance().getMonitoredTasks());
                 taskListFragment.adapter.notifyDataSetChanged();
             }
         }

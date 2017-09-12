@@ -213,6 +213,13 @@ public class PetimoController {
     }
 
     /**
+     * Remove all saved monitored tasks
+     */
+    public void clearMonitoredTaskList(){
+        this.sharedPref.clearMonitoredTasks();
+    }
+
+    /**
      * update the last monitored cat/task to the current one
      */
     public void updateLastMonitored(){
@@ -392,7 +399,12 @@ public class PetimoController {
      * @return
      */
     public ArrayList<String[]> getMonitoredTasks(){
-        return sharedPref.getMonitored(sharedPref.getUsrMonitoredSortOrder());
+        ArrayList<String[]> monitoredTasks =
+                sharedPref.getMonitored(sharedPref.getUsrMonitoredSortOrder());
+        if (monitoredTasks == null)
+            return new ArrayList<String[]>();
+        else
+            return monitoredTasks;
     }
 
     /**

@@ -156,23 +156,13 @@ public class PetimoSharedPref {
         monitorEditor.apply();
     }
 
+
     /**
-     * Remove a task from the list of save monitored tasks
-     * @param category
-     * @param task
-     * @return
+     * Remove all saved monitored tasks
      */
-    public boolean removeMonitoredTask(String category, String task){
-        ArrayList<String[]> monitoredTasks = this.getMonitored(this.NONE);
-        if (monitoredTasks!=null) {
-            for (String[] item : monitoredTasks) {
-                if (item[0].equals(category) && item[1].equals(task)) {
-                    monitoredTasks.remove(item);
-                    return true;
-                }
-            }
-        }
-        return false;
+    public void clearMonitoredTasks(){
+        monitorEditor.remove(MONITOR_MONITORED_TASKS);
+        monitorEditor.apply();
     }
 
     /**
@@ -254,6 +244,7 @@ public class PetimoSharedPref {
      */
     public ArrayList<String[]> getMonitored(String sortOpt){
 
+        Log.d(TAG, "fooooooooooooooooooooooooooooooo");
         //monitorEditor.remove(MONITOR_MONITORED_TASKS).apply();
         try{
             ArrayList<String[]> monitoredTaskList = StringUtils.parse(
@@ -264,8 +255,11 @@ public class PetimoSharedPref {
                 String[] catTask = monitoredTaskIterator.next();
 
                 if (!PetimoDbWrapper.getInstance().checkCatExists(catTask[0]) ||
-                        !PetimoDbWrapper.getInstance().checkTaskExists(catTask[0], catTask[1]))
+                        !PetimoDbWrapper.getInstance().checkTaskExists(catTask[0], catTask[1])) {
                     monitoredTaskIterator.remove();
+                    // TODO: consider to remove it from the saved list
+                    //removeMonitoredTask(catTask[0], catTask[1]);
+                }
             }
             switch (sortOpt){
                 case TIME:
@@ -304,7 +298,7 @@ public class PetimoSharedPref {
             }
         }
         catch (StringParsingException e){
-            Log.d(TAG, e.getMessage());
+            Log.d(TAG, "StringParsingException ===> " + e.getMessage());
             return null;
         }
     }
