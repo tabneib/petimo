@@ -32,6 +32,8 @@ public class MonitoredTaskListFragment extends Fragment {
     private int mColumnCount = 2;
     private OnModeFragmentInteractionListener mListener;
 
+    public MonitoredTaskRecyclerViewAdapter adapter;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -64,6 +66,8 @@ public class MonitoredTaskListFragment extends Fragment {
 
         // Set the adapter
         if (view instanceof RecyclerView) {
+            adapter = new MonitoredTaskRecyclerViewAdapter(
+                    PetimoController.getInstance().getMonitoredTasks(), mListener);
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
@@ -71,8 +75,7 @@ public class MonitoredTaskListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MonitoredTaskRecyclerViewAdapter(
-                    PetimoController.getInstance().getMonitoredTasks(), mListener));
+            recyclerView.setAdapter(adapter);
             // TODO : Put this into a async task !
         }
         return view;

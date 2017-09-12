@@ -2,13 +2,24 @@ package de.tud.nhd.petimo.view.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
+
+import java.util.ArrayList;
 
 import de.tud.nhd.petimo.R;
+import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.model.PetimoSharedPref;
+import de.tud.nhd.petimo.view.activities.MainActivity;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
+import de.tud.nhd.petimo.view.fragments.lists.MonitoredTaskListFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +29,11 @@ import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListen
  */
 public class ModeOffMenuFragment extends Fragment {
 
+    private static final String TAG = "ModeOffMenuFragment";
+
     private OnModeFragmentInteractionListener mListener;
+    RadioButton radioButtonTime;
+    RadioButton radioButtonFreq;
 
     public ModeOffMenuFragment() {
         // Required empty public constructor
@@ -30,6 +45,73 @@ public class ModeOffMenuFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_off_mode_menu, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        radioButtonFreq = (RadioButton) getView().findViewById(R.id.radioButtonFreq);
+        radioButtonTime = (RadioButton) getView().findViewById(R.id.radioButtonTime);
+
+        // update the selection of radioButtons
+        Log.d(TAG, "PetimoController.getInstance().getUsrMonitoredTasksSortOrder() ===> " +
+                PetimoController.getInstance().getUsrMonitoredTasksSortOrder());
+        switch (PetimoController.getInstance().getUsrMonitoredTasksSortOrder()){
+            case PetimoSharedPref.FREQUENCY:
+                radioButtonFreq.setChecked(true);
+                break;
+            default:
+                radioButtonTime.setChecked(true);
+        }
+        radioButtonTime.setOnCheckedChangeListener(new RadioButton.OnCheckedChangeListener(){
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // save the chosen option
+                if (isChecked) {
+                    PetimoController.getInstance().
+                            updateUsrMonitoredTasksSortOrder(PetimoSharedPref.TIME);
+                    // Update the monitored Task List
+                    updateMonitoredTaskList();
+                }
+            }
+        });
+
+        radioButtonFreq.setOnCheckedChangeListener(new RadioButton.OnCheckedChangeListener(){
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // save the chosen option
+                if (isChecked) {
+                    PetimoController.getInstance().
+                            updateUsrMonitoredTasksSortOrder(PetimoSharedPref.FREQUENCY);
+                    // Update the monitored Task List
+                    updateMonitoredTaskList();
+                }
+            }
+        });
+
+    }
+
+    /**
+     * Update the monitored Task List upon a change of sort order
+     */
+    private void updateMonitoredTaskList(){
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        ModeOffFragment modeOffFragment = (ModeOffFragment)
+                fm.findFragmentByTag(MainActivity.MODE_OFF_FRAGMENT_TAG);
+        if (modeOffFragment != null) {
+            //modeOffFragment.updateTaskListFragment();
+             MonitoredTaskListFragment taskListFragment =
+                     (MonitoredTaskListFragment) modeOffFragment.getChildFragmentManager().
+                             findFragmentByTag(ModeOffFragment.TASK_LIST_FRAGMENT_TAG);
+            if (taskListFragment != null){
+                taskListFragment.adapter.monitoredTaskList =
+                        new ArrayList<>(PetimoController.getInstance().getMonitoredTasks());
+                taskListFragment.adapter.notifyDataSetChanged();
+            }
+        }
     }
 
 

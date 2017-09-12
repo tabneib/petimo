@@ -1,7 +1,6 @@
 package de.tud.nhd.petimo.view.fragments;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -42,8 +41,6 @@ public class ModeOffFragment extends Fragment {
     Spinner catSpinner;
     Spinner taskSpinner;
     Button startButton;
-    RadioButton radioButtonTime;
-    RadioButton radioButtonFreq;
     boolean menuOpened = false;
 
     /**
@@ -51,8 +48,8 @@ public class ModeOffFragment extends Fragment {
      */
     private int catSpinnerPosition;
 
-    private final String MENU_FRAGMENT_TAG = TAG + "-menu";
-    private final String TASK_LIST_FRAGMENT_TAG = TAG + "-taskList";
+    public static final String MENU_FRAGMENT_TAG = TAG + "-menu";
+    public static final String TASK_LIST_FRAGMENT_TAG = TAG + "-taskList";
 
 
 
@@ -92,7 +89,6 @@ public class ModeOffFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_off_mode, container, false);
     }
 
@@ -103,8 +99,7 @@ public class ModeOffFragment extends Fragment {
         taskSpinner = (Spinner) getView().findViewById(R.id.spinnerTask);
         startButton = (Button) getView().findViewById(R.id.buttonStart);
         menuButton = (Button) getView().findViewById(R.id.menu_button);
-        radioButtonFreq = (RadioButton) getView().findViewById(R.id.radioButtonFreq);
-        radioButtonTime = (RadioButton) getView().findViewById(R.id.radioButtonTime);
+
         taskListContainer = (RelativeLayout) getView().findViewById(R.id.monitored_tasks_container);
         menuContainer =
                 (RelativeLayout) getView().findViewById(R.id.monitored_tasks_menu_container);
@@ -144,7 +139,6 @@ public class ModeOffFragment extends Fragment {
             }
         });
 
-
         //----------------- TaskList -------------------------------------------------------------->
         FragmentManager fm = getChildFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -167,13 +161,10 @@ public class ModeOffFragment extends Fragment {
             }
         });
 
-
-
         // update menu display anyway
         updateMenuDisplay(false);
-
-
     }
+
 
     /**
      * Decide if the menu should be opened or closed
@@ -222,7 +213,6 @@ public class ModeOffFragment extends Fragment {
             }
         }
     }
-
 
     @Override
     public void onResume() {

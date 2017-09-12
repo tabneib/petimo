@@ -191,6 +191,7 @@ public class PetimoSharedPref {
             default:
                 monitorEditor.putString(MONITOR_USR_MONITORED_SORT_ORDER, NONE);
         }
+        monitorEditor.apply();
     }
 
     /**
@@ -273,9 +274,9 @@ public class PetimoSharedPref {
                             Collections.reverseOrder(new Comparator<String[]>() {
                         @Override
                         public int compare(String[] o1, String[] o2) {
-                            if (Long.parseLong(o1[2],16) > Long.parseLong(o2[2]))
+                            if (Long.parseLong(o1[2],16) > Long.parseLong(o2[2], 16))
                                 return 1;
-                            else if (Long.parseLong(o1[2],16) < Long.parseLong(o2[2]))
+                            else if (Long.parseLong(o1[2],16) < Long.parseLong(o2[2],16))
                                 return -1;
                             else
                                 return 0;
@@ -309,14 +310,6 @@ public class PetimoSharedPref {
     }
 
     /**
-     * Get the sort order chosen by user for displaying monitored tasks
-     * @return the sort order
-     */
-    public String getUsrMonitoredSortOrder(){
-        return monitorPref.getString(MONITOR_USR_MONITORED_SORT_ORDER, NONE);
-    }
-
-    /**
      * Get the last monitored cat/task
      * @return a string array containing the category and task, null if no category/task is stored
      */
@@ -329,6 +322,23 @@ public class PetimoSharedPref {
                 return new String[]{cat, task};
         return new String[]{null, null};
     }
+
+
+    /**
+    * Get the sort order chosen by user for displaying monitored tasks
+    * @return the sort order
+    */
+    public String getUsrMonitoredSortOrder(){
+        switch (monitorPref.getString(MONITOR_USR_MONITORED_SORT_ORDER, NONE)){
+            case FREQUENCY:
+                return FREQUENCY;
+            case TIME:
+                return TIME;
+            default:
+                return TIME;
+        }
+    }
+
     //<---------------------------------------------------------------------------------------------
     // Settings Preferences
     // -------------------------------------------------------------------------------------------->

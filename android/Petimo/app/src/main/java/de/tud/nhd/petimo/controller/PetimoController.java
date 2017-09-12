@@ -225,6 +225,20 @@ public class PetimoController {
     public void updateLastMonitored(String category, String task){
         this.sharedPref.setLastMonitored(category, task);
     }
+
+    /**
+     * Update the chosen sort order for displaying monitored tasks
+     * @param sortOrder
+     */
+    public void updateUsrMonitoredTasksSortOrder(String sortOrder){
+        switch (sortOrder){
+            case PetimoSharedPref.FREQUENCY:
+                sharedPref.setUsrMonitoredSortOrder(PetimoSharedPref.FREQUENCY);
+                break;
+            default:
+                sharedPref.setUsrMonitoredSortOrder(PetimoSharedPref.TIME);
+        }
+    }
     //<---------------------------------------------------------------------------------------------
     //  Core - Outputting
     // -------------------------------------------------------------------------------------------->
@@ -356,13 +370,6 @@ public class PetimoController {
     public MonitorTask getTaskByName(String taskName, String catName){
         return dbWrapper.getTaskByName(taskName, catName);
     }
-    /**
-     *
-     * @return
-     */
-    public List<String> getAllTaskNames(){
-        return dbWrapper.getAllTaskName();
-    }
 
 
     /**
@@ -403,6 +410,14 @@ public class PetimoController {
         else
             // no last monitored cat/task saved, return the first position
             return new int[]{0,0};
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getUsrMonitoredTasksSortOrder(){
+        return sharedPref.getUsrMonitoredSortOrder();
     }
 
     /**

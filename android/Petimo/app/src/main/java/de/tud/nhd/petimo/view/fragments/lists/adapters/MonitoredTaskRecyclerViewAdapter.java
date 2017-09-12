@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class MonitoredTaskRecyclerViewAdapter extends RecyclerView.Adapter<MonitoredTaskRecyclerViewAdapter.ViewHolder> {
 
-    private final List<String[]> monitoredTaskList;
+    public List<String[]> monitoredTaskList;
     private final OnModeFragmentInteractionListener mListener;
 
     public MonitoredTaskRecyclerViewAdapter(
