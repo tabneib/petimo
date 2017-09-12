@@ -3,6 +3,7 @@ package de.tud.nhd.petimo.view.activities;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -144,6 +145,13 @@ public class MainActivity extends AppCompatActivity
      * @param position
      */
     private void chooseDisplay(int position) {
+
+        // If the database wrapper is not yet ready
+        if (!controller.isDbReady()) {
+            new WaitForDb(position).execute((Void) null);
+            return;
+        }
+
         // Create a new fragment and specify the planet to show based on position
         switch (position) {
             case 1:
@@ -200,12 +208,9 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction ft = fm.beginTransaction();
         Fragment fragment = fm.findFragmentByTag(fTag);
 
-        if (fragment != null) {
-            Log.d(TAG, "Old fragment found ===> " + fTag);
+        if (fragment != null)
             ft.replace(R.id.content_frame, fragment).commit();
-        }
         else{
-            Log.d(TAG, "old fragment not found ===> " + fTag);
             switch (fTag) {
                 case EDIT_BLOCKS_FRAGMENT_TAG:
                     fragment = EditBlocksFragment.getInstance();
@@ -400,4 +405,28 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Busy loop until the db wrapper is ready. This is only done when the app is starting up
+     */
+    private class WaitForDb extends AsyncTask<Void, Void, Void> {
+
+        private int position;
+        public WaitForDb(int position){
+            this.position = position;
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            while (!controller.isDbReady()){
+                try{
+                    Log.d(TAG, "waiting for DB");
+                    Thread.sleep(20);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            chooseDisplay(position);
+            return null;
+        }
+    }
 }

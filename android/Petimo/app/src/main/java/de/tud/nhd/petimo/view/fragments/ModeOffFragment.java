@@ -227,7 +227,7 @@ public class ModeOffFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        new WaitForDb().execute((Void) null);
+        initCatSpinner();
     }
 
     /**
@@ -238,7 +238,7 @@ public class ModeOffFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable(){
             @Override
             public void run(){
-                ArrayAdapter<String> catSpinnerAdapter = new ArrayAdapter<String>(getContext(),
+                ArrayAdapter<String> catSpinnerAdapter = new ArrayAdapter<>(getContext(),
                         R.layout.support_simple_spinner_dropdown_item,
                         PetimoController.getInstance().getAllCatNames());
                 catSpinner.setAdapter(catSpinnerAdapter);
@@ -286,27 +286,5 @@ public class ModeOffFragment extends Fragment {
         updateTaskSpinner();
         taskSpinner.setSelection(
                 PetimoController.getInstance().getTaskNameByCat(category).indexOf(task));
-    }
-
-
-    /**
-     * Busy loop until the db wrapper is ready. This is only done when the app is starting up
-     * in Off Mode
-     */
-    private class WaitForDb extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            while (!PetimoController.getInstance().isDbReady()){
-                try{
-                    Thread.sleep(20);
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-            initCatSpinner();
-            return null;
-        }
     }
 }

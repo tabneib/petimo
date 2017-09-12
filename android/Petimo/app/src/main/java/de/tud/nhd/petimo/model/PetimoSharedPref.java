@@ -7,6 +7,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.utils.StringParsingException;
@@ -45,7 +46,7 @@ public class PetimoSharedPref {
 
 
     private static PetimoSharedPref _instance;
-    private Context context;
+    private static Context context;
 
     private SharedPreferences settingPref;
     private SharedPreferences monitorPref;
@@ -70,18 +71,20 @@ public class PetimoSharedPref {
         this.monitorEditor = monitorPref.edit();
     }
 
-    public static void initialize(Context context) throws Exception{
+    public static void initialize(Context kontext) throws Exception{
         if(_instance != null)
             throw new Exception("Cannot initialize multiple instances of PetimoSharedPref!");
         else {
-            _instance = new PetimoSharedPref(context);
+            context = kontext;
             Log.d(TAG, "Initialized!");
         }
     }
 
-    public static PetimoSharedPref getInstance() throws Exception{
-        if (_instance == null)
-            throw new Exception("PetimoSharedPref is not yet initialized!");
+    public static PetimoSharedPref getInstance() {
+        if (_instance == null) {
+            _instance = new PetimoSharedPref(context);
+            return _instance;
+        }
         else
             return _instance;
     }
@@ -254,6 +257,15 @@ public class PetimoSharedPref {
         try{
             ArrayList<String[]> monitoredTaskList = StringUtils.parse(
                     monitorPref.getString(MONITOR_MONITORED_TASKS, null), 4);
+            // Remove all cat / task that don't exist anymore
+            Iterator<String[]> monitoredTaskIterator = monitoredTaskList.iterator();
+            while (monitoredTaskIterator.hasNext()) {
+                String[] catTask = monitoredTaskIterator.next();
+
+                if (!PetimoDbWrapper.getInstance().checkCatExists(catTask[0]) ||
+                        !PetimoDbWrapper.getInstance().checkTaskExists(catTask[0], catTask[1]))
+                    monitoredTaskIterator.remove();
+            }
             switch (sortOpt){
                 case TIME:
                     // DESC sort by time
@@ -309,10 +321,13 @@ public class PetimoSharedPref {
      * @return a string array containing the category and task, null if no category/task is stored
      */
     public String[] getLastMonitoredTask(){
-        return new String[]{
-                monitorPref.getString(MONITOR_LAST_MONITORED_CATEGORY, null),
-                monitorPref.getString(MONITOR_LAST_MONITORED_TASK, null)
-        };
+        String cat = monitorPref.getString(MONITOR_LAST_MONITORED_CATEGORY, null);
+        String task = monitorPref.getString(MONITOR_LAST_MONITORED_TASK, null);
+
+        if (cat != null && task != null && PetimoDbWrapper.getInstance().checkCatExists(cat) &&
+                PetimoDbWrapper.getInstance().checkTaskExists(cat, task))
+                return new String[]{cat, task};
+        return new String[]{null, null};
     }
     //<---------------------------------------------------------------------------------------------
     // Settings Preferences

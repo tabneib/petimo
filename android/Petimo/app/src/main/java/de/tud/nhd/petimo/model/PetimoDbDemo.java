@@ -46,18 +46,9 @@ public class PetimoDbDemo {
 
 
     public PetimoDbDemo(Context context){
-        try {
-            PetimoDbWrapper.initialize(context);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        try {
-            this.dbWrapper = PetimoDbWrapper.getInstance();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+
+        PetimoDbWrapper.setContext(context);
+        this.dbWrapper = PetimoDbWrapper.getInstance();
 
         // Prepare calendar & time
         this.calendar = Calendar.getInstance();

@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.tud.nhd.petimo.controller.ResponseCode;
@@ -29,6 +30,8 @@ public class PetimoDbWrapper {
     private SQLiteDatabase readableDb = null;
     private SQLiteOpenHelper dbHelper = null;
 
+    private static Context context;
+
     //<---------------------------------------------------------------------------------------------
     // Init
     // -------------------------------------------------------------------------------------------->
@@ -38,21 +41,17 @@ public class PetimoDbWrapper {
         new GetReadableDbTask(dbHelper).execute((Void) null);
         new GetWritableDbTask(dbHelper).execute((Void) null);
 
-
     }
 
-    public static void initialize(Context context) throws Exception{
-        if(_instance != null)
-            throw new Exception("Cannot initialize multiple instances of PetimoDbWrapper!");
-        else {
+    public static void setContext(Context kontext) {
+        context = kontext;
+    }
+
+    public static PetimoDbWrapper getInstance() {
+        if (_instance == null){
             _instance = new PetimoDbWrapper(context);
-            Log.d(TAG, "Initialized!");
+            return _instance;
         }
-    }
-
-    public static PetimoDbWrapper getInstance() throws Exception{
-        if (_instance == null)
-            throw new Exception("PetimoDbWrapper is not yet initialized!");
         else
             return _instance;
     }
@@ -188,11 +187,9 @@ public class PetimoDbWrapper {
             long duration, int date, int weekDay, int overNight)
             throws DbErrorException, InvalidCategoryException {
         if (!checkCatExists(category)) {
-            Log.d(TAG, "Invalid category: " + category);
             throw new InvalidCategoryException("Category already exists: " + category);
         }
         if (task != null && !checkTaskExists(task, category)){
-            Log.d(TAG, "Invalid task: " + task);
             throw new InvalidCategoryException("Task already exists for the given category: "
                     + category + " / " + task);
         }
@@ -330,9 +327,6 @@ public class PetimoDbWrapper {
                 selection, selectionArgs, null, null, null, null);
 
         while(cursor.moveToNext()){
-            Log.d(TAG, "pre-fetching categories: " + cursor.getString(cursor.getColumnIndexOrThrow(
-                    PetimoContract.Categories.COLUMN_NAME_NAME)));
-
             category = new MonitorCategory(
                     cursor.getInt(cursor.getColumnIndexOrThrow(
                             PetimoContract.Categories._ID)),
@@ -390,7 +384,6 @@ public class PetimoDbWrapper {
         while (cursor.moveToNext())
             tasks.add(getTaskFromCursor(cursor));
         cursor.close();
-        Log.d(TAG, "number of tasks that belong to '" + catName + "' ======> " + tasks.size());
         return tasks;
     }
 
@@ -411,6 +404,7 @@ public class PetimoDbWrapper {
             taskNames.add(cursor.getString(cursor.getColumnIndexOrThrow(
                     PetimoContract.Tasks.COLUMN_NAME_NAME)));
         cursor.close();
+        Log.d(TAG, "cat ===> " + catName + " -- found tasks ===> " + taskNames);
         return taskNames;
     }
 
@@ -424,9 +418,6 @@ public class PetimoDbWrapper {
                 PetimoContract.Categories.getAllColumns(), null, null, null, null, null, null);
 
         while(cursor.moveToNext()){
-            Log.d(TAG, "pre-fetching categories: " + cursor.getString(cursor.getColumnIndexOrThrow(
-                    PetimoContract.Categories.COLUMN_NAME_NAME)));
-
             categories.add(new MonitorCategory(
                     cursor.getInt(cursor.getColumnIndexOrThrow(
                             PetimoContract.Categories._ID)),
@@ -614,7 +605,7 @@ public class PetimoDbWrapper {
      * @param category
      * @return
      */
-    public boolean checkTaskExists(String task, String category){
+    public boolean checkTaskExists(String category, String task){
         return this.getTaskNamesByCat(category).contains(task);
     }
 

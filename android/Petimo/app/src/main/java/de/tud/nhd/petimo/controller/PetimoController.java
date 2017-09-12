@@ -42,14 +42,14 @@ public class PetimoController {
 
     private PetimoController(Context context){
         try{
-            PetimoDbWrapper.initialize(context);
-            this.dbWrapper = PetimoDbWrapper.getInstance();
+            PetimoDbWrapper.setContext(context);
             PetimoSharedPref.initialize(context);
-            this.sharedPref = PetimoSharedPref.getInstance();
         }
         catch (Exception e){
             e.printStackTrace();
         }
+        this.dbWrapper = PetimoDbWrapper.getInstance();
+        this.sharedPref = PetimoSharedPref.getInstance();
     }
 
     /**
