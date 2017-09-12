@@ -46,6 +46,11 @@ public class ModeOffFragment extends Fragment {
     RadioButton radioButtonFreq;
     boolean menuOpened = false;
 
+    /**
+     * tag used to avoid undesired call of catSpinner.onSelectedItem
+     */
+    private int catSpinnerPosition;
+
     private final String MENU_FRAGMENT_TAG = TAG + "-menu";
     private final String TASK_LIST_FRAGMENT_TAG = TAG + "-taskList";
 
@@ -126,7 +131,11 @@ public class ModeOffFragment extends Fragment {
         catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                updateTaskSpinner();
+                // Only auto update taskSpinner if the catSpinner is selected by the user
+                if (position != catSpinnerPosition) {
+                    updateTaskSpinner();
+                    catSpinnerPosition = position;
+                }
             }
 
             @Override
@@ -232,9 +241,6 @@ public class ModeOffFragment extends Fragment {
                 ArrayAdapter<String> catSpinnerAdapter = new ArrayAdapter<String>(getContext(),
                         R.layout.support_simple_spinner_dropdown_item,
                         PetimoController.getInstance().getAllCatNames());
-
-                Log.d(TAG, "init catSpinner, last Cat  ===> "
-                        + PetimoController.getInstance().getLastMonitoredTask()[0]);
                 catSpinner.setAdapter(catSpinnerAdapter);
                 catSpinner.setSelection(
                         PetimoController.getInstance().getLastMonitoredTask()[0], true);
@@ -244,7 +250,6 @@ public class ModeOffFragment extends Fragment {
                 updateTaskSpinner();
                 taskSpinner.setSelection(
                         PetimoController.getInstance().getLastMonitoredTask()[1], true);
-
             }
         });
     }
@@ -265,6 +270,20 @@ public class ModeOffFragment extends Fragment {
                 taskSpinnerAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    /**
+     * Update all spinners selection according to the given chosen cat and task
+     * @param category
+     */
+    public void updateAllSpinner(String category, String task){
+        int catPos = PetimoController.getInstance().getAllCatNames().indexOf(category);
+        catSpinner.setSelection(catPos);
+        // Set the tag up-to-date in order to avoid undesired call of catSpinner.onItemSelected
+        catSpinnerPosition = catPos;
+        updateTaskSpinner();
+        taskSpinner.setSelection(
+                PetimoController.getInstance().getTaskNameByCat(category).indexOf(task));
     }
 
 

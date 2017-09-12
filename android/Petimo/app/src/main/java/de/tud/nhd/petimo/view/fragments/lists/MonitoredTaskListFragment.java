@@ -73,7 +73,6 @@ public class MonitoredTaskListFragment extends Fragment {
             }
             recyclerView.setAdapter(new MonitoredTaskRecyclerViewAdapter(
                     PetimoController.getInstance().getMonitoredTasks(), mListener));
-            Log.d(TAG, "The Adapter set !");
         }
         return view;
     }

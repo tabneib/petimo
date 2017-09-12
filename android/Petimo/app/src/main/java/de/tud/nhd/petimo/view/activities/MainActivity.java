@@ -272,6 +272,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onLastMonitoredTaskSelected(String category, String task) {
+        ModeOffFragment modeOffFragment = (ModeOffFragment)
+                getSupportFragmentManager().findFragmentByTag(MODE_OFF_FRAGMENT_TAG);
+        if (modeOffFragment != null){
+            modeOffFragment.updateAllSpinner(category, task);
+        }
+    }
+
+    @Override
     public void onConfirmAddingCatButtonClicked(
             CategoryListFragment catListFragment, String inputCat, int priority) {
 

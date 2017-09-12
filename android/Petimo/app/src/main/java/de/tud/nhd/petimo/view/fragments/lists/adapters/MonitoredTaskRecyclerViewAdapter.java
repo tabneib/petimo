@@ -35,7 +35,7 @@ public class MonitoredTaskRecyclerViewAdapter extends RecyclerView.Adapter<Monit
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = monitoredTaskList.get(position);
         holder.textViewCatTask.setText(
                 monitoredTaskList.get(position)[0] + " / " + monitoredTaskList.get(position)[1]);
@@ -43,13 +43,20 @@ public class MonitoredTaskRecyclerViewAdapter extends RecyclerView.Adapter<Monit
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                   // mListener.onListFragmentInteraction(holder.mItem);
-                }
+            taskSelected(position);
             }
         });
+    }
+
+    /**
+     *
+     * @param position
+     */
+    private void taskSelected(int position){
+        if (null != mListener) {
+            mListener.onLastMonitoredTaskSelected(monitoredTaskList.get(position)[0],
+                    monitoredTaskList.get(position)[1]);
+        }
     }
 
     @Override

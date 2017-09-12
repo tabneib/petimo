@@ -23,4 +23,7 @@ public interface OnModeFragmentInteractionListener {
      * Call-back method which is called when the stop confirm button is clicked
      */
     void onConfirmStopButtonClicked();
+
+
+    void onLastMonitoredTaskSelected(String category, String task);
 }
