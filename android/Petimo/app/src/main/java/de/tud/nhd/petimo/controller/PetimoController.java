@@ -218,6 +218,13 @@ public class PetimoController {
     public void updateLastMonitored(){
         this.sharedPref.setLastMonitored(sharedPref.getMonitorCat(), sharedPref.getMonitorTask());
     }
+
+    /**
+     * update the last monitored cat/task to the given one
+     */
+    public void updateLastMonitored(String category, String task){
+        this.sharedPref.setLastMonitored(category, task);
+    }
     //<---------------------------------------------------------------------------------------------
     //  Core - Outputting
     // -------------------------------------------------------------------------------------------->

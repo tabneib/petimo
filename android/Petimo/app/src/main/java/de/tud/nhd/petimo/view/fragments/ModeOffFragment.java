@@ -242,8 +242,10 @@ public class ModeOffFragment extends Fragment {
                         R.layout.support_simple_spinner_dropdown_item,
                         PetimoController.getInstance().getAllCatNames());
                 catSpinner.setAdapter(catSpinnerAdapter);
-                catSpinner.setSelection(
-                        PetimoController.getInstance().getLastMonitoredTask()[0], true);
+                int catPos = PetimoController.getInstance().getLastMonitoredTask()[0];
+                catSpinner.setSelection(catPos, true);
+                // Avoid undesired call of catSpinner.onItemSelected
+                catSpinnerPosition = catPos;
                 catSpinnerAdapter.notifyDataSetChanged();
 
                 // init task spinner accordingly
