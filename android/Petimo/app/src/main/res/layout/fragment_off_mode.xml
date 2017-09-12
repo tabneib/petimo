@@ -4,53 +4,104 @@
     android:layout_height="match_parent"
     tools:context="de.tud.nhd.petimo.view.fragments.ModeOffFragment">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:text="@string/colon_category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/textViewCat"
-        android:layout_marginLeft="8dp" />
+        <RelativeLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="@string/colon_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:id="@+id/textViewCat"
+                android:layout_marginLeft="8dp" />
 
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewCat"
-        android:layout_alignStart="@+id/textViewCat"
-        android:layout_marginTop="8dp"
-        android:id="@+id/spinnerCat"
-        android:entries="@array/spinner_default" />
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewCat"
+                android:layout_alignStart="@+id/textViewCat"
+                android:layout_marginTop="8dp"
+                android:id="@+id/spinnerCat"
+                android:entries="@array/spinner_default" />
 
-    <TextView
-        android:text="@string/colon_task"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/spinnerCat"
-        android:layout_alignStart="@+id/textViewCat"
-        android:layout_marginTop="8dp"
-        android:id="@+id/textViewTask" />
+            <TextView
+                android:text="@string/colon_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/spinnerCat"
+                android:layout_alignStart="@+id/textViewCat"
+                android:layout_marginTop="8dp"
+                android:id="@+id/textViewTask" />
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewTask"
-        android:layout_alignStart="@+id/textViewCat"
-        android:layout_marginTop="8dp"
-        android:entries="@array/spinner_default"
-        android:id="@+id/spinnerTask" />
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewTask"
+                android:layout_alignStart="@+id/textViewCat"
+                android:layout_marginTop="8dp"
+                android:entries="@array/spinner_default"
+                android:id="@+id/spinnerTask" />
 
-    <Button
-        android:text="@string/button_start_monitor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_alignTop="@+id/textViewCat"
-        android:layout_alignBottom="@+id/spinnerTask"
-        android:layout_alignParentRight="true"
-        android:id="@+id/buttonStart" />
+            <Button
+                android:text="@string/button_start_monitor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_alignTop="@+id/textViewCat"
+                android:layout_alignBottom="@+id/spinnerTask"
+                android:layout_alignParentRight="true"
+                android:id="@+id/buttonStart" />
+
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/menu_header"
+            android:layout_below="@id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="@string/title_monitored_tasks"
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="90"/>
+            <Button
+                android:id="@+id/menu_button"
+                android:text=".."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:layout_alignParentRight="true"/>
+        </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/monitored_tasks_menu_container"
+            android:layout_below="@+id/menu_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <RelativeLayout
+            android:id="@+id/monitored_tasks_container"
+            android:layout_below="@+id/monitored_tasks_menu_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="foooooooooooo"
+            android:layout_below="@id/monitored_tasks_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+
+
 
 
 </RelativeLayout>

@@ -29,6 +29,10 @@ public class PetimoSharedPref {
             "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LIVE_TASK";
     private final String MONITOR_MONITORED_TASKS =
             "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_MONITORED_TASKS";
+    private final String MONITOR_USR_MONITORED_SORT_ORDER =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_USR_MONITORED_SORT_ORDER";
+
+
 
     private final String SETTINGS_OVERNIGHT_THRESHOLD =
             "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_OVERNIGHT_THRESHOLD";
@@ -82,7 +86,7 @@ public class PetimoSharedPref {
     // Monitor Preferences
     // -------------------------------------------------------------------------------------------->
 
-    // Write
+    //------------------------------------------ Write -------------------------------------------->
     /**
      * Save information about the ongoing monitor into the preferences
      * @param category  category of the ongoing monitor
@@ -136,12 +140,11 @@ public class PetimoSharedPref {
         }
         else{
             // initialize
-            monitoredTasks = new ArrayList<String[]>();
+            monitoredTasks = new ArrayList<>();
             monitoredTasks.add(
                     new String[]{category, task, Long.toHexString(time), Integer.toString(1)});
         }
 
-        monitorEditor.remove(MONITOR_MONITORED_TASKS);
         monitorEditor.putString(MONITOR_MONITORED_TASKS, StringUtils.encode(monitoredTasks, 4));
         monitorEditor.apply();
     }
@@ -164,7 +167,26 @@ public class PetimoSharedPref {
         }
         return false;
     }
-    // Read
+
+    /**
+     * Save the sort order chosen by user to display monitored task.
+     * If the given value is NONE or invalid, the sort order is set to NONE
+     * @param sortOrder the given sort order
+     */
+    public void setUsrMonitoredSortOrder(String sortOrder){
+        switch (sortOrder){
+            case FREQUENCY:
+                monitorEditor.putString(MONITOR_USR_MONITORED_SORT_ORDER, FREQUENCY);
+                break;
+            case TIME:
+                monitorEditor.putString(MONITOR_USR_MONITORED_SORT_ORDER, TIME);
+                break;
+            default:
+                monitorEditor.putString(MONITOR_USR_MONITORED_SORT_ORDER, NONE);
+        }
+    }
+
+    //------------------------------------------- Read -------------------------------------------->
 
     /**
      * Return the category string of the ongoing monitor
@@ -221,7 +243,7 @@ public class PetimoSharedPref {
                 case TIME:
                     // DESC sort by time
                     Collections.sort(monitoredTaskList,
-                            Collections.<String[]>reverseOrder(new Comparator<String[]>() {
+                            Collections.reverseOrder(new Comparator<String[]>() {
                         @Override
                         public int compare(String[] o1, String[] o2) {
                             if (Long.parseLong(o1[2],16) > Long.parseLong(o2[2]))
@@ -237,7 +259,7 @@ public class PetimoSharedPref {
                 case FREQUENCY:
                     // DESC sort by frequency
                     Collections.sort(monitoredTaskList,
-                            Collections.<String[]>reverseOrder(new Comparator<String[]>() {
+                            Collections.reverseOrder(new Comparator<String[]>() {
                                 @Override
                                 public int compare(String[] o1, String[] o2) {
                                     if (Integer.parseInt(o1[3]) > Integer.parseInt(o2[3]))
@@ -257,6 +279,14 @@ public class PetimoSharedPref {
             Log.d(TAG, e.getMessage());
             return null;
         }
+    }
+
+    /**
+     * Get the sort order chosen by user for displaying monitored tasks
+     * @return the sort order
+     */
+    public String getUsrMonitoredSortOrder(){
+        return monitorPref.getString(MONITOR_USR_MONITORED_SORT_ORDER, NONE);
     }
 
     //<---------------------------------------------------------------------------------------------

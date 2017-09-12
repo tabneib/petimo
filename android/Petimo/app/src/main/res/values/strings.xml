@@ -1,7 +1,6 @@
 <resources>
 
 
-
     <!-- configuration & system strings #########################################################-->
     <string name="app_name">Petimo</string>
     <string name="preference_file_settings">de.tud.nhd.PREFERENCE_FILE_SETTINGS</string>
@@ -29,9 +28,9 @@
     </string-array>
 
 
-    <!-- Common short text ######################################################################-->
+    <!-- Short text ######################################################################-->
 
-    <!-- Common short text with colon ###########################################################-->
+    <!-- Short text with colon ###########################################################-->
     <string name="colon_category">Category:</string>
     <string name="colon_task">Task:</string>
     <string name="colon_priority">Priority:</string>
@@ -70,8 +69,9 @@
     <string name="title_remove_category">Remove Category</string>
     <string name="title_remove_task">Remove Task</string>
     <string name="title_remove_block">Remove Block</string>
+    <string name="title_monitored_tasks">Monitored Tasks</string>
 
-    <!-- Common message #########################################################################-->
+    <!-- Messages #########################################################################-->
     <string name="message_confirm_stop_monitor">Stop the monitor?</string>
     <string name="message_confirm_start_monitor">To be monitored:</string>
     <string name="message_confirm_remove">Are you sure to remove&#160;</string>

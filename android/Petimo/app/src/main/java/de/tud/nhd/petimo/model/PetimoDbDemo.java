@@ -197,10 +197,7 @@ public class PetimoDbDemo {
             System.out.println("----------------------------------------------");
             dbWrapper.generateXml();
 
-
             return true;
         }
-
-
     }
 }

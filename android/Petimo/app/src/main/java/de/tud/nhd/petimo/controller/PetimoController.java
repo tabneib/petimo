@@ -2,6 +2,7 @@ package de.tud.nhd.petimo.controller;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -363,6 +364,16 @@ public class PetimoController {
                     TimeUtils.getDayTimeFromMsTime(sharedPref.getMonitorStart())};
     }
 
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<String[]> getMonitoredTasks(){
+        return sharedPref.getMonitored(sharedPref.getUsrMonitoredSortOrder());
+    }
+
+
     /**
      *
      * @return
@@ -370,8 +381,10 @@ public class PetimoController {
     public boolean isDbReady(){
         return dbWrapper.isReady();
     }
+
+
     //<---------------------------------------------------------------------------------------------
-    //  Core - GUI updating
+    //  Auxiliary
     // -------------------------------------------------------------------------------------------->
 
     /**
@@ -380,11 +393,6 @@ public class PetimoController {
     public boolean isMonitoring(){
         return sharedPref.isMonitoring();
     }
-
-
-    //<---------------------------------------------------------------------------------------------
-    //  Auxiliary
-    // -------------------------------------------------------------------------------------------->
 
     /**
      * The live monitoring date is the day before if the monitor starts between midnight and the

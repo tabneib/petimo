@@ -5,6 +5,8 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,28 +19,25 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.controller.ResponseCode;
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
 import de.tud.nhd.petimo.model.MonitorBlock;
-import de.tud.nhd.petimo.model.MonitorDay;
 import de.tud.nhd.petimo.view.fragments.DemoFragment;
 import de.tud.nhd.petimo.view.fragments.EditBlocksFragment;
 import de.tud.nhd.petimo.view.fragments.EditTasksFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOffFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOnFragment;
+import de.tud.nhd.petimo.view.fragments.SettingFragment;
+import de.tud.nhd.petimo.view.fragments.StatisticsFragment;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditBlocksMenuFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditDayFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
-import de.tud.nhd.petimo.view.fragments.SettingFragment;
-import de.tud.nhd.petimo.view.fragments.StatisticsFragment;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapter;
 
@@ -46,7 +45,15 @@ public class MainActivity extends AppCompatActivity
         implements OnModeFragmentInteractionListener, OnEditTaskFragmentInteractionListener,
         OnEditDayFragmentInteractionListener, OnEditBlocksMenuFragmentInteractionListener {
 
-    final String TAG = "MainActivity";
+    private static final String TAG = "MainActivity";
+
+    public static final String EDIT_BLOCKS_FRAGMENT_TAG = TAG + "VIEW_BLOCKS_FRAGMENT_TAG";
+    public static final String EDIT_TASKS_FRAGMENT_TAG = TAG + "EDIT_TASKS_FRAGMENT_TAG";
+    public static final String STATISTICS_FRAGMENT_TAG = TAG + "STATISTICS_FRAGMENT_TAG";
+    public static final String SETTING_FRAGMENT_TAG = TAG + "SETTING_FRAGMENT_TAG";
+    public static final String DEMO_FRAGMENT_TAG = TAG + "DEMO_FRAGMENT_TAG";
+    public static final String MODE_OFF_FRAGMENT_TAG = TAG + "MODE_OFF_FRAGMENT_TAG";
+    public static final String MODE_ON_FRAGMENT_TAG = TAG + "MODE_ON_FRAGMENT_TAG";
     Toolbar toolBar;
     PetimoController controller;
 
@@ -141,23 +148,23 @@ public class MainActivity extends AppCompatActivity
         switch (position) {
             case 1:
                 //Monitored Tasks
-                displayFragment(EditBlocksFragment.getInstance());
+                displayFragment(EDIT_BLOCKS_FRAGMENT_TAG);
                 break;
             case 2:
                 //Statistics
-                displayFragment(StatisticsFragment.getInstance());
+                displayFragment(STATISTICS_FRAGMENT_TAG);
                 break;
             case 3:
                 //Manage Tasks
-                displayFragment(EditTasksFragment.getInstance());
+                displayFragment(EDIT_TASKS_FRAGMENT_TAG);
                 break;
             case 4:
                 //Setting
-                displayFragment(SettingFragment.getInstance());
+                displayFragment(SETTING_FRAGMENT_TAG);
                 break;
             case 5:
                 //Demo
-                displayFragment(DemoFragment.getInstance());
+                displayFragment(DEMO_FRAGMENT_TAG);
                 break;
             default:
                 //Monitor
@@ -176,19 +183,54 @@ public class MainActivity extends AppCompatActivity
     private void chooseModeToDisplay(){
         if (controller.isMonitoring())
             // There is ongoing live monitor
-            displayFragment(ModeOnFragment.getInstance());
+            displayFragment(MODE_ON_FRAGMENT_TAG);
         else
             // No ongoing live monitor
-            displayFragment(ModeOffFragment.getInstance());
+            displayFragment(MODE_OFF_FRAGMENT_TAG);
 
     }
+
+
     /**
      *
-     * @param fragment
+     * @param fTag
      */
-    private void displayFragment(Fragment fragment){
-        getSupportFragmentManager().beginTransaction().
-                replace(R.id.content_frame, fragment).commit();
+    private void displayFragment(String fTag){
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        Fragment fragment = fm.findFragmentByTag(fTag);
+
+        if (fragment != null) {
+            Log.d(TAG, "Old fragment found ===> " + fTag);
+            ft.replace(R.id.content_frame, fragment).commit();
+        }
+        else{
+            Log.d(TAG, "old fragment not found ===> " + fTag);
+            switch (fTag) {
+                case EDIT_BLOCKS_FRAGMENT_TAG:
+                    fragment = EditBlocksFragment.getInstance();
+                    break;
+                case EDIT_TASKS_FRAGMENT_TAG:
+                    fragment = EditTasksFragment.getInstance();
+                    break;
+                case STATISTICS_FRAGMENT_TAG:
+                    fragment = StatisticsFragment.getInstance();
+                    break;
+                case SETTING_FRAGMENT_TAG:
+                    fragment = SettingFragment.getInstance();
+                    break;
+                case DEMO_FRAGMENT_TAG:
+                    fragment = DemoFragment.getInstance();
+                    break;
+                case MODE_OFF_FRAGMENT_TAG:
+                    fragment = ModeOffFragment.getInstance();
+                    break;
+                case MODE_ON_FRAGMENT_TAG:
+                    fragment = ModeOnFragment.getInstance();
+                    break;
+            }
+            ft.replace(R.id.content_frame, fragment, fTag).commit();
+        }
     }
 
     private void displayFragment(Fragment fragment, String tag){

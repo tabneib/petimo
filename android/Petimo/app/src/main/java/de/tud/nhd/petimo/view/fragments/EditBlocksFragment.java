@@ -153,7 +153,6 @@ public class EditBlocksFragment extends Fragment {
             }
         });
 
-        //TODO
         menuButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -187,7 +186,6 @@ public class EditBlocksFragment extends Fragment {
                 }
             }
         });
-
 
         // Fill in the fragment to display day list
         getActivity().getSupportFragmentManager().beginTransaction().add(
