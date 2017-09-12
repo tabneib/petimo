@@ -64,6 +64,8 @@
 
     <string name="button_show">Show</string>
 
+    <string name="button_clear">Clear</string>
+
 
     <!-- Titles #################################################################################-->
     <string name="title_remove_category">Remove Category</string>
@@ -71,10 +73,15 @@
     <string name="title_remove_block">Remove Block</string>
     <string name="title_monitored_tasks">Monitored Tasks</string>
 
-    <!-- Messages #########################################################################-->
+    <!-- Messages ###############################################################################-->
     <string name="message_confirm_stop_monitor">Stop the monitor?</string>
     <string name="message_confirm_start_monitor">To be monitored:</string>
     <string name="message_confirm_remove">Are you sure to remove&#160;</string>
+
+
+    <!-- Option text ############################################################################-->
+    <string name="option_most_recently_first">Most recently first</string>
+    <string name="option_most_frequently_first">Most frequently first</string>
 
 
     <!-- Other strings ##########################################################################-->

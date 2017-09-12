@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -210,6 +211,13 @@ public class PetimoController {
         this.sharedPref.updateMonitoredTask(this.sharedPref.getMonitorCat(),
                 this.sharedPref.getMonitorTask(), System.currentTimeMillis());
     }
+
+    /**
+     * update the last monitored cat/task to the current one
+     */
+    public void updateLastMonitored(){
+        this.sharedPref.setLastMonitored(sharedPref.getMonitorCat(), sharedPref.getMonitorTask());
+    }
     //<---------------------------------------------------------------------------------------------
     //  Core - Outputting
     // -------------------------------------------------------------------------------------------->
@@ -373,6 +381,22 @@ public class PetimoController {
         return sharedPref.getMonitored(sharedPref.getUsrMonitoredSortOrder());
     }
 
+    /**
+     * Calculate the position of the last monitored cat/task
+     * @return
+     */
+    public int[] getLastMonitoredTask(){
+        String[] lastCatTask = sharedPref.getLastMonitoredTask();
+        if (lastCatTask[0] != null && lastCatTask[1] != null) {
+            return new int[]{
+                    getAllCatNames().indexOf(lastCatTask[0]),
+                    getTaskNameByCat(lastCatTask[0]).indexOf(lastCatTask[1])
+            };
+        }
+        else
+            // no last monitored cat/task saved, return the first position
+            return new int[]{0,0};
+    }
 
     /**
      *

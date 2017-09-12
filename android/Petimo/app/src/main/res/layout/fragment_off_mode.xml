@@ -92,11 +92,6 @@
             android:layout_below="@+id/monitored_tasks_menu_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <TextView
-            android:text="foooooooooooo"
-            android:layout_below="@id/monitored_tasks_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
     </RelativeLayout>
 

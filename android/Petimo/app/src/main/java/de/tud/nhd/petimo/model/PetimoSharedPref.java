@@ -31,6 +31,10 @@ public class PetimoSharedPref {
             "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_MONITORED_TASKS";
     private final String MONITOR_USR_MONITORED_SORT_ORDER =
             "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_USR_MONITORED_SORT_ORDER";
+    private final String MONITOR_LAST_MONITORED_CATEGORY =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LAST_MONITORED_CATEGORY";
+    private final String MONITOR_LAST_MONITORED_TASK =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LAST_MONITORED_TASK";
 
 
 
@@ -186,6 +190,17 @@ public class PetimoSharedPref {
         }
     }
 
+    /**
+     * Stored the last monitored task
+     * @param cat   category of the task
+     * @param task  the task
+     */
+    public void setLastMonitored(String cat, String task){
+        monitorEditor.putString(MONITOR_LAST_MONITORED_CATEGORY, cat);
+        monitorEditor.putString(MONITOR_LAST_MONITORED_TASK, task);
+        monitorEditor.apply();
+    }
+
     //------------------------------------------- Read -------------------------------------------->
 
     /**
@@ -289,6 +304,16 @@ public class PetimoSharedPref {
         return monitorPref.getString(MONITOR_USR_MONITORED_SORT_ORDER, NONE);
     }
 
+    /**
+     * Get the last monitored cat/task
+     * @return a string array containing the category and task, null if no category/task is stored
+     */
+    public String[] getLastMonitoredTask(){
+        return new String[]{
+                monitorPref.getString(MONITOR_LAST_MONITORED_CATEGORY, null),
+                monitorPref.getString(MONITOR_LAST_MONITORED_TASK, null)
+        };
+    }
     //<---------------------------------------------------------------------------------------------
     // Settings Preferences
     // -------------------------------------------------------------------------------------------->

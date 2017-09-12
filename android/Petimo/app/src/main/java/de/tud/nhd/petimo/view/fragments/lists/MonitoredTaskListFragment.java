@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import de.tud.nhd.petimo.view.fragments.lists.adapters.MonitoredTaskRecyclerView
  */
 public class MonitoredTaskListFragment extends Fragment {
 
+    private static final String TAG = "MonitoredTasksFragment";
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
@@ -49,6 +51,7 @@ public class MonitoredTaskListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d(TAG, "onCreate !");
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -70,6 +73,7 @@ public class MonitoredTaskListFragment extends Fragment {
             }
             recyclerView.setAdapter(new MonitoredTaskRecyclerViewAdapter(
                     PetimoController.getInstance().getMonitoredTasks(), mListener));
+            Log.d(TAG, "The Adapter set !");
         }
         return view;
     }
@@ -84,11 +88,19 @@ public class MonitoredTaskListFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnMonitoredTaskFragmentInteractionListener");
         }
+
+        Log.d(TAG, "onAttach!!!!!!");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume!!!!!!!!!!!!!!!");
     }
 }

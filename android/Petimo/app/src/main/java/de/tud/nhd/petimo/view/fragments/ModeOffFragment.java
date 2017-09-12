@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
@@ -41,6 +42,8 @@ public class ModeOffFragment extends Fragment {
     Spinner catSpinner;
     Spinner taskSpinner;
     Button startButton;
+    RadioButton radioButtonTime;
+    RadioButton radioButtonFreq;
     boolean menuOpened = false;
 
     private final String MENU_FRAGMENT_TAG = TAG + "-menu";
@@ -62,6 +65,12 @@ public class ModeOffFragment extends Fragment {
         }
         return _instance;
     }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "Created");
+    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -78,6 +87,7 @@ public class ModeOffFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_off_mode, container, false);
     }
 
@@ -88,93 +98,13 @@ public class ModeOffFragment extends Fragment {
         taskSpinner = (Spinner) getView().findViewById(R.id.spinnerTask);
         startButton = (Button) getView().findViewById(R.id.buttonStart);
         menuButton = (Button) getView().findViewById(R.id.menu_button);
+        radioButtonFreq = (RadioButton) getView().findViewById(R.id.radioButtonFreq);
+        radioButtonTime = (RadioButton) getView().findViewById(R.id.radioButtonTime);
         taskListContainer = (RelativeLayout) getView().findViewById(R.id.monitored_tasks_container);
         menuContainer =
                 (RelativeLayout) getView().findViewById(R.id.monitored_tasks_menu_container);
 
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-
-        //----------------- TaskList -------------------------------------------------------------->
-        MonitoredTaskListFragment taskListFragment = (MonitoredTaskListFragment)
-                fm.findFragmentByTag(TASK_LIST_FRAGMENT_TAG);
-        if(taskListFragment != null){
-            Log.d(TAG, "old taskListFragment found -> replace");
-            ft.detach(taskListFragment).attach(taskListFragment).commit();        }
-        else{
-            Log.d(TAG, "old taskListFragment not found -> add new");
-            taskListFragment = MonitoredTaskListFragment.newInstance(2);
-            ft.add(taskListContainer.getId(), taskListFragment, TASK_LIST_FRAGMENT_TAG).commit();
-        }
-
-        //------------------ Menu ----------------------------------------------------------------->
-        menuButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                updateMenuDisplay(true);
-            }
-        });
-
-        // update menu display anyway
-        //updateMenuDisplay(false);
-
-
-    }
-
-    /**
-     * Decide if the menu should be opened or closed
-     * @param isClicked weather this method is called upon the menu button is clicked
-     */
-    private void updateMenuDisplay(boolean isClicked){
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
-
-        ModeOffMenuFragment menuFragment = (ModeOffMenuFragment)
-                fm.findFragmentByTag(MENU_FRAGMENT_TAG);
-        if(menuFragment != null){
-            Log.d(TAG, "old menuFragment found");
-            // menu is currently opened
-            if (menuOpened) {
-                if (isClicked) {
-                    Log.d(TAG, "menuOpened: " + menuOpened + " / isClicked: " + isClicked);
-                    ft.hide(menuFragment).commit();
-                    menuOpened = false;
-                }
-                else {
-                    // update the menu display according to the last state
-                    Log.d(TAG, "menuOpened: " + menuOpened + " / isClicked: " + isClicked);
-                    ft.show(menuFragment).commit();
-                }
-            }
-            // menu is currently closed
-            else {
-                if(isClicked) {
-                    Log.d(TAG, "menuOpened: " + menuOpened + " / isClicked: " + isClicked);
-                    ft.show(menuFragment).commit();
-                    menuOpened = true;
-                }
-            }
-        }
-        else{
-            // init
-            if(isClicked) {
-                Log.d(TAG, "menuOpened: " + menuOpened + " / isClicked: " + isClicked);
-                menuFragment = new ModeOffMenuFragment();
-                ft.add(menuContainer.getId(), menuFragment, MENU_FRAGMENT_TAG).commit();
-                menuOpened = true;
-            }
-            else
-                Log.d(TAG, "menuOpened: " + menuOpened + " / isClicked: " + isClicked);
-        }
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        new WaitForDb().execute((Void) null);
+        //----------------- Monitor control dashboard --------------------------------------------->
         startButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -205,10 +135,95 @@ public class ModeOffFragment extends Fragment {
             }
         });
 
+
+        //----------------- TaskList -------------------------------------------------------------->
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        MonitoredTaskListFragment taskListFragment = (MonitoredTaskListFragment)
+                fm.findFragmentByTag(TASK_LIST_FRAGMENT_TAG);
+        if(taskListFragment != null)
+            // old taskListFragment found -> replace
+            ft.show(taskListFragment).commit();
+        else
+            // old taskListFragment not found -> add new
+            ft.add(taskListContainer.getId(),
+                    MonitoredTaskListFragment.newInstance(2), TASK_LIST_FRAGMENT_TAG).commit();
+
+        //------------------ Menu ----------------------------------------------------------------->
+        menuButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                updateMenuDisplay(true);
+            }
+        });
+
+
+
+        // update menu display anyway
+        updateMenuDisplay(false);
+
+
+    }
+
+    /**
+     * Decide if the menu should be opened or closed
+     * @param isClicked weather this method is called upon the menu button is clicked
+     */
+    private void updateMenuDisplay(boolean isClicked){
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        ModeOffMenuFragment menuFragment = (ModeOffMenuFragment)
+                fm.findFragmentByTag(MENU_FRAGMENT_TAG);
+        if(menuFragment != null){
+            // old menuFragment found
+            // menu is currently opened
+            if (menuOpened) {
+                // Open, User clicked ==> close
+                ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
+                ft.hide(menuFragment).commit();
+                menuOpened = false;
+            }
+            // menu is currently closed
+            else {
+                // Closed, User clicked => open
+                ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
+                ft.show(menuFragment).commit();
+                menuOpened = true;
+            }
+        }
+        else{
+            // init
+            if(isClicked) {
+                // Open menu for the first time
+                ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
+                ft.add(menuContainer.getId(),
+                        new ModeOffMenuFragment(), MENU_FRAGMENT_TAG).commit();
+                menuOpened = true;
+            }
+            else{
+                // Navigate (back) to this view
+                // Navigate to this View
+                if (menuOpened) {
+                    // Reconstruct old state -> open
+                    ft.add(menuContainer.getId(),
+                            new ModeOffMenuFragment(), MENU_FRAGMENT_TAG).commit();
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new WaitForDb().execute((Void) null);
     }
 
     /**
      * Initialize the contents of the category spinner with data from the database
+     * and set focus on the last monitored task
      */
     private void initCatSpinner(){
         getActivity().runOnUiThread(new Runnable(){
@@ -218,12 +233,22 @@ public class ModeOffFragment extends Fragment {
                         R.layout.support_simple_spinner_dropdown_item,
                         PetimoController.getInstance().getAllCatNames());
 
+                Log.d(TAG, "init catSpinner, last Cat  ===> "
+                        + PetimoController.getInstance().getLastMonitoredTask()[0]);
                 catSpinner.setAdapter(catSpinnerAdapter);
+                catSpinner.setSelection(
+                        PetimoController.getInstance().getLastMonitoredTask()[0], true);
                 catSpinnerAdapter.notifyDataSetChanged();
+
+                // init task spinner accordingly
+                updateTaskSpinner();
+                taskSpinner.setSelection(
+                        PetimoController.getInstance().getLastMonitoredTask()[1], true);
 
             }
         });
     }
+
 
     /**
      * Update the contents of the task spinner according to the selected item of the cat spinner

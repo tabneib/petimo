@@ -233,24 +233,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void displayFragment(Fragment fragment, String tag){
-
-        Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(tag);
-        if(oldFragment == null){
-            Log.d(TAG, "No old fragment instance found, creating new one");
-            getSupportFragmentManager().beginTransaction().
-                    add(R.id.content_frame, fragment, tag).commit();
-        }
-        else{
-            Log.d(TAG, "Old fragment instance found, use it");
-            getSupportFragmentManager().beginTransaction().
-                    replace(R.id.content_frame, fragment, tag).commit();
-            getSupportFragmentManager().beginTransaction().
-                    add(R.id.content_frame, fragment, tag).commit();
-        }
-
-    }
-
     //--------------------------------------------------------------------------------------------->
     // Handle Callback Listeners
     //<---------------------------------------------------------------------------------------------
@@ -275,6 +257,8 @@ public class MainActivity extends AppCompatActivity
         try {
             // update the monitored task list
             controller.updateMonitoredTaskList();
+            // store the last monitored cat/task
+            controller.updateLastMonitored();
             // add the monitored block
             controller.addBlockLive(null, null);
         } catch (DbErrorException e) {
