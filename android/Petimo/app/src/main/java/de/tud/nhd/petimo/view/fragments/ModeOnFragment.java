@@ -2,12 +2,14 @@ package de.tud.nhd.petimo.view.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
@@ -28,13 +30,13 @@ public class ModeOnFragment extends Fragment {
     private static ModeOnFragment _instance;
 
     private OnModeFragmentInteractionListener mListener;
-    private PetimoController controller;
 
     private TextView textViewMonitoring;
     private TextView textViewCatTask;
     private TextView textViewDate;
     private TextView textViewStartTime;
     private Button buttonStop;
+    private Chronometer chronometer;
 
     public ModeOnFragment() {
         // Required empty public constructor
@@ -55,12 +57,7 @@ public class ModeOnFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try{
-            controller = PetimoController.getInstance();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+
         try {
             mListener = (OnModeFragmentInteractionListener) getActivity();
         } catch (ClassCastException e) {
@@ -84,6 +81,7 @@ public class ModeOnFragment extends Fragment {
         textViewDate = (TextView) getView().findViewById(R.id.textViewDate);
         textViewStartTime = (TextView) getView().findViewById(R.id.textViewStartTime);
         buttonStop = (Button) getView().findViewById(R.id.buttonStop);
+        chronometer = (Chronometer) getView().findViewById(R.id.chronometer2);
     }
 
     @Override
@@ -93,8 +91,7 @@ public class ModeOnFragment extends Fragment {
         // Update view
         textViewMonitoring.setText(
                 "< " + getString(R.string.onmodefragment_text_view_monitoring) + " >");
-        Log.d(TAG, "Controller is null ===> " + (controller==null));
-        final String[] monitorInfo = controller.getLiveMonitorInfo();
+        final String[] monitorInfo = PetimoController.getInstance().getLiveMonitorInfo();
         textViewCatTask.setText(monitorInfo[0] + " / " + monitorInfo[1]);
         textViewDate.setText(
                 getString(R.string.colon_date) + " " + monitorInfo[2]);
@@ -115,6 +112,11 @@ public class ModeOnFragment extends Fragment {
                 stopDialogFragment.show(getFragmentManager(),null);
             }
         });
+
+        // Update and start the chronometer
+        long passedTime = System.currentTimeMillis() - Long.parseLong(monitorInfo[4]);
+        chronometer.setBase(SystemClock.elapsedRealtime() - passedTime);
+        chronometer.start();
     }
 
     @Override

@@ -1,57 +1,80 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="de.tud.nhd.petimo.view.fragments.ModeOffFragment">
 
 
     <!-- Header text -->
-    <TextView
-        android:text="@string/onmodefragment_text_view_monitoring"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="8dp"
-        android:id="@+id/textViewMonitoring" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <!-- category/task , default value is 'loading..' -->
-    <TextView
-        android:text="@string/loading_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewMonitoring"
-        android:layout_alignStart="@+id/textViewMonitoring"
-        android:layout_marginTop="8dp"
-        android:id="@+id/textViewCatTask"/>
+        <TextView
+            android:text="@string/onmodefragment_text_view_monitoring"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="8dp"
+            android:id="@+id/textViewMonitoring" />
 
-    <TextView
-        android:text="@string/colon_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewCatTask"
-        android:layout_alignStart="@+id/textViewMonitoring"
-        android:layout_marginTop="8dp"
-        android:id="@+id/textViewDate" />
+        <!-- category/task , default value is 'loading..' -->
+        <TextView
+            android:text="@string/loading_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewMonitoring"
+            android:layout_alignStart="@+id/textViewMonitoring"
+            android:layout_marginTop="8dp"
+            android:id="@+id/textViewCatTask"/>
 
-    <TextView
-        android:text="@string/colon_start_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewDate"
-        android:layout_alignStart="@+id/textViewMonitoring"
-        android:layout_marginTop="8dp"
-        android:id="@+id/textViewStartTime" />
+        <TextView
+            android:text="@string/colon_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewCatTask"
+            android:layout_alignStart="@+id/textViewMonitoring"
+            android:layout_marginTop="8dp"
+            android:id="@+id/textViewDate" />
 
-    <Button
-        android:text="@string/button_stop_monitor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_alignTop="@+id/textViewMonitoring"
-        android:layout_alignBottom="@+id/textViewStartTime"
-        android:layout_alignParentRight="true"
-        android:id="@+id/buttonStop" />
+        <TextView
+            android:text="@string/colon_start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewDate"
+            android:layout_alignStart="@+id/textViewMonitoring"
+            android:layout_marginTop="8dp"
+            android:id="@+id/textViewStartTime" />
+
+        <Button
+            android:text="@string/button_stop_monitor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:layout_alignTop="@+id/textViewMonitoring"
+            android:layout_alignBottom="@+id/textViewStartTime"
+            android:layout_alignParentRight="true"
+            android:id="@+id/buttonStop" />
+
+    </RelativeLayout>
 
 
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
+
+        <Chronometer
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="80dp"
+            android:id="@+id/chronometer2"
+            android:gravity="center_horizontal"/>
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

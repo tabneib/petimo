@@ -380,8 +380,8 @@ public class PetimoController {
 
 
     /**
-     * Return a string of size 4 containing all information of the ongoing monitor.
-     * The information includes: Category, Task, Date, Start time
+     * Return a string of size 5 containing all information of the ongoing monitor.
+     * The information includes: Category, Task, Date, Start time in HH:MM, Start time in millis
      * @return  the string, or null if there is no ongoing monitor
      */
     public String[] getLiveMonitorInfo(){
@@ -390,7 +390,8 @@ public class PetimoController {
         else
             return new String[] {sharedPref.getMonitorCat(), sharedPref.getMonitorTask(),
                     TimeUtils.getDateStrFromInt(sharedPref.getMonitorDate()),
-                    TimeUtils.getDayTimeFromMsTime(sharedPref.getMonitorStart())};
+                    TimeUtils.getDayTimeFromMsTime(sharedPref.getMonitorStart()),
+                    Long.toString(sharedPref.getMonitorStart())};
     }
 
 
