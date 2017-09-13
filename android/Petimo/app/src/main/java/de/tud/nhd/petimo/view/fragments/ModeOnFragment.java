@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStartDialogFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStopDialogFragment;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 
@@ -88,24 +89,31 @@ public class ModeOnFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        buttonStop.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                new ConfirmStopDialogFragment().show(getFragmentManager(),null);
-            }
-        });
 
         // Update view
         textViewMonitoring.setText(
                 "< " + getString(R.string.onmodefragment_text_view_monitoring) + " >");
         Log.d(TAG, "Controller is null ===> " + (controller==null));
-        String[] monitorInfo = controller.getLiveMonitorInfo();
+        final String[] monitorInfo = controller.getLiveMonitorInfo();
         textViewCatTask.setText(monitorInfo[0] + " / " + monitorInfo[1]);
         textViewDate.setText(
                 getString(R.string.colon_date) + " " + monitorInfo[2]);
         textViewStartTime.setText(
                 getString(R.string.colon_start_time) + " " + monitorInfo[3]);
+
+        buttonStop.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+                ConfirmStopDialogFragment stopDialogFragment = new ConfirmStopDialogFragment();
+                Bundle args = new Bundle();
+                args.putString(ConfirmStopDialogFragment.CATEGORY, monitorInfo[0]);
+                args.putString(ConfirmStopDialogFragment.TASK, monitorInfo[1]);
+                stopDialogFragment.setArguments(args);
+                stopDialogFragment.show(getFragmentManager(),null);
+            }
+        });
     }
 
     @Override

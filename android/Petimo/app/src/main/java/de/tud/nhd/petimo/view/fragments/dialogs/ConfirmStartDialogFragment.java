@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +76,6 @@ public class ConfirmStartDialogFragment extends DialogFragment {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 Calendar mcurrentTime = Calendar.getInstance();
                 int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mcurrentTime.get(Calendar.MINUTE);
@@ -88,7 +86,7 @@ public class ConfirmStartDialogFragment extends DialogFragment {
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         // Check if the selected time is valid
                         if (PetimoController.getInstance().
-                                checkValidStartTime(selectedHour, selectedMinute)){
+                                checkValidLiveStartTime(selectedHour, selectedMinute)){
                             textViewStartTime.setText(
                                     (selectedHour<10 ? "0" + selectedHour : selectedHour) +
                                             ":" + (selectedMinute<10 ? "0" + selectedMinute :
@@ -102,7 +100,7 @@ public class ConfirmStartDialogFragment extends DialogFragment {
                         else
                             Toast.makeText(
                                     getActivity(), getString(R.string.massage_invalid_start_time),
-                                    Toast.LENGTH_LONG).show();
+                                    Toast.LENGTH_SHORT).show();
 
 
                     }
@@ -119,7 +117,7 @@ public class ConfirmStartDialogFragment extends DialogFragment {
 
                 if (manualTime != null){
                     mListener.onConfirmStartButtonClicked(args.getString(CATEGORY),
-                            args.getString(TASK), PetimoController.getInstance().getStartTime(
+                            args.getString(TASK), TimeUtils.getMillisFromHM(
                                     manualTime[0], manualTime[1]));
                 }
                 else{
@@ -127,8 +125,6 @@ public class ConfirmStartDialogFragment extends DialogFragment {
                             args.getString(TASK), System.currentTimeMillis());
                 }
                 dismiss();
-
-
             }
         });
 

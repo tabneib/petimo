@@ -84,7 +84,6 @@ public class BlockListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            Log.d(TAG, "Date range: " + mStartDate + " -> " + mEndDate);
             recyclerView.setAdapter(new BlockRecyclerViewAdapter(
                     controller.getBlocksFromRange(mStartDate, mEndDate)));
         }

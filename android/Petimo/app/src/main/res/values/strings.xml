@@ -42,6 +42,7 @@
     <string name="colon_from">From:</string>
     <string name="colon_to">To:</string>
     <string name="colon_start_at">Start at:</string>
+    <string name="colon_stop_at">Stop at:</string>
 
 
     <!-- Common button text -->
@@ -77,7 +78,9 @@
     <string name="title_monitored_tasks">Monitored Tasks</string>
     <string name="title_clear_monitored_task_list">Clear Saved Monitored Task List</string>
     <string name="title_start_monitor">Start Monitor?</string>
+    <string name="title_stop_monitor">Stop Monitor?</string>
     <string name="title_select_start_time">Select Start Time</string>
+    <string name="title_select_stop_time">Select Stop Time</string>
 
     <!-- Messages ###############################################################################-->
     <string name="message_confirm_stop_monitor">Stop the monitor?</string>
@@ -87,6 +90,7 @@
         choosing task faster. Clearing this list does not affect your monitor data. Are you sure you
         want to clear it?</string>
     <string name="massage_invalid_start_time">Invalid start time! Chosen time is in the future</string>
+    <string name="massage_invalid_stop_time">Invalid stop time! Chosen time is in the future or before the start time</string>
 
 
     <!-- Option text ############################################################################-->

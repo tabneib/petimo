@@ -22,7 +22,7 @@ public interface OnModeFragmentInteractionListener {
     /**
      * Call-back method which is called when the stop confirm button is clicked
      */
-    void onConfirmStopButtonClicked();
+    void onConfirmStopButtonClicked(long stopTime);
 
 
     void onLastMonitoredTaskSelected(String category, String task);

@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onConfirmStopButtonClicked() {
+    public void onConfirmStopButtonClicked(long stopTime) {
         // Stop the monitor
         try {
             // update the monitored task list
@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity
             // store the last monitored cat/task
             controller.updateLastMonitored();
             // add the monitored block
-            controller.monitor(null, null, 0, System.currentTimeMillis());
+            controller.monitor(null, null, 0, stopTime);
         } catch (DbErrorException e) {
             // TODO
         } catch (InvalidCategoryException e) {

@@ -136,6 +136,16 @@ public class TimeUtils {
         return 0;
     }
 
+
+    /**
+     * Calculate the start time in milliseconds from the given hour and minute.
+     * @param hour
+     * @param minute
+     * @return
+     */
+    public static long getMillisFromHM(int hour, int minute){
+        return getDayStartInMillis(new Date()) + hour * 60*60*1000 + minute * 60*1000;
+    }
     /**
      * Return the time string of 'HH:MM' format from the given long value
      * @param time

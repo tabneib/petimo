@@ -445,17 +445,6 @@ public class PetimoController {
     //  Auxiliary
     // -------------------------------------------------------------------------------------------->
 
-    /**
-     * Calculate the start time in milliseconds from the given hour and minute.
-     * This takes into account the roll of the overnight threshold
-     * @param hour
-     * @param minute
-     * @return
-     */
-    public long getStartTime(int hour, int minute){
-        hour = hour < sharedPref.getOvThreshold() ? hour + 24 : hour;
-        return TimeUtils.getDayStartInMillis(new Date()) + hour * 60*60*1000 + minute * 60*1000;
-    }
 
     /**
      *
@@ -513,7 +502,7 @@ public class PetimoController {
      * @param minute
      * @return
      */
-    public boolean checkValidStartTime(int hour, int minute){
+    public boolean checkValidLiveStartTime(int hour, int minute){
         int currentHour = TimeUtils.getCurrentHour();
         int currentMinute = TimeUtils.getCurrentMinute();
 
@@ -528,6 +517,47 @@ public class PetimoController {
             return true;
         }
         return false;
+    }
+
+    /**
+     *
+     * Check if the given time is a valid stop time according to the current saved start time
+     * @param hour
+     * @param minute
+     * @return
+     */
+    public boolean checkValidLiveStopTime(int hour, int minute){
+        return checkValidLiveStopTime(hour, minute, sharedPref.getMonitorStart());
+    }
+
+
+    /**
+     *
+     * Check if the given time is a valid stop time
+     * @param hour
+     * @param minute
+     * @return
+     */
+    public boolean checkValidLiveStopTime(int hour, int minute, long startTimeMillis){
+
+        // Check if the stop time is not before or equal start time
+        long stopTimeMillis =
+                TimeUtils.getDayStartInMillis(new Date()) + hour * 60*60*1000 + minute * 60*1000;
+        if (stopTimeMillis <= startTimeMillis)
+            return false;
+
+        int currentHour = TimeUtils.getCurrentHour();
+        int currentMinute = TimeUtils.getCurrentMinute();
+        // change the format of hours to 24+
+        currentHour = currentHour < sharedPref.getOvThreshold() ? currentHour + 24 : currentHour;
+        hour = hour < sharedPref.getOvThreshold() ? hour + 24 : hour;
+
+        // Check if the stop time is not in the future
+        if (currentHour < hour)
+            return false;
+        else if ((currentHour == hour) && (currentMinute < minute))
+            return false;
+        return true;
     }
 
 }
