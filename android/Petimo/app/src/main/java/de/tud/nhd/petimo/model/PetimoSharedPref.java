@@ -244,7 +244,6 @@ public class PetimoSharedPref {
      */
     public ArrayList<String[]> getMonitored(String sortOpt){
 
-        Log.d(TAG, "fooooooooooooooooooooooooooooooo");
         //monitorEditor.remove(MONITOR_MONITORED_TASKS).apply();
         try{
             ArrayList<String[]> monitoredTaskList = StringUtils.parse(

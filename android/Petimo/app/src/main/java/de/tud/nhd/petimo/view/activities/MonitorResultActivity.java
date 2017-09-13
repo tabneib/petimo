@@ -32,7 +32,7 @@ public class MonitorResultActivity extends AppCompatActivity {
             }
         });
         blockListFragment = BlockListFragment.newInstance(
-                1, TimeUtils.getTodayDate()-1, TimeUtils.getTodayDate());
+                1, TimeUtils.getTodayDate(), TimeUtils.getTodayDate());
         getSupportFragmentManager().beginTransaction().add(
                 R.id.activity_monitor_result_fragment_container, blockListFragment).commit();
 

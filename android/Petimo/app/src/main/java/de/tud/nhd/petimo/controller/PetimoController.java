@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
@@ -75,7 +76,6 @@ public class PetimoController {
             throw new Exception("Cannot initialize multiple instances of Controller!");
         else {
             _instance = new PetimoController(context);
-            Log.d(TAG, "Initialized!");
         }
     }
 
@@ -152,25 +152,30 @@ public class PetimoController {
      * @param inputTask
      * @return the corresponding response code
      */
-    public ResponseCode addBlockLive(String inputCat, String inputTask)
+    public ResponseCode monitor(
+            String inputCat, String inputTask, long startTime, long stopTime)
             throws DbErrorException, InvalidCategoryException {
-        Date current = new Date();
+        //Date current = new Date();
         if (!sharedPref.isMonitoring()){
             // Case there is no ongoing monitor
-            sharedPref.setLiveMonitor(inputCat, inputTask, getLiveDate(current), current.getTime());
+            //sharedPref.setLiveMonitor(inputCat, inputTask, getLiveDate(current), current.getTime());
+            sharedPref.setLiveMonitor(inputCat, inputTask,
+                    getDateFromMillis(startTime, sharedPref.getOvThreshold()), startTime);
             return ResponseCode.OK;
         }
         else{
             // Case there's an ongoing monitor
-            // In this case all the parameters are ignored.
+            // In this case all given arguments are ignored.
+            // TODO Check for startDate and end date !
+            // TODO If the monitor go to another day so add multiple blocks !
             long start = sharedPref.getMonitorStart();
-            long end = current.getTime();
             int date = sharedPref.getMonitorDate();
             String cat = sharedPref.getMonitorCat();
             String task = sharedPref.getMonitorTask();
             sharedPref.clearLiveMonitor();
-            return this.dbWrapper.insertMonitorBlock(task, cat,start, end, end - start,
-                    date, TimeUtils.getWeekDay(date), isOverNight(date, start, end));
+            ResponseCode rCode =  this.dbWrapper.insertMonitorBlock(task, cat,start, stopTime, stopTime - start,
+                    date, TimeUtils.getWeekDay(date), isOverNight(date, start, stopTime));
+            return rCode;
         }
     }
 
@@ -281,13 +286,9 @@ public class PetimoController {
             ArrayList<MonitorDay> dayList =
                     (ArrayList<MonitorDay>) this.dbWrapper.getDaysByRange(startDate, endDate);
             ArrayList<MonitorDay> resultList = new ArrayList<>();
-            Log.d(TAG, "dayList size =====> " + dayList.size());
             for (int day = endDate; day >= startDate; day--) {
-                Log.d(TAG, "day ====> " + day);
                 if(!dayList.isEmpty() && dayList.get(0).getDate() == day) {
                     // Insert the Monitor Day returned from DB
-                    Log.d(TAG, "Day/BlockList.size  ====> " + dayList.get(0).getDate() +
-                    " / " + dayList.get(0).getMonitorBlocks().size());
                     resultList.add(dayList.get(0));
                     dayList.remove(0);
                 }
@@ -364,7 +365,6 @@ public class PetimoController {
      * @return
      */
     public MonitorCategory getCatByName(String catName){
-        Log.d(TAG, "is about to getCatByName ====> " + catName);
         return dbWrapper.getCatByName(catName);
     }
 
@@ -446,6 +446,18 @@ public class PetimoController {
     // -------------------------------------------------------------------------------------------->
 
     /**
+     * Calculate the start time in milliseconds from the given hour and minute.
+     * This takes into account the roll of the overnight threshold
+     * @param hour
+     * @param minute
+     * @return
+     */
+    public long getStartTime(int hour, int minute){
+        hour = hour < sharedPref.getOvThreshold() ? hour + 24 : hour;
+        return TimeUtils.getDayStartInMillis(new Date()) + hour * 60*60*1000 + minute * 60*1000;
+    }
+
+    /**
      *
      */
     public boolean isMonitoring(){
@@ -453,19 +465,23 @@ public class PetimoController {
     }
 
     /**
-     * The live monitoring date is the day before if the monitor starts between midnight and the
+     * Determine the monitor date according to the given time.
+     * The monitor date is the day before if the given time is between midnight and the
      * overnight threshold.
-     * @param date the date object that capture the start time of the monitor
-     * @return the live monitoring date as an integer
+     * @param time the time in milliseconds
+     * @param ovThreshold overnight threshold
+     * @return the monitor date as an integer
      */
-    private int getLiveDate(Date date){
+    private int getDateFromMillis(long time, int ovThreshold){
+        Date date = new Date(time);
         int dateInt = TimeUtils.getDateIntFromDate(date);
         int hours = TimeUtils.getHourFromDate(date);
-        if (0 <= hours && hours <= sharedPref.getOvThreshold())
+        if (hours < ovThreshold)
             // the user is working overnight
             dateInt--;
         return dateInt;
     }
+
 
     /**
      *
@@ -489,6 +505,29 @@ public class PetimoController {
     public int isOverNight(int date, long start, long end){
         // TODO implement me. For now never overnight, good boy :)
         return 0;
+    }
+
+    /**
+     * Check if the given time is a valid start time
+     * @param hour
+     * @param minute
+     * @return
+     */
+    public boolean checkValidStartTime(int hour, int minute){
+        int currentHour = TimeUtils.getCurrentHour();
+        int currentMinute = TimeUtils.getCurrentMinute();
+
+        currentHour = currentHour < sharedPref.getOvThreshold() ? currentHour + 24 : currentHour;
+        hour = hour < sharedPref.getOvThreshold() ? hour + 24 : hour;
+
+        if (currentHour > hour)
+            return true;
+        else if (currentHour == hour){
+            if (currentMinute < minute)
+                return false;
+            return true;
+        }
+        return false;
     }
 
 }

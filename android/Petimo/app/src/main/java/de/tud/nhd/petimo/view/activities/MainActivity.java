@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void chooseDisplay(int position) {
 
+        Log.d(TAG, "Changing display to ====> " + position);
         // If the database wrapper is not yet ready
         if (!controller.isDbReady()) {
             new WaitForDb(position).execute((Void) null);
@@ -242,11 +243,12 @@ public class MainActivity extends AppCompatActivity
     // Handle Callback Listeners
     //<---------------------------------------------------------------------------------------------
 
+
     @Override
-    public void onConfirmStartButtonClicked(String inputCat, String inputTask) {
+    public void onConfirmStartButtonClicked(String inputCat, String inputTask, long startTime) {
         // Start the monitor
         try {
-            controller.addBlockLive(inputCat, inputTask);
+            controller.monitor(inputCat, inputTask, startTime, 0);
         } catch (InvalidCategoryException e){
             // TODO
         } catch (DbErrorException e){
@@ -265,7 +267,7 @@ public class MainActivity extends AppCompatActivity
             // store the last monitored cat/task
             controller.updateLastMonitored();
             // add the monitored block
-            controller.addBlockLive(null, null);
+            controller.monitor(null, null, 0, System.currentTimeMillis());
         } catch (DbErrorException e) {
             // TODO
         } catch (InvalidCategoryException e) {

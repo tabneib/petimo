@@ -41,6 +41,7 @@
     <string name="colon_date">Date:</string>
     <string name="colon_from">From:</string>
     <string name="colon_to">To:</string>
+    <string name="colon_start_at">Start at:</string>
 
 
     <!-- Common button text -->
@@ -66,20 +67,26 @@
 
     <string name="button_clear">Clear</string>
 
+    <string name="button_edit">Edit</string>
+
 
     <!-- Titles #################################################################################-->
     <string name="title_remove_category">Remove Category</string>
     <string name="title_remove_task">Remove Task</string>
     <string name="title_remove_block">Remove Block</string>
     <string name="title_monitored_tasks">Monitored Tasks</string>
-    <string name="title_clear_monitored_task_list">Clear Monitored Task List</string>
+    <string name="title_clear_monitored_task_list">Clear Saved Monitored Task List</string>
+    <string name="title_start_monitor">Start Monitor?</string>
+    <string name="title_select_start_time">Select Start Time</string>
 
     <!-- Messages ###############################################################################-->
     <string name="message_confirm_stop_monitor">Stop the monitor?</string>
     <string name="message_confirm_start_monitor">To be monitored:</string>
     <string name="message_confirm_remove">Are you sure to remove&#160;</string>
-    <string name="message_confirm_clear_monitored_task_list">List of monitored tasks can help you choosing task faster. Are you sure
-    to clear it?</string>
+    <string name="message_confirm_clear_monitored_task_list">List of monitored tasks can help you
+        choosing task faster. Clearing this list does not affect your monitor data. Are you sure you
+        want to clear it?</string>
+    <string name="massage_invalid_start_time">Invalid start time! Chosen time is in the future</string>
 
 
     <!-- Option text ############################################################################-->

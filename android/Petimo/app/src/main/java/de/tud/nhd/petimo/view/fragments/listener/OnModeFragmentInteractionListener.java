@@ -17,7 +17,7 @@ public interface OnModeFragmentInteractionListener {
      * @param inputCat
      * @param inputTask
      */
-    void onConfirmStartButtonClicked(String inputCat, String inputTask);
+    void onConfirmStartButtonClicked(String inputCat, String inputTask, long startTime);
 
     /**
      * Call-back method which is called when the stop confirm button is clicked

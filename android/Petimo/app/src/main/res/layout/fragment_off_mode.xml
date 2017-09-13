@@ -69,7 +69,7 @@
 
             <TextView
                 android:text="@string/title_monitored_tasks"
-                android:id="@+id/title"
+                android:id="@+id/textViewTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="90"/>

@@ -143,24 +143,24 @@ public class PetimoDbWrapper {
 
     /**
      *
-     * @param catName
+     * @param task
      * @param category
      * @param priority
      * @return the corresponding response code
      */
-    public ResponseCode insertTask(String catName, String category, int priority)
+    public ResponseCode insertTask(String task, String category, int priority)
             throws DbErrorException, InvalidInputNameException, InvalidCategoryException {
-        if(!checkName(catName))
-            throw new InvalidInputNameException("The input task catName is invalid: " + catName +
-                    " - please use other catName");
+        if(!checkName(task))
+            throw new InvalidInputNameException("The input task name is invalid: " + task +
+                    " - please use other task name");
         if (!checkCatExists(category))
-            throw new InvalidCategoryException("Category already exists: " + catName);
-        if (checkTaskExists(catName, category))
+            throw new InvalidCategoryException("Category does not exist: " + category);
+        if (checkTaskExists(category, task))
             throw new InvalidCategoryException("Task already exists for the given category: "
-                    + category + " / " + catName);
+                    + category + " / " + task);
         else{
             ContentValues values = new ContentValues();
-            values.put(PetimoContract.Tasks.COLUMN_NAME_NAME, catName);
+            values.put(PetimoContract.Tasks.COLUMN_NAME_NAME, task);
             values.put(PetimoContract.Tasks.COLUMN_NAME_CATEGORY, category);
             values.put(PetimoContract.Tasks.COLUMN_NAME_PRIORITY, priority);
             if(writableDb.insert(PetimoContract.Tasks.TABLE_NAME, null, values) == -1)
@@ -186,14 +186,16 @@ public class PetimoDbWrapper {
             String task, String category, long start, long end,
             long duration, int date, int weekDay, int overNight)
             throws DbErrorException, InvalidCategoryException {
+
         if (!checkCatExists(category)) {
             throw new InvalidCategoryException("Category already exists: " + category);
         }
-        if (task != null && !checkTaskExists(task, category)){
+        Log.d(TAG, "foooooooooooooooooooooooooo");
+
+        if (task != null && !checkTaskExists(category, task)){
             throw new InvalidCategoryException("Task already exists for the given category: "
                     + category + " / " + task);
         }
-
         ContentValues values = new ContentValues();
         values.put(PetimoContract.Monitor.COLUMN_NAME_TASK, task);
         values.put(PetimoContract.Monitor.COLUMN_NAME_CATEGORY, category);
@@ -404,7 +406,6 @@ public class PetimoDbWrapper {
             taskNames.add(cursor.getString(cursor.getColumnIndexOrThrow(
                     PetimoContract.Tasks.COLUMN_NAME_NAME)));
         cursor.close();
-        Log.d(TAG, "cat ===> " + catName + " -- found tasks ===> " + taskNames);
         return taskNames;
     }
 

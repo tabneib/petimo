@@ -62,8 +62,6 @@ public class ModeOffMenuFragment extends Fragment {
         buttonClear = (Button) getView().findViewById(R.id.buttonClear);
 
         // update the selection of radioButtons
-        Log.d(TAG, "PetimoController.getInstance().getUsrMonitoredTasksSortOrder() ===> " +
-                PetimoController.getInstance().getUsrMonitoredTasksSortOrder());
         switch (PetimoController.getInstance().getUsrMonitoredTasksSortOrder()){
             case PetimoSharedPref.FREQUENCY:
                 radioButtonFreq.setChecked(true);

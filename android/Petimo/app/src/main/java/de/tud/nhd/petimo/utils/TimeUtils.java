@@ -87,6 +87,19 @@ public class TimeUtils {
     }
 
     /**
+     * Calculate the time in milliseconds of the start of the given day
+     * @param date the Date object that describes the given day
+     * @return day start in milliseconds
+     */
+    public static long getDayStartInMillis(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+        return calendar.getTimeInMillis();
+    }
+
+    /**
      * Get the integer that represents today date
      * TODO also consider the overNightThreshold ;)
      */
@@ -94,6 +107,23 @@ public class TimeUtils {
         int date = Integer.parseInt(dateFormat.format(new Date()));
         return date;
     }
+
+    /**
+     * @return the current hour
+     */
+    public static int getCurrentHour(){
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.HOUR_OF_DAY);
+    }
+
+    /**
+     * @return the current minute
+     */
+    public static int getCurrentMinute(){
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.MINUTE);
+    }
+
 
     /**
      * Return the time as milliseconds from the given string of 'HH:MM' format
