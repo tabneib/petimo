@@ -42,6 +42,7 @@
     <string name="colon_from">From:</string>
     <string name="colon_to">To:</string>
     <string name="colon_start_at">Start at:</string>
+    <string name="colon_started_at">Started at:</string>
     <string name="colon_stop_at">Stop at:</string>
 
 

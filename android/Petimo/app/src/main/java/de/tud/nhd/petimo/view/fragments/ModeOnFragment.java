@@ -110,6 +110,7 @@ public class ModeOnFragment extends Fragment {
                 Bundle args = new Bundle();
                 args.putString(ConfirmStopDialogFragment.CATEGORY, monitorInfo[0]);
                 args.putString(ConfirmStopDialogFragment.TASK, monitorInfo[1]);
+                args.putString(ConfirmStopDialogFragment.START_TIME, monitorInfo[3]);
                 stopDialogFragment.setArguments(args);
                 stopDialogFragment.show(getFragmentManager(),null);
             }

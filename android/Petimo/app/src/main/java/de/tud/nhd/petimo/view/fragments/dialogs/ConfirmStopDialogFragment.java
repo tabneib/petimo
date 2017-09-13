@@ -29,9 +29,11 @@ public class ConfirmStopDialogFragment extends DialogFragment {
     OnModeFragmentInteractionListener mListener;
     public static final String CATEGORY = "category";
     public static final String TASK = "task";
+    public static final String START_TIME = "start_time";
 
     private TextView textViewCatTask;
     private TextView textViewStopTime;
+    private TextView textViewStartTime;
     private TextClock textClock;
     private Button buttonEdit;
     private Button buttonPositive;
@@ -63,6 +65,7 @@ public class ConfirmStopDialogFragment extends DialogFragment {
 
         textViewCatTask = (TextView) getView().findViewById(R.id.textViewCatTask);
         textViewStopTime = (TextView) getView().findViewById(R.id.textViewStopTime);
+        textViewStartTime = (TextView) getView().findViewById(R.id.textViewStartTime);
         textClock = (TextClock) getView().findViewById(R.id.textClock);
         buttonEdit = (Button) getView().findViewById(R.id.button_edit);
         buttonPositive = (Button) getView().findViewById(R.id.button_positive);
@@ -71,7 +74,7 @@ public class ConfirmStopDialogFragment extends DialogFragment {
         final Bundle args = getArguments();
         textViewCatTask.setText(args.getString(CATEGORY) + " / " + args.getString(TASK));
         textViewStopTime.setVisibility(View.INVISIBLE);
-
+        textViewStartTime.setText(args.getString(START_TIME));
         buttonEdit.setOnClickListener(new View.OnClickListener(){
 
             @Override
