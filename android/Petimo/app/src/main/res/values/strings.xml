@@ -76,13 +76,14 @@
     <string name="title_remove_category">Remove Category</string>
     <string name="title_remove_task">Remove Task</string>
     <string name="title_remove_block">Remove Block</string>
-    <string name="title_monitored_tasks">Monitored Tasks</string>
     <string name="title_clear_monitored_task_list">Clear Saved Monitored Task List</string>
     <string name="title_start_monitor">Start Monitor?</string>
     <string name="title_stop_monitor">Stop Monitor?</string>
     <string name="title_select_start_time">Select Start Time</string>
     <string name="title_select_stop_time">Select Stop Time</string>
+
     <string name="title_monitor">Monitor</string>
+    <string name="title_monitored_tasks">Monitored Tasks</string>
 
     <!-- Messages ###############################################################################-->
     <string name="message_confirm_stop_monitor">Stop the monitor?</string>
@@ -98,7 +99,10 @@
     <!-- Option text ############################################################################-->
     <string name="option_most_recently_first">Most recently first</string>
     <string name="option_most_frequently_first">Most frequently first</string>
-
+    
+    <string name="option_show_selected_tasks">Show selected tasks</string>
+    <string name="option_show_empty_days">Show empty days</string>
+    <string name="option_remember">Remember</string>
 
     <!-- Other strings ##########################################################################-->
     <string name="loading_text">loading..</string>

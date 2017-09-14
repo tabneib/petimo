@@ -1,8 +1,9 @@
 package de.tud.nhd.petimo.view.fragments;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -16,7 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
@@ -37,9 +38,10 @@ public class ModeOffFragment extends Fragment {
     private static final String TAG = "ModeOffFragment";
     private OnModeFragmentInteractionListener mListener;
 
-    private ImageButton menuButton;
+    private ImageButton menuImageButton;
     private RelativeLayout menuContainer;
     private RelativeLayout taskListContainer;
+    private LinearLayout menuHeader;
     Spinner catSpinner;
     Spinner taskSpinner;
     Button startButton;
@@ -100,7 +102,8 @@ public class ModeOffFragment extends Fragment {
         catSpinner = (Spinner) getView().findViewById(R.id.spinnerCat);
         taskSpinner = (Spinner) getView().findViewById(R.id.spinnerTask);
         startButton = (Button) getView().findViewById(R.id.buttonStart);
-        menuButton = (ImageButton) getView().findViewById(R.id.menu_button);
+        menuImageButton = (ImageButton) getView().findViewById(R.id.menu_button);
+        menuHeader = (LinearLayout) getView().findViewById(R.id.menu_header);
 
         //Log.d(TAG, "Button color ===> " + ((ColorDrawable) startButton.getBackground()).getColor());
 
@@ -157,7 +160,7 @@ public class ModeOffFragment extends Fragment {
                     MonitoredTaskListFragment.newInstance(2), TASK_LIST_FRAGMENT_TAG).commit();
 
         //------------------ Menu ----------------------------------------------------------------->
-        menuButton.setOnClickListener(new View.OnClickListener(){
+        menuHeader.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
@@ -165,6 +168,12 @@ public class ModeOffFragment extends Fragment {
             }
         });
 
+        menuImageButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                updateMenuDisplay(true);
+            }
+        });
         // update menu display anyway
         updateMenuDisplay(false);
     }
@@ -178,6 +187,11 @@ public class ModeOffFragment extends Fragment {
         FragmentManager fm = getChildFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
+        Drawable upIcon = getResources().getDrawable(
+                R.drawable.ic_arrow_drop_up_black_24dp, null);
+        Drawable downIcon = getResources().getDrawable(
+                R.drawable.ic_arrow_drop_down_black_24dp, null);
+
         ModeOffMenuFragment menuFragment = (ModeOffMenuFragment)
                 fm.findFragmentByTag(MENU_FRAGMENT_TAG);
         if(menuFragment != null){
@@ -188,6 +202,7 @@ public class ModeOffFragment extends Fragment {
                 ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
                 ft.hide(menuFragment).commit();
                 menuOpened = false;
+                menuImageButton.setBackground(downIcon);
             }
             // menu is currently closed
             else {
@@ -195,6 +210,7 @@ public class ModeOffFragment extends Fragment {
                 ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
                 ft.show(menuFragment).commit();
                 menuOpened = true;
+                menuImageButton.setBackground(upIcon);
             }
         }
         else{
@@ -205,6 +221,7 @@ public class ModeOffFragment extends Fragment {
                 ft.add(menuContainer.getId(),
                         new ModeOffMenuFragment(), MENU_FRAGMENT_TAG).commit();
                 menuOpened = true;
+                menuImageButton.setBackground(upIcon);
             }
             else{
                 // Navigate (back) to this view
@@ -213,6 +230,7 @@ public class ModeOffFragment extends Fragment {
                     // Reconstruct old state -> open
                     ft.add(menuContainer.getId(),
                             new ModeOffMenuFragment(), MENU_FRAGMENT_TAG).commit();
+                    menuImageButton.setBackground(upIcon);
                 }
             }
         }

@@ -6,17 +6,19 @@ import android.app.DatePickerDialog;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import de.tud.nhd.petimo.R;
@@ -30,14 +32,16 @@ import de.tud.nhd.petimo.view.fragments.lists.DayListFragment;
 public class EditBlocksFragment extends Fragment {
 
     private static final String TAG = "EditBlocksFragment";
+    private static final String MENU_FRAGMENT_TAG = TAG + "-menu";
     private static EditBlocksFragment _instance;
     Button fromDateButton;
     Button toDateButton;
-    Button showButton;
-    Button menuButton;
+    ImageButton showButton;
+    ImageButton menuImageButton;
     RelativeLayout menuContainer;
     RelativeLayout listContainer;
-    RelativeLayout parentContainer;
+    LinearLayout parentContainer;
+    LinearLayout header;
     Calendar fromCalendar = Calendar.getInstance();
     Calendar toCalendar = Calendar.getInstance();
     boolean menuOpened = false;
@@ -72,14 +76,15 @@ public class EditBlocksFragment extends Fragment {
 
         menuContainer = (RelativeLayout) view.findViewById(R.id.drop_down_menu_container);
         listContainer = (RelativeLayout) view.findViewById(R.id.day_list_fragment_container);
-        parentContainer = (RelativeLayout) view.findViewById(R.id.parentContainer) ;
+        parentContainer = (LinearLayout) view.findViewById(R.id.parentContainer) ;
+        header = (LinearLayout) view.findViewById(R.id.header);
 
-        menuButton = (Button) view.findViewById(R.id.button_menu);
+        menuImageButton = (ImageButton) view.findViewById(R.id.button_menu);
 
         // Setup DatePicker dialogs and update textViews accordingly
         fromDateButton = (Button) view.findViewById(R.id.button_date_from);
         toDateButton = (Button) view.findViewById(R.id.button_date_to);
-        showButton = (Button) view.findViewById(R.id.button_display_day_range);
+        showButton = (ImageButton) view.findViewById(R.id.button_display_day_range);
 
 
         // default date range is the last 1 week
@@ -153,43 +158,83 @@ public class EditBlocksFragment extends Fragment {
             }
         });
 
-        menuButton.setOnClickListener(new View.OnClickListener(){
+        header.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                if (!menuOpened){
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
-                    EditBlocksMenuFragment fragment = (EditBlocksMenuFragment)
-                            fm.findFragmentByTag(TAG + "-menu");
-                    if(fragment == null) {
-                        fragment = EditBlocksMenuFragment.newInstance();
-                        ft.add(menuContainer.getId(), fragment, TAG + "-menu").commit();
-                    }
-                    else
-                        ft.detach(fragment).attach(fragment).commit();
-                    menuOpened = true;
-                }
-                else{
-                    EditBlocksMenuFragment fragment = (EditBlocksMenuFragment)
-                            getActivity().getSupportFragmentManager().
-                                    findFragmentByTag(TAG + "-menu");
-
-                    if (fragment != null){
-                        FragmentTransaction ft =
-                                getActivity().getSupportFragmentManager().beginTransaction();
-                        //ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
-                        ft.detach(fragment).commit();
-                    }
-                    menuOpened = false;
-                }
+                updateMenuDisplay(true);
             }
         });
+
+        menuImageButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                updateMenuDisplay(true);
+            }
+        });
+        // update menu display anyway
+        updateMenuDisplay(false);
 
         // Fill in the fragment to display day list
         getActivity().getSupportFragmentManager().beginTransaction().add(
                 R.id.day_list_fragment_container, DayListFragment.newInstance(),
                 TAG + "day_list_fragment").commit();
+    }
+
+    /**
+     *
+     * @param isClicked
+     */
+    private void updateMenuDisplay(boolean isClicked){
+        FragmentManager fm = getChildFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        Drawable upIcon = getResources().getDrawable(
+                R.drawable.ic_arrow_drop_up_black_24dp, null);
+        Drawable downIcon = getResources().getDrawable(
+                R.drawable.ic_arrow_drop_down_black_24dp, null);
+
+        EditBlocksMenuFragment menuFragment = (EditBlocksMenuFragment)
+                fm.findFragmentByTag(MENU_FRAGMENT_TAG);
+        if(menuFragment != null){
+            // old menuFragment found
+            // menu is currently opened
+            if (menuOpened) {
+                // Open, User clicked ==> close
+                ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
+                ft.hide(menuFragment).commit();
+                menuOpened = false;
+                menuImageButton.setBackground(downIcon);
+            }
+            // menu is currently closed
+            else {
+                // Closed, User clicked => open
+                ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
+                ft.show(menuFragment).commit();
+                menuOpened = true;
+                menuImageButton.setBackground(upIcon);
+            }
+        }
+        else{
+            // init
+            if(isClicked) {
+                // Open menu for the first time
+                ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
+                ft.add(menuContainer.getId(),
+                        new EditBlocksMenuFragment(), MENU_FRAGMENT_TAG).commit();
+                menuOpened = true;
+                menuImageButton.setBackground(upIcon);
+            }
+            else{
+                // Navigate (back) to this view
+                // Navigate to this View
+                if (menuOpened) {
+                    // Reconstruct old state -> open
+                    ft.add(menuContainer.getId(),
+                            new EditBlocksMenuFragment(), MENU_FRAGMENT_TAG).commit();
+                    menuImageButton.setBackground(upIcon);
+                }
+            }
+        }
     }
 }

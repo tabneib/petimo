@@ -10,8 +10,10 @@
     <dimen name="text_margin">4dp</dimen>
     <dimen name="header_text_size">17dp</dimen>
     <dimen name="primary_text_size">16dp</dimen>
+    <dimen name="small_text_size">11dp</dimen>
 
     <dimen name="pane_margin">8dp</dimen>
+    <dimen name="sub_pane_margin">8dp</dimen>
 
     <dimen name="container_padding">8dp</dimen>
     <dimen name="container_padding_single">4dp</dimen>

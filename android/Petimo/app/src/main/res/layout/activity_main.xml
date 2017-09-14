@@ -35,7 +35,8 @@
                 card_view:cardBackgroundColor="@color/background_primary"
                 card_view:cardCornerRadius="5dp"
                 card_view:cardElevation="0dp"
-                card_view:contentPadding="0dp">
+                card_view:contentPadding="0dp"
+                android:scrollbars="none">
                 <FrameLayout
                     android:id="@+id/content_frame"
                     android:theme="@style/PetimoTheme.Light.Pane"

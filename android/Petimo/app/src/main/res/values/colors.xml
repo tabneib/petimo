@@ -22,9 +22,10 @@
 
     <!-- Grey 50 -->
     <color name="background_primary">#FAFAFA</color>
-    <!-- Grey 500, 300 -->
+    <!-- Grey 500, 300, 200, 550 -->
     <color name="background_title">#9E9E9E</color>
     <color name="background_title_highlight">#E0E0E0</color>
+    <color name="background_title_highlight_white">#EEEEEE</color>
     <color name="background_title_shadow">#848484</color>
     <!-- Red A700 -->
     <color name="background_title_underline">#D50000</color>

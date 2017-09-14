@@ -1,20 +1,72 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="de.tud.nhd.petimo.view.fragments.EditBlocksFragment"
-    android:clipToPadding="false"
-    android:animateLayoutChanges="true">
+    android:clipToPadding="false">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/parentContainer">
+        android:id="@+id/parentContainer"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <LinearLayout
+            android:id="@+id/header"
+            app:theme="@style/PetimoTheme.Light.Header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:text="@string/title_monitored_tasks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="right">
+                <ImageButton
+                    android:background="@drawable/ic_arrow_drop_down_black_24dp"
+                    android:id="@+id/button_menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/background_title_highlight" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2.5dp"
+            android:background="@color/background_title_underline" />
+
+
+        <RelativeLayout
+            android:id="@+id/drop_down_menu_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </RelativeLayout>
+
+
+
+        <!-- Dashboard -->
+
         <LinearLayout
             android:id="@+id/dash_board"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginRight="@dimen/pane_margin"
+            android:layout_marginLeft="@dimen/pane_margin">
 
             <TextView
                 android:text="@string/colon_from"
@@ -24,7 +76,6 @@
                 android:text="@string/loading_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#111"
                 android:id="@+id/button_date_from" />
             <TextView
                 android:text="@string/colon_to"
@@ -34,37 +85,27 @@
                 android:text="@string/loading_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#111"
                 android:id="@+id/button_date_to" />
-            <Button
-                android:id="@+id/button_display_day_range"
-                android:layout_gravity="right"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/button_show"/>
-            <Button
-                android:text=".."
-                android:id="@+id/button_menu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:gravity="center"
+                android:layout_gravity="center_vertical">
+                <ImageButton
+                    android:id="@+id/button_display_day_range"
+                    android:background="@drawable/ic_search_black_36dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/drop_down_menu_container"
-            android:layout_below="@+id/dash_board"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </RelativeLayout>
-
-        <RelativeLayout
             android:id="@+id/day_list_fragment_container"
-            android:layout_below="@id/drop_down_menu_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
-
-
         </RelativeLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

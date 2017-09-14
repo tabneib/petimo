@@ -6,6 +6,7 @@
     android:name="de.tud.nhd.petimo.view.fragments.MonitorBlockListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/windowBackground"
     app:layoutManager="LinearLayoutManager"
     tools:context="de.tud.nhd.petimo.view.fragments.lists.BlockListFragment"
     tools:listitem="@layout/list_item_block"/>
