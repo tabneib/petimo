@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#063f59</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+
+    <!-- Ref: https://material.io/guidelines/style/color.html -->
+    <!-- Override ###############################################################################-->
+    <!-- Red A700 -->
+    <color name="colorPrimary">#D50000</color>
+    <!-- Grey 900 -->
+    <color name="colorPrimaryDark">#212121</color>
+    <!-- Red A700 -->
+    <color name="colorAccent">#D50000</color>
+    <!-- Grey 300 -->
+    <color name="windowBackground">#E0E0E0</color>
+
+    <color name="navigationBarColor">#FF5722</color>
+    <!-- Grey 100 -->
+    <color name="textColorPrimary">#F5F5F5</color>
+    <!-- Grey 900 -->
+    <color name="textColor">#212121</color>
+
+    <!-- Custom #################################################################################-->
+
+    <!-- Grey 50 -->
+    <color name="background_primary">#FAFAFA</color>
+    <!-- Grey 500, 300 -->
+    <color name="background_title">#9E9E9E</color>
+    <color name="background_title_highlight">#E0E0E0</color>
+    <color name="background_title_shadow">#848484</color>
+    <!-- Red A700 -->
+    <color name="background_title_underline">#D50000</color>
+
 </resources>

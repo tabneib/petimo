@@ -1,11 +1,66 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <!-- Base application theme -->
+    <style name="PetimoTheme" parent="Theme.AppCompat.NoActionBar"></style>
+
+    <style name="PetimoTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:navigationBarColor">@color/navigationBarColor</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:spinnerStyle">@style/PetimoTheme.Light.Spinner</item>
+        <item name="android:textSize">@dimen/primary_text_size</item>
+    </style>
+
+    <!-- Containers #############################################################################-->
+
+    <!-- Single container for the whole screen which is filled with a CardView -->
+    <style name="PetimoTheme.Container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:padding">@dimen/container_padding</item>
+    </style>
+
+    <!-- Container that lays aside others vertically -->
+    <style name="PetimoTheme.Container.Vertical">
+        <item name="android:paddingTop">@dimen/container_padding_single</item>
+        <item name="android:paddingBottom">@dimen/container_padding_single</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!-- Container that lays aside others horizontally -->
+    <style name="PetimoTheme.Container.Horizontal">
+        <item name="android:paddingRight">@dimen/container_padding_single</item>
+        <item name="android:paddingLeft">@dimen/container_padding_single</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <!-- Panes ##################################################################################-->
+    <!--- A display pane that lays inside a container -->
+    <style name="PetimoTheme.Light.Pane">
+        <item name="android:background">@color/background_primary</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:layout_margin">0dp</item>
+    </style>
+
+
+    <!-- Header layout ##########################################################################-->
+
+    <style name="PetimoTheme.Light.Header">
+        <item name="android:background">@color/background_title</item>
+        <item name="android:textSize">@dimen/header_text_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:layout_marginRight">0dp</item>
+        <item name="android:layout_margin">@dimen/text_margin</item>
+    </style>
+
+    <!-- Widget #################################################################################-->
+    <style name="PetimoTheme.Light.Spinner" parent="android:Widget.Material.Spinner.Underlined">
+        <item name="android:textSize">20sp</item>
     </style>
 
 </resources>

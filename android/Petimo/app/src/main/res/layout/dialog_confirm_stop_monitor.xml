@@ -4,11 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--
     <TextView
         android:text="@string/title_stop_monitor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"/>
+        android:textSize="20dp"/> -->
     <TextView
         android:id="@+id/textViewCatTask"
         android:text="@string/loading_text"

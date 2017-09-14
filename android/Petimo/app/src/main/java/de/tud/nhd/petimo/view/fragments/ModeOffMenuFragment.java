@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class ModeOffMenuFragment extends Fragment {
     private OnModeFragmentInteractionListener mListener;
     RadioButton radioButtonTime;
     RadioButton radioButtonFreq;
-    Button buttonClear;
+    ImageButton buttonClear;
 
     public ModeOffMenuFragment() {
         // Required empty public constructor
@@ -59,7 +60,7 @@ public class ModeOffMenuFragment extends Fragment {
 
         radioButtonFreq = (RadioButton) getView().findViewById(R.id.radioButtonFreq);
         radioButtonTime = (RadioButton) getView().findViewById(R.id.radioButtonTime);
-        buttonClear = (Button) getView().findViewById(R.id.buttonClear);
+        buttonClear = (ImageButton) getView().findViewById(R.id.buttonClear);
 
         // update the selection of radioButtons
         switch (PetimoController.getInstance().getUsrMonitoredTasksSortOrder()){

@@ -82,6 +82,7 @@
     <string name="title_stop_monitor">Stop Monitor?</string>
     <string name="title_select_start_time">Select Start Time</string>
     <string name="title_select_stop_time">Select Stop Time</string>
+    <string name="title_monitor">Monitor</string>
 
     <!-- Messages ###############################################################################-->
     <string name="message_confirm_stop_monitor">Stop the monitor?</string>

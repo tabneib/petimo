@@ -63,6 +63,7 @@ public class ConfirmStopDialogFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        getDialog().setTitle(getString(R.string.title_stop_monitor));
         textViewCatTask = (TextView) getView().findViewById(R.id.textViewCatTask);
         textViewStopTime = (TextView) getView().findViewById(R.id.textViewStopTime);
         textViewStartTime = (TextView) getView().findViewById(R.id.textViewStartTime);

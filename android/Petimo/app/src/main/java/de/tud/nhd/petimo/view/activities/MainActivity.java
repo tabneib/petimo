@@ -185,7 +185,6 @@ public class MainActivity extends AppCompatActivity
         drawerList.setItemChecked(position, true);
     }
 
-
     /**
      * Choose the monitor mode (on/off) to display
      */
@@ -196,9 +195,7 @@ public class MainActivity extends AppCompatActivity
         else
             // No ongoing live monitor
             displayFragment(MODE_OFF_FRAGMENT_TAG);
-
     }
-
 
     /**
      *
@@ -420,7 +417,7 @@ public class MainActivity extends AppCompatActivity
         protected Void doInBackground(Void... params) {
             while (!controller.isDbReady()){
                 try{
-                    Log.d(TAG, "waiting for DB");
+                    //Log.d(TAG, "waiting for DB");
                     Thread.sleep(20);
                 }
                 catch (Exception e){

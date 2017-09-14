@@ -61,6 +61,9 @@ public class ConfirmStartDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        getDialog().setTitle(getString(R.string.title_start_monitor));
+
         textViewCatTask = (TextView) getView().findViewById(R.id.textViewCatTask);
         textViewStartTime = (TextView) getView().findViewById(R.id.textViewStartTime);
         textClock = (TextClock) getView().findViewById(R.id.textClock);

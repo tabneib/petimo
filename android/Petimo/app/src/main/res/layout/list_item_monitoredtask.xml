@@ -7,8 +7,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="4dp"
-        android:background="@color/colorPrimary">
+        android:layout_margin="@dimen/container_padding_single"
+        android:background="@color/background_title_highlight">
         <TextView
             android:id="@+id/textViewCatTask"
             android:layout_width="wrap_content"
