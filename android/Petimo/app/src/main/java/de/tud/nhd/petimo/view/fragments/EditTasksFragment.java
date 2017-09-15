@@ -63,6 +63,7 @@ public class EditTasksFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                // TODO replace with PetimoDialog
                 AddCatDialogFragment dialogFragment = new AddCatDialogFragment();
                 dialogFragment.catListFragment = catListFragment;
                 dialogFragment.show(getActivity().getSupportFragmentManager(), null);

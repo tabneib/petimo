@@ -28,6 +28,8 @@
     <!-- Red A700 -->
     <color name="background_title_underline">#D50000</color>
 
+
+
     <!-- Navigation Bar ################-->
     <!-- Grey 800 -->
     <color name="navigationBarColor">#424242</color>

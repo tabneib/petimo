@@ -112,10 +112,6 @@ public class MainActivity extends AppCompatActivity
         // Set the drawer toggle as the DrawerListener
         drawerLayout.addDrawerListener(drawerToggle);
 
-       // toolBar.
-        //toolBar.setDisplayHomeAsUpEnabled(true);
-        //toolBar.setHomeButtonEnabled(true);
-
 
         // Initialize the controller
         PetimoController.setContext(this);
@@ -183,7 +179,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             default:
                 //Monitor
-                setTitle("Monitor");
+                setTitle(titleList[0]);
                 chooseModeToDisplay();
 
         }

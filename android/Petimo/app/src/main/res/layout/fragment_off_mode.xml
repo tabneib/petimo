@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_margin="@dimen/pane_margin"
+                android:layout_margin="@dimen/pane_padding"
                 android:weightSum="100">
 
                 <LinearLayout
@@ -88,9 +88,6 @@
                     android:layout_weight="40"/>
 
             </LinearLayout>
-
-
-
         </LinearLayout>
 
 

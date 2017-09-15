@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context="de.tud.nhd.petimo.view.fragments.EditBlocksMenuFragment"
-    android:layout_margin="@dimen/pane_margin"
+    android:layout_margin="@dimen/pane_padding"
     android:orientation="vertical">
 
 

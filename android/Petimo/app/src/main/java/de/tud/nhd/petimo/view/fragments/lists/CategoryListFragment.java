@@ -19,6 +19,7 @@ import java.util.List;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.MonitorCategory;
+import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapter;
 
 /**
@@ -28,7 +29,7 @@ public class CategoryListFragment extends Fragment {
 
     private static final String TAG = "CatListFragment";
     private static CategoryListFragment _instance;
-    private CategoryRecyclerViewAdapter adapter;
+    public CategoryRecyclerViewAdapter adapter;
     private int mColumnCount = 1;
     private List<MonitorCategory> catList;
 
@@ -88,6 +89,37 @@ public class CategoryListFragment extends Fragment {
 
                 @Override
                 public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+                    final CategoryRecyclerViewAdapter.ViewHolder vHolder =
+                            (CategoryRecyclerViewAdapter.ViewHolder) viewHolder;
+                    final PetimoDialog removeCatDialog = PetimoDialog.newInstance()
+                            .setTitle(getActivity().getString(R.string.title_remove_category))
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setMessage(getActivity().
+                                    getString(R.string.message_confirm_remove) + vHolder.catName
+                                    + "?")
+                            .setPositiveButton(getString(R.string.button_yes),
+                                    new PetimoDialog.OnClickListener(){
+                                        @Override
+                                        public void onClick(View v) {
+                                            // Delete the category
+                                            PetimoController.getInstance().removeCategory(
+                                                    adapter.catList.get(
+                                                            vHolder.getLayoutPosition()).getName());
+                                            adapter.notifyItemRemoved(vHolder.getLayoutPosition());
+                                            adapter.catList.remove(vHolder.getLayoutPosition());
+                                        }
+                                    })
+                            .setNegativeButton(getString(R.string.button_cancel),
+                                    new PetimoDialog.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    });
+                    removeCatDialog.show(getActivity().getSupportFragmentManager(), null);
+
+                    /*
                     AlertDialog.Builder builder;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         builder = new AlertDialog.Builder(getActivity(),
@@ -123,6 +155,8 @@ public class CategoryListFragment extends Fragment {
                                     })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
+
+                            */
                 }
             };
 

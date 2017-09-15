@@ -17,6 +17,7 @@ import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.MonitorCategory;
 import de.tud.nhd.petimo.view.fragments.dialogs.AddTaskDialogFragment;
+import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
 import java.util.List;
@@ -87,6 +88,49 @@ public class CategoryRecyclerViewAdapter extends
                     @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
+                        final TaskRecyclerViewAdapter.ViewHolder vHolder =
+                                (TaskRecyclerViewAdapter.ViewHolder) viewHolder;
+                        PetimoDialog removeTaskDialog = new PetimoDialog()
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setTitle(fragment.getActivity().
+                                        getString(R.string.title_remove_task))
+                                .setMessage(fragment.getActivity().
+                                        getString(R.string.message_confirm_remove)
+                                        + vHolder.taskNameTextView.getText() + "?")
+                                .setPositiveButton(
+                                        fragment.getActivity().getString(R.string.button_yes),
+                                        new PetimoDialog.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                // Delete the task
+                                                PetimoController.getInstance().removeTask(
+                                                        holder.taskAdapter.taskList.get(
+                                                                vHolder.getLayoutPosition()).
+                                                                getName(),
+                                                        holder.taskAdapter.taskList.get(
+                                                                vHolder.getLayoutPosition()).
+                                                                getCategory());
+
+                                                holder.taskAdapter.
+                                                        notifyItemRemoved(vHolder.
+                                                                getLayoutPosition());
+                                                holder.taskAdapter.
+                                                        taskList.remove(vHolder.
+                                                        getLayoutPosition());
+                                            }
+                                        })
+                                .setNegativeButton(
+                                        fragment.getActivity().getString(R.string.button_cancel),
+                                        new PetimoDialog.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                holder.taskAdapter.notifyDataSetChanged();
+                                            }
+                                        }
+                                );
+                        removeTaskDialog.show(
+                                fragment.getActivity().getSupportFragmentManager(), null);
+                        /*
                         AlertDialog.Builder builder;
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             builder = new AlertDialog.Builder(fragment.getActivity(),
@@ -127,6 +171,7 @@ public class CategoryRecyclerViewAdapter extends
                                 })
                                 .setIcon(android.R.drawable.ic_dialog_alert)
                                 .show();
+                         */
                     }
                 };
 

@@ -8,8 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginLeft="@dimen/sub_pane_margin"
-        android:layout_marginRight="@dimen/sub_pane_margin">
+        android:layout_marginLeft="@dimen/sub_pane_padding"
+        android:layout_marginRight="@dimen/sub_pane_padding">
         
         <View
             android:layout_width="match_parent"
@@ -20,16 +20,16 @@
             android:id="@+id/fragment_monitorblock_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/pane_margin"
-            android:layout_marginLeft="@dimen/sub_pane_margin"
+            android:layout_marginTop="@dimen/pane_padding"
+            android:layout_marginLeft="@dimen/sub_pane_padding"
             android:textAppearance="?attr/textAppearanceListItem" />
 
         <TextView
             android:id="@+id/fragment_monitorblock_monitor_data"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/sub_pane_margin"
-            android:layout_marginBottom="@dimen/pane_margin"
+            android:layout_marginLeft="@dimen/sub_pane_padding"
+            android:layout_marginBottom="@dimen/pane_padding"
             android:textAppearance="?attr/textAppearanceListItem" />
     </LinearLayout>
 

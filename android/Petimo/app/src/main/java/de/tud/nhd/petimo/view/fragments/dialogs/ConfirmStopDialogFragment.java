@@ -10,11 +10,14 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.Calendar;
 
@@ -31,6 +34,7 @@ public class ConfirmStopDialogFragment extends DialogFragment {
     public static final String TASK = "task";
     public static final String START_TIME = "start_time";
 
+    private TextView textViewTitle;
     private TextView textViewCatTask;
     private TextView textViewStopTime;
     private TextView textViewStartTime;
@@ -63,7 +67,9 @@ public class ConfirmStopDialogFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getDialog().setTitle(getString(R.string.title_stop_monitor));
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //getDialog().setTitle(getString(R.string.title_stop_monitor));
+        textViewTitle = (TextView) getView().findViewById(R.id.dialog_title);
         textViewCatTask = (TextView) getView().findViewById(R.id.textViewCatTask);
         textViewStopTime = (TextView) getView().findViewById(R.id.textViewStopTime);
         textViewStartTime = (TextView) getView().findViewById(R.id.textViewStartTime);
@@ -72,6 +78,7 @@ public class ConfirmStopDialogFragment extends DialogFragment {
         buttonPositive = (Button) getView().findViewById(R.id.button_positive);
         buttonNegative = (Button) getView().findViewById(R.id.button_negative);
 
+        textViewTitle.setText(getString(R.string.title_stop_monitor));
         final Bundle args = getArguments();
         textViewCatTask.setText(args.getString(CATEGORY) + " / " + args.getString(TASK));
         textViewStopTime.setVisibility(View.INVISIBLE);

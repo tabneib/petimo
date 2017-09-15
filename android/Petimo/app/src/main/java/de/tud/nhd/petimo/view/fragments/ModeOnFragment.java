@@ -31,7 +31,6 @@ public class ModeOnFragment extends Fragment {
 
     private OnModeFragmentInteractionListener mListener;
 
-    private TextView textViewMonitoring;
     private TextView textViewCatTask;
     private TextView textViewDate;
     private TextView textViewStartTime;
@@ -76,7 +75,6 @@ public class ModeOnFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        textViewMonitoring = (TextView) getView().findViewById(R.id.textViewMonitoring);
         textViewCatTask = (TextView) getView().findViewById(R.id.textViewCatTask);
         textViewDate = (TextView) getView().findViewById(R.id.textViewDate);
         textViewStartTime = (TextView) getView().findViewById(R.id.textViewStartTime);
@@ -89,8 +87,8 @@ public class ModeOnFragment extends Fragment {
         super.onResume();
 
         // Update view
-        textViewMonitoring.setText(
-                "< " + getString(R.string.onmodefragment_text_view_monitoring) + " >");
+        /*textViewMonitoring.setText(
+                "< " + getString(R.string.onmodefragment_text_view_monitoring) + " >");*/
         final String[] monitorInfo = PetimoController.getInstance().getLiveMonitorInfo();
         textViewCatTask.setText(monitorInfo[0] + " / " + monitorInfo[1]);
         textViewDate.setText(
@@ -109,6 +107,7 @@ public class ModeOnFragment extends Fragment {
                 args.putString(ConfirmStopDialogFragment.TASK, monitorInfo[1]);
                 args.putString(ConfirmStopDialogFragment.START_TIME, monitorInfo[3]);
                 stopDialogFragment.setArguments(args);
+
                 stopDialogFragment.show(getFragmentManager(),null);
             }
         });

@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginTop="@dimen/sub_pane_margin"
-    android:layout_marginBottom="@dimen/sub_pane_margin">
+    android:layout_marginTop="@dimen/sub_pane_padding"
+    android:layout_marginBottom="@dimen/sub_pane_padding">
 
     <!-- Header -->
     <LinearLayout
@@ -36,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/text_margin"
-                    android:layout_marginLeft="@dimen/pane_margin"
+                    android:layout_marginLeft="@dimen/pane_padding"
                     android:textAppearance="?attr/textAppearanceListItem" />
             </FrameLayout>
             <View

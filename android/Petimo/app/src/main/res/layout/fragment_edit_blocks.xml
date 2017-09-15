@@ -65,8 +65,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginRight="@dimen/pane_margin"
-            android:layout_marginLeft="@dimen/pane_margin">
+            android:layout_marginRight="@dimen/pane_padding"
+            android:layout_marginLeft="@dimen/pane_padding">
 
             <TextView
                 android:text="@string/colon_from"

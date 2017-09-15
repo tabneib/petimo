@@ -85,6 +85,7 @@
     <string name="title_monitor">Monitor</string>
     <string name="title_monitored_tasks">Monitored Tasks</string>
     <string name="title_manage_tasks">Manage Tasks</string>
+    <string name="title_monitoring">Monitoring</string>
 
     <!-- Messages ###############################################################################-->
     <string name="message_confirm_stop_monitor">Stop the monitor?</string>
@@ -100,7 +101,7 @@
     <!-- Option text ############################################################################-->
     <string name="option_most_recently_first">Most recently first</string>
     <string name="option_most_frequently_first">Most frequently first</string>
-    
+
     <string name="option_show_selected_tasks">Show selected tasks</string>
     <string name="option_show_empty_days">Show empty days</string>
     <string name="option_remember">Remember</string>
@@ -118,7 +119,6 @@
     </string-array>
 
     <!-- ModeOnFragment -->
-    <string name="onmodefragment_text_view_monitoring">Monitoring</string>
 
 
 </resources>
