@@ -101,6 +101,12 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/background_title_highlight"
+            android:layout_margin="0dp"/>
+
         <RelativeLayout
             android:id="@+id/day_list_fragment_container"
             android:layout_width="match_parent"

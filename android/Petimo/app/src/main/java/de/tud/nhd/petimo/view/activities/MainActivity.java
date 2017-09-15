@@ -80,25 +80,31 @@ public class MainActivity extends AppCompatActivity
 
         title = drawerTitle = getTitle();
         titleList = getResources().getStringArray(R.array.navigation_titles);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+        //-------------------- Navigation Drawer -------------------------------------------------->
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView) findViewById(R.id.left_drawer);
         drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, titleList));
         drawerList.setOnItemClickListener(new OnDrawerItemClickListener());
+
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
                 R.string.drawer_open, R.string.drawer_close){
+
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                toolBar.setTitle(drawerTitle);
+                //toolBar.setTitle(drawerTitle);
+
                 invalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                toolBar.setTitle(title);
+                //toolBar.setTitle(title);
+
                 invalidateOptionsMenu();
             }
         };
@@ -177,6 +183,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             default:
                 //Monitor
+                setTitle("Monitor");
                 chooseModeToDisplay();
 
         }
@@ -236,6 +243,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Set the toolbar's title
+     * @param title the title to be set
+     */
+    private void setTitle(String title){
+        toolBar.setTitle(title);
+    }
     //--------------------------------------------------------------------------------------------->
     // Handle Callback Listeners
     //<---------------------------------------------------------------------------------------------
@@ -374,6 +388,7 @@ public class MainActivity extends AppCompatActivity
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
         if (drawerToggle.onOptionsItemSelected(item)) {
+
             return true;
         }
         // Handle other action bar items..
@@ -396,11 +411,8 @@ public class MainActivity extends AppCompatActivity
             chooseDisplay(position);
             // Close the drawer
             drawerLayout.closeDrawer(drawerList);
-        }
 
-        public void setTitle(CharSequence title) {
-            CharSequence mTitle = title;
-            toolBar.setTitle(mTitle);
+            setTitle(titleList[position]);
         }
     }
 

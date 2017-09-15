@@ -11,8 +11,6 @@
     <color name="colorAccent">#D50000</color>
     <!-- Grey 300 -->
     <color name="windowBackground">#E0E0E0</color>
-
-    <color name="navigationBarColor">#FF5722</color>
     <!-- Grey 100 -->
     <color name="textColorPrimary">#F5F5F5</color>
     <!-- Grey 900 -->
@@ -29,5 +27,11 @@
     <color name="background_title_shadow">#848484</color>
     <!-- Red A700 -->
     <color name="background_title_underline">#D50000</color>
+
+    <!-- Navigation Bar ################-->
+    <!-- Grey 800 -->
+    <color name="navigationBarColor">#424242</color>
+    <color name="background_selected_item">#D50000</color>
+
 
 </resources>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginTop="@dimen/pane_margin"
-    android:layout_marginBottom="@dimen/pane_margin">
+    android:layout_marginTop="@dimen/sub_pane_margin"
+    android:layout_marginBottom="@dimen/sub_pane_margin">
 
     <!-- Header -->
     <LinearLayout
@@ -43,6 +44,7 @@
                 android:layout_height="20dp"/>
         </LinearLayout>
 
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="30"
@@ -50,6 +52,7 @@
             android:paddingLeft="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:gravity="left"
             android:orientation="horizontal">
             <Button
                 android:drawableRight="@drawable/ic_add_circle_outline_black_24dp"
@@ -59,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="-4dp"
-                android:gravity="left"/>
+                android:gravity="center_vertical"/>
         </LinearLayout>
 
 

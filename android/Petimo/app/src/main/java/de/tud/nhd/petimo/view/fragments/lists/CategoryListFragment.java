@@ -10,12 +10,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.tud.nhd.petimo.R;
@@ -67,7 +65,7 @@ public class CategoryListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.list_monitorcategory, container, false);
+        final View view = inflater.inflate(R.layout.list_fragment_monitorcategory, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {

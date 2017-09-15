@@ -60,7 +60,7 @@
     <string name="button_no">No</string>
     <string name="button_back"> Back </string>
 
-    <string name="button_new_category">New Category</string>
+    <string name="button_new_category">&#160;New Category</string>
     <string name="button_new_task">New Task</string>
     <string name="button_new_block">New Block</string>
 
@@ -84,6 +84,7 @@
 
     <string name="title_monitor">Monitor</string>
     <string name="title_monitored_tasks">Monitored Tasks</string>
+    <string name="title_manage_tasks">Manage Tasks</string>
 
     <!-- Messages ###############################################################################-->
     <string name="message_confirm_stop_monitor">Stop the monitor?</string>

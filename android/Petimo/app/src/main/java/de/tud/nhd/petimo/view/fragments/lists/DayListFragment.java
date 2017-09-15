@@ -75,7 +75,7 @@ public class DayListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.list_monitorday, container, false);
+        View view = inflater.inflate(R.layout.list_fragment_monitorday, container, false);
 
         adapter = new DayRecyclerViewAdapter(
                 this,
