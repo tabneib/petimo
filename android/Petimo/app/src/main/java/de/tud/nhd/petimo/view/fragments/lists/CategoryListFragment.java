@@ -92,7 +92,7 @@ public class CategoryListFragment extends Fragment {
 
                     final CategoryRecyclerViewAdapter.ViewHolder vHolder =
                             (CategoryRecyclerViewAdapter.ViewHolder) viewHolder;
-                    final PetimoDialog removeCatDialog = PetimoDialog.newInstance()
+                    final PetimoDialog removeCatDialog = PetimoDialog.newInstance(getActivity())
                             .setTitle(getActivity().getString(R.string.title_remove_category))
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setMessage(getActivity().

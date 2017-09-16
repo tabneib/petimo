@@ -3,14 +3,16 @@
 
     <!-- Ref: https://material.io/guidelines/style/color.html -->
     <!-- Override ###############################################################################-->
-    <!-- Red A700 -->
-    <color name="colorPrimary">#D50000</color>
+    <!-- Red A700
+    <color name="colorPrimary">#D50000</color>-->
+    <!-- Orange 800 -->
+    <color name="colorPrimary">#EF6C00</color>
     <!-- Grey 900 -->
     <color name="colorPrimaryDark">#212121</color>
-    <!-- Red A700 -->
-    <color name="colorAccent">#D50000</color>
-    <!-- Grey 300 -->
-    <color name="windowBackground">#E0E0E0</color>
+    <!-- Orange 800 -->
+    <color name="colorAccent">#EF6C00</color>
+    <!-- Grey (300) (200) Deep Orange 50-->
+    <color name="windowBackground">#FBE9E7</color>
     <!-- Grey 100 -->
     <color name="textColorPrimary">#F5F5F5</color>
     <!-- Grey 900 -->
@@ -20,20 +22,24 @@
 
     <!-- Grey 50 -->
     <color name="background_primary">#FAFAFA</color>
-    <!-- Grey 500, 300, 200, 550 -->
-    <color name="background_title">#9E9E9E</color>
-    <color name="background_title_highlight">#E0E0E0</color>
-    <color name="background_title_highlight_white">#EEEEEE</color>
-    <color name="background_title_shadow">#848484</color>
-    <!-- Red A700 -->
-    <color name="background_title_underline">#D50000</color>
+    <!-- Grey 300, 200, 100, 500 -->
+    <color name="background_title">#E0E0E0</color>
+    <color name="background_title_highlight">#EEEEEE</color>
+    <color name="background_title_highlight_white">#F5F5F5</color>
+    <color name="background_title_shadow">#9E9E9E</color>
+
+
+    <!-- Red A700
+    <color name="background_title_underline">#D50000</color>-->
+    <!-- Like ColorPrimary -->
+    <color name="background_title_underline">#EF6C00</color>
 
 
 
     <!-- Navigation Bar ################-->
     <!-- Grey 800 -->
     <color name="navigationBarColor">#424242</color>
-    <color name="background_selected_item">#D50000</color>
+    <!-- <color name="background_selected_item">#D50000</color> -->
 
 
 </resources>

@@ -1,18 +1,20 @@
-<LinearLayout
+<RelativeLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context="de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog">
 
 
     <!-- Header #################################################################################-->
     <LinearLayout
+        android:id="@+id/header"
         app:theme="@style/PetimoTheme.Light.Header.Dialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/buttons"
         android:orientation="horizontal">
         <ImageButton
             android:id="@+id/dialog_icon"
@@ -41,32 +43,38 @@
     -->
 
     <!-- Content ################################################################################-->
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/content_container"
-        android:layout_width="wrap_content"
+        android:layout_below="@id/header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dialog_content_padding"
-        android:orientation="vertical">
+        android:layout_alignRight="@+id/buttons"
+        android:padding="0dp">
 
         <TextView
             android:id="@+id/content_message"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dialog_content_padding" />
 
-    </LinearLayout>
+    </FrameLayout>
 
 
     <View
+        android:id="@+id/separator"
+        android:layout_below="@id/content_container"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/background_title_shadow" />
+        android:background="@color/background_title_highlight" />
 
     <!-- Dialog buttons -->
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/buttons"
+        android:layout_below="@id/separator"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="right">
+        android:gravity="right">
 
         <Button
             android:id="@+id/button_negative"
@@ -84,4 +92,4 @@
 
 
 
-</LinearLayout>
+</RelativeLayout>

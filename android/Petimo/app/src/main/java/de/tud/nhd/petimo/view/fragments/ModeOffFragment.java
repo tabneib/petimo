@@ -20,10 +20,14 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextClock;
+import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.utils.TimeUtils;
 import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStartDialogFragment;
+import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.MonitoredTaskListFragment;
 
@@ -117,16 +121,61 @@ public class ModeOffFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                DialogFragment dialogFragment = new ConfirmStartDialogFragment();
-                Bundle args = new Bundle();
+                final Bundle args = new Bundle();
                 if (catSpinner.getSelectedItem() != null)
                     args.putString(ConfirmStartDialogFragment.CATEGORY,
                             catSpinner.getSelectedItem().toString());
                 if (taskSpinner.getSelectedItem() != null)
                     args.putString(ConfirmStartDialogFragment.TASK,
                             taskSpinner.getSelectedItem().toString());
-                dialogFragment.setArguments(args);
-                dialogFragment.show(getFragmentManager(), null);
+
+                final ConfirmStartDialogFragment contentFragment =
+                        new ConfirmStartDialogFragment();
+                contentFragment.setArguments(args);
+
+                if (args.getString(ConfirmStartDialogFragment.CATEGORY) != null &&
+                        args.getString(ConfirmStartDialogFragment.TASK) != null) {
+                    PetimoDialog confirmStartDialog = PetimoDialog.newInstance(getActivity())
+                            .setIcon(PetimoDialog.ICON_TIME_EMPTY)
+                            .setTitle(getActivity().getString(R.string.title_start_monitor))
+                            .setContentFragment(contentFragment)
+                            .setPositiveButton(getActivity().getString(
+                                    R.string.button_start_monitor),
+                                    new PetimoDialog.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            if (contentFragment.manualTime != null){
+                                                mListener.onConfirmStartButtonClicked(
+                                                        args.getString(
+                                                                ConfirmStartDialogFragment.CATEGORY)
+                                                        , args.getString(
+                                                                ConfirmStartDialogFragment.TASK),
+                                                        TimeUtils.getMillisFromHM(
+                                                                contentFragment.manualTime[0],
+                                                                contentFragment.manualTime[1]));
+                                            }
+                                            else{
+                                                mListener.onConfirmStartButtonClicked(
+                                                        args.getString(
+                                                                ConfirmStartDialogFragment.CATEGORY)
+                                                        , args.getString(
+                                                                ConfirmStartDialogFragment.TASK),
+                                                        System.currentTimeMillis());
+                                            }
+                                        }
+                                    })
+                            .setNegativeButton(getActivity().getString(R.string.button_cancel),
+                                    new PetimoDialog.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            // do nothing
+                                        }
+                                    });
+                    confirmStartDialog.show(getActivity().getSupportFragmentManager(),null);
+                }
+                else {
+                    // TODO: notify that user has to choose a cat and a task
+                }
             }
         });
 
@@ -276,12 +325,15 @@ public class ModeOffFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ArrayAdapter<String> taskSpinnerAdapter = new ArrayAdapter<String>(getContext(),
-                        R.layout.support_simple_spinner_dropdown_item,
-                        PetimoController.getInstance().getTaskNameByCat(
-                                catSpinner.getSelectedItem().toString()));
-                taskSpinner.setAdapter(taskSpinnerAdapter);
-                taskSpinnerAdapter.notifyDataSetChanged();
+                // Case there is no category, catSpinner.getSelectedItem() will be null ;)
+                if (catSpinner.getSelectedItem() != null) {
+                    ArrayAdapter<String> taskSpinnerAdapter = new ArrayAdapter<String>(getContext(),
+                            R.layout.support_simple_spinner_dropdown_item,
+                            PetimoController.getInstance().getTaskNameByCat(
+                                    catSpinner.getSelectedItem().toString()));
+                    taskSpinner.setAdapter(taskSpinnerAdapter);
+                    taskSpinnerAdapter.notifyDataSetChanged();
+                }
             }
         });
     }

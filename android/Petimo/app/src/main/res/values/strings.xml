@@ -36,6 +36,7 @@
     <string name="colon_priority">Priority:</string>
     <string name="colon_new_category">New Category:</string>
     <string name="colon_new_task">New Task:</string>
+    <string name="colon_name">Name:</string>
     <string name="colon_start_time">Start time:</string>
     <string name="colon_recent_monitors">Recent monitors:</string>
     <string name="colon_date">Date:</string>
@@ -73,7 +74,10 @@
 
 
     <!-- Titles #################################################################################-->
+
+    <string name="title_new_category">New Category</string>
     <string name="title_remove_category">Remove Category</string>
+    <string name="title_new_task">New Task</string>
     <string name="title_remove_task">Remove Task</string>
     <string name="title_remove_block">Remove Block</string>
     <string name="title_clear_monitored_task_list">Clear Saved Monitored Task List</string>

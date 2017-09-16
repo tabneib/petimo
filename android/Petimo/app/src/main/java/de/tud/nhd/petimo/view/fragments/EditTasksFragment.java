@@ -9,9 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.view.fragments.dialogs.AddCatDialogFragment;
+import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
+import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
 /**
@@ -63,10 +66,41 @@ public class EditTasksFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                // TODO replace with PetimoDialog
-                AddCatDialogFragment dialogFragment = new AddCatDialogFragment();
-                dialogFragment.catListFragment = catListFragment;
-                dialogFragment.show(getActivity().getSupportFragmentManager(), null);
+                PetimoDialog newCatDialog = new PetimoDialog()
+                        .setIcon(PetimoDialog.ICON_SAVE)
+                        .setTitle(getActivity().getString(R.string.title_new_category))
+                        .setContentLayout(R.layout.dialog_add_category)
+                        .setPositiveButton(getActivity().getString(R.string.button_create),
+                                new PetimoDialog.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        OnEditTaskFragmentInteractionListener mListener;
+                                        EditText catInput = (EditText)
+                                                view.findViewById(R.id.editTextCatName);
+                                        Spinner prioritySpinner = (Spinner)
+                                                view.findViewById(R.id.spinnerPriorities);
+                                        try {
+                                           mListener = (OnEditTaskFragmentInteractionListener)
+                                                            getActivity();
+                                        } catch (ClassCastException e) {
+                                            throw new ClassCastException(getActivity().toString()
+                                                    + " must implement " +
+                                                    "OnEditTaskFragmentInteractionListener");
+                                        }
+                                        mListener.onConfirmAddingCatButtonClicked(
+                                                catListFragment,
+                                                catInput.getText().toString(),
+                                                prioritySpinner.getSelectedItemPosition());
+                                    }
+                                })
+                        .setNegativeButton(getActivity().getString(R.string.button_cancel),
+                                new PetimoDialog.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        // do nothing
+                                    }
+                                });
+                newCatDialog.show(getActivity().getSupportFragmentManager(), null);
             }
         });
 

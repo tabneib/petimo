@@ -11,13 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.MonitorCategory;
-import de.tud.nhd.petimo.view.fragments.dialogs.AddTaskDialogFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
+import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
 import java.util.List;
@@ -58,20 +60,52 @@ public class CategoryRecyclerViewAdapter extends
 
             @Override
             public void onClick(View v) {
-
-                AddTaskDialogFragment dialogFragment = new AddTaskDialogFragment();
-                dialogFragment.catListFragment = fragment;
-                dialogFragment.viewHolder = holder;
-                // This is a bug! The value of position will be fixed at this point,
-                // Hence it is nor updated upon adding new categor => yield wrong category name
-                //dialogFragment.category = catList.get(position).getName();
-                dialogFragment.category = holder.catName;
-                dialogFragment.show(fragment.getActivity().getSupportFragmentManager(), null);
+                PetimoDialog newTaskDialog = new PetimoDialog()
+                        .setIcon(PetimoDialog.ICON_SAVE)
+                        .setTitle(fragment.getActivity().getString(R.string.title_new_task))
+                        .setContentLayout(R.layout.dialog_add_task)
+                        .setPositiveButton(fragment.getActivity().getString(R.string.button_create),
+                                new PetimoDialog.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        OnEditTaskFragmentInteractionListener mListener;
+                                        EditText taskInput = (EditText)
+                                                view.findViewById(R.id.editTextTaskName);
+                                        Spinner prioritySpinner = (Spinner)
+                                                view.findViewById(R.id.spinnerPriorities);;
+                                        try {
+                                            mListener = (OnEditTaskFragmentInteractionListener)
+                                                    fragment.getActivity();
+                                        } catch (ClassCastException e) {
+                                            throw new ClassCastException(
+                                                    fragment.getActivity().toString()
+                                                    + " must implement " +
+                                                    "OnEditTaskFragmentInteractionListener");
+                                        }
+                                        mListener.onConfirmAddingTaskStopButtonClicked(
+                                                holder,
+                                                // This is a bug! The value of position will be
+                                                // fixed at this point, Hence it is nor updated
+                                                // upon adding new categor => yield wrong category
+                                                // name
+                                                //catList.get(position).getName();
+                                                holder.catName,
+                                                taskInput.getText().toString(),
+                                                prioritySpinner.getSelectedItemPosition());
+                                    }
+                                })
+                        .setNegativeButton(fragment.getActivity().getString(R.string.button_cancel),
+                                new PetimoDialog.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        // do nothing
+                                    }
+                                });
+                newTaskDialog.show(fragment.getActivity().getSupportFragmentManager(), null);
             }
         });
 
         // Nesting fragments inside RecyclerView is not recommended, so I use recyclerView directly
-
         holder.taskAdapter = new TaskRecyclerViewAdapter(
                 PetimoController.getInstance().getAllTasks(catList.get(position).getName()));
 
@@ -91,7 +125,7 @@ public class CategoryRecyclerViewAdapter extends
                         final TaskRecyclerViewAdapter.ViewHolder vHolder =
                                 (TaskRecyclerViewAdapter.ViewHolder) viewHolder;
                         PetimoDialog removeTaskDialog = new PetimoDialog()
-                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setIcon(PetimoDialog.ICON_WARNING)
                                 .setTitle(fragment.getActivity().
                                         getString(R.string.title_remove_task))
                                 .setMessage(fragment.getActivity().
@@ -131,6 +165,7 @@ public class CategoryRecyclerViewAdapter extends
                         removeTaskDialog.show(
                                 fragment.getActivity().getSupportFragmentManager(), null);
                         /*
+                        // Old approach: use Dialog builder, replaced with customized PetimoDialog ;)
                         AlertDialog.Builder builder;
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             builder = new AlertDialog.Builder(fragment.getActivity(),

@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.utils.TimeUtils;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 
-public class ConfirmStopDialogFragment extends DialogFragment {
+public class ConfirmStopDialogFragment extends Fragment {
 
     public static final String TAG = "ConfirmStartDialog";
     OnModeFragmentInteractionListener mListener;
@@ -34,17 +35,14 @@ public class ConfirmStopDialogFragment extends DialogFragment {
     public static final String TASK = "task";
     public static final String START_TIME = "start_time";
 
-    private TextView textViewTitle;
     private TextView textViewCatTask;
     private TextView textViewStopTime;
     private TextView textViewStartTime;
     private TextClock textClock;
     private Button buttonEdit;
-    private Button buttonPositive;
-    private Button buttonNegative;
 
     // array storing the hour and minute chosen by user as stop time
-    private int[] manualTime = null;
+    public int[] manualTime = null;
 
     @Override
     public void onAttach(Context context) {
@@ -60,25 +58,20 @@ public class ConfirmStopDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_confirm_stop_monitor, container);
+        return inflater.inflate(R.layout.dialog_confirm_stop_monitor, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         //getDialog().setTitle(getString(R.string.title_stop_monitor));
-        textViewTitle = (TextView) getView().findViewById(R.id.dialog_title);
         textViewCatTask = (TextView) getView().findViewById(R.id.textViewCatTask);
         textViewStopTime = (TextView) getView().findViewById(R.id.textViewStopTime);
         textViewStartTime = (TextView) getView().findViewById(R.id.textViewStartTime);
         textClock = (TextClock) getView().findViewById(R.id.textClock);
         buttonEdit = (Button) getView().findViewById(R.id.button_edit);
-        buttonPositive = (Button) getView().findViewById(R.id.button_positive);
-        buttonNegative = (Button) getView().findViewById(R.id.button_negative);
 
-        textViewTitle.setText(getString(R.string.title_stop_monitor));
         final Bundle args = getArguments();
         textViewCatTask.setText(args.getString(CATEGORY) + " / " + args.getString(TASK));
         textViewStopTime.setVisibility(View.INVISIBLE);
@@ -122,29 +115,6 @@ public class ConfirmStopDialogFragment extends DialogFragment {
             }
         });
 
-        buttonPositive.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-
-                if (manualTime != null){
-                    mListener.onConfirmStopButtonClicked(TimeUtils.getMillisFromHM(
-                                    manualTime[0], manualTime[1]));
-                }
-                else{
-                    mListener.onConfirmStopButtonClicked(System.currentTimeMillis());
-                }
-                dismiss();
-            }
-        });
-
-        buttonNegative.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
     }
 /**
     @Override

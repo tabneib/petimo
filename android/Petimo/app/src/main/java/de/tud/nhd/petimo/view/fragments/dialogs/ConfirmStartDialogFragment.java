@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +25,7 @@ import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.utils.TimeUtils;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 
-public class ConfirmStartDialogFragment extends DialogFragment {
+public class ConfirmStartDialogFragment extends Fragment {
 
     public static final String TAG = "ConfirmStartDialog";
     OnModeFragmentInteractionListener mListener;
@@ -34,15 +36,15 @@ public class ConfirmStartDialogFragment extends DialogFragment {
     private TextView textViewStartTime;
     private TextClock textClock;
     private Button buttonEdit;
-    private Button buttonPositive;
-    private Button buttonNegative;
 
     // array storing the hour and minute chosen by user as start time
-    private int[] manualTime = null;
+    public int[] manualTime = null;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.d(TAG, "onAttach !!!!!!!!!!!!!!!");
+
         try {
             mListener = (OnModeFragmentInteractionListener) getActivity();
         } catch (ClassCastException e) {
@@ -55,21 +57,20 @@ public class ConfirmStartDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         //return super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.dialog_confirm_start_monitor, container);
+        // Bug: Must not attach to root => false
+        // see: https://stackoverflow.com/questions/19301458/
+        return inflater.inflate(R.layout.dialog_confirm_start_monitor, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        getDialog().setTitle(getString(R.string.title_start_monitor));
+        Log.d(TAG, "onViewCreated !!!!!!!!!!!!!!!");
 
         textViewCatTask = (TextView) getView().findViewById(R.id.textViewCatTask);
         textViewStartTime = (TextView) getView().findViewById(R.id.textViewStartTime);
         textClock = (TextClock) getView().findViewById(R.id.textClock);
         buttonEdit = (Button) getView().findViewById(R.id.button_edit);
-        buttonPositive = (Button) getView().findViewById(R.id.button_positive);
-        buttonNegative = (Button) getView().findViewById(R.id.button_negative);
 
         final Bundle args = getArguments();
         textViewCatTask.setText(args.getString(CATEGORY) + " / " + args.getString(TASK));
@@ -113,6 +114,7 @@ public class ConfirmStartDialogFragment extends DialogFragment {
             }
         });
 
+        /*
         buttonPositive.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -138,7 +140,7 @@ public class ConfirmStartDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
-
+        */
         //Log.d(TAG, "textClock ====> " + textClock.getT);
     }
 

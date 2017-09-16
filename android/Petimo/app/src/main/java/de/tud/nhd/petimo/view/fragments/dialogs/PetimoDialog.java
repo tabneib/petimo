@@ -1,11 +1,12 @@
 package de.tud.nhd.petimo.view.fragments.dialogs;
 
 
-import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
@@ -22,10 +22,14 @@ public class PetimoDialog extends DialogFragment {
 
     private static final String TAG = "PetimoDialog";
     public static final String CONTENT_FRAGMENT_TAG = TAG + "-ContentFragment";
+
+    public FragmentActivity fragmentActivity;
+
     private String title;
     //private String subtitle;
     private String message;
     private int contentLayoutId;
+    private Fragment contentFragment;
     private String positiveButton;
     private String negativeButton;
     private PetimoDialog.OnClickListener posListener;
@@ -36,9 +40,17 @@ public class PetimoDialog extends DialogFragment {
     private TextView textViewTitle;
     //private TextView textViewSubtitle;
     private TextView textViewMessage;
-    private LinearLayout contentContainer;
+    private FrameLayout contentContainer;
     private Button buttonPositive;
     private Button buttonNegative;
+
+    // Icon Constants
+    public static final int ICON_WARNING = android.R.drawable.ic_dialog_alert;
+    public static final int ICON_ERROR = 0;
+    public static final int ICON_SAVE = R.drawable.ic_save_white_36dp;
+    public static final int ICON_TIME_EMPTY = R.drawable.ic_hourglass_empty_white_36dp;
+    public static final int ICON_TIME_FULL = R.drawable.ic_hourglass_full_white_36dp;
+
 
 
 
@@ -46,8 +58,10 @@ public class PetimoDialog extends DialogFragment {
         // Required empty public constructor
     }
 
-    public static PetimoDialog newInstance(){
-        return new PetimoDialog();
+    public static PetimoDialog newInstance(FragmentActivity activity){
+        PetimoDialog dialog = new PetimoDialog();
+        dialog.fragmentActivity = activity;
+        return dialog;
     }
 
     @Override
@@ -77,7 +91,7 @@ public class PetimoDialog extends DialogFragment {
         textViewTitle = (TextView) getView().findViewById(R.id.dialog_title);
         //textViewSubtitle = (TextView) getView().findViewById(R.id.dialog_subtitle);
         textViewMessage = (TextView) getView().findViewById(R.id.content_message);
-        contentContainer = (LinearLayout) getView().findViewById(R.id.content_container);
+        contentContainer = (FrameLayout) getView().findViewById(R.id.content_container);
         buttonPositive = (Button) getView().findViewById(R.id.button_positive);
         buttonNegative = (Button) getView().findViewById(R.id.button_negative);
 
@@ -88,8 +102,12 @@ public class PetimoDialog extends DialogFragment {
 
         textViewTitle.setText(title);
 
-        // customized content layout has higher priority than a simple content message
-        if (contentLayoutId != 0)
+        // Priority: Customized content fragment > Customized content layout > content message
+        if (contentFragment != null) {
+            getChildFragmentManager().beginTransaction().add(
+                    contentContainer.getId(), contentFragment, CONTENT_FRAGMENT_TAG).commit();
+        }
+        else if (contentLayoutId != 0)
             LayoutInflater.from(getActivity()).inflate(contentLayoutId, contentContainer);
         else
             textViewMessage.setText(message);
@@ -134,7 +152,6 @@ public class PetimoDialog extends DialogFragment {
 
     public PetimoDialog setContentLayout(int contentLayoutId) {
         this.contentLayoutId = contentLayoutId;
-        dismiss();
         return this;
     }
 
@@ -158,6 +175,11 @@ public class PetimoDialog extends DialogFragment {
 
     public PetimoDialog setIcon(int id){
         this.iconDrawableId = id;
+        return this;
+    }
+
+    public PetimoDialog setContentFragment(Fragment contentFragment) {
+        this.contentFragment = contentFragment;
         return this;
     }
 

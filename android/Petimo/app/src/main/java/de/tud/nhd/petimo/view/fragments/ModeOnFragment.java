@@ -14,8 +14,10 @@ import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.utils.TimeUtils;
 import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStartDialogFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStopDialogFragment;
+import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 
 /**
@@ -101,14 +103,47 @@ public class ModeOnFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                ConfirmStopDialogFragment stopDialogFragment = new ConfirmStopDialogFragment();
+
+                // TODO use PetimoDialog
+
+                final ConfirmStopDialogFragment stopDialogFragment = new ConfirmStopDialogFragment();
                 Bundle args = new Bundle();
                 args.putString(ConfirmStopDialogFragment.CATEGORY, monitorInfo[0]);
                 args.putString(ConfirmStopDialogFragment.TASK, monitorInfo[1]);
                 args.putString(ConfirmStopDialogFragment.START_TIME, monitorInfo[3]);
                 stopDialogFragment.setArguments(args);
 
-                stopDialogFragment.show(getFragmentManager(),null);
+                PetimoDialog confirmStopDialog = PetimoDialog.newInstance(getActivity())
+                        .setIcon(PetimoDialog.ICON_TIME_FULL)
+                        .setTitle(getActivity().getString(R.string.title_stop_monitor))
+                        .setContentFragment(stopDialogFragment)
+                        .setPositiveButton(getActivity().getString(R.string.button_stop_monitor),
+                                new PetimoDialog.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        if (stopDialogFragment.manualTime != null){
+                                            mListener.onConfirmStopButtonClicked(TimeUtils.getMillisFromHM(
+                                                    stopDialogFragment.manualTime[0],
+                                                    stopDialogFragment.manualTime[1]));
+                                        }
+                                        else{
+                                            mListener.onConfirmStopButtonClicked(System.currentTimeMillis());
+                                        }
+                                    }
+                                })
+                        .setNegativeButton(getActivity().getString(R.string.button_cancel),
+                                new PetimoDialog.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        // do nothing
+                                    }
+                                });
+                confirmStopDialog.show(getActivity().getSupportFragmentManager(), null);
+
+
+
+
+                //stopDialogFragment.show(getFragmentManager(),null);
             }
         });
 

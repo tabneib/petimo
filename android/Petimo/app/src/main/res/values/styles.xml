@@ -4,14 +4,19 @@
     <style name="PetimoTheme" parent="Theme.AppCompat.NoActionBar"></style>
 
     <style name="PetimoTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:colorPrimary">@color/colorPrimary</item>
-        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColor">@color/textColor</item>
         <item name="android:navigationBarColor">@color/navigationBarColor</item>
         <item name="android:windowBackground">@color/windowBackground</item>
         <item name="android:spinnerStyle">@style/PetimoTheme.Light.Spinner</item>
+        <!--  From AppCompat v7:21+ onwards the standard theme attributes needs to be used WITHOUT
+         the "android:" prefix in the styles -->
+        <item name="editTextStyle">@style/PetimoTheme.Light.EditText</item>
+        <item name="android:datePickerDialogTheme">@style/PetimoTheme.Light.DatePickerDialog</item>
+        <item name="android:timePickerDialogTheme">@style/PetimoTheme.Light.TimePickerDialog</item>
         <item name="android:textSize">@dimen/primary_text_size</item>
     </style>
 
@@ -71,6 +76,13 @@
     <!-- Widget #################################################################################-->
     <style name="PetimoTheme.Light.Spinner" parent="android:Widget.Material.Spinner.Underlined">
         <item name="android:textSize">20sp</item>
+    </style>
+    <style name="PetimoTheme.Light.EditText" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">@color/textColor</item>
+    </style>
+    <style name="PetimoTheme.Light.DatePickerDialog" parent="Theme.AppCompat.Light.Dialog.MinWidth">
+    </style>
+    <style name="PetimoTheme.Light.TimePickerDialog" parent="Theme.AppCompat.Light.Dialog.MinWidth">
     </style>
 
 </resources>
