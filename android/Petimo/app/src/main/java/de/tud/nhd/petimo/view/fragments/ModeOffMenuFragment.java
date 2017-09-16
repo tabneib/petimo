@@ -23,6 +23,7 @@ import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.view.activities.MainActivity;
+import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.MonitoredTaskListFragment;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.TaskRecyclerViewAdapter;
@@ -102,36 +103,30 @@ public class ModeOffMenuFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder = new AlertDialog.Builder(getActivity(),
-                            android.R.style.Theme_Material_Dialog_Alert);
-                } else {
-                    builder = new AlertDialog.Builder(getActivity());
-                }
 
-                builder.setTitle(
-                        getActivity().getString(R.string.title_clear_monitored_task_list))
+
+                PetimoDialog confirmClearDialog = PetimoDialog.newInstance(getActivity())
+                        .setIcon(PetimoDialog.ICON_WARNING)
+                        .setTitle(getActivity().getString(R.string.title_clear_monitored_task_list))
                         .setMessage(getActivity().
                                 getString(R.string.message_confirm_clear_monitored_task_list))
-                        .setPositiveButton(android.R.string.yes,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-
+                        .setPositiveButton(getActivity().getString(R.string.button_ok),
+                                new PetimoDialog.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
                                         // Delete the saved monitored task
                                         PetimoController.getInstance().clearMonitoredTaskList();
                                         updateMonitoredTaskList();
-
                                     }
                                 })
-                        .setNegativeButton(
-                                android.R.string.no, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                       // do nothing
+                        .setNegativeButton(getActivity().getString(R.string.button_cancel),
+                                new PetimoDialog.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        // do nothing
                                     }
-                                })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                                });
+                confirmClearDialog.show(getActivity().getSupportFragmentManager(), null);
             }
          });
     }

@@ -57,7 +57,7 @@ public class DayRecyclerViewAdapter extends
 
         // The adapter for the recyclerView that displays the given list of monitor blocks
         holder.blockAdapter =
-                new BlockRecyclerViewAdapter(dayList.get(position).getMonitorBlocks());
+                new BlockRecyclerViewAdapter(fragment.getActivity(), dayList.get(position).getMonitorBlocks());
         // Set adapter for the recyclerView displaying block list
         ItemTouchHelper.SimpleCallback simpleCallback =
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT){

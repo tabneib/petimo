@@ -240,7 +240,9 @@ public class PetimoSharedPref {
     /**
      * Return a list of all monitored tasks
      * @return  the list of monitored tasks, or null if there is no saved monitored task or
-     *          some error occurs
+     *          some error occurs.
+     *          Each item contains the category, the task, last monitored time, and the monitor
+     *          frequency
      */
     public ArrayList<String[]> getMonitored(String sortOpt){
 

@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import de.tud.nhd.petimo.model.PetimoSharedPref;
+
 /**
  * Created by nhd on 01.09.17.
  */
@@ -139,12 +141,20 @@ public class TimeUtils {
 
     /**
      * Calculate the start time in milliseconds from the given hour and minute.
+     * The Overnight threshold is also taken into account
      * @param hour
      * @param minute
      * @return
      */
     public static long getMillisFromHM(int hour, int minute){
-        return getDayStartInMillis(new Date()) + hour * 60*60*1000 + minute * 60*1000;
+        long millis = getDayStartInMillis(new Date()) + hour * 60*60*1000 + minute * 60*1000;
+        // If user manually set the start time to a time point on yesterday and the current time
+        // has passed midnight but not yet passed overnight threshold
+        // => set millis to 1 day earlier
+        if (hour >= PetimoSharedPref.getInstance().getOvThreshold() &&
+                getCurrentHour() < PetimoSharedPref.getInstance().getOvThreshold())
+            millis = millis - 24 * 60 * 60 * 1000;
+        return millis;
     }
     /**
      * Return the time string of 'HH:MM' format from the given long value

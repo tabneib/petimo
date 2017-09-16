@@ -26,7 +26,7 @@
     <color name="background_title">#E0E0E0</color>
     <color name="background_title_highlight">#EEEEEE</color>
     <color name="background_title_highlight_white">#F5F5F5</color>
-    <color name="background_title_shadow">#9E9E9E</color>
+    <color name="background_title_shadow" >#9E9E9E</color>
 
 
     <!-- Red A700
@@ -35,11 +35,25 @@
     <color name="background_title_underline">#EF6C00</color>
 
 
-
     <!-- Navigation Bar ################-->
     <!-- Grey 800 -->
     <color name="navigationBarColor">#424242</color>
     <!-- <color name="background_selected_item">#D50000</color> -->
 
+
+    <!-- Monitored Task Backgrounds ####-->
+    <!-- Orange -->
+    <color name="monitoredTask_bg_50">#FFF3E0</color>
+    <color name="monitoredTask_bg_100">#FFE0B2</color>
+    <color name="monitoredTask_bg_200">#FFCC80</color>
+    <color name="monitoredTask_bg_300">#FFB74D</color>
+    <color name="monitoredTask_bg_400">#FFA726</color>
+    <color name="monitoredTask_bg_500">#FF9800</color>
+    <color name="monitoredTask_bg_600">#FB8C00</color>
+    <color name="monitoredTask_bg_700">#F57C00</color>
+    <color name="monitoredTask_bg_800">#EF6C00</color>
+    <color name="monitoredTask_bg_900">#E65100</color>
+    <!-- manually chosen color, not exact-->
+    <color name="monitoredTask_bg_1000">#A83b00</color>
 
 </resources>

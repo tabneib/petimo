@@ -432,8 +432,14 @@ public class MainActivity extends AppCompatActivity
                     e.printStackTrace();
                 }
             }
-            chooseDisplay(position);
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.d(TAG, "DB ready.");
+            chooseDisplay(position);
         }
     }
 }

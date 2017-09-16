@@ -29,7 +29,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/background_title_highlight_white">
+                android:background="@color/background_title_highlight">
                 <TextView
                     android:id="@+id/textViewCatName"
                     android:textStyle="bold"
@@ -80,6 +80,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/background_title_highlight"
+        android:background="@color/background_title"
         android:layout_margin="0dp"/>
 </LinearLayout>

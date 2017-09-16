@@ -1,13 +1,17 @@
 package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
+import de.tud.nhd.petimo.utils.ColorUtils;
 import de.tud.nhd.petimo.utils.TimeUtils;
 import de.tud.nhd.petimo.model.MonitorBlock;
 
@@ -21,14 +25,36 @@ public class BlockRecyclerViewAdapter extends
 
     private static final String TAG = "BlockAdapter";
     public List<MonitorBlock> blockList;
+    private Context context;
+
+    // Default duration step is 30 min
+    private int durationStep = 30;
+
+    private int[] bgColors = {
+            R.color.background_primary,
+            R.color.monitoredTask_bg_50,
+            R.color.monitoredTask_bg_100,
+            R.color.monitoredTask_bg_200,
+            R.color.monitoredTask_bg_300,
+            R.color.monitoredTask_bg_400,
+            R.color.monitoredTask_bg_500,
+            R.color.monitoredTask_bg_600,
+            R.color.monitoredTask_bg_700,
+            R.color.monitoredTask_bg_800,
+            R.color.monitoredTask_bg_900,
+            R.color.monitoredTask_bg_1000,
+    };
 
     /**
      * Construct the adapter. Is the given block list is null then the adapter will query the
      * database by every view holder binding.
      * @param blockList
      */
-    public BlockRecyclerViewAdapter(List<MonitorBlock> blockList) {
+    public BlockRecyclerViewAdapter(Context context, List<MonitorBlock> blockList) {
         this.blockList = blockList;
+        this.context = context;
+        durationStep = context.getResources().getInteger(R.integer.monitor_block_duration_step);
+
     }
 
     @Override
@@ -53,6 +79,24 @@ public class BlockRecyclerViewAdapter extends
                 blockList.get(position).getTask();
         holder.textViewData.setText(monitorInfo);
 
+
+        int durationLevel = (int)
+                holder.monitorBlock.getDuration() / (durationStep * 60000);
+        // This is a hard-coded fix for any unwanted bug that makes durationLevel a negative int
+        durationLevel = Math.abs(durationLevel);
+        
+        durationLevel = durationLevel >= bgColors.length ? bgColors.length - 1 : durationLevel;
+        holder.itemContainer.setBackgroundColor(
+                ContextCompat.getColor(context, bgColors[durationLevel]));
+
+        if (ColorUtils.isDarkColor(ContextCompat.getColor(context, bgColors[durationLevel]))) {
+            holder.textViewTime.setTextColor(
+                    ContextCompat.getColor(context, R.color.textColorPrimary));
+            holder.textViewData.setTextColor(
+                    ContextCompat.getColor(context, R.color.textColorPrimary));
+        }
+
+
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,12 +119,15 @@ public class BlockRecyclerViewAdapter extends
         public TextView textViewTime;
         public TextView textViewData;
         public MonitorBlock monitorBlock;
+        public FrameLayout itemContainer;
+
 
         public BlockListViewHolder(View view) {
             super(view);
             mView = view;
             textViewTime = (TextView) view.findViewById(R.id.fragment_monitorblock_time);
             textViewData = (TextView) view.findViewById(R.id.fragment_monitorblock_monitor_data);
+            itemContainer = (FrameLayout) view.findViewById(R.id.item_container);
         }
 
         @Override

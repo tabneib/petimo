@@ -85,7 +85,8 @@
                     android:layout_alignBottom="@+id/spinnerTask"
                     android:layout_alignParentRight="true"
                     android:id="@+id/buttonStart"
-                    android:layout_weight="40"/>
+                    android:layout_weight="40"
+                    android:layout_gravity="center_vertical"/>
 
             </LinearLayout>
         </LinearLayout>

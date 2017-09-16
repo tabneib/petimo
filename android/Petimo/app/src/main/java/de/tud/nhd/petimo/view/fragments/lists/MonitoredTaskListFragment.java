@@ -66,7 +66,7 @@ public class MonitoredTaskListFragment extends Fragment {
 
         // Set the adapter
         if (view instanceof RecyclerView) {
-            adapter = new MonitoredTaskRecyclerViewAdapter(
+            adapter = new MonitoredTaskRecyclerViewAdapter(getActivity(),
                     PetimoController.getInstance().getMonitoredTasks(), mListener);
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;

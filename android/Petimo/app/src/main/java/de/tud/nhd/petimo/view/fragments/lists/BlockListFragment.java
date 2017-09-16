@@ -83,7 +83,7 @@ public class BlockListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new BlockRecyclerViewAdapter(
+            recyclerView.setAdapter(new BlockRecyclerViewAdapter(getActivity(),
                     controller.getBlocksFromRange(mStartDate, mEndDate)));
         }
         return view;
