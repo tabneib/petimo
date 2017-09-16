@@ -44,10 +44,15 @@
     <!-- Monitored Task Backgrounds ####-->
     <!-- Orange -->
     <color name="monitoredTask_bg_50">#FFF3E0</color>
+    <color name="monitoredTask_bg_75">#FFE8D0</color>
     <color name="monitoredTask_bg_100">#FFE0B2</color>
+    <color name="monitoredTask_bg_150">#FFDEA1</color>
     <color name="monitoredTask_bg_200">#FFCC80</color>
+    <color name="monitoredTask_bg_250">#FFC26E</color>
     <color name="monitoredTask_bg_300">#FFB74D</color>
+    <color name="monitoredTask_bg_350">#FFAF39</color>
     <color name="monitoredTask_bg_400">#FFA726</color>
+
     <color name="monitoredTask_bg_500">#FF9800</color>
     <color name="monitoredTask_bg_600">#FB8C00</color>
     <color name="monitoredTask_bg_700">#F57C00</color>

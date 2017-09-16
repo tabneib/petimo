@@ -103,10 +103,12 @@ public class TimeUtils {
 
     /**
      * Get the integer that represents today date
-     * TODO also consider the overNightThreshold ;)
+     * overNightThreshold is also considered
      */
     public static int getTodayDate(){
         int date = Integer.parseInt(dateFormat.format(new Date()));
+        if (getCurrentHour() < PetimoSharedPref.getInstance().getOvThreshold())
+            date--;
         return date;
     }
 
@@ -178,7 +180,7 @@ public class TimeUtils {
         long timeInMinutes = time / (1000 * 60);
         int hours = (int) (timeInMinutes / 60);
         int minutes = (int) (timeInMinutes % 60);
-        return hours + ":" + minutes;
+        return hours + ":" + (minutes < 10 ? "0" + minutes : Integer.toString(minutes));
     }
 
     /**

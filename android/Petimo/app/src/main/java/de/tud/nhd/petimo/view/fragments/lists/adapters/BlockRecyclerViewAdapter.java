@@ -33,16 +33,14 @@ public class BlockRecyclerViewAdapter extends
     private int[] bgColors = {
             R.color.background_primary,
             R.color.monitoredTask_bg_50,
+            R.color.monitoredTask_bg_75,
             R.color.monitoredTask_bg_100,
+            R.color.monitoredTask_bg_150,
             R.color.monitoredTask_bg_200,
+            R.color.monitoredTask_bg_250,
             R.color.monitoredTask_bg_300,
+            R.color.monitoredTask_bg_350,
             R.color.monitoredTask_bg_400,
-            R.color.monitoredTask_bg_500,
-            R.color.monitoredTask_bg_600,
-            R.color.monitoredTask_bg_700,
-            R.color.monitoredTask_bg_800,
-            R.color.monitoredTask_bg_900,
-            R.color.monitoredTask_bg_1000,
     };
 
     /**
@@ -84,7 +82,7 @@ public class BlockRecyclerViewAdapter extends
                 holder.monitorBlock.getDuration() / (durationStep * 60000);
         // This is a hard-coded fix for any unwanted bug that makes durationLevel a negative int
         durationLevel = Math.abs(durationLevel);
-        
+
         durationLevel = durationLevel >= bgColors.length ? bgColors.length - 1 : durationLevel;
         holder.itemContainer.setBackgroundColor(
                 ContextCompat.getColor(context, bgColors[durationLevel]));
