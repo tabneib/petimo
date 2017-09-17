@@ -47,6 +47,8 @@ public class PetimoSharedPref {
             "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS";
     public static final String SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS =
             "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS";
+    public static final String SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS";
 
     public static final String SETTINGS_OVERNIGHT_THRESHOLD =
             "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_OVERNIGHT_THRESHOLD";
@@ -204,6 +206,63 @@ public class PetimoSharedPref {
         monitorEditor.apply();
     }
 
+    /**
+     *
+     * @param category
+     * @param task
+     */
+    public void addSelectedTask(String category, String task){
+        ArrayList<String[]> selectedTasks = this.getSelectedTasks();
+        if (selectedTasks!=null){
+            // If the cat/task is already there then do nothing
+            for (String[] item : selectedTasks)
+                if(item[0].equals(category) && item[1].equals(task))
+                    return;
+            // Add a new item to the selected task list
+            selectedTasks.add(new String[]{category, task});
+        }
+        else{
+            // initialize
+            selectedTasks = new ArrayList<>();
+            selectedTasks.add(new String[]{category, task});
+        }
+        settingsEditor.putString(SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS,
+                PetimoStringUtils.encode(selectedTasks, 2));
+        settingsEditor.apply();
+    }
+
+    /**
+     *
+     * @param category
+     * @param task
+     */
+    public void removeSelectedTask(String category, String task){
+        ArrayList<String[]> selectedTasks = this.getSelectedTasks();
+        if (selectedTasks!=null){
+            boolean contained = false;
+            Iterator<String[]> selectedTasksIterator = selectedTasks.iterator();
+            while(selectedTasksIterator.hasNext()){
+                String[] item = selectedTasksIterator.next();
+                if(item[0].equals(category) && item[1].equals(task)){
+                    contained = true;
+                    selectedTasksIterator.remove();
+                }
+            }
+            if (contained){
+                if (selectedTasks.isEmpty())
+                    settingsEditor.putString(SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS, null);
+                else
+                    settingsEditor.putString(SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS,
+                            PetimoStringUtils.encode(selectedTasks, 2));
+                settingsEditor.apply();
+            }
+            else
+                // If the cat/task is not there then do nothing
+                return;
+        }
+        return;
+
+    }
 
 
     //------------------------------------------- Read -------------------------------------------->
@@ -311,6 +370,35 @@ public class PetimoSharedPref {
         }
         catch (StringParsingException e){
             return null;
+        }
+    }
+
+    /**
+     * Return a list of all selected cat/task to display on EditBlockFragment
+     * @return
+     */
+    public ArrayList<String[]> getSelectedTasks(){
+
+        try{
+            ArrayList<String[]> selectedTasks = PetimoStringUtils.parse(
+                    settingPref.getString(SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS, null), 2);
+            // Remove all cat / task that don't exist anymore
+            Iterator<String[]> selectedTaskIterator = selectedTasks.iterator();
+            while (selectedTaskIterator.hasNext()) {
+                String[] catTask = selectedTaskIterator.next();
+
+                // Check if the cat/task is not yet removed by the user
+                if (!PetimoDbWrapper.getInstance().checkCatExists(catTask[0]) ||
+                        !PetimoDbWrapper.getInstance().checkTaskExists(catTask[0], catTask[1])) {
+                    selectedTaskIterator.remove();
+                    // TODO: consider to remove it from the saved list
+                    //removeMonitoredTask(catTask[0], catTask[1]);
+                }
+            }
+            return selectedTasks;
+        }
+        catch (StringParsingException e){
+            return new ArrayList<>();
         }
     }
 

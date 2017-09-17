@@ -85,11 +85,13 @@
     <string name="title_stop_monitor">Stop Monitor?</string>
     <string name="title_select_start_time">Select Start Time</string>
     <string name="title_select_stop_time">Select Stop Time</string>
-
+    <string name="title_select_tasks_to_display">Select Task To Display</string>
+    
     <string name="title_monitor">Monitor</string>
     <string name="title_monitored_tasks">Monitored Tasks</string>
     <string name="title_manage_tasks">Manage Tasks</string>
     <string name="title_monitoring">Monitoring</string>
+    
 
     <!-- Messages ###############################################################################-->
     <string name="message_confirm_stop_monitor">Stop the monitor?</string>
@@ -111,6 +113,7 @@
     <string name="option_show_selected_tasks">Show selected tasks</string>
     <string name="option_show_empty_days">Show empty days</string>
     <string name="option_remember">Remember</string>
+    <string name="option_swipe_to_delete">Swipe to delete</string>
 
     <!-- Other strings ##########################################################################-->
     <string name="loading_text">loading..</string>

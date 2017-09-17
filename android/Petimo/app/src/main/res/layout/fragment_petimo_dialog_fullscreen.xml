@@ -1,17 +1,18 @@
 <RelativeLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:gravity="center_vertical"
     tools:context="de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog">
 
 
     <!-- Header #################################################################################-->
     <LinearLayout
+        android:layout_alignParentTop="true"
         android:id="@+id/header"
-        app:theme="@style/PetimoTheme.Light.Header.Dialog"
+        android:theme="@style/PetimoTheme.Light.Header.Dialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/buttons"
@@ -46,6 +47,7 @@
     <FrameLayout
         android:id="@+id/content_container"
         android:layout_below="@id/header"
+        android:layout_above="@id/separator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/buttons"
@@ -62,7 +64,7 @@
 
     <View
         android:id="@+id/separator"
-        android:layout_below="@id/content_container"
+        android:layout_above="@id/buttons"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/background_title_highlight" />
@@ -71,9 +73,9 @@
 
     <LinearLayout
         android:id="@+id/buttons"
-        android:layout_below="@id/separator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:gravity="right">
 
         <Button

@@ -189,7 +189,6 @@ public class PetimoDbWrapper {
         if (!checkCatExists(category)) {
             throw new InvalidCategoryException("Category already exists: " + category);
         }
-        Log.d(TAG, "foooooooooooooooooooooooooo");
 
         if (task != null && !checkTaskExists(category, task)){
             throw new InvalidCategoryException("Task already exists for the given category: "
@@ -247,8 +246,24 @@ public class PetimoDbWrapper {
      * @param endDate
      * @return
      */
-    public ArrayList<MonitorDay> getDaysByRange(int startDate, int endDate){
+    public ArrayList<MonitorDay> getDaysByRange(int startDate, int endDate, boolean selectedTasks){
         String selection = PetimoContract.Monitor.COLUMN_NAME_DATE + " BETWEEN ? AND ?";
+
+        // If only selected taks should be fetched
+        if (selectedTasks){
+            // If there is no task selected, return an empty list
+            if (PetimoSharedPref.getInstance().getSelectedTasks().isEmpty())
+                return new ArrayList<>();
+            selection = selection + " AND ";
+            for (String[] catTask : PetimoSharedPref.getInstance().getSelectedTasks()){
+                selection = selection + "((" + PetimoContract.Monitor.COLUMN_NAME_CATEGORY +
+                        " = '" + catTask[0] + "') AND (" + PetimoContract.Monitor.COLUMN_NAME_TASK +
+                        " = '" + catTask[1] + "')) OR ";
+            }
+            // remove the last " OR "
+            selection = selection.substring(0, selection.length()-4);
+        }
+
         String[] selectionArgs = {Integer.toString(startDate), Integer.toString(endDate)};
         String sortOrder = PetimoContract.Monitor.COLUMN_NAME_DATE + " DESC";
         Cursor cursor = readableDb.query(PetimoContract.Monitor.TABLE_NAME,

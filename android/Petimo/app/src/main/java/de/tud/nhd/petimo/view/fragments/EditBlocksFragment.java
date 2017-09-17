@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import android.widget.RelativeLayout;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.lists.DayListFragment;
 
@@ -108,7 +110,6 @@ public class EditBlocksFragment extends Fragment {
                             // Update the fromButton accordingly to display the date
                             fromDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(fromCalendar));
                         }
-
             };
 
             @Override
@@ -147,14 +148,7 @@ public class EditBlocksFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                DayListFragment dayListFragment = (DayListFragment) getActivity().
-                        getSupportFragmentManager().findFragmentByTag(TAG + "day_list_fragment");
-                if(dayListFragment != null){
-                    dayListFragment.adapter.dayList = PetimoController.getInstance().
-                            getDaysFromRange(PetimoTimeUtils.getDateIntFromCalendatr(fromCalendar),
-                                    PetimoTimeUtils.getDateIntFromCalendatr(toCalendar), true);
-                    dayListFragment.adapter.notifyDataSetChanged();
-                }
+                updateDayList();
             }
         });
 
@@ -179,6 +173,32 @@ public class EditBlocksFragment extends Fragment {
         getActivity().getSupportFragmentManager().beginTransaction().add(
                 R.id.day_list_fragment_container, DayListFragment.newInstance(),
                 TAG + "day_list_fragment").commit();
+    }
+
+    /**
+     * Force the recyclerView to rebind all items
+     */
+    public void updateDayList(){
+        DayListFragment dayListFragment = (DayListFragment) getActivity().
+                getSupportFragmentManager().findFragmentByTag(TAG + "day_list_fragment");
+        if(dayListFragment != null){
+            dayListFragment.adapter.dayList = PetimoController.getInstance().
+                    getDaysFromRange(PetimoTimeUtils.getDateIntFromCalendatr(fromCalendar),
+                            PetimoTimeUtils.getDateIntFromCalendatr(toCalendar),
+                            PetimoSharedPref.getInstance().getSettingsBoolean(PetimoSharedPref.
+                                    SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
+                            PetimoSharedPref.getInstance().getSettingsBoolean(PetimoSharedPref.
+                                    SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false));
+            dayListFragment.adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void reloadDayList(){
+        DayListFragment dayListFragment = (DayListFragment) getActivity().
+                getSupportFragmentManager().findFragmentByTag(TAG + "day_list_fragment");
+        if(dayListFragment != null) {
+            dayListFragment.adapter.notifyDataSetChanged();
+        }
     }
 
     /**
@@ -221,7 +241,7 @@ public class EditBlocksFragment extends Fragment {
                 // Open menu for the first time
                 ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_top);
                 ft.add(menuContainer.getId(),
-                        new EditBlocksMenuFragment(), MENU_FRAGMENT_TAG).commit();
+                        EditBlocksMenuFragment.newInstance(this), MENU_FRAGMENT_TAG).commit();
                 menuOpened = true;
                 menuImageButton.setBackground(upIcon);
             }
@@ -231,7 +251,7 @@ public class EditBlocksFragment extends Fragment {
                 if (menuOpened) {
                     // Reconstruct old state -> open
                     ft.add(menuContainer.getId(),
-                            new EditBlocksMenuFragment(), MENU_FRAGMENT_TAG).commit();
+                            EditBlocksMenuFragment.newInstance(this), MENU_FRAGMENT_TAG).commit();
                     menuImageButton.setBackground(upIcon);
                 }
             }

@@ -1,21 +1,26 @@
 <RelativeLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:gravity="center_vertical"
     tools:context="de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog">
 
 
     <!-- Header #################################################################################-->
     <LinearLayout
         android:id="@+id/header"
-        app:theme="@style/PetimoTheme.Light.Header.Dialog"
+        android:theme="@style/PetimoTheme.Light.Header.Dialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/buttons"
         android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/dialog_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/sub_pane_padding"/>
         <TextView
             android:id="@+id/dialog_title"
             android:layout_width="wrap_content"

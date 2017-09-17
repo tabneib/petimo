@@ -1,5 +1,7 @@
 package de.tud.nhd.petimo.utils;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -48,6 +50,8 @@ public class PetimoStringUtils {
      */
     public static String encode(ArrayList<String[]> strList, int itemSize){
         String encoded = "";
+        if (strList == null || strList.isEmpty())
+            throw new StringEncodingException();
         try {
             for (String[] item : strList){
                 for (int i=0; i < (itemSize-1); i++)

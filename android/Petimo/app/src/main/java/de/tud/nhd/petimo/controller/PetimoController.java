@@ -5,6 +5,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
@@ -33,6 +34,7 @@ public class PetimoController {
     private PetimoSharedPref sharedPref;
     private static Context context;
 
+    private HashMap<String, Boolean> tags = new HashMap<>();
     //<---------------------------------------------------------------------------------------------
     // Init
     // -------------------------------------------------------------------------------------------->
@@ -257,13 +259,14 @@ public class PetimoController {
      * @param inputEndDate
      * @return the list of all satisfied monitor days, or null if the inputs are invalid
      */
-    public List<MonitorDay> getDaysFromRange(String inputStartDate, String inputEndDate){
+    public List<MonitorDay> getDaysFromRange(
+            String inputStartDate, String inputEndDate, boolean selectedTasks){
         long startDate = PetimoTimeUtils.getDateFromStr(inputStartDate);
         long endDate = PetimoTimeUtils.getDateFromStr(inputEndDate);
         if (startDate == -1 || endDate == -1)
             return null;
         else
-            return this.dbWrapper.getDaysByRange((int) startDate, (int) endDate);
+            return this.dbWrapper.getDaysByRange((int) startDate, (int) endDate, selectedTasks);
     }
 
     /**
@@ -273,14 +276,15 @@ public class PetimoController {
      * @param displayEmptyDay
      * @return the list of all satisfied monitor days in DESC order
      */
-    public ArrayList<MonitorDay> getDaysFromRange(int startDate, int endDate, boolean displayEmptyDay){
+    public ArrayList<MonitorDay> getDaysFromRange(
+            int startDate, int endDate, boolean displayEmptyDay, boolean selectedTasks){
 
         if(!displayEmptyDay)
             // The list will not contain empty days
-            return this.dbWrapper.getDaysByRange(startDate, endDate);
+            return this.dbWrapper.getDaysByRange(startDate, endDate, selectedTasks);
         else {
             ArrayList<MonitorDay> dayList =
-                    (ArrayList<MonitorDay>) this.dbWrapper.getDaysByRange(startDate, endDate);
+                    this.dbWrapper.getDaysByRange(startDate, endDate, selectedTasks);
             ArrayList<MonitorDay> resultList = new ArrayList<>();
             for (int day = endDate; day >= startDate; day--) {
                 if(!dayList.isEmpty() && dayList.get(0).getDate() == day) {
@@ -560,6 +564,28 @@ public class PetimoController {
         else if ((currentHour == hour) && (currentMinute < minute))
             return false;
         return true;
+    }
+
+    /**
+     *
+     * @param tag
+     * @param content
+     */
+    public void setTag(String tag, boolean content){
+        tags.put(tag, content);
+    }
+
+    /**
+     *
+     * @param tag
+     * @param defaultValue
+     * @return
+     */
+    public boolean getTag(String tag, boolean defaultValue){
+        if (tags.containsKey(tag))
+            return tags.get(tag);
+        else
+            return defaultValue;
     }
 
 }

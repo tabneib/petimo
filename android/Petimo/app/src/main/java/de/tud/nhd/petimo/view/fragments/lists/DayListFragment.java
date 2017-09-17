@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditDayFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.DayRecyclerViewAdapter;
@@ -40,6 +41,7 @@ public class DayListFragment extends Fragment {
     private OnEditDayFragmentInteractionListener mListener;
 
     public DayRecyclerViewAdapter adapter;
+    public RecyclerView recyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -47,8 +49,6 @@ public class DayListFragment extends Fragment {
      */
     public DayListFragment() {
     }
-
-
 
     public static DayListFragment newInstance(int fromDate, int toDate) {
         DayListFragment fragment = new DayListFragment();
@@ -77,23 +77,30 @@ public class DayListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_fragment_monitorday, container, false);
 
-        adapter = new DayRecyclerViewAdapter(
-                this,
-                PetimoController.getInstance().getDaysFromRange(fromDate, toDate, true), mListener);
+        adapter = generateAdapter();
 
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            this.recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            Log.d(TAG, "Setting the Adapter for the view !");
             recyclerView.setAdapter(adapter);
         }
         return view;
+    }
+
+    public DayRecyclerViewAdapter generateAdapter(){
+        return new DayRecyclerViewAdapter(
+                this, PetimoController.getInstance().getDaysFromRange(
+                fromDate, toDate, PetimoSharedPref.getInstance().getSettingsBoolean(
+                        PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
+                PetimoSharedPref.getInstance().getSettingsBoolean(
+                        PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false)),
+                mListener);
     }
 
 

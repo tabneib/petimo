@@ -1,7 +1,6 @@
 package de.tud.nhd.petimo.view.fragments.dialogs;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -35,6 +34,8 @@ public class PetimoDialog extends DialogFragment {
     private PetimoDialog.OnClickListener posListener;
     private PetimoDialog.OnClickListener negListener;
     private int iconDrawableId;
+    private boolean canceledOnTouchOutside = false;
+    public boolean fullScreen = false;
 
     private ImageButton dialogIcon;
     private TextView textViewTitle;
@@ -58,6 +59,13 @@ public class PetimoDialog extends DialogFragment {
         // Required empty public constructor
     }
 
+    public static PetimoDialog newInstance(FragmentActivity activity, boolean fullScreen){
+        PetimoDialog dialog = new PetimoDialog();
+        dialog.fragmentActivity = activity;
+        dialog.fullScreen = fullScreen;
+        return dialog;
+    }
+
     public static PetimoDialog newInstance(FragmentActivity activity){
         PetimoDialog dialog = new PetimoDialog();
         dialog.fragmentActivity = activity;
@@ -75,10 +83,10 @@ public class PetimoDialog extends DialogFragment {
         // Inflate the layout for this fragment
 
         // Switch between dialog with/without icon
-        if (iconDrawableId == 0)
-            return inflater.inflate(R.layout.fragment_petimo_dialog, container, false);
+        if (fullScreen)
+            return inflater.inflate(R.layout.fragment_petimo_dialog_fullscreen, container, false);
         else
-            return inflater.inflate(R.layout.fragment_petimo_dialog_icon, container, false);
+            return inflater.inflate(R.layout.fragment_petimo_dialog, container, false);
     }
 
     @Override
@@ -86,7 +94,9 @@ public class PetimoDialog extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getDialog().setCanceledOnTouchOutside(false);
+
+        if (!canceledOnTouchOutside)
+            getDialog().setCanceledOnTouchOutside(false);
 
         textViewTitle = (TextView) getView().findViewById(R.id.dialog_title);
         //textViewSubtitle = (TextView) getView().findViewById(R.id.dialog_subtitle);
@@ -129,6 +139,8 @@ public class PetimoDialog extends DialogFragment {
                 dismiss();
             }
         });
+        if (negativeButton == null)
+            buttonNegative.setVisibility(View.INVISIBLE);
     }
 
     public PetimoDialog setTitle(String title) {
@@ -183,6 +195,10 @@ public class PetimoDialog extends DialogFragment {
         return this;
     }
 
+    public PetimoDialog setCanceledOnTouchOutside(boolean canceledOnTouchOutside){
+        this.canceledOnTouchOutside = canceledOnTouchOutside;
+        return this;
+    }
 
     /*public void show(){
         show(getActivity().getSupportFragmentManager(), TAG);

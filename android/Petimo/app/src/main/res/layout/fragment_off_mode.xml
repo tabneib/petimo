@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="de.tud.nhd.petimo.view.fragments.ModeOffFragment">
 
     <LinearLayout
@@ -18,7 +17,7 @@
 
             <!-- Header -->
             <FrameLayout
-                app:theme="@style/PetimoTheme.Light.Header"
+                android:theme="@style/PetimoTheme.Light.Header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
