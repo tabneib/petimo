@@ -2,14 +2,10 @@ package de.tud.nhd.petimo.controller;
 
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
@@ -23,7 +19,7 @@ import de.tud.nhd.petimo.model.MonitorDay;
 import de.tud.nhd.petimo.model.MonitorTask;
 import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
-import de.tud.nhd.petimo.utils.TimeUtils;
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 
 /**
  * Created by nhd on 31.08.17.
@@ -127,20 +123,20 @@ public class PetimoController {
             String inputTask, String inputCat, String inputStart, String inputEnd, String inputDate)
             throws DbErrorException, InvalidInputDateException,
             InvalidInputTimeException, InvalidTimeException, InvalidCategoryException {
-        if (TimeUtils.getDateFromStr(inputDate) == -1)
+        if (PetimoTimeUtils.getDateFromStr(inputDate) == -1)
             throw new InvalidInputDateException("The input date is invalid: " + inputDate);
-        long start = TimeUtils.getMsTimeFromStr(inputStart, inputDate);
+        long start = PetimoTimeUtils.getMsTimeFromStr(inputStart, inputDate);
         if (start == -1)
             throw new InvalidInputTimeException("The input start time is invalid: " + inputStart);
-        long end = TimeUtils.getMsTimeFromStr(inputEnd, inputDate);
+        long end = PetimoTimeUtils.getMsTimeFromStr(inputEnd, inputDate);
         if (end == -1)
             throw new InvalidInputTimeException("The input end time is invalid: " + inputEnd);
         if (end <= start)
             throw new InvalidTimeException(
                     "End time lays before start time: " + inputEnd + " < " + inputStart);
-        int date = (int) TimeUtils.getDateFromStr(inputDate);
+        int date = (int) PetimoTimeUtils.getDateFromStr(inputDate);
         return this.dbWrapper.insertMonitorBlock(
-                inputTask, inputCat, start, end, end - start, date, TimeUtils.getWeekDay(date),
+                inputTask, inputCat, start, end, end - start, date, PetimoTimeUtils.getWeekDay(date),
                 isOverNight(inputDate, inputStart, inputEnd));
     }
 
@@ -174,7 +170,7 @@ public class PetimoController {
             String task = sharedPref.getMonitorTask();
             sharedPref.clearLiveMonitor();
             ResponseCode rCode =  this.dbWrapper.insertMonitorBlock(task, cat,start, stopTime, stopTime - start,
-                    date, TimeUtils.getWeekDay(date), isOverNight(date, start, stopTime));
+                    date, PetimoTimeUtils.getWeekDay(date), isOverNight(date, start, stopTime));
             return rCode;
         }
     }
@@ -262,8 +258,8 @@ public class PetimoController {
      * @return the list of all satisfied monitor days, or null if the inputs are invalid
      */
     public List<MonitorDay> getDaysFromRange(String inputStartDate, String inputEndDate){
-        long startDate = TimeUtils.getDateFromStr(inputStartDate);
-        long endDate = TimeUtils.getDateFromStr(inputEndDate);
+        long startDate = PetimoTimeUtils.getDateFromStr(inputStartDate);
+        long endDate = PetimoTimeUtils.getDateFromStr(inputEndDate);
         if (startDate == -1 || endDate == -1)
             return null;
         else
@@ -307,8 +303,8 @@ public class PetimoController {
      * @return the list of all satisfied monitor blocks, or null if the inputs are invalid
      */
     public List<MonitorBlock> getBlocksFromRange(String inputStartDate, String inputEndDate){
-        long startDate = TimeUtils.getDateFromStr(inputStartDate);
-        long endDate = TimeUtils.getDateFromStr(inputEndDate);
+        long startDate = PetimoTimeUtils.getDateFromStr(inputStartDate);
+        long endDate = PetimoTimeUtils.getDateFromStr(inputEndDate);
         if (startDate == -1 || endDate == -1)
             return null;
         else
@@ -389,8 +385,8 @@ public class PetimoController {
             return null;
         else
             return new String[] {sharedPref.getMonitorCat(), sharedPref.getMonitorTask(),
-                    TimeUtils.getDateStrFromInt(sharedPref.getMonitorDate()),
-                    TimeUtils.getDayTimeFromMsTime(sharedPref.getMonitorStart()),
+                    PetimoTimeUtils.getDateStrFromInt(sharedPref.getMonitorDate()),
+                    PetimoTimeUtils.getDayTimeFromMsTime(sharedPref.getMonitorStart()),
                     Long.toString(sharedPref.getMonitorStart())};
     }
 
@@ -464,8 +460,8 @@ public class PetimoController {
      */
     private int getDateFromMillis(long time, int ovThreshold){
         Date date = new Date(time);
-        int dateInt = TimeUtils.getDateIntFromDate(date);
-        int hours = TimeUtils.getHourFromDate(date);
+        int dateInt = PetimoTimeUtils.getDateIntFromDate(date);
+        int hours = PetimoTimeUtils.getHourFromDate(date);
         if (hours < ovThreshold)
             // the user is working overnight
             dateInt--;
@@ -482,7 +478,7 @@ public class PetimoController {
      */
     public int isOverNight(String date, String start, String end){
         return isOverNight(Integer.parseInt(date),
-                TimeUtils.getMsTimeFromStr(start, date), TimeUtils.getMsTimeFromStr(end,date));
+                PetimoTimeUtils.getMsTimeFromStr(start, date), PetimoTimeUtils.getMsTimeFromStr(end,date));
     }
 
     /**
@@ -504,12 +500,12 @@ public class PetimoController {
      * @return
      */
     public boolean checkValidLiveStartTime(int hour, int minute){
-        int currentHour = TimeUtils.getCurrentHour();
-        int currentMinute = TimeUtils.getCurrentMinute();
-        long startTimeMillis = TimeUtils.getTimeMillisFromHM(hour, minute);
+        int currentHour = PetimoTimeUtils.getCurrentHour();
+        int currentMinute = PetimoTimeUtils.getCurrentMinute();
+        long startTimeMillis = PetimoTimeUtils.getTimeMillisFromHM(hour, minute);
         // Check if the chosen start time is not equal or before the last stop time
         if (startTimeMillis <= dbWrapper.getBlocksByRange(
-                TimeUtils.getTodayDate(), TimeUtils.getTodayDate()).get(0).getEnd())
+                PetimoTimeUtils.getTodayDate(), PetimoTimeUtils.getTodayDate()).get(0).getEnd())
             return false;
 
         currentHour = currentHour < sharedPref.getOvThreshold() ? currentHour + 24 : currentHour;
@@ -547,12 +543,12 @@ public class PetimoController {
     public boolean checkValidLiveStopTime(int hour, int minute, long startTimeMillis){
 
         // Check if the stop time is not before or equal start time
-        long stopTimeMillis = TimeUtils.getTimeMillisFromHM(hour, minute);
+        long stopTimeMillis = PetimoTimeUtils.getTimeMillisFromHM(hour, minute);
         if (stopTimeMillis <= startTimeMillis)
             return false;
 
-        int currentHour = TimeUtils.getCurrentHour();
-        int currentMinute = TimeUtils.getCurrentMinute();
+        int currentHour = PetimoTimeUtils.getCurrentHour();
+        int currentMinute = PetimoTimeUtils.getCurrentMinute();
 
         // change the format of hours to 24+
         currentHour = currentHour < sharedPref.getOvThreshold() ? currentHour + 24 : currentHour;

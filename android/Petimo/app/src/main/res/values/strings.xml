@@ -100,7 +100,8 @@
         want to clear it?</string>
     <string name="massage_invalid_start_time">Invalid start time! Chosen time is in the future
     or before the last stop time.</string>
-    <string name="massage_invalid_stop_time">Invalid stop time! Chosen time is in the future or before the start time.</string>
+    <string name="massage_invalid_stop_time">Invalid stop time! Chosen time is in the future or
+        before the start time.</string>
 
 
     <!-- Option text ############################################################################-->

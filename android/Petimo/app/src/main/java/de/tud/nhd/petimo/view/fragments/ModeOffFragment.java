@@ -21,7 +21,7 @@ import android.widget.Spinner;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.utils.TimeUtils;
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStartDialogFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
@@ -146,7 +146,7 @@ public class ModeOffFragment extends Fragment {
                                                                 ConfirmStartDialogFragment.CATEGORY)
                                                         , args.getString(
                                                                 ConfirmStartDialogFragment.TASK),
-                                                        TimeUtils.getTimeMillisFromHM(
+                                                        PetimoTimeUtils.getTimeMillisFromHM(
                                                                 contentFragment.manualTime[0],
                                                                 contentFragment.manualTime[1]));
                                             }

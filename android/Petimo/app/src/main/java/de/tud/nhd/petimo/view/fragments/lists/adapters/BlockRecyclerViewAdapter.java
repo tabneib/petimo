@@ -3,7 +3,6 @@ package de.tud.nhd.petimo.view.fragments.lists.adapters;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.utils.ColorUtils;
-import de.tud.nhd.petimo.utils.TimeUtils;
+import de.tud.nhd.petimo.utils.PetimoColorUtils;
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.model.MonitorBlock;
 
 import java.util.List;
@@ -66,9 +65,9 @@ public class BlockRecyclerViewAdapter extends
     public void onBindViewHolder(final BlockListViewHolder holder, int position) {
         holder.monitorBlock = blockList.get(position);
         String timeInfo = "► " +
-               TimeUtils.getDayTimeFromMsTime(blockList.get(position).getStart()) +
-                " -> " + TimeUtils.getDayTimeFromMsTime(blockList.get(position).getEnd()) +
-                " : " + TimeUtils.getTimeFromMs(blockList.get(position).getDuration());
+               PetimoTimeUtils.getDayTimeFromMsTime(blockList.get(position).getStart()) +
+                " -> " + PetimoTimeUtils.getDayTimeFromMsTime(blockList.get(position).getEnd()) +
+                " : " + PetimoTimeUtils.getTimeFromMs(blockList.get(position).getDuration());
         //Log.d(TAG, timeInfo);
 
         holder.textViewTime.setText(timeInfo);
@@ -87,7 +86,7 @@ public class BlockRecyclerViewAdapter extends
         holder.itemContainer.setBackgroundColor(
                 ContextCompat.getColor(context, bgColors[durationLevel]));
 
-        if (ColorUtils.isDarkColor(ContextCompat.getColor(context, bgColors[durationLevel]))) {
+        if (PetimoColorUtils.isDarkColor(ContextCompat.getColor(context, bgColors[durationLevel]))) {
             holder.textViewTime.setTextColor(
                     ContextCompat.getColor(context, R.color.textColorPrimary));
             holder.textViewData.setTextColor(

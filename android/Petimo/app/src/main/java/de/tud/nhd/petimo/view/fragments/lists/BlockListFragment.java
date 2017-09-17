@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.utils.TimeUtils;
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.BlockRecyclerViewAdapter;
 
 /**
@@ -29,8 +29,8 @@ public class BlockListFragment extends Fragment {
     // Use linear layout as default
     private int mColumnCount = 1;
     // Default values for date range: today blocks
-    private int mStartDate = TimeUtils.getTodayDate();
-    private int mEndDate = TimeUtils.getTodayDate();
+    private int mStartDate = PetimoTimeUtils.getTodayDate();
+    private int mEndDate = PetimoTimeUtils.getTodayDate();
 
 
     PetimoController controller;

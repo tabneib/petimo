@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.utils.StringParsingException;
-import de.tud.nhd.petimo.utils.StringUtils;
+import de.tud.nhd.petimo.utils.PetimoStringUtils;
 
 /**
  * Created by nhd on 01.09.17.
@@ -30,16 +30,25 @@ public class PetimoSharedPref {
             "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LIVE_TASK";
     private final String MONITOR_MONITORED_TASKS =
             "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_MONITORED_TASKS";
-    private final String MONITOR_USR_MONITORED_SORT_ORDER =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_USR_MONITORED_SORT_ORDER";
     private final String MONITOR_LAST_MONITORED_CATEGORY =
             "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LAST_MONITORED_CATEGORY";
     private final String MONITOR_LAST_MONITORED_TASK =
             "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LAST_MONITORED_TASK";
 
+    //------------------------------- User's choices ---------------------------------------------->
+    public static final String SETTINGS_MONITORED_TASKS_SORT_ORDER =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_MONITORED_TASKS_SORT_ORDER";
 
+    public static final String SETTINGS_MONITORED_BLOCKS_REMEMBER =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_REMEMBER";
+    public static final String SETTINGS_MONITORED_BLOCKS_LOCK =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK";
+    public static final String SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS";
+    public static final String SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS";
 
-    private final String SETTINGS_OVERNIGHT_THRESHOLD =
+    public static final String SETTINGS_OVERNIGHT_THRESHOLD =
             "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_OVERNIGHT_THRESHOLD";
 
     private final int DEFAULT_OVERNIGHT_THRESHOLD = 6;
@@ -152,7 +161,7 @@ public class PetimoSharedPref {
                     new String[]{category, task, Long.toHexString(time), Integer.toString(1)});
         }
 
-        monitorEditor.putString(MONITOR_MONITORED_TASKS, StringUtils.encode(monitoredTasks, 4));
+        monitorEditor.putString(MONITOR_MONITORED_TASKS, PetimoStringUtils.encode(monitoredTasks, 4));
         monitorEditor.apply();
     }
 
@@ -173,15 +182,15 @@ public class PetimoSharedPref {
     public void setUsrMonitoredSortOrder(String sortOrder){
         switch (sortOrder){
             case FREQUENCY:
-                monitorEditor.putString(MONITOR_USR_MONITORED_SORT_ORDER, FREQUENCY);
+                settingsEditor.putString(SETTINGS_MONITORED_TASKS_SORT_ORDER, FREQUENCY);
                 break;
             case TIME:
-                monitorEditor.putString(MONITOR_USR_MONITORED_SORT_ORDER, TIME);
+                settingsEditor.putString(SETTINGS_MONITORED_TASKS_SORT_ORDER, TIME);
                 break;
             default:
-                monitorEditor.putString(MONITOR_USR_MONITORED_SORT_ORDER, NONE);
+                settingsEditor.putString(SETTINGS_MONITORED_TASKS_SORT_ORDER, NONE);
         }
-        monitorEditor.apply();
+        settingsEditor.apply();
     }
 
     /**
@@ -194,6 +203,8 @@ public class PetimoSharedPref {
         monitorEditor.putString(MONITOR_LAST_MONITORED_TASK, task);
         monitorEditor.apply();
     }
+
+
 
     //------------------------------------------- Read -------------------------------------------->
 
@@ -246,15 +257,15 @@ public class PetimoSharedPref {
      */
     public ArrayList<String[]> getMonitored(String sortOpt){
 
-        //monitorEditor.remove(MONITOR_MONITORED_TASKS).apply();
         try{
-            ArrayList<String[]> monitoredTaskList = StringUtils.parse(
+            ArrayList<String[]> monitoredTaskList = PetimoStringUtils.parse(
                     monitorPref.getString(MONITOR_MONITORED_TASKS, null), 4);
             // Remove all cat / task that don't exist anymore
             Iterator<String[]> monitoredTaskIterator = monitoredTaskList.iterator();
             while (monitoredTaskIterator.hasNext()) {
                 String[] catTask = monitoredTaskIterator.next();
 
+                // Check if the cat/task is not yet removed by the user
                 if (!PetimoDbWrapper.getInstance().checkCatExists(catTask[0]) ||
                         !PetimoDbWrapper.getInstance().checkTaskExists(catTask[0], catTask[1])) {
                     monitoredTaskIterator.remove();
@@ -299,7 +310,6 @@ public class PetimoSharedPref {
             }
         }
         catch (StringParsingException e){
-            Log.d(TAG, "StringParsingException ===> " + e.getMessage());
             return null;
         }
     }
@@ -324,7 +334,7 @@ public class PetimoSharedPref {
     * @return the sort order
     */
     public String getUsrMonitoredSortOrder(){
-        switch (monitorPref.getString(MONITOR_USR_MONITORED_SORT_ORDER, NONE)){
+        switch (settingPref.getString(SETTINGS_MONITORED_TASKS_SORT_ORDER, NONE)){
             case FREQUENCY:
                 return FREQUENCY;
             case TIME:
@@ -338,14 +348,113 @@ public class PetimoSharedPref {
     // Settings Preferences
     // -------------------------------------------------------------------------------------------->
 
-    // Write
+    //------------------------------------------- Write -------------------------------------------->
 
+    /**
+     *
+     * @param tag
+     * @param content
+     */
+    public void setSettingsInt(String tag, int content){
+        switch (tag){
+            case SETTINGS_OVERNIGHT_THRESHOLD:
+                settingsEditor.putInt(tag, content);
+                settingsEditor.apply();
+                break;
+            default:
+                throw new SettingsException("setSettingsInt: Unknown settings tag ==> " + tag);
+        }
+    }
 
-    // Read
+    /**
+     *
+     * @param tag
+     * @param content
+     */
+    public void setSettingsString(String tag, String content){
+        switch (tag){
+            case SETTINGS_MONITORED_TASKS_SORT_ORDER:
+                settingsEditor.putString(tag, content);
+                settingsEditor.apply();
+                break;
+            default:
+                throw new SettingsException("setSettingsString: Unknown settings tag ==> " + tag);
+        }
+    }
+
+    /**
+     *
+     * @param tag
+     * @param content
+     */
+    public void setSettingsBoolean(String tag, boolean content){
+        switch (tag){
+            case SETTINGS_MONITORED_BLOCKS_LOCK:
+            case SETTINGS_MONITORED_BLOCKS_REMEMBER:
+            case SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS:
+            case SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS:
+                settingsEditor.putBoolean(tag, content);
+                settingsEditor.apply();
+                break;
+            default:
+                throw new SettingsException("setSettingsBoolean: Unknown settings tag ==> " + tag);
+        }
+    }
+
+    //------------------------------------------- Read -------------------------------------------->
+
+    /**
+     *
+     * @param tag
+     * @param defaultValue
+     * @return
+     */
+    public int getSettingsInt(String tag, int defaultValue){
+        switch (tag){
+            case SETTINGS_OVERNIGHT_THRESHOLD:
+                return settingPref.getInt(tag, defaultValue);
+            default:
+                throw new SettingsException("getSettingsInt: Unknown settings tag ==> " + tag);
+        }
+    }
+
+    /**
+     *
+     * @param tag
+     * @param defaultValue
+     * @return
+     */
+    public String getSettingsString(String tag, String defaultValue){
+        switch (tag){
+            case SETTINGS_MONITORED_TASKS_SORT_ORDER:
+                return settingPref.getString(tag, defaultValue);
+            default:
+                throw new SettingsException("getSettingsString: Unknown settings tag ==> " + tag);
+        }
+    }
+
+    /**
+     *
+     * @param tag
+     * @param defaultValue
+     * @return
+     */
+    public boolean getSettingsBoolean(String tag, boolean defaultValue){
+        switch (tag){
+            case SETTINGS_MONITORED_BLOCKS_LOCK:
+            case SETTINGS_MONITORED_BLOCKS_REMEMBER:
+            case SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS:
+            case SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS:
+                return settingPref.getBoolean(tag, defaultValue);
+            default:
+                throw new SettingsException("getSettingsBoolean: Unknown settings tag ==> " + tag);
+        }
+    }
 
     /**
      * Get the overnight threshold
      * @return the threshold
+     * TODO remove this method, use generic method above instead
      */
     public int getOvThreshold(){
         return settingPref.getInt(SETTINGS_OVERNIGHT_THRESHOLD, DEFAULT_OVERNIGHT_THRESHOLD);

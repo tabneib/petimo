@@ -23,7 +23,7 @@ import android.widget.RelativeLayout;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.utils.TimeUtils;
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.lists.DayListFragment;
 
 /**
@@ -92,8 +92,8 @@ public class EditBlocksFragment extends Fragment {
         toCalendar.setTime(new Date());
         fromCalendar.add(Calendar.DATE, -6);
 
-        fromDateButton.setText(TimeUtils.getDateStrFromCalendar(fromCalendar));
-        toDateButton.setText(TimeUtils.getDateStrFromCalendar(toCalendar));
+        fromDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(fromCalendar));
+        toDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(toCalendar));
 
         fromDateButton.setOnClickListener(new View.OnClickListener(){
 
@@ -106,7 +106,7 @@ public class EditBlocksFragment extends Fragment {
                             fromCalendar.set(Calendar.MONTH, month);
                             fromCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                             // Update the fromButton accordingly to display the date
-                            fromDateButton.setText(TimeUtils.getDateStrFromCalendar(fromCalendar));
+                            fromDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(fromCalendar));
                         }
 
             };
@@ -131,7 +131,7 @@ public class EditBlocksFragment extends Fragment {
                             toCalendar.set(Calendar.MONTH, month);
                             toCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                             // Update the toButton accordingly to display the date
-                            toDateButton.setText(TimeUtils.getDateStrFromCalendar(toCalendar));
+                            toDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(toCalendar));
 
                         }
                     };
@@ -151,8 +151,8 @@ public class EditBlocksFragment extends Fragment {
                         getSupportFragmentManager().findFragmentByTag(TAG + "day_list_fragment");
                 if(dayListFragment != null){
                     dayListFragment.adapter.dayList = PetimoController.getInstance().
-                            getDaysFromRange(TimeUtils.getDateIntFromCalendatr(fromCalendar),
-                                    TimeUtils.getDateIntFromCalendatr(toCalendar), true);
+                            getDaysFromRange(PetimoTimeUtils.getDateIntFromCalendatr(fromCalendar),
+                                    PetimoTimeUtils.getDateIntFromCalendatr(toCalendar), true);
                     dayListFragment.adapter.notifyDataSetChanged();
                 }
             }

@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.utils.TimeUtils;
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.lists.BlockListFragment;
 
 // TODO implement me
@@ -32,7 +32,7 @@ public class MonitorResultActivity extends AppCompatActivity {
             }
         });
         blockListFragment = BlockListFragment.newInstance(
-                1, TimeUtils.getTodayDate(), TimeUtils.getTodayDate());
+                1, PetimoTimeUtils.getTodayDate(), PetimoTimeUtils.getTodayDate());
         getSupportFragmentManager().beginTransaction().add(
                 R.id.activity_monitor_result_fragment_container, blockListFragment).commit();
 

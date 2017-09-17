@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import de.tud.nhd.petimo.utils.TimeUtils;
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
@@ -23,9 +23,9 @@ public class PetimoDbDemo {
 
     private Calendar calendar;
     //private final String DATE_YESTERDAY = "20170829";
-    private final String DATE_YESTERDAY = Integer.toString(TimeUtils.getTodayDate() - 1);
+    private final String DATE_YESTERDAY = Integer.toString(PetimoTimeUtils.getTodayDate() - 1);
 
-    private final String DATE_TODAY = Integer.toString(TimeUtils.getTodayDate());
+    private final String DATE_TODAY = Integer.toString(PetimoTimeUtils.getTodayDate());
 
     private final String[] cat1 = {"work", "10"};
     private final String[] cat2 = {"study", "5"};
@@ -84,7 +84,7 @@ public class PetimoDbDemo {
 
         // Convert to ms
         for (int i = 0; i < times.length; i++) {
-            Log.d(TAG, TimeUtils.getTimeFromMs(times[i]*60*1000) + " -> " +
+            Log.d(TAG, PetimoTimeUtils.getTimeFromMs(times[i]*60*1000) + " -> " +
                     ((times[i] * 60 * 1000) + yesterdayBeginTime));
 
             times[i] = (times[i] * 60 * 1000) + yesterdayBeginTime;

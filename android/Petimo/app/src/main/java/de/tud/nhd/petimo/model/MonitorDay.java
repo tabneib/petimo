@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.List;
 
-import de.tud.nhd.petimo.utils.TimeUtils;
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 
 /**
  * Created by nhd on 28.08.17.
@@ -58,7 +58,7 @@ public class MonitorDay {
      * @return the info string
      */
     public String getInfo(){
-        String info = "Total Duration: " + TimeUtils.getTimeFromMs(getDuration());
+        String info = "Total Duration: " + PetimoTimeUtils.getTimeFromMs(getDuration());
         return info;
     }
     /**

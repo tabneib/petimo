@@ -1,9 +1,6 @@
 package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
-import android.content.DialogInterface;
-import android.os.Build;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -15,7 +12,7 @@ import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.utils.TimeUtils;
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.model.MonitorDay;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditDayFragmentInteractionListener;
@@ -52,7 +49,7 @@ public class DayRecyclerViewAdapter extends
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.monitorDay = dayList.get(position);
-        holder.textViewDate.setText(TimeUtils.getDateStrFromInt(dayList.get(position).getDate()));
+        holder.textViewDate.setText(PetimoTimeUtils.getDateStrFromInt(dayList.get(position).getDate()));
         holder.textViewInfo.setText(dayList.get(position).getInfo());
 
         // The adapter for the recyclerView that displays the given list of monitor blocks

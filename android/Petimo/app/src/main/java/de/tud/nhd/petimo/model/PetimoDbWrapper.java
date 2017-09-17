@@ -9,11 +9,10 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.tud.nhd.petimo.controller.ResponseCode;
-import de.tud.nhd.petimo.utils.TimeUtils;
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
@@ -210,7 +209,7 @@ public class PetimoDbWrapper {
         else {
             Log.d(TAG, " Inserted Block: \nDate: " + date + "\nstart: " + start + "\nend: " +
                     end + "\ncat: " + category + "\ntask: " + task + "\nduration: " +
-                    TimeUtils.getTimeFromMs(duration));
+                    PetimoTimeUtils.getTimeFromMs(duration));
             return ResponseCode.OK;
         }
 

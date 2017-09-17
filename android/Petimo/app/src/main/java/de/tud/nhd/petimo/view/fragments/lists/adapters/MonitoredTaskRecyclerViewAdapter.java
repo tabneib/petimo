@@ -1,10 +1,8 @@
 package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +10,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.utils.ColorUtils;
+import de.tud.nhd.petimo.utils.PetimoColorUtils;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,7 +73,7 @@ public class MonitoredTaskRecyclerViewAdapter
         holder.itemContainer.setBackgroundColor(
                 ContextCompat.getColor(context, bgColors[freqLevel]));
 
-        if (ColorUtils.isDarkColor(ContextCompat.getColor(context, bgColors[freqLevel])))
+        if (PetimoColorUtils.isDarkColor(ContextCompat.getColor(context, bgColors[freqLevel])))
             holder.textViewCatTask.setTextColor(
                     ContextCompat.getColor(context, R.color.textColorPrimary));
 

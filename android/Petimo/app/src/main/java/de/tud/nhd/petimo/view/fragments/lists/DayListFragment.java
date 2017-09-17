@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.utils.TimeUtils;
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditDayFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.DayRecyclerViewAdapter;
 
@@ -34,8 +34,8 @@ public class DayListFragment extends Fragment {
     // default is linear layout
     private int mColumnCount = 1;
     // default is the last 1 week
-    private int fromDate = TimeUtils.getTodayDate()-6;
-    private int toDate = TimeUtils.getTodayDate();
+    private int fromDate = PetimoTimeUtils.getTodayDate()-6;
+    private int toDate = PetimoTimeUtils.getTodayDate();
 
     private OnEditDayFragmentInteractionListener mListener;
 

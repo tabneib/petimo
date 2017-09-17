@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.utils.TimeUtils;
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStopDialogFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
@@ -118,7 +118,7 @@ public class ModeOnFragment extends Fragment {
                                     public void onClick(View view) {
                                         if (stopDialogFragment.manualTime != null){
                                             mListener.onConfirmStopButtonClicked(
-                                                    TimeUtils.getTimeMillisFromHM(
+                                                    PetimoTimeUtils.getTimeMillisFromHM(
                                                     stopDialogFragment.manualTime[0],
                                                     stopDialogFragment.manualTime[1]));
                                         }

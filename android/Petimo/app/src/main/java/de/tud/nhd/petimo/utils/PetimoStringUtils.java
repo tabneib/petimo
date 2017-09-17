@@ -7,9 +7,9 @@ import java.util.Arrays;
  * Created by nhd on 11.09.17.
  */
 
-public class StringUtils {
+public class PetimoStringUtils {
 
-    private static final String TAG = "StringUtils";
+    private static final String TAG = "PetimoStringUtils";
     // String structure
     public static final String ESCAPE = "%#";
     public static final String ITEM_SEPARATOR = ESCAPE + "~";

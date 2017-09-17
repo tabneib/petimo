@@ -14,9 +14,9 @@ import de.tud.nhd.petimo.model.PetimoSharedPref;
  * Created by nhd on 01.09.17.
  */
 
-public class TimeUtils {
+public class PetimoTimeUtils {
 
-    private static final String TAG = "TimeUtils";
+    private static final String TAG = "PetimoTimeUtils";
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
     private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +21,6 @@ import java.util.Calendar;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.utils.TimeUtils;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 
 public class ConfirmStartDialogFragment extends Fragment {
@@ -122,7 +120,7 @@ public class ConfirmStartDialogFragment extends Fragment {
 
                 if (manualTime != null){
                     mListener.onConfirmStartButtonClicked(args.getString(CATEGORY),
-                            args.getString(TASK), TimeUtils.getTimeMillisFromHM(
+                            args.getString(TASK), PetimoTimeUtils.getTimeMillisFromHM(
                                     manualTime[0], manualTime[1]));
                 }
                 else{

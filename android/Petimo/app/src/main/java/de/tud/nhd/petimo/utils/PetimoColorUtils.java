@@ -6,7 +6,7 @@ import android.graphics.Color;
  * Created by nhd on 16.09.17.
  */
 
-public class ColorUtils {
+public class PetimoColorUtils {
 
     public static boolean isDarkColor(int color){
         double darkness = 1-
