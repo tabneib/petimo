@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.utils.TimeUtils;
-import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStartDialogFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStopDialogFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
@@ -122,7 +120,8 @@ public class ModeOnFragment extends Fragment {
                                     @Override
                                     public void onClick(View view) {
                                         if (stopDialogFragment.manualTime != null){
-                                            mListener.onConfirmStopButtonClicked(TimeUtils.getMillisFromHM(
+                                            mListener.onConfirmStopButtonClicked(
+                                                    TimeUtils.getTimeMillisFromHM(
                                                     stopDialogFragment.manualTime[0],
                                                     stopDialogFragment.manualTime[1]));
                                         }

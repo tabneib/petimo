@@ -122,7 +122,7 @@ public class ConfirmStartDialogFragment extends Fragment {
 
                 if (manualTime != null){
                     mListener.onConfirmStartButtonClicked(args.getString(CATEGORY),
-                            args.getString(TASK), TimeUtils.getMillisFromHM(
+                            args.getString(TASK), TimeUtils.getTimeMillisFromHM(
                                     manualTime[0], manualTime[1]));
                 }
                 else{

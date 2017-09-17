@@ -3,9 +3,7 @@ package de.tud.nhd.petimo.view.fragments;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,8 +18,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.TextClock;
-import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
@@ -151,7 +147,7 @@ public class ModeOffFragment extends Fragment {
                                                                 ConfirmStartDialogFragment.CATEGORY)
                                                         , args.getString(
                                                                 ConfirmStartDialogFragment.TASK),
-                                                        TimeUtils.getMillisFromHM(
+                                                        TimeUtils.getTimeMillisFromHM(
                                                                 contentFragment.manualTime[0],
                                                                 contentFragment.manualTime[1]));
                                             }

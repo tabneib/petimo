@@ -542,13 +542,13 @@ public class PetimoController {
     public boolean checkValidLiveStopTime(int hour, int minute, long startTimeMillis){
 
         // Check if the stop time is not before or equal start time
-        long stopTimeMillis =
-                TimeUtils.getDayStartInMillis(new Date()) + hour * 60*60*1000 + minute * 60*1000;
+        long stopTimeMillis = TimeUtils.getTimeMillisFromHM(hour, minute);
         if (stopTimeMillis <= startTimeMillis)
             return false;
 
         int currentHour = TimeUtils.getCurrentHour();
         int currentMinute = TimeUtils.getCurrentMinute();
+
         // change the format of hours to 24+
         currentHour = currentHour < sharedPref.getOvThreshold() ? currentHour + 24 : currentHour;
         hour = hour < sharedPref.getOvThreshold() ? hour + 24 : hour;

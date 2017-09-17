@@ -142,15 +142,15 @@ public class TimeUtils {
 
 
     /**
-     * Calculate the start time in milliseconds from the given hour and minute.
+     * Calculate the time in milliseconds from the given hour and minute chosen by user.
      * The Overnight threshold is also taken into account
      * @param hour
      * @param minute
      * @return
      */
-    public static long getMillisFromHM(int hour, int minute){
+    public static long getTimeMillisFromHM(int hour, int minute){
         long millis = getDayStartInMillis(new Date()) + hour * 60*60*1000 + minute * 60*1000;
-        // If user manually set the start time to a time point on yesterday and the current time
+        // If user manually set the time to a time point on yesterday and the current time
         // has passed midnight but not yet passed overnight threshold
         // => set millis to 1 day earlier
         if (hour >= PetimoSharedPref.getInstance().getOvThreshold() &&
@@ -158,6 +158,25 @@ public class TimeUtils {
             millis = millis - 24 * 60 * 60 * 1000;
         return millis;
     }
+
+    /**
+     * Calculate the stop time in milliseconds from the given hour and minute.
+     * The Overnight threshold is also taken into account
+     * @param hour
+     * @param minute
+     * @return
+     */
+    public static long getStopTimeMillisFromHM(int hour, int minute){
+        long millis = getDayStartInMillis(new Date()) + hour * 60*60*1000 + minute * 60*1000;
+        // If user manually set the stop time to a time point on yesterday and the current time
+        // has passed midnight but not yet passed overnight threshold
+        // => set millis to 1 day earlier
+        if (hour >= PetimoSharedPref.getInstance().getOvThreshold() &&
+                getCurrentHour() < PetimoSharedPref.getInstance().getOvThreshold())
+            millis = millis - 24 * 60 * 60 * 1000;
+        return millis;
+    }
+
     /**
      * Return the time string of 'HH:MM' format from the given long value
      * @param time
