@@ -71,11 +71,12 @@ public class MonitoredTaskRecyclerViewAdapter
                 monitoredTaskList.get(position)[0] + " / " + monitoredTaskList.get(position)[1]);
 
         int freqLevel = Integer.parseInt(holder.mItem[3]) / freqStep;
-        freqLevel = freqLevel >= bgColors.length ? bgColors.length : freqLevel;
+        // Notice : If freqStep is 1 then freqLevel will never be 0 :)
+        freqLevel = freqLevel >= bgColors.length ? bgColors.length - 1 : freqLevel;
         holder.itemContainer.setBackgroundColor(
-                ContextCompat.getColor(context, bgColors[freqLevel - 1]));
+                ContextCompat.getColor(context, bgColors[freqLevel]));
 
-        if (ColorUtils.isDarkColor(ContextCompat.getColor(context, bgColors[freqLevel - 1])))
+        if (ColorUtils.isDarkColor(ContextCompat.getColor(context, bgColors[freqLevel])))
             holder.textViewCatTask.setTextColor(
                     ContextCompat.getColor(context, R.color.textColorPrimary));
 

@@ -506,6 +506,11 @@ public class PetimoController {
     public boolean checkValidLiveStartTime(int hour, int minute){
         int currentHour = TimeUtils.getCurrentHour();
         int currentMinute = TimeUtils.getCurrentMinute();
+        long startTimeMillis = TimeUtils.getTimeMillisFromHM(hour, minute);
+        // Check if the chosen start time is not equal or before the last stop time
+        if (startTimeMillis <= dbWrapper.getBlocksByRange(
+                TimeUtils.getTodayDate(), TimeUtils.getTodayDate()).get(0).getEnd())
+            return false;
 
         currentHour = currentHour < sharedPref.getOvThreshold() ? currentHour + 24 : currentHour;
         hour = hour < sharedPref.getOvThreshold() ? hour + 24 : hour;

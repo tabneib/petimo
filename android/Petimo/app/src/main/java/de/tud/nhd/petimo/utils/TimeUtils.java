@@ -103,7 +103,8 @@ public class TimeUtils {
 
     /**
      * Get the integer that represents today date
-     * overNightThreshold is also considered
+     * overNightThreshold is also considered: If current time has passed midnight but not yet Over-
+     * night threshold, so today date is yesterday date
      */
     public static int getTodayDate(){
         int date = Integer.parseInt(dateFormat.format(new Date()));
@@ -143,7 +144,9 @@ public class TimeUtils {
 
     /**
      * Calculate the time in milliseconds from the given hour and minute chosen by user.
-     * The Overnight threshold is also taken into account
+     * The Overnight threshold is also taken into account to identify the case in which there is
+     * conflict between system date and monitor date: User intends to choose a time point which is
+     * still on current monitor date but according to system date it is on yesterday.
      * @param hour
      * @param minute
      * @return
@@ -159,23 +162,7 @@ public class TimeUtils {
         return millis;
     }
 
-    /**
-     * Calculate the stop time in milliseconds from the given hour and minute.
-     * The Overnight threshold is also taken into account
-     * @param hour
-     * @param minute
-     * @return
-     */
-    public static long getStopTimeMillisFromHM(int hour, int minute){
-        long millis = getDayStartInMillis(new Date()) + hour * 60*60*1000 + minute * 60*1000;
-        // If user manually set the stop time to a time point on yesterday and the current time
-        // has passed midnight but not yet passed overnight threshold
-        // => set millis to 1 day earlier
-        if (hour >= PetimoSharedPref.getInstance().getOvThreshold() &&
-                getCurrentHour() < PetimoSharedPref.getInstance().getOvThreshold())
-            millis = millis - 24 * 60 * 60 * 1000;
-        return millis;
-    }
+
 
     /**
      * Return the time string of 'HH:MM' format from the given long value

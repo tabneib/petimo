@@ -141,7 +141,6 @@ public class ModeOffFragment extends Fragment {
                                         @Override
                                         public void onClick(View view) {
                                             if (contentFragment.manualTime != null){
-                                                Log.d(TAG, "manualTime ===> " + contentFragment.manualTime[0] + ":" + contentFragment.manualTime[1]);
                                                 mListener.onConfirmStartButtonClicked(
                                                         args.getString(
                                                                 ConfirmStartDialogFragment.CATEGORY)

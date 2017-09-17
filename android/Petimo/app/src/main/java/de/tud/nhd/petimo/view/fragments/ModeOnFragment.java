@@ -101,9 +101,6 @@ public class ModeOnFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-
-                // TODO use PetimoDialog
-
                 final ConfirmStopDialogFragment stopDialogFragment = new ConfirmStopDialogFragment();
                 Bundle args = new Bundle();
                 args.putString(ConfirmStopDialogFragment.CATEGORY, monitorInfo[0]);
@@ -138,11 +135,6 @@ public class ModeOnFragment extends Fragment {
                                     }
                                 });
                 confirmStopDialog.show(getActivity().getSupportFragmentManager(), null);
-
-
-
-
-                //stopDialogFragment.show(getFragmentManager(),null);
             }
         });
 
