@@ -33,7 +33,7 @@ import de.tud.nhd.petimo.view.fragments.EditBlocksFragment;
 import de.tud.nhd.petimo.view.fragments.EditTasksFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOffFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOnFragment;
-import de.tud.nhd.petimo.view.fragments.SettingFragment;
+import de.tud.nhd.petimo.view.fragments.SettingsFragment;
 import de.tud.nhd.petimo.view.fragments.StatisticsFragment;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditBlocksMenuFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditDayFragmentInteractionListener;
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity
                     fragment = StatisticsFragment.getInstance();
                     break;
                 case SETTING_FRAGMENT_TAG:
-                    fragment = SettingFragment.getInstance();
+                    fragment = SettingsFragment.getInstance();
                     break;
                 case DEMO_FRAGMENT_TAG:
                     fragment = DemoFragment.getInstance();

@@ -42,6 +42,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
+
         <CheckBox
             android:id="@+id/checkbox_remember_options"
             android:text="@string/option_remember"

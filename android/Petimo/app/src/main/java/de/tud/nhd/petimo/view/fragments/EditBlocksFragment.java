@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -96,6 +97,9 @@ public class EditBlocksFragment extends Fragment {
 
         fromDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(fromCalendar));
         toDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(toCalendar));
+        //fromDateButton.setPaintFlags(fromDateButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        //toDateButton.setPaintFlags(toDateButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
 
         fromDateButton.setOnClickListener(new View.OnClickListener(){
 

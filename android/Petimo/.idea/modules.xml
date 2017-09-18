@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/libs/HorizontalPicker/HorizontalPicker.iml" filepath="$PROJECT_DIR$/libs/HorizontalPicker/HorizontalPicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/Petimo.iml" filepath="$PROJECT_DIR$/Petimo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libs/libs.iml" filepath="$PROJECT_DIR$/libs/libs.iml" />
     </modules>
   </component>
 </project>

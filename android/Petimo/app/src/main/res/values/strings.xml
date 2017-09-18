@@ -94,7 +94,7 @@
     <string name="title_monitoring">Monitoring</string> -->
 
     <string name="title_monitor"></string>
-    <string name="title_monitored_tasks"></string>
+    <string name="title_monitored_tasks">History</string>
     <string name="title_manage_tasks"></string>
     <string name="title_monitoring"></string>
 
@@ -132,7 +132,18 @@
         <item>No data</item>
     </string-array>
 
-    <!-- ModeOnFragment -->
+    <!-- Settings -->
+    <string name="settings_ov_threshold">New day starts at:</string>
+    <string name="settings_am">&#160; a.m.</string>
+    <string-array name="settings_ov_threshold_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
 
 
 </resources>

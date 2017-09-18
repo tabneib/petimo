@@ -1,6 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="de.tud.nhd.petimo.view.fragments.EditBlocksFragment"
@@ -15,15 +14,15 @@
         <!-- Header -->
         <LinearLayout
             android:id="@+id/header"
-            app:theme="@style/PetimoTheme.Light.Header"
+            android:theme="@style/PetimoTheme.Light.Header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <TextView
+            <!-- <TextView
                 android:text="@string/title_monitored_tasks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"/> -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -71,18 +70,22 @@
             <TextView
                 android:text="@string/colon_from"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/sub_pane_padding"/>
             <Button
                 android:text="@string/loading_text"
+                android:background="@color/background_primary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/button_date_from" />
             <TextView
                 android:text="@string/colon_to"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/sub_pane_padding" />
             <Button
                 android:text="@string/loading_text"
+                android:background="@color/background_primary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/button_date_to" />

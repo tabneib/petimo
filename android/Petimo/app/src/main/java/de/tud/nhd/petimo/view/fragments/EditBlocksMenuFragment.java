@@ -90,13 +90,16 @@ public class EditBlocksMenuFragment extends Fragment {
         textViewLock = (TextView) getView().findViewById(R.id.textview_lock);
 
         // Update the checkboxes
-        if (PetimoSharedPref.getInstance().getSettingsBoolean(
+
+        // There is no need for remember option ;)
+        checkBoxRemember.setVisibility(View.INVISIBLE);
+        /*if (PetimoSharedPref.getInstance().getSettingsBoolean(
                 PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_REMEMBER, false))
-            checkBoxRemember.setChecked(true);
+            checkBoxRemember.setChecked(true);*/
 
         // If Remember is not checked and not yet reset to default
         // => Set values of these option to default and update day List
-        if (!checkBoxRemember.isChecked() &&
+        /*if (!checkBoxRemember.isChecked() &&
                 !PetimoController.getInstance().getTag(RESET_TO_DEFAULT_TAG, false)) {
             PetimoController.getInstance().setTag(RESET_TO_DEFAULT_TAG, true);
             PetimoSharedPref.getInstance().setSettingsBoolean(
@@ -105,7 +108,9 @@ public class EditBlocksMenuFragment extends Fragment {
                     PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, false);
             //update List
             parentFragment.updateDayList();
-        }
+        }*/
+
+
 
         if (PetimoSharedPref.getInstance().getSettingsBoolean(
                 PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false))
@@ -169,14 +174,14 @@ public class EditBlocksMenuFragment extends Fragment {
                     }
                 });
 
-        checkBoxRemember.setOnCheckedChangeListener(
+        /*checkBoxRemember.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         PetimoSharedPref.getInstance().setSettingsBoolean(
                                 PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_REMEMBER, isChecked);
                     }
-                });
+                });*/
 
         checkBoxLock.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
