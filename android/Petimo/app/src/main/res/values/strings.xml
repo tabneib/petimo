@@ -86,12 +86,17 @@
     <string name="title_select_start_time">Select Start Time</string>
     <string name="title_select_stop_time">Select Stop Time</string>
     <string name="title_select_tasks_to_display">Select Task To Display</string>
-    
+
+    <!-- Redundant titles make the UI so nestedly complicated
     <string name="title_monitor">Monitor</string>
     <string name="title_monitored_tasks">Monitored Tasks</string>
     <string name="title_manage_tasks">Manage Tasks</string>
-    <string name="title_monitoring">Monitoring</string>
-    
+    <string name="title_monitoring">Monitoring</string> -->
+
+    <string name="title_monitor"></string>
+    <string name="title_monitored_tasks"></string>
+    <string name="title_manage_tasks"></string>
+    <string name="title_monitoring"></string>
 
     <!-- Messages ###############################################################################-->
     <string name="message_confirm_stop_monitor">Stop the monitor?</string>

@@ -59,11 +59,6 @@ public class DayRecyclerViewAdapter extends
                 fragment.getActivity(), dayList.get(position).getMonitorBlocks());
         // Set adapter for the recyclerView displaying block list
 
-
-        Log.d("EditBlocksFragment", "getting sharedPref Lock ===> " +
-                PetimoSharedPref.getInstance().
-                        getSettingsBoolean(PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, true));
-
         if (!PetimoSharedPref.getInstance().
                 getSettingsBoolean(PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, true))
             holder.itemTouchHelper.attachToRecyclerView(holder.recyclerView);

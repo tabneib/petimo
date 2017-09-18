@@ -508,8 +508,12 @@ public class PetimoController {
         int currentMinute = PetimoTimeUtils.getCurrentMinute();
         long startTimeMillis = PetimoTimeUtils.getTimeMillisFromHM(hour, minute);
         // Check if the chosen start time is not equal or before the last stop time
-        if (startTimeMillis <= dbWrapper.getBlocksByRange(
-                PetimoTimeUtils.getTodayDate(), PetimoTimeUtils.getTodayDate()).get(0).getEnd())
+        // Bug: If this is the first monitor of the day, dbWrapper.getBlocksByRange() will return
+        // an empty list
+        List<MonitorBlock> todayBlocks = dbWrapper.getBlocksByRange(
+                PetimoTimeUtils.getTodayDate(), PetimoTimeUtils.getTodayDate());
+        if (todayBlocks != null && !todayBlocks.isEmpty()
+                && startTimeMillis <= todayBlocks.get(0).getEnd())
             return false;
 
         currentHour = currentHour < sharedPref.getOvThreshold() ? currentHour + 24 : currentHour;
