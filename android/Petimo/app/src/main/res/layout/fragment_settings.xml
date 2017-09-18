@@ -72,6 +72,8 @@
 
 
 
+
+
         </LinearLayout>
 
     </LinearLayout>
@@ -79,6 +81,12 @@
         android:background="@color/background_title"
         android:layout_width="match_parent"
         android:layout_height="2dp" />
+
+    <Button
+        android:id="@+id/button_demo"
+        android:text="@string/button_execute_demo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
 
