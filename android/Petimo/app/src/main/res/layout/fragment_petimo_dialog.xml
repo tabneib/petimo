@@ -65,7 +65,7 @@
         android:layout_below="@id/content_container"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/background_title_highlight" />
+        android:background="@color/background_title" />
 
     <!-- Dialog buttons -->
 
@@ -74,7 +74,8 @@
         android:layout_below="@id/separator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="right">
+        android:gravity="right"
+        android:background="@color/background_title">
 
         <Button
             android:id="@+id/button_negative"

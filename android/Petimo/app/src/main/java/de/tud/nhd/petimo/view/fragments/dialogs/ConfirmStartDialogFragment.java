@@ -63,7 +63,6 @@ public class ConfirmStartDialogFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "onViewCreated !!!!!!!!!!!!!!!");
 
         textViewCatTask = (TextView) getView().findViewById(R.id.textViewCatTask);
         textViewStartTime = (TextView) getView().findViewById(R.id.textViewStartTime);
@@ -101,7 +100,7 @@ public class ConfirmStartDialogFragment extends Fragment {
                         }
                         else
                             Toast.makeText(
-                                    getActivity(), getString(R.string.massage_invalid_start_time),
+                                    getActivity(), getString(R.string.message_invalid_start_time),
                                     Toast.LENGTH_SHORT).show();
 
 

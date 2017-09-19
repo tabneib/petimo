@@ -101,7 +101,7 @@ public class ConfirmStopDialogFragment extends Fragment {
                                 else
                                     Toast.makeText(
                                             getActivity(), getString(
-                                                    R.string.massage_invalid_stop_time),
+                                                    R.string.message_invalid_stop_time),
                                             Toast.LENGTH_SHORT).show();
                             }
                         }, hour, minute, true);//Yes 24 hour time

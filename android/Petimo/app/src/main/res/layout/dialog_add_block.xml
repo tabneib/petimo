@@ -1,0 +1,94 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="de.tud.nhd.petimo.view.fragments.dialogs.AddBlockDialogFragment">
+
+    <!-- Sub-header -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/pane_padding"
+        android:background="@color/background_title">
+        <TextView
+            android:id="@+id/textViewDate"
+            android:text="@string/loading_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!-- Content -->
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dialog_content_padding">
+
+        <TextView
+            android:id="@+id/textViewCat"
+            android:text="@string/colon_category"
+            android:layout_alignBaseline="@+id/spinnerCat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Spinner
+            android:layout_toRightOf="@id/textViewCat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinnerCat"
+            android:entries="@array/spinner_default" />
+
+        <TextView
+            android:layout_below="@id/textViewCat"
+            android:layout_alignBaseline="@+id/spinnerTask"
+            android:id="@+id/textViewTask"
+            android:text="@string/colon_task"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Spinner
+            android:layout_below="@id/spinnerCat"
+            android:layout_toRightOf="@+id/textViewTask"
+            android:layout_alignLeft="@+id/spinnerCat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/spinnerCat"
+            android:entries="@array/spinner_default"
+            android:id="@+id/spinnerTask" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <TextView
+            android:text="@string/colon_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/sub_pane_padding"/>
+        <Button
+            android:text="@string/loading_text"
+            android:background="@color/background_title_highlight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_start" />
+        <TextView
+            android:text="@string/colon_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/sub_pane_padding" />
+        <Button
+            android:text="@string/loading_text"
+            android:background="@color/background_title_highlight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_end" />
+
+    </LinearLayout>
+
+</LinearLayout>

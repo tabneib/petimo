@@ -31,6 +31,7 @@ public class SettingsFragment extends Fragment {
     public static final String TAG = "SettingsFragment";
     private static SettingsFragment _instance;
     private PetimoDbDemo demo;
+    // password to execute demo
     private final String md5Pwd = "6b3e58be7169f200c66594f235c0a665";
 
     private HorizontalPicker ovPicker;

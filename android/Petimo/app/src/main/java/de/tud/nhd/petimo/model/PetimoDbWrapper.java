@@ -265,7 +265,8 @@ public class PetimoDbWrapper {
         }
 
         String[] selectionArgs = {Integer.toString(startDate), Integer.toString(endDate)};
-        String sortOrder = PetimoContract.Monitor.COLUMN_NAME_DATE + " DESC";
+        String sortOrder = PetimoContract.Monitor.COLUMN_NAME_DATE + " DESC, " +
+                PetimoContract.Monitor.COLUMN_NAME_START + " DESC";
         Cursor cursor = readableDb.query(PetimoContract.Monitor.TABLE_NAME,
                 PetimoContract.Monitor.getAllColumns(), selection,
                 selectionArgs, null, null, sortOrder);

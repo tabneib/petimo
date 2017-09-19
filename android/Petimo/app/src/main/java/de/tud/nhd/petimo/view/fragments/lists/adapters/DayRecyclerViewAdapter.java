@@ -10,14 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.controller.exception.DbErrorException;
+import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
+import de.tud.nhd.petimo.controller.exception.InvalidInputTimeException;
+import de.tud.nhd.petimo.controller.exception.InvalidTimeException;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.model.MonitorDay;
+import de.tud.nhd.petimo.view.fragments.dialogs.AddBlockDialogFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditDayFragmentInteractionListener;
+import de.tud.nhd.petimo.view.fragments.lists.DayListFragment;
 
 import java.util.List;
 
@@ -31,9 +38,9 @@ public class DayRecyclerViewAdapter extends
     private static final String TAG = "DayAdapter";
     public List<MonitorDay> dayList;
     private final OnEditDayFragmentInteractionListener mListener;
-    private Fragment fragment;
+    private DayListFragment fragment;
 
-    public DayRecyclerViewAdapter(Fragment fragment, List<MonitorDay> items,
+    public DayRecyclerViewAdapter(DayListFragment fragment, List<MonitorDay> items,
                                   OnEditDayFragmentInteractionListener listener) {
         this.fragment = fragment;
         dayList = items;
@@ -53,6 +60,64 @@ public class DayRecyclerViewAdapter extends
         holder.textViewDate.setText(
                 PetimoTimeUtils.getDateStrFromInt(dayList.get(position).getDate()));
         holder.textViewInfo.setText(dayList.get(position).getInfo());
+
+        // Listener for Add Button
+        holder.buttonAddBlock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AddBlockDialogFragment addBlockFragment =
+                        AddBlockDialogFragment.newInstance(holder.monitorDay.getDate());
+
+                PetimoDialog addBlockDialog = PetimoDialog.newInstance(fragment.getActivity())
+                        .setIcon(PetimoDialog.ICON_SAVE)
+                        .setTitle(fragment.getActivity().
+                                getString(R.string.title_new_monitor_block))
+                        .setContentFragment(addBlockFragment)
+                        .setPositiveButton(fragment.getActivity().getString(R.string.button_add_block),
+                                new PetimoDialog.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        // If the time is set, then add new block
+                                        if (addBlockFragment.manualTime[0] != 0 &&
+                                                addBlockFragment.manualTime[1] != 0){
+                                            try {
+                                                PetimoController.getInstance().addBlockManually(
+                                                    addBlockFragment.catSpinner.
+                                                            getSelectedItem().toString(),
+                                                        addBlockFragment.taskSpinner.
+                                                                getSelectedItem().toString(),
+                                                        addBlockFragment.manualTime[0],
+                                                        addBlockFragment.manualTime[1],
+                                                        holder.monitorDay.getDate());
+                                                Toast.makeText(fragment.getActivity(),
+                                                        fragment.getActivity().getString(
+                                                                R.string.message_block_added),
+                                                        Toast.LENGTH_LONG).show();
+                                                // Refresh the list
+                                                fragment.refreshList();                                            } catch (DbErrorException e) {
+                                                e.printStackTrace();
+                                            } catch (InvalidInputTimeException e) {
+                                                e.printStackTrace();
+                                            } catch (InvalidTimeException e) {
+                                                e.printStackTrace();
+                                            } catch (InvalidCategoryException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+
+                                    }
+                                })
+                        .setNegativeButton(fragment.getActivity().getString(R.string.button_cancel),
+                                new PetimoDialog.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        // Do nothing
+                                    }
+                                });
+                addBlockDialog.show(fragment.getActivity().getSupportFragmentManager(), null);
+            }
+        });
+
 
         // The adapter for the recyclerView that displays the given list of monitor blocks
         holder.blockAdapter = new BlockRecyclerViewAdapter(

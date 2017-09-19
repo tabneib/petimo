@@ -16,7 +16,7 @@
         <item>Statistics</item>
         <item>Manage Tasks</item>
         <item>Settings</item>
-       <!-- <item>Demo</item> -->
+        <!-- <item>Demo</item> -->
     </string-array>
 
     <string-array name="priorities">
@@ -64,6 +64,7 @@
     <string name="button_new_category">&#160;New Category</string>
     <string name="button_new_task">New Task</string>
     <string name="button_new_block">New Block</string>
+    <string name="button_add_block">Add Block</string>
 
 
     <string name="button_show">Show</string>
@@ -74,7 +75,7 @@
 
 
     <!-- Titles #################################################################################-->
-
+    <string name="title_new_monitor_block">New Monitor Block</string>
     <string name="title_new_category">New Category</string>
     <string name="title_remove_category">Remove Category</string>
     <string name="title_new_task">New Task</string>
@@ -105,10 +106,15 @@
     <string name="message_confirm_clear_monitored_task_list">List of monitored tasks can help you
         choosing task faster. Clearing this list does not affect your monitor data. Are you sure you
         want to clear it?</string>
-    <string name="massage_invalid_start_time">Invalid start time! Chosen time is in the future
+    <string name="message_invalid_start_time">Invalid start time! Chosen time is in the future
     or before the last stop time.</string>
-    <string name="massage_invalid_stop_time">Invalid stop time! Chosen time is in the future or
+    <string name="message_invalid_stop_time">Invalid stop time! Chosen time is in the future or
         before the start time.</string>
+    <string name="message_invalid_manual_start_time">Invalid start time! Chosen time already belongs
+    to a monitor block.</string>
+    <string name="message_invalid_manual_stop_time">Invalid time interval!</string>
+    <string name="message_no_manual_start_time">Please select a start time first.</string>
+    <string name="message_block_added">Monitor Block added.</string>
 
 
     <!-- Option text ############################################################################-->

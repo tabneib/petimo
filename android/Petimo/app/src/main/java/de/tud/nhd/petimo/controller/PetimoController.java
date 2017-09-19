@@ -116,30 +116,21 @@ public class PetimoController {
      * TODO: Check for invalid information - Time in the future; Time conflicts with other blocks
      * @param inputTask
      * @param inputCat
-     * @param inputStart
-     * @param inputEnd
-     * @param inputDate
+     * @param start
+     * @param end
+     * @param date
      * @return
      */
     public ResponseCode addBlockManually(
-            String inputTask, String inputCat, String inputStart, String inputEnd, String inputDate)
-            throws DbErrorException, InvalidInputDateException,
-            InvalidInputTimeException, InvalidTimeException, InvalidCategoryException {
-        if (PetimoTimeUtils.getDateFromStr(inputDate) == -1)
-            throw new InvalidInputDateException("The input date is invalid: " + inputDate);
-        long start = PetimoTimeUtils.getMsTimeFromStr(inputStart, inputDate);
-        if (start == -1)
-            throw new InvalidInputTimeException("The input start time is invalid: " + inputStart);
-        long end = PetimoTimeUtils.getMsTimeFromStr(inputEnd, inputDate);
-        if (end == -1)
-            throw new InvalidInputTimeException("The input end time is invalid: " + inputEnd);
+            String inputCat, String inputTask, long start, long end, int date)
+            throws DbErrorException, InvalidInputTimeException,
+            InvalidTimeException, InvalidCategoryException {
         if (end <= start)
             throw new InvalidTimeException(
-                    "End time lays before start time: " + inputEnd + " < " + inputStart);
-        int date = (int) PetimoTimeUtils.getDateFromStr(inputDate);
+                    "End time lays before start time: " + end + " < " + start);
         return this.dbWrapper.insertMonitorBlock(
                 inputTask, inputCat, start, end, end - start, date, PetimoTimeUtils.getWeekDay(date),
-                isOverNight(inputDate, inputStart, inputEnd));
+                isOverNight(date, start, end));
     }
 
     /**
@@ -486,15 +477,14 @@ public class PetimoController {
     }
 
     /**
-     *
+     * TODO remove me !
      * @param date
      * @param start
      * @param end
      * @return
      */
     public int isOverNight(int date, long start, long end){
-        // TODO implement me. For now never overnight, good boy :)
-        return 0;
+        return sharedPref.getOvThreshold();
     }
 
     /**
@@ -527,6 +517,17 @@ public class PetimoController {
             return true;
         }
         return false;
+    }
+
+
+    /**
+     * Check if the given manual time is a valid start time
+     * @param hour
+     * @param minute
+     * @return
+     */
+    public boolean checkValidManualStartTime(int date, int hour, int minute){
+        return checkValidManualTime(date, hour, minute);
     }
 
     /**
@@ -572,6 +573,62 @@ public class PetimoController {
 
     /**
      *
+     * @param hour
+     * @param minute
+     * @param startTimeMillis
+     * @return
+     */
+    public boolean checkValidManualStopTime(int date, int hour, int minute, long startTimeMillis){
+
+        long stopTimeMillis = PetimoTimeUtils.getTimeMillisFromHM(date, hour, minute);
+        // First, trivially, it has to be after the given start time
+        if (stopTimeMillis <= startTimeMillis)
+            return false;
+
+        // Second, it has to be a valid time
+        if (!checkValidManualTime(date, hour, minute))
+            return false;
+
+        // Third, there must be no monitored time interval between it and the given start time
+        List<MonitorBlock> todayBlocks = dbWrapper.getBlocksByRange(date, date);
+        if (todayBlocks == null || todayBlocks.isEmpty())
+            // If there is not yet any monitor block today, so any given time is valid
+            return true;
+        for (MonitorBlock block : todayBlocks)
+            if (stopTimeMillis >= block.getStart() && startTimeMillis <= block.getStart())
+                // If there is some monitored start time laying between it and the given start time,
+                // so it is invalid
+                return false;
+        return true;
+    }
+
+
+    /**
+     * Check if the given time is a valid time. This means it does not lay in any already monitored
+     * time interval
+     * @param hour
+     * @param minute
+     * @return
+     */
+    public boolean checkValidManualTime(int date, int hour, int minute){
+
+        long startTimeMillis = PetimoTimeUtils.getTimeMillisFromHM(date, hour, minute);
+        // Check if the chosen time is not between any pair of existed start/stop time
+        List<MonitorBlock> todayBlocks = dbWrapper.getBlocksByRange(date, date);
+        if (todayBlocks == null || todayBlocks.isEmpty())
+            // If there is not yet any monitor block today, so any given time is valid
+            return true;
+        for (MonitorBlock block : todayBlocks)
+            if (startTimeMillis >= block.getStart() && startTimeMillis <= block.getEnd())
+                // If the given time lays between any pair of start/stop time, so it is invalid
+                return false;
+        return true;
+    }
+
+
+
+    /**
+     * Used by view to set controlling tags
      * @param tag
      * @param content
      */
@@ -580,7 +637,7 @@ public class PetimoController {
     }
 
     /**
-     *
+     * used by view to get controlling tags
      * @param tag
      * @param defaultValue
      * @return

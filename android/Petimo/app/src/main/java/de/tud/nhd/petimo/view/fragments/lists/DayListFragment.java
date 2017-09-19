@@ -103,6 +103,18 @@ public class DayListFragment extends Fragment {
                 mListener);
     }
 
+    /**
+     *
+     */
+    public void refreshList(){
+        adapter.dayList = PetimoController.getInstance().getDaysFromRange(
+                fromDate, toDate, PetimoSharedPref.getInstance().getSettingsBoolean(
+                        PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
+                PetimoSharedPref.getInstance().getSettingsBoolean(
+                        PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false));
+        adapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public void onAttach(Context context) {

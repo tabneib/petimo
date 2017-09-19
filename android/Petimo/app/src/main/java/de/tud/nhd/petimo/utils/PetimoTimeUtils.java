@@ -65,14 +65,16 @@ public class PetimoTimeUtils {
 
 
     /**
-     *
+     * TODO: WTH is this ???????
      * @param date
      * @return
      */
-    public static  long getDateFromStr(String date){
+    public static long getDateFromStr(String date){
         //TODO implement me
         return Integer.parseInt(date);
     }
+
+
 
     /**
      * Return the string representation from the given date.
@@ -98,6 +100,17 @@ public class PetimoTimeUtils {
         calendar.setTime(date);
         calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+        return calendar.getTimeInMillis();
+    }
+
+    /**
+     * Calculate the time in milliseconds of the start of the given day
+     * @param dateInt  int representation of the given date
+     * @return
+     */
+    public static long getDayStartInMillis(int dateInt){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(dateInt/10000, (dateInt % 10000)/100, dateInt % 100, 0, 0, 0);
         return calendar.getTimeInMillis();
     }
 
@@ -162,6 +175,19 @@ public class PetimoTimeUtils {
         return millis;
     }
 
+
+    /**
+     * Calculate the time in milliseconds from the given date, hour and minute chosen by user.
+     * The Overnight threshold is also taken into account.
+     * @param hour
+     * @param minute
+     * @return
+     */
+    public static long getTimeMillisFromHM(int date, int hour, int minute){
+        if (hour < PetimoSharedPref.getInstance().getOvThreshold())
+            hour = hour + 24;
+        return getDayStartInMillis(date) + hour * 60*60*1000 + minute * 60*1000;
+    }
 
 
     /**
