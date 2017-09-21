@@ -291,6 +291,7 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().findFragmentByTag(MODE_OFF_FRAGMENT_TAG);
         if (modeOffFragment != null){
             modeOffFragment.updateAllSpinner(category, task);
+            modeOffFragment.updateStartButtonText(category, task);
             controller.updateLastMonitored(category, task);
         }
     }

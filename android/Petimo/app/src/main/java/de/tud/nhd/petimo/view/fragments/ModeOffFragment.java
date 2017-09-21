@@ -187,7 +187,21 @@ public class ModeOffFragment extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // TODO implement or remove
+                // TODO It should be nothing selected at app startup!
+            }
+        });
+
+        taskSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Up date the cat/task displayed on start monitor button
+                updateStartButtonText(catSpinner.getSelectedItem().toString(),
+                        taskSpinner.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // TODO It should be nothing selected at app startup!
             }
         });
 
@@ -329,7 +343,12 @@ public class ModeOffFragment extends Fragment {
                                     catSpinner.getSelectedItem().toString()));
                     taskSpinner.setAdapter(taskSpinnerAdapter);
                     taskSpinnerAdapter.notifyDataSetChanged();
+                    // Also display the chosen cat/task on the start monitor button
+                    updateStartButtonText(catSpinner.getSelectedItem().toString(),
+                            taskSpinner.getSelectedItem().toString());
                 }
+                // There is no task selected => display no cat/task on the start monitor button
+                updateStartButtonText(null, null);
             }
         });
     }
@@ -346,5 +365,16 @@ public class ModeOffFragment extends Fragment {
         updateTaskSpinner();
         taskSpinner.setSelection(
                 PetimoController.getInstance().getTaskNameByCat(category).indexOf(task));
+    }
+
+    /**
+     * Display the current chosen cat/task on the start monitor button
+     * @param category
+     * @param task
+     */
+    public void updateStartButtonText(String category, String task){
+        if(category != null && task != null)
+            startButton.setText(getString(R.string.button_start_monitor) + "\n\n" +
+            category + " / " + task);
     }
 }
