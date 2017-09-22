@@ -1,0 +1,155 @@
+<resources>
+
+
+    <!-- configuration & system strings #########################################################-->
+    <string name="app_name">Petimo</string>
+    <string name="preference_file_settings">de.tud.nhd.PREFERENCE_FILE_SETTINGS</string>
+    <string name="preference_file_monitor">de.tud.nhd.PREFERENCE_FILE_MONITOR</string>
+
+
+    <string name="drawer_open">Drawer Opened</string>
+    <string name="drawer_close">Drawer Closed</string>
+    <!-- Please adapt MainActivity after changing this array ! -->
+    <string-array name="navigation_titles">
+        <item>Giám Sát</item>
+        <item>Công Việc Đã Giám Sát</item>
+        <item>Thống Kê</item>
+        <item>Quản Lý Công Việc</item>
+        <item>Cài Đặt</item>
+        <!-- <item>Demo</item> -->
+    </string-array>
+
+    <string-array name="priorities">
+        <item>Thấp Nhất</item>
+        <item>Thấp</item>
+        <item>Bình Thường</item>
+        <item>Cao</item>
+        <item>Cao Nhất</item>
+    </string-array>
+
+
+    <!-- Short text ######################################################################-->
+
+    <!-- Short text with colon ###########################################################-->
+    <string name="colon_category">Nhóm việc:</string>
+    <string name="colon_task">Công việc:</string>
+    <string name="colon_priority">Ưu tiên:</string>
+    <string name="colon_new_category">Thêm nhóm việc:</string>
+    <string name="colon_new_task">Thêm Công Việc:</string>
+    <string name="colon_name">Name:</string>
+    <string name="colon_start_time">Bắt Đầu:</string>
+    <string name="colon_recent_monitors">Công việc giám gát gần đây:</string>
+    <string name="colon_date">Ngày:</string>
+    <string name="colon_from">Từ:</string>
+    <string name="colon_to">Đến:</string>
+    <string name="colon_start_at">Bắt đầu lúc:</string>
+    <string name="colon_started_at">Đã bắt đầu lúc:</string>
+    <string name="colon_stop_at">Dừng lúc:</string>
+
+
+    <!-- Common button text -->
+    <string name="button_stop_monitor">Dừng Giám Sát</string>
+    <string name="button_start_monitor">Bắt Đầu Giám Sát</string>
+    <string name="button_execute_demo">Chạy Demo</string>
+
+    <string name="button_start">Bắt Đầu</string>
+    <string name="button_ok">OK</string>
+    <string name="button_yes">Có</string>
+    <string name="button_create">Tạo</string>
+
+    <string name="button_cancel">Thoát</string>
+    <string name="button_no">Không</string>
+    <string name="button_back"> Quay lại </string>
+
+    <string name="button_new_category">&#160;Nhóm Việc Mới</string>
+    <string name="button_new_task">Công Việc Mới</string>
+    <string name="button_new_block">Thêm Giám Sát</string>
+    <string name="button_add_block">Thêm Giám Sát</string>
+
+
+    <string name="button_show">Hiện</string>
+
+    <string name="button_clear">Xóa Hết</string>
+
+    <string name="button_edit">Chỉnh Sửa</string>
+
+
+    <!-- Titles #################################################################################-->
+    <string name="title_new_monitor_block">Thêm Giám Sát</string>
+    <string name="title_new_category">Thêm Nhóm Việc</string>
+    <string name="title_remove_category">Xóa Nhóm Việc</string>
+    <string name="title_new_task">Thêm Công Việc</string>
+    <string name="title_remove_task">Xóa Công Việc</string>
+    <string name="title_remove_block">Xóa Giám Sát</string>
+    <string name="title_clear_monitored_task_list">Xóa Danh Sách Công Việc Đã Giám Sát</string>
+    <string name="title_start_monitor">Bắt Đầu Giám Sát?</string>
+    <string name="title_stop_monitor">Dừng Giám Sát?</string>
+    <string name="title_select_start_time">Tự Chọn Thời Gian Bắt Đầu</string>
+    <string name="title_select_stop_time">Tự Chọn Thời Gian Kết Thúc</string>
+    <string name="title_select_tasks_to_display">Chọn Công Việc</string>
+
+    <!-- Redundant titles make the UI so nestedly complicated
+    <string name="title_monitor">Monitor</string>
+    <string name="title_monitored_tasks">Monitored Tasks</string>
+    <string name="title_manage_tasks">Manage Tasks</string>
+    <string name="title_monitoring">Monitoring</string> -->
+
+    <string name="title_monitor"></string>
+    <string name="title_monitored_tasks">Lịch Sử</string>
+    <string name="title_manage_tasks"></string>
+    <string name="title_monitoring"></string>
+
+    <!-- Messages ###############################################################################-->
+    <string name="message_confirm_stop_monitor">Dừng giám sát này?</string>
+    <string name="message_confirm_start_monitor">Chuẩn bị giám sát:</string>
+    <string name="message_confirm_remove">Bạn thực sự muốn xóa&#160;</string>
+    <string name="message_confirm_clear_monitored_task_list">Danh sách các công việc đã được giám
+        sát sẽ giúp bạn chọn công việc để giám sát nhanh hơn. Xóa danh sách này sẽ không ảnh hưởng
+        đến dữ liệu giám sát của bạn. Bạn thực sự muốn xóa danh sách này?</string>
+    <string name="message_invalid_start_time">Thời điểm bắt đầu không hợp lệ! Thời điểm bạn chọn nằm
+        ở tương lai hoặc trước thời điểm bắt đầu gần nhất.</string>
+    <string name="message_invalid_stop_time">Thời điểm kết thúc không hợp lệ! Thời điểm bạn chọn nằm
+        ở tương lai hoặc trước thời điểm bắt đầu.</string>
+    <string name="message_invalid_manual_start_time">Thời điểm bắt đầu không hợp lệ! Thời điểm bạn
+        chọn nằm trong một giám sát khác.</string>
+    <string name="message_invalid_manual_stop_time">Khung thời gian giám sát không hợp lệ.</string>
+    <string name="message_no_manual_start_time">Bạn hãy lựa chọn thời điểm bắt đầu trước.</string>
+    <string name="message_block_added">Giám sát đã được thêm.</string>
+
+
+    <!-- Option text ############################################################################-->
+    <string name="option_most_recently_first">Gần đây trước</string>
+    <string name="option_most_frequently_first">Thường xuyên trước</string>
+
+    <string name="option_show_selected_tasks">Chỉ hiện công việc đã lựa chọn</string>
+    <string name="option_show_empty_days">Hiện cả ngày trống</string>
+    <string name="option_remember">Nhớ</string>
+    <string name="option_swipe_to_delete">Vuốt để xóa</string>
+
+    <!-- Other strings ##########################################################################-->
+    <string name="loading_text">..</string>
+    <string name="hello_blank_fragment">Đang Phát Triển</string>
+
+
+    <!-- Individual Strings #####################################################################-->
+
+    <!-- ModeOffFragment -->
+    <string-array name="spinner_default">
+        <item>Không có dữ liệu</item>
+    </string-array>
+
+    <!-- Settings -->
+    <string name="settings_ov_threshold">Ngày mới bắt đầu vào lúc:</string>
+    <string name="settings_am">&#160; giờ sáng</string>
+    <string-array name="settings_ov_threshold_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+
+
+</resources>
