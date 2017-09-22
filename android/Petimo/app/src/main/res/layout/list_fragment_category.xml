@@ -9,4 +9,4 @@
     android:padding="0dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment"
-    tools:listitem="@layout/list_item_category" />
+    tools:listitem="@layout/list_item_category_edit" />

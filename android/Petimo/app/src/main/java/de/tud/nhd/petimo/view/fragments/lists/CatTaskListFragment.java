@@ -42,7 +42,7 @@ public class CatTaskListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.list_fragment_cattask, container, false);
+        View view = inflater.inflate(R.layout.list_fragment_selectcategory, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {

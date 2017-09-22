@@ -1,11 +1,8 @@
 package de.tud.nhd.petimo.view.fragments.lists;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,7 +24,11 @@ import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapt
  */
 public class CategoryListFragment extends Fragment {
 
-    private static final String TAG = "CatListFragment";
+    public static final String TAG = "CatListFragment";
+    public static final String EDIT_MODE = "Edit-mode";
+    public static final String SELECT_MODE = "Select-mode";
+    public String mode;
+
     private static CategoryListFragment _instance;
     public CategoryRecyclerViewAdapter adapter;
     private int mColumnCount = 1;
@@ -45,10 +46,12 @@ public class CategoryListFragment extends Fragment {
      * Get the (unique) instance of this fragment, if not yet exists, then initialize it
      * @return the unique instance
      */
-    public static CategoryListFragment getInstance(){
+    public static CategoryListFragment getInstance(String mode){
 
         // TODO: I still cannot figure out the cause of this bug, so I comment out the code fragment
-        return new CategoryListFragment();
+        CategoryListFragment fragment = new CategoryListFragment();
+        fragment.mode = mode;
+        return fragment;
 
         /*if (_instance == null) {
             _instance = new CategoryListFragment();
@@ -66,7 +69,26 @@ public class CategoryListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.list_fragment_monitorcategory, container, false);
+        switch (mode){
+            case EDIT_MODE:
+                return createEditModeView(inflater, container, savedInstanceState);
+            case SELECT_MODE:
+                return createSelectModeView(inflater, container, savedInstanceState);
+            default:
+                throw new RuntimeException("Display mode is not set.");
+        }
+    }
+
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
+    private View createEditModeView(LayoutInflater inflater, ViewGroup container,
+                                    Bundle savedInstanceState){
+        final View view = inflater.inflate(R.layout.list_fragment_category, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -80,97 +102,91 @@ public class CategoryListFragment extends Fragment {
 
             ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
                     new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-                @Override
-                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
-                                      RecyclerView.ViewHolder target) {
-                    // Do nothing
-                    return false;
-                }
+                        @Override
+                        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder
+                                viewHolder, RecyclerView.ViewHolder target) {
+                            // Do nothing
+                            return false;
+                        }
 
-                @Override
-                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                        @Override
+                        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
-                    final CategoryRecyclerViewAdapter.ViewHolder vHolder =
-                            (CategoryRecyclerViewAdapter.ViewHolder) viewHolder;
-                    final PetimoDialog removeCatDialog = PetimoDialog.newInstance(getActivity())
-                            .setTitle(getActivity().getString(R.string.title_remove_category))
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setMessage(getActivity().
-                                    getString(R.string.message_confirm_remove) + vHolder.catName
-                                    + "?")
-                            .setPositiveButton(getString(R.string.button_yes),
-                                    new PetimoDialog.OnClickListener(){
-                                        @Override
-                                        public void onClick(View v) {
-                                            // Delete the category
-                                            PetimoController.getInstance().removeCategory(
-                                                    adapter.catList.get(
-                                                            vHolder.getLayoutPosition()).getName());
-                                            adapter.notifyItemRemoved(vHolder.getLayoutPosition());
-                                            adapter.catList.remove(vHolder.getLayoutPosition());
-                                        }
-                                    })
-                            .setNegativeButton(getString(R.string.button_cancel),
-                                    new PetimoDialog.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            adapter.notifyDataSetChanged();
-                                        }
-                                    });
-                    removeCatDialog.show(getActivity().getSupportFragmentManager(), null);
-
-                    /*
-                    AlertDialog.Builder builder;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        builder = new AlertDialog.Builder(getActivity(),
-                                android.R.style.Theme_Material_Dialog_Alert);
-                    } else {
-                        builder = new AlertDialog.Builder(getActivity());
-                    }
-                    final CategoryRecyclerViewAdapter.ViewHolder vHolder =
-                            (CategoryRecyclerViewAdapter.ViewHolder) viewHolder;
-                    builder.setTitle(
-                            getActivity().getString(R.string.title_remove_category))
-                            .setMessage(getActivity().
-                                    getString(R.string.message_confirm_remove) +
-                                        vHolder.catName + "?")
-                            .setPositiveButton(android.R.string.yes,
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            // Delete the category
-                                            PetimoController.getInstance().removeCategory(
-                                                    adapter.catList.get(
-                                                            vHolder.getLayoutPosition()).getName());
-                                            adapter.notifyItemRemoved(vHolder.getLayoutPosition());
-                                            adapter.catList.remove(vHolder.getLayoutPosition());
-                                        }
-                                    })
-                            .setNegativeButton(
-                                    android.R.string.no, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            adapter.notifyDataSetChanged();
-                                            // do nothing
-                                        }
-                                    })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-
-                            */
-                }
-            };
+                            final CategoryRecyclerViewAdapter.ViewHolder vHolder =
+                                    (CategoryRecyclerViewAdapter.ViewHolder) viewHolder;
+                            final PetimoDialog removeCatDialog =
+                                    PetimoDialog.newInstance(getActivity())
+                                            .setTitle(getActivity().getString(
+                                                    R.string.title_remove_category))
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .setMessage(getActivity().
+                                                    getString(R.string.message_confirm_remove) +
+                                                    vHolder.catName + "?")
+                                            .setPositiveButton(getString(R.string.button_yes),
+                                                    new PetimoDialog.OnClickListener(){
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            // Delete the category
+                                                            PetimoController.getInstance().
+                                                                    removeCategory(
+                                                                    adapter.catList.get(vHolder.
+                                                                            getLayoutPosition()).
+                                                                            getName());
+                                                            adapter.notifyItemRemoved(
+                                                                    vHolder.getLayoutPosition());
+                                                            adapter.catList.remove(
+                                                                    vHolder.getLayoutPosition());
+                                                        }
+                                                    })
+                                            .setNegativeButton(getString(R.string.button_cancel),
+                                                    new PetimoDialog.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            adapter.notifyDataSetChanged();
+                                                        }
+                                                    });
+                            removeCatDialog.show(getActivity().getSupportFragmentManager(), null);
+                        }
+                    };
 
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
             itemTouchHelper.attachToRecyclerView(recyclerView);
 
             this.catList = PetimoController.getInstance().getAllCats();
-            this.adapter = new CategoryRecyclerViewAdapter(this, catList);
+            this.adapter = new CategoryRecyclerViewAdapter(this, catList, mode);
+            recyclerView.setAdapter(adapter);
+        }
+        return view;
+    }
+
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
+    private View createSelectModeView(LayoutInflater inflater, ViewGroup container,
+                                    Bundle savedInstanceState){
+       final View view = inflater.inflate(R.layout.list_fragment_category, container, false);
+
+        // Set the adapter
+        if (view instanceof RecyclerView) {
+            Context context = view.getContext();
+            RecyclerView recyclerView = (RecyclerView) view;
+            if (mColumnCount <= 1) {
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            } else {
+                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+            }
+
+            this.catList = PetimoController.getInstance().getAllCats();
+            this.adapter = new CategoryRecyclerViewAdapter(this, catList, mode);
             recyclerView.setAdapter(adapter);
 
         }
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.model.MonitorTask;
+import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
 import java.util.List;
 
@@ -18,25 +19,45 @@ import java.util.List;
 public class TaskRecyclerViewAdapter extends
         RecyclerView.Adapter<TaskRecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = "TaskAdapter";
+    public static final String TAG = "TaskAdapter";
+    private String mode;
     public List<MonitorTask> taskList;
 
-    public TaskRecyclerViewAdapter(List<MonitorTask> items) {
+    public TaskRecyclerViewAdapter(List<MonitorTask> items, String mode) {
         taskList = items;
-        Log.d(TAG, "tagList size ====> " + taskList.size());
+        this.mode = mode;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_task, parent, false);
+        View view;
+        switch (mode){
+            case CategoryListFragment.EDIT_MODE:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.list_item_task_edit, parent, false);
+                break;
+            case CategoryListFragment.SELECT_MODE:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.list_item_task_select, parent, false);
+                break;
+            default:
+                throw new RuntimeException("Display mode is not set.");
+        }
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.task = taskList.get(position);
-        holder.taskNameTextView.setText(taskList.get(position).getName());
+        switch (mode){
+            case CategoryListFragment.EDIT_MODE:
+                holder.task = taskList.get(position);
+                holder.taskNameTextView.setText(taskList.get(position).getName());
+                break;
+            case CategoryListFragment.SELECT_MODE:
+                break;
+            default:
+                throw new RuntimeException("Display mode is not set.");
+        }
     }
 
     @Override
@@ -46,6 +67,7 @@ public class TaskRecyclerViewAdapter extends
 
     /**
      * BlockListViewHolder that holds a task item to display
+     * TODO adapt according to display mode!
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;

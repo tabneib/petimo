@@ -1,12 +1,8 @@
 package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
-import android.content.DialogInterface;
-import android.os.Build;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,26 +29,55 @@ public class CategoryRecyclerViewAdapter extends
     private static final String TAG = "CatAdapter";
     public List<MonitorCategory> catList;
     private CategoryListFragment fragment;
+    private String mode;
 
 
     public CategoryRecyclerViewAdapter(
-            CategoryListFragment fragment, List<MonitorCategory> items) {
+            CategoryListFragment fragment, List<MonitorCategory> items, String mode) {
         this.fragment = fragment;
         this.catList = items;
+        this.mode = mode;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_category, parent, false);
+        View view;
+        switch (mode){
+            case CategoryListFragment.EDIT_MODE:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.list_item_category_edit, parent, false);
+                break;
+            case CategoryListFragment.SELECT_MODE:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.list_item_category_select, parent, false);
+                break;
+            default:
+                throw new RuntimeException("Display mode is not set.");
+        }
+
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        Log.d(TAG, "gonna bind position ====> " + position +" ====> "
-                + catList.get(position).getName());
-        Log.d(TAG, "Adapter's catList size ====> " + this.catList.size());
+
+        switch (mode){
+            case CategoryListFragment.EDIT_MODE:
+                onBindViewHolderEditMode(holder, position);
+                break;
+            case CategoryListFragment.SELECT_MODE:
+                break;
+            default:
+                throw new RuntimeException("Display mode is not set.");
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return catList.size();
+    }
+
+    private void onBindViewHolderEditMode(final ViewHolder holder, final int position) {
 
         holder.catName = catList.get(position).getName();
         holder.catTextView.setText(catList.get(position).getName());
@@ -79,14 +104,14 @@ public class CategoryRecyclerViewAdapter extends
                                         } catch (ClassCastException e) {
                                             throw new ClassCastException(
                                                     fragment.getActivity().toString()
-                                                    + " must implement " +
-                                                    "OnEditTaskFragmentInteractionListener");
+                                                            + " must implement " +
+                                                            "OnEditTaskFragmentInteractionListener");
                                         }
                                         mListener.onConfirmAddingTaskStopButtonClicked(
                                                 holder,
                                                 // This is a bug! The value of position will be
                                                 // fixed at this point, Hence it is nor updated
-                                                // upon adding new categor => yield wrong category
+                                                // upon adding new category => yield wrong category
                                                 // name
                                                 //catList.get(position).getName();
                                                 holder.catName,
@@ -107,7 +132,8 @@ public class CategoryRecyclerViewAdapter extends
 
         // Nesting fragments inside RecyclerView is not recommended, so I use recyclerView directly
         holder.taskAdapter = new TaskRecyclerViewAdapter(
-                PetimoController.getInstance().getAllTasks(catList.get(position).getName()));
+                PetimoController.getInstance().getAllTasks(catList.get(position).getName()),
+                mode);
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -255,17 +281,11 @@ public class CategoryRecyclerViewAdapter extends
         else
             Log.d(TAG, "sub-fragment already setup for this position !");*/
 
-       // TODO setup listener for dragging to delete category
     }
-
-    @Override
-    public int getItemCount() {
-        return catList.size();
-    }
-
 
     /**
      * BlockListViewHolder that hold the view of a block displaying a category
+     * TODO adapt according to display mode!
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public View view;
@@ -290,12 +310,14 @@ public class CategoryRecyclerViewAdapter extends
          * @param taskName
          */
         public void updateView(String taskName, String catName){
-            this.taskAdapter.taskList.add(0,
-                    PetimoController.getInstance().getTaskByName(taskName, catName));
-            taskAdapter.notifyItemInserted(0);
-            this.taskAdapter.taskList.clear();
-            this.taskAdapter.taskList.addAll(PetimoController.getInstance().getAllTasks(catName));
-            this.taskAdapter.notifyDataSetChanged();
+            if (mode.equals(CategoryListFragment.EDIT_MODE)){
+                this.taskAdapter.taskList.add(0,
+                        PetimoController.getInstance().getTaskByName(taskName, catName));
+                taskAdapter.notifyItemInserted(0);
+                this.taskAdapter.taskList.clear();
+                this.taskAdapter.taskList.addAll(PetimoController.getInstance().getAllTasks(catName));
+                this.taskAdapter.notifyDataSetChanged();
+            }
         }
 
         @Override
