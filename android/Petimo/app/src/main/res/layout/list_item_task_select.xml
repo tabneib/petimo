@@ -9,6 +9,7 @@
 
     <CheckBox
         android:id="@+id/checkboxTask"
+        android:layout_marginLeft="@dimen/large_pane_padding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <View

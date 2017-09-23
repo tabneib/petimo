@@ -1,7 +1,6 @@
 package de.tud.nhd.petimo.view.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,11 +13,10 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditBlocksMenuFragmentInteractionListener;
-import de.tud.nhd.petimo.view.fragments.lists.CatTaskListFragment;
+import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -139,13 +137,15 @@ public class EditBlocksMenuFragment extends Fragment {
 
                         // Display task selector dialog if checked
                         if (isChecked){
-                            CatTaskListFragment taskListFragment =
-                                    CatTaskListFragment.newInstance();
+                            /*CatTaskListFragment taskListFragment =
+                                    CatTaskListFragment.newInstance();*/
+                            CategoryListFragment catListFragment = CategoryListFragment.
+                                    getInstance(CategoryListFragment.SELECT_MODE);
                             PetimoDialog taskSelectorDialog =
                                     PetimoDialog.newInstance(parentFragment.getActivity(), true)
                                     .setIcon(PetimoDialog.ICON_SAVE)
                                     .setTitle(getString(R.string.title_select_tasks_to_display))
-                                    .setContentFragment(taskListFragment)
+                                    .setContentFragment(catListFragment)
                                     .setPositiveButton(getString(R.string.button_ok),
                                             new PetimoDialog.OnClickListener() {
                                                 @Override

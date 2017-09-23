@@ -3,11 +3,13 @@ package de.tud.nhd.petimo.view.fragments.lists.adapters;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -15,10 +17,12 @@ import android.widget.TextView;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.MonitorCategory;
+import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +35,7 @@ public class CategoryRecyclerViewAdapter extends
     public List<MonitorCategory> catList;
     private CategoryListFragment fragment;
     private String mode;
+    private boolean onBind = false;
 
 
     public CategoryRecyclerViewAdapter(
@@ -140,7 +145,7 @@ public class CategoryRecyclerViewAdapter extends
         // Nesting fragments inside RecyclerView is not recommended, so I use recyclerView directly
         holder.taskAdapter = new TaskRecyclerViewAdapter(
                 PetimoController.getInstance().getAllTasks(catList.get(position).getName()),
-                mode);
+                mode, this, position);
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -298,7 +303,34 @@ public class CategoryRecyclerViewAdapter extends
      */
     private void onBindViewHolderSelectMode(final ViewHolder holder, final int position) {
 
+        holder.catName = catList.get(position).getName();
+        holder.catCheckBox.setText(catList.get(position).getName());
+        holder.taskAdapter = new TaskRecyclerViewAdapter(
+                PetimoController.getInstance().getAllTasks(catList.get(position).getName()), mode,
+                this, position);
+        holder.taskListRecyclerView.setLayoutManager(
+                new LinearLayoutManager(fragment.getActivity()));
+        holder.taskListRecyclerView.setAdapter(holder.taskAdapter);
+
+        ArrayList<String[]> tasks = PetimoSharedPref.getInstance().getSelectedTasks();
+        int selectedTaskNum = 0;
+        for (String[] catTask: tasks)
+            if (catTask[0].equals(catList.get(position).getName()))
+                selectedTaskNum++;
+        // If all tasks belonging to this category are selected => checked
+        if (selectedTaskNum == PetimoController.getInstance().
+                getTaskNameByCat(catList.get(position).getName()).size()) {
+            onBind = true;
+            holder.catCheckBox.setChecked(true);
+            onBind = false;
+        }
+        else{
+            onBind = true;
+            holder.catCheckBox.setChecked(false);
+            onBind = false;
+        }
     }
+
 
 
         /**
@@ -333,6 +365,34 @@ public class CategoryRecyclerViewAdapter extends
             // Common
             this.taskListRecyclerView = (RecyclerView)
                     view.findViewById(R.id.task_list_recycler_view);
+
+            switch (mode){
+                case CategoryListFragment.EDIT_MODE:
+                    break;
+                case CategoryListFragment.SELECT_MODE:
+                    catCheckBox.setOnCheckedChangeListener(
+                            new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(
+                                        CompoundButton buttonView, boolean isChecked) {
+                                    if (isChecked)
+                                        for (String task :
+                                                PetimoController.getInstance().
+                                                        getTaskNameByCat(catName))
+                                            PetimoSharedPref.getInstance().
+                                                    addSelectedTask(catName, task);
+                                    else
+                                        for (String task :
+                                                PetimoController.getInstance().
+                                                        getTaskNameByCat(catName))
+                                            PetimoSharedPref.getInstance().
+                                                    removeSelectedTask(catName, task);
+                                    if (!onBind)
+                                        taskAdapter.notifyDataSetChanged();
+                                }
+                            });
+                    break;
+            }
         }
 
         /**
@@ -347,6 +407,7 @@ public class CategoryRecyclerViewAdapter extends
                 this.taskAdapter.taskList.clear();
                 this.taskAdapter.taskList.addAll(PetimoController.getInstance().getAllTasks(catName));
                 this.taskAdapter.notifyDataSetChanged();
+
             }
         }
 

@@ -5,12 +5,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.model.MonitorTask;
+import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,10 +25,17 @@ public class TaskRecyclerViewAdapter extends
 
     public static final String TAG = "TaskAdapter";
     private String mode;
+    // Select mode attributes
+    private CategoryRecyclerViewAdapter catAdapter;
+    private int catPosition;
     public List<MonitorTask> taskList;
+    private boolean onBind = false;
 
-    public TaskRecyclerViewAdapter(List<MonitorTask> items, String mode) {
-        taskList = items;
+    public TaskRecyclerViewAdapter(List<MonitorTask> items, String mode,
+                                   CategoryRecyclerViewAdapter catAdapter, int catPosition) {
+        this.taskList = items;
+        this.catAdapter = catAdapter;
+        this.catPosition = catPosition;
         this.mode = mode;
     }
 
@@ -39,6 +50,7 @@ public class TaskRecyclerViewAdapter extends
             case CategoryListFragment.SELECT_MODE:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_task_select, parent, false);
+
                 break;
             default:
                 throw new RuntimeException("Display mode is not set.");
@@ -54,6 +66,25 @@ public class TaskRecyclerViewAdapter extends
                 holder.taskNameTextView.setText(taskList.get(position).getName());
                 break;
             case CategoryListFragment.SELECT_MODE:
+                holder.task = taskList.get(position);
+                holder.taskCheckBox.setText(taskList.get(position).getName());
+
+                boolean notFound = true;
+                for (String[] catTask : PetimoSharedPref.getInstance().getSelectedTasks()) {
+                    if (catTask[0].equals(holder.task.getCategory()) &&
+                            catTask[1].equals(holder.task.getName())){
+                        onBind = true;
+                        holder.taskCheckBox.setChecked(true);
+                        onBind = false;
+                        notFound = false;
+                        break;
+                    }
+                }
+                if (notFound) {
+                    onBind = true;
+                    holder.taskCheckBox.setChecked(false);
+                    onBind = false;
+                }
                 break;
             default:
                 throw new RuntimeException("Display mode is not set.");
@@ -71,13 +102,48 @@ public class TaskRecyclerViewAdapter extends
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView taskNameTextView;
+        // Edit mode
+        public TextView taskNameTextView;
+
+        // Select mode
+        public CheckBox taskCheckBox;
+
+        // Common
         public MonitorTask task;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
+            // Edit Mode
             taskNameTextView = (TextView) view.findViewById(R.id.textViewTaskName);
+            // Select Mode
+            taskCheckBox = (CheckBox) view.findViewById(R.id.checkboxTask);
+
+            switch (mode){
+                case CategoryListFragment.EDIT_MODE:
+                    break;
+                case CategoryListFragment.SELECT_MODE:
+
+                    taskCheckBox.setOnCheckedChangeListener(
+                            new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(
+                                        CompoundButton buttonView, boolean isChecked) {
+                                    if (isChecked)
+                                        PetimoSharedPref.getInstance().addSelectedTask(
+                                                task.getCategory(), task.getName());
+                                    else
+                                        PetimoSharedPref.getInstance().removeSelectedTask(
+                                                task.getCategory(), task.getName());
+                                    // Rebind the corresponding category
+                                    //catAdapter.onBindViewHolder(catViewHolder, catPosition);
+                                    // Notify the corresponding cat viewHolder to update its check box
+                                    if (!onBind)
+                                        catAdapter.notifyItemChanged(catPosition);
+                                }
+                            });
+                    break;
+            }
         }
 
         @Override
