@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -66,6 +67,7 @@ public class CategoryRecyclerViewAdapter extends
                 onBindViewHolderEditMode(holder, position);
                 break;
             case CategoryListFragment.SELECT_MODE:
+                onBindViewHolderSelectMode(holder, position);
                 break;
             default:
                 throw new RuntimeException("Display mode is not set.");
@@ -77,6 +79,11 @@ public class CategoryRecyclerViewAdapter extends
         return catList.size();
     }
 
+    /**
+     *
+     * @param holder
+     * @param position
+     */
     private void onBindViewHolderEditMode(final ViewHolder holder, final int position) {
 
         holder.catName = catList.get(position).getName();
@@ -283,14 +290,30 @@ public class CategoryRecyclerViewAdapter extends
 
     }
 
+
     /**
-     * BlockListViewHolder that hold the view of a block displaying a category
-     * TODO adapt according to display mode!
+     *
+     * @param holder
+     * @param position
      */
+    private void onBindViewHolderSelectMode(final ViewHolder holder, final int position) {
+
+    }
+
+
+        /**
+         * BlockListViewHolder that hold the view of a block displaying a category
+         */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public View view;
+        // Edit Mode Attributes
         public TextView catTextView;
         public Button newTaskButton;
+
+        // Select Mode Attributes
+        public CheckBox catCheckBox;
+
+        // Common Attributes
         public RecyclerView taskListRecyclerView;
         public String catName;
         // Each BlockListViewHolder must have its own TaskRecyclerViewAdapter
@@ -298,11 +321,18 @@ public class CategoryRecyclerViewAdapter extends
 
         public ViewHolder(View view) {
             super(view);
-
             this.view = view;
+
+            // Edit Mode
             this.catTextView = (TextView) view.findViewById(R.id.textViewCatName);
             this.newTaskButton = (Button) view.findViewById(R.id.button_add_task);
-            this.taskListRecyclerView = (RecyclerView) view.findViewById(R.id.task_list_recycler_view);
+
+            // Select Mode
+            this.catCheckBox = (CheckBox) view.findViewById(R.id.checkboxCat);
+
+            // Common
+            this.taskListRecyclerView = (RecyclerView)
+                    view.findViewById(R.id.task_list_recycler_view);
         }
 
         /**
