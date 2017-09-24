@@ -2,8 +2,10 @@ package de.tud.nhd.petimo.controller;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +35,8 @@ public class PetimoController {
     private PetimoDbWrapper dbWrapper;
     private PetimoSharedPref sharedPref;
     private static Context context;
+
+
 
     private HashMap<String, Boolean> tags = new HashMap<>();
     //<---------------------------------------------------------------------------------------------
@@ -625,6 +629,29 @@ public class PetimoController {
         return true;
     }
 
+    /**
+     *
+     * @param lang
+     * @return
+     */
+    public int getLangId(String lang){
+        switch (lang){
+            case PetimoSharedPref.LANG_EN:
+            case PetimoSharedPref.LANG_DE:
+            case PetimoSharedPref.LANG_VI:
+                return PetimoSharedPref.LANGUAGES.indexOf(lang);
+            default:
+                return PetimoSharedPref.LANGUAGES.indexOf(PetimoSharedPref.LANG_EN);
+        }
+    }
+
+    public String getLangFromId(int id){
+        Log.d(TAG, "getLangFromId "+ id +" ===> " + PetimoSharedPref.LANGUAGES.get(id));
+        if (id < PetimoSharedPref.LANGUAGES.size() && id >= 0)
+            return PetimoSharedPref.LANGUAGES.get(id);
+        else
+            return PetimoSharedPref.LANG_EN;
+    }
 
 
     /**

@@ -8,14 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.security.MessageDigest;
-import java.util.concurrent.ExecutionException;
 
+import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.libs.HorizontalPicker;
 
 import de.tud.nhd.petimo.R;
@@ -70,6 +71,26 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Language
+        Spinner langSpinner = (Spinner) view.findViewById(R.id.spinnerLang);
+        langSpinner.setSelection(
+                PetimoController.getInstance().getLangId(
+                        PetimoSharedPref.getInstance().getSettingsString(
+                                PetimoSharedPref.SETTINGS_LANGUAGE, PetimoSharedPref.LANG_EN)));
+        langSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                PetimoSharedPref.getInstance().setSettingsString(
+                        PetimoSharedPref.SETTINGS_LANGUAGE,
+                        PetimoController.getInstance().getLangFromId(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         // Demo
         Button demoButton = (Button) getActivity().findViewById(R.id.button_demo);
@@ -129,7 +150,6 @@ public class SettingsFragment extends Fragment {
             public void onItemSelected(int index) {
                 PetimoSharedPref.getInstance().
                         setSettingsInt(PetimoSharedPref.SETTINGS_OVERNIGHT_THRESHOLD, index);
-                Log.d(TAG, "chosen ====> " + index);
             }
         });
     }

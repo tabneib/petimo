@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -55,6 +56,9 @@ public class PetimoSharedPref {
     public static final String LANG_VI = "vi";
     public static final String LANG_EN = "en";
     public static final String LANG_DE = "de";
+    // This order is fixed
+    public static final ArrayList<String> LANGUAGES =
+            new ArrayList(Arrays.asList(new String[]{LANG_EN, LANG_DE, LANG_VI}));
 
     public static final String SETTINGS_OVERNIGHT_THRESHOLD =
             "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_OVERNIGHT_THRESHOLD";
@@ -481,6 +485,7 @@ public class PetimoSharedPref {
                         // Default is English
                         settingsEditor.putString(tag, LANG_EN);
                 }
+                settingsEditor.apply();
                 break;
             default:
                 throw new SettingsException("setSettingsString: Unknown settings tag ==> " + tag);

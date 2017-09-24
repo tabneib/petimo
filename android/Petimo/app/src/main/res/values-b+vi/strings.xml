@@ -27,6 +27,13 @@
         <item>Cao Nhất</item>
     </string-array>
 
+    <!-- The content (and order) of this array must be identical with the one in PetimoController-->
+    <string-array name="languages">
+        <item>Tiếng Anh</item>
+        <item>Tiếng Đức</item>
+        <item>Tiếng Việt</item>
+    </string-array>
+
 
     <!-- Short text ######################################################################-->
 
@@ -45,6 +52,8 @@
     <string name="colon_start_at">Bắt đầu lúc:</string>
     <string name="colon_started_at">Đã bắt đầu lúc:</string>
     <string name="colon_stop_at">Dừng lúc:</string>
+    <string name="colon_language">Ngôn ngữ:</string>
+
 
 
     <!-- Common button text -->
