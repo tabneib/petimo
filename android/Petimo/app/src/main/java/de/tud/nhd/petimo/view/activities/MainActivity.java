@@ -1,9 +1,12 @@
 package de.tud.nhd.petimo.view.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,12 +26,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
 import de.tud.nhd.petimo.model.MonitorBlock;
+import de.tud.nhd.petimo.model.PetimoSharedPref;
+import de.tud.nhd.petimo.utils.PetimoContextWrapper;
 import de.tud.nhd.petimo.view.fragments.DemoFragment;
 import de.tud.nhd.petimo.view.fragments.EditBlocksFragment;
 import de.tud.nhd.petimo.view.fragments.EditTasksFragment;
@@ -68,9 +76,23 @@ public class MainActivity extends AppCompatActivity
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
 
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        PetimoController.setContext(newBase);
+        this.controller = PetimoController.getInstance();
+        // Update Language
+        super.attachBaseContext(PetimoContextWrapper.wrapLanguage(newBase, PetimoSharedPref.getInstance().
+                getSettingsString(PetimoSharedPref.SETTINGS_LANGUAGE, PetimoSharedPref.LANG_EN)));
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_main);
 
         // Set the action bar
@@ -111,11 +133,6 @@ public class MainActivity extends AppCompatActivity
 
         // Set the drawer toggle as the DrawerListener
         drawerLayout.addDrawerListener(drawerToggle);
-
-
-        // Initialize the controller
-        PetimoController.setContext(this);
-        this.controller = PetimoController.getInstance();
 
 
         // Choose the displaying mode

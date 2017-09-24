@@ -50,6 +50,12 @@ public class PetimoSharedPref {
     public static final String SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS =
             "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS";
 
+    public static final String SETTINGS_LANGUAGE =
+            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_LANGUAGE";
+    public static final String LANG_VI = "vi";
+    public static final String LANG_EN = "en";
+    public static final String LANG_DE = "de";
+
     public static final String SETTINGS_OVERNIGHT_THRESHOLD =
             "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_OVERNIGHT_THRESHOLD";
 
@@ -465,6 +471,17 @@ public class PetimoSharedPref {
                 settingsEditor.putString(tag, content);
                 settingsEditor.apply();
                 break;
+            case SETTINGS_LANGUAGE:
+                switch (content){
+                    case LANG_VI:
+                    case LANG_DE:
+                        settingsEditor.putString(tag, content);
+                        break;
+                    default:
+                        // Default is English
+                        settingsEditor.putString(tag, LANG_EN);
+                }
+                break;
             default:
                 throw new SettingsException("setSettingsString: Unknown settings tag ==> " + tag);
         }
@@ -509,12 +526,13 @@ public class PetimoSharedPref {
     /**
      *
      * @param tag
-     * @param defaultValue
+     * @param defaultValue TODO passing null to use app default value
      * @return
      */
     public String getSettingsString(String tag, String defaultValue){
         switch (tag){
             case SETTINGS_MONITORED_TASKS_SORT_ORDER:
+            case SETTINGS_LANGUAGE:
                 return settingPref.getString(tag, defaultValue);
             default:
                 throw new SettingsException("getSettingsString: Unknown settings tag ==> " + tag);
