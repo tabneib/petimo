@@ -1,0 +1,20 @@
+
+
+
+
+	[+] Database: 
+		[+] Change to ID-References
+		[+] Adding new columns:
+			Category: status, deleted_date, note
+			Task:	  status, deleted_sate, note
+			Monitor:  status, note
+
+	[+] App:
+		[+] (secret) Admin Activity
+		[+] Ability to edit cats/tasks/blocks
+		[+] Step by step change to use activities instead of fragments for major activities of the app.
+		[+] Some issues:
+			[+] Handle the case a monitor passes throug multiple days
+			[+] Handle the change of OvThreshold made by user 
+
+
