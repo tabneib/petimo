@@ -195,8 +195,11 @@ public class ModeOffFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Up date the cat/task displayed on start monitor button
-                updateStartButtonText(catSpinner.getSelectedItem().toString(),
-                        taskSpinner.getSelectedItem().toString());
+                // bug: If db is empty, only catSpinner is empty but not taskSpinner, so we have
+                // to check for this case
+                if (catSpinner.getSelectedItem() != null)
+                    updateStartButtonText(catSpinner.getSelectedItem().toString(),
+                            taskSpinner.getSelectedItem().toString());
             }
 
             @Override

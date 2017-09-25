@@ -60,7 +60,7 @@ public class DemoFragment extends Fragment {
                 new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                demo.execute();
+                demo.executeDemo();
             }
         });
     }

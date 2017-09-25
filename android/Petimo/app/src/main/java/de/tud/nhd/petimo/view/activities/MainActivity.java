@@ -3,10 +3,8 @@ package de.tud.nhd.petimo.view.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,7 +14,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,14 +23,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.Locale;
-
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
 import de.tud.nhd.petimo.model.MonitorBlock;
+import de.tud.nhd.petimo.model.PetimoDbDemo;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.utils.PetimoContextWrapper;
 import de.tud.nhd.petimo.view.fragments.DemoFragment;
@@ -137,6 +133,10 @@ public class MainActivity extends AppCompatActivity
 
         // Choose the displaying mode
         chooseDisplay(0);
+
+        // debug
+        //Log.d(TAG, "gonna run the db demo!");
+        //new PetimoDbDemo(this).executeDemo();
     }
 
     @Override
@@ -442,8 +442,9 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected Void doInBackground(Void... params) {
             while (!controller.isDbReady()){
+            //while (true){
                 try{
-                    //Log.d(TAG, "waiting for DB");
+                    Log.d(TAG, "waiting for DB");
                     Thread.sleep(20);
                 }
                 catch (Exception e){

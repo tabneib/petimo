@@ -32,7 +32,7 @@ public class SettingsFragment extends Fragment {
     public static final String TAG = "SettingsFragment";
     private static SettingsFragment _instance;
     private PetimoDbDemo demo;
-    // password to execute demo
+    // password to executeDemo demo
     private final String md5Pwd = "6b3e58be7169f200c66594f235c0a665";
 
     private HorizontalPicker ovPicker;
@@ -120,7 +120,7 @@ public class SettingsFragment extends Fragment {
 
 
                                                     if (sb.toString().equals(md5Pwd)) {
-                                                        demo.execute();
+                                                        demo.executeDemo();
                                                         Toast.makeText(getActivity(),
                                                                 "Demo executed!",
                                                                 Toast.LENGTH_LONG).show();

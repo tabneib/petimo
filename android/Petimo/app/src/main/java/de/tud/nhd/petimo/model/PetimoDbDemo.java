@@ -1,6 +1,7 @@
 package de.tud.nhd.petimo.model;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -53,14 +54,14 @@ public class PetimoDbDemo {
         // Prepare calendar & time
         this.calendar = Calendar.getInstance();
         // Set date to yesterday
-        Log.d(TAG, "Before: Calendar.day ===> " + calendar.get(Calendar.DAY_OF_MONTH));
+        //Log.d(TAG, "Before: Calendar.day ===> " + calendar.get(Calendar.DAY_OF_MONTH));
         calendar.setTimeInMillis(calendar.getTimeInMillis() - 24*3600*100);
         // Set the time of calendar to 00:00 yesterday
         calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH) - 1, 0, 0, 0);
-        Log.d(TAG, "After: Calendar.day ===> " + calendar.get(Calendar.DAY_OF_MONTH));
+        //Log.d(TAG, "After: Calendar.day ===> " + calendar.get(Calendar.DAY_OF_MONTH));
         long yesterdayBeginTime = calendar.getTimeInMillis();
-        Log.d(TAG, "yesterdayBeginTime ===> " + yesterdayBeginTime);
+        //Log.d(TAG, "yesterdayBeginTime ===> " + yesterdayBeginTime);
 
 
         // Minutes from 00:00
@@ -84,8 +85,8 @@ public class PetimoDbDemo {
 
         // Convert to ms
         for (int i = 0; i < times.length; i++) {
-            Log.d(TAG, PetimoTimeUtils.getTimeFromMs(times[i]*60*1000) + " -> " +
-                    ((times[i] * 60 * 1000) + yesterdayBeginTime));
+            /*Log.d(TAG, PetimoTimeUtils.getTimeFromMs(times[i]*60*1000) + " -> " +
+                    ((times[i] * 60 * 1000) + yesterdayBeginTime));*/
 
             times[i] = (times[i] * 60 * 1000) + yesterdayBeginTime;
 
@@ -123,72 +124,102 @@ public class PetimoDbDemo {
             blocks.add(i, block);
         }
 
-        for (String[] block : blocks)
-            Log.d(TAG, "added to blocks: " + block[4]);
+        /*for (String[] block : blocks)
+            Log.d(TAG, "added to blocks: " + block[4]);*/
 
     }
 
     /**
      * Init the example database and run the basic features
      */
-    public boolean execute(){
+    public void executeDemo(){
+
+
+        // First, wait for db
         if (!dbWrapper.isReady()){
-            Log.d(TAG,"Database wrapper is not yet ready! Please try again");
-            return false;
+            //Log.d(TAG,"Database wrapper is not yet ready! Please try again");
+            //return false;
+            WaitForDb task = new WaitForDb();
+            task.execute((Void) null);
+            return;
         }
-        else{
-            Log.d(TAG, "Dropping tables");
-            dbWrapper.dropAll();
-            Log.d(TAG, "Dropping tables: done");
-            Log.d(TAG, "Creating tables");
-            dbWrapper.createAll();
-            Log.d(TAG, "Creating tables: done");
-            Log.d(TAG, "Inserting Categories");
-            for (String[] cat: cats)
-                try {
-                    dbWrapper.insertCategory(cat[0], Integer.parseInt(cat[1]));
-                } catch (DbErrorException e) {
-                    e.printStackTrace();
-                } catch (InvalidInputNameException e) {
-                    e.printStackTrace();
-                } catch (InvalidCategoryException e) {
-                    e.printStackTrace();
-                }
-            Log.d(TAG, "Inserting Categories: done");
-            Log.d(TAG, "Inserting Tasks");
-            for (String[] task: tasks)
-                try {
-                    dbWrapper.insertTask(task[0], task[1], Integer.parseInt(task[2]));
-                } catch (DbErrorException e) {
-                    e.printStackTrace();
-                } catch (InvalidInputNameException e) {
-                    e.printStackTrace();
-                } catch (InvalidCategoryException e) {
-                    e.printStackTrace();
-                }
-            Log.d(TAG, "Inserting Tasks: done");
-            Log.d(TAG, "Inserting Monitor Blocks");
-            for (String[] block: blocks)
-                try {
-                    dbWrapper.insertMonitorBlock(block[0], block[1], Long.parseLong(block[2]),
-                            Long.parseLong(block[3]), Long.parseLong(block[4]),
-                            Integer.parseInt(block[5]), Integer.parseInt(block[6]),
-                            Integer.parseInt(block[7]));
-                } catch (DbErrorException e) {
-                    e.printStackTrace();
-                } catch (InvalidCategoryException e) {
-                    e.printStackTrace();
-                }
-            Log.d(TAG, "Inserting Monitor Blocks: done");
 
-            Log.d(TAG, "Fetching day");
-            MonitorDay mDay = dbWrapper.getDay(Integer.parseInt(DATE_YESTERDAY));
-            Log.d(TAG, "Fetching day: done");
-            Log.d(TAG, mDay.toXml(0));
-            System.out.println("----------------------------------------------");
-            dbWrapper.generateXml();
+        Log.d(TAG, "Resetting Database");
+        dbWrapper.resetDb();
+        Log.d(TAG, "Resetting Database: done");
 
-            return true;
+        Log.d(TAG, "Inserting Categories");
+        for (String[] cat: cats)
+            try {
+                dbWrapper.insertCategory(cat[0], Integer.parseInt(cat[1]));
+            } catch (DbErrorException e) {
+                e.printStackTrace();
+            } catch (InvalidInputNameException e) {
+                e.printStackTrace();
+            } catch (InvalidCategoryException e) {
+                e.printStackTrace();
+            }
+        Log.d(TAG, "Inserting Categories: done");
+        Log.d(TAG, "Inserting Tasks");
+        for (String[] task: tasks)
+            try {
+                dbWrapper.insertTask(task[0], task[1], Integer.parseInt(task[2]));
+            } catch (DbErrorException e) {
+                e.printStackTrace();
+            } catch (InvalidInputNameException e) {
+                e.printStackTrace();
+            } catch (InvalidCategoryException e) {
+                e.printStackTrace();
+            }
+        Log.d(TAG, "Inserting Tasks: done");
+        Log.d(TAG, "Inserting Monitor Blocks");
+        for (String[] block: blocks)
+            try {
+                dbWrapper.insertMonitorBlock(block[0], block[1], Long.parseLong(block[2]),
+                        Long.parseLong(block[3]), Long.parseLong(block[4]),
+                        Integer.parseInt(block[5]), Integer.parseInt(block[6]),
+                        Integer.parseInt(block[7]));
+            } catch (DbErrorException e) {
+                e.printStackTrace();
+            } catch (InvalidCategoryException e) {
+                e.printStackTrace();
+            }
+        Log.d(TAG, "Inserting Monitor Blocks: done");
+
+        Log.d(TAG, "Fetching day");
+        MonitorDay mDay = dbWrapper.getDay(Integer.parseInt(DATE_YESTERDAY));
+        Log.d(TAG, "Fetching day: done");
+        Log.d(TAG, mDay.toXml(0));
+        System.out.println("----------------------------------------------");
+        dbWrapper.generateXml();
+    }
+
+
+    /**
+     * Busy loop until the db wrapper is ready. This is only done when the app is starting up
+     */
+    private class WaitForDb extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Log.d(TAG, "waitForDb: doInBackground");
+             while (!dbWrapper.isReady()){
+                try{
+                    Log.d(TAG, "waiting for DB");
+                    Thread.sleep(20);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.d(TAG, "DB ready.");
+            executeDemo();
         }
     }
 }

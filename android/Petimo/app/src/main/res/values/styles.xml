@@ -77,14 +77,20 @@
     <style name="PetimoTheme.Light.Spinner" parent="android:Widget.Material.Spinner.Underlined">
         <item name="android:textSize">20sp</item>
     </style>
+
     <style name="PetimoTheme.Light.EditText" parent="@android:style/Widget.EditText">
         <item name="android:textColor">@color/textColor</item>
     </style>
+
     <style name="PetimoTheme.Light.WidgetDialog" parent="Theme.AppCompat.Light.Dialog.MinWidth">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/textColor</item>
         <item name="android:windowBackground">@color/background_primary</item>
     </style>
+
+    <style name="PetimoTheme.Light.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="PetimoTheme.Light.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 </resources>

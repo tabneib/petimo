@@ -28,15 +28,22 @@ public class PetimoDbWrapper {
     private SQLiteDatabase writableDb = null;
     private SQLiteDatabase readableDb = null;
     private SQLiteOpenHelper dbHelper = null;
+    //public static final int dbVersion = 1;
+    // 25.09.2017
+    public static final int dbVersion = 2;
+
 
     private static Context context;
+
 
     //<---------------------------------------------------------------------------------------------
     // Init
     // -------------------------------------------------------------------------------------------->
 
+    // TODO: Memory leaks! Use Application context here?
     private PetimoDbWrapper(Context context){
-        dbHelper = new PetimoDbHelper(context);
+        dbHelper = new PetimoDbHelper(context, dbVersion);
+
         new GetReadableDbTask(dbHelper).execute((Void) null);
         new GetWritableDbTask(dbHelper).execute((Void) null);
 
@@ -549,45 +556,14 @@ public class PetimoDbWrapper {
     // Core - Database - Tables
     //--------------------------------------------------------------------------------------------->
 
-    public void dropCategories(){
-        String query = "DROP TABLE " + PetimoContract.Categories.TABLE_NAME;
-        writableDb.execSQL(query);
-    }
 
-    public void dropTasks(){
-        String query = "DROP TABLE " + PetimoContract.Tasks.TABLE_NAME;
-        writableDb.execSQL(query);
-    }
-
-
-    public void dropMonitor(){
-        String query = "DROP TABLE " + PetimoContract.Monitor.TABLE_NAME;
-        writableDb.execSQL(query);
-    }
-
-
-    public void dropAll(){
-        dropCategories();
-        dropMonitor();
-        dropTasks();
-    }
-
-    public void createCategories(){
-        writableDb.execSQL(PetimoDbHelper.SQL_CREATE_CATEGORIES);
-    }
-
-    public void createTasks(){
-        writableDb.execSQL(PetimoDbHelper.SQL_CREATE_TASKS);
-    }
-
-    public void createMonitor(){
-        writableDb.execSQL(PetimoDbHelper.SQL_CREATE_MONITOR);
-    }
-
-    public void createAll(){
-        createCategories();
-        createTasks();
-        createMonitor();
+    /**
+     * This will delete all stored data! Only use after backing up data!
+     */
+    public void resetDb(){
+        writableDb.delete(PetimoContract.Categories.TABLE_NAME, null, null);
+        writableDb.delete(PetimoContract.Tasks.TABLE_NAME, null, null);
+        writableDb.delete(PetimoContract.Monitor.TABLE_NAME, null, null);
     }
 
 
@@ -603,6 +579,8 @@ public class PetimoDbWrapper {
     public boolean isReady(){
         // Wrapper is ready iff both readable and writable databases are not null
         // TODO verify this approach
+        Log.d(TAG, "readableDb!=null ===> " + (readableDb!=null));
+        Log.d(TAG, "writableDb!=null ===> " + (writableDb!=null));
         return (readableDb!=null && writableDb!=null);
     }
 
