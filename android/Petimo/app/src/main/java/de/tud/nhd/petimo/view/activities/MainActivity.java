@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
         implements OnModeFragmentInteractionListener, OnEditTaskFragmentInteractionListener,
         OnEditDayFragmentInteractionListener, OnEditBlocksMenuFragmentInteractionListener {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "PetimoMainActivity";
 
     public static final String EDIT_BLOCKS_FRAGMENT_TAG = TAG + "VIEW_BLOCKS_FRAGMENT_TAG";
     public static final String EDIT_TASKS_FRAGMENT_TAG = TAG + "EDIT_TASKS_FRAGMENT_TAG";
@@ -61,6 +61,11 @@ public class MainActivity extends AppCompatActivity
     public static final String MODE_ON_FRAGMENT_TAG = TAG + "MODE_ON_FRAGMENT_TAG";
     Toolbar toolBar;
     PetimoController controller;
+
+    /**
+     * static field to store the currently displayed fragment
+     */
+    public static int displayFragment = 0;
 
     //ModeOffFragment modeOffFragment;
     //ModeOnFragment modeOnFragment;
@@ -75,6 +80,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void attachBaseContext(Context newBase) {
+        Log.d(TAG, "attachBaseContext");
         PetimoController.setContext(newBase);
         this.controller = PetimoController.getInstance();
         // Update Language
@@ -86,8 +92,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
 
         setContentView(R.layout.activity_main);
 
@@ -132,12 +136,13 @@ public class MainActivity extends AppCompatActivity
 
 
         // Choose the displaying mode
-        chooseDisplay(0);
+        chooseDisplay(displayFragment);
 
         // debug
         //Log.d(TAG, "gonna run the db demo!");
         //new PetimoDbDemo(this).executeDemo();
     }
+
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -152,12 +157,6 @@ public class MainActivity extends AppCompatActivity
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-
 
     /**
      *
@@ -165,7 +164,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void chooseDisplay(int position) {
 
-        Log.d(TAG, "Changing display to ====> " + position);
+        //Log.d(TAG, "Changing display to " + position);
         // If the database wrapper is not yet ready
         if (!controller.isDbReady()) {
             new WaitForDb(position).execute((Void) null);
@@ -176,26 +175,32 @@ public class MainActivity extends AppCompatActivity
         switch (position) {
             case 1:
                 //Monitored Tasks
+                displayFragment = 1;
                 displayFragment(EDIT_BLOCKS_FRAGMENT_TAG);
                 break;
             case 2:
                 //Statistics
+                displayFragment = 2;
                 displayFragment(STATISTICS_FRAGMENT_TAG);
                 break;
             case 3:
                 //Manage Tasks
+                displayFragment = 3;
                 displayFragment(EDIT_TASKS_FRAGMENT_TAG);
                 break;
             case 4:
                 //Setting
+                displayFragment = 4;
                 displayFragment(SETTING_FRAGMENT_TAG);
                 break;
             case 5:
                 //Demo
+                displayFragment = 5;
                 displayFragment(DEMO_FRAGMENT_TAG);
                 break;
             default:
                 //Monitor
+                displayFragment = 0;
                 setTitle(titleList[0]);
                 chooseModeToDisplay();
 
@@ -203,6 +208,7 @@ public class MainActivity extends AppCompatActivity
         // Highlight the selected item on the navigation drawer,
         // update the title
         drawerList.setItemChecked(position, true);
+        //Log.d(TAG, "Changed display to " + position);
     }
 
     /**
@@ -378,7 +384,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
+    // TODO: what is this??? remove it!
     @Override
     public void onRemovingMonitorBlock(MonitorBlock item) {
 
@@ -444,7 +450,7 @@ public class MainActivity extends AppCompatActivity
             while (!controller.isDbReady()){
             //while (true){
                 try{
-                    Log.d(TAG, "waiting for DB");
+                    //Log.d(TAG, "waiting for DB");
                     Thread.sleep(20);
                 }
                 catch (Exception e){
@@ -457,7 +463,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Log.d(TAG, "DB ready.");
+            //Log.d(TAG, "DB ready.");
             chooseDisplay(position);
         }
     }
