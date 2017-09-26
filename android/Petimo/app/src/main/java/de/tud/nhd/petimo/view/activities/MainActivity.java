@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        Log.d(TAG, "attachBaseContext");
         PetimoController.setContext(newBase);
         this.controller = PetimoController.getInstance();
         // Update Language
@@ -258,7 +257,22 @@ public class MainActivity extends AppCompatActivity
                     fragment = ModeOnFragment.getInstance();
                     break;
             }
-            ft.replace(R.id.content_frame, fragment, fTag).commit();
+            try {
+                // Can not perform this action after onSaveInstanceState Bug
+                // solution: commitAllowingStateLoss()
+                // see: https://stackoverflow.com/questions/7575921
+                ft.replace(R.id.content_frame, fragment, fTag).commitAllowingStateLoss();
+            }
+            catch (IllegalStateException e){
+                // There is still a bug here: "Activity has been destroyed"
+                // This may (very probably) be due to using the async task WaitForDb
+                // When the user opens the app and rotates the screen at the same time, the activity
+                // is created and WaitForDb is executed. Meanwhile, this activity instance is
+                // destroyed due to screen rotation. Hence, when the onPostExecute callback of
+                // WaitForDb call chooseDisplay() -> chooseModeToDisplay() -> displayFragment()
+                // the exception is thrown. <= when/where/why exactly ?
+                e.printStackTrace();
+            }
         }
     }
 
