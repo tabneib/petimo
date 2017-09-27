@@ -11,7 +11,7 @@ import de.tud.nhd.petimo.utils.PetimoTimeUtils;
  */
 
 public class MonitorDay {
-    private static final String TAG = "MonitorBlock";
+    public static final String TAG = "MonitorDay";
     private List<MonitorBlock> monitorBlocks;
     private int date;
 
@@ -31,7 +31,7 @@ public class MonitorDay {
      */
     //unused
     public boolean removeBlock(int position){
-        Log.d(TAG, "Trying to remove the Block at position ====> " + position);
+        //Log.d(TAG, "Trying to remove the Block at position ====> " + position);
         if (monitorBlocks == null || monitorBlocks.isEmpty()
                 || monitorBlocks.size() < position + 1)
             return false;

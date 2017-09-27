@@ -72,8 +72,8 @@ public class BlockRecyclerViewAdapter extends
 
         holder.textViewTime.setText(timeInfo);
 
-        String monitorInfo = "    " + blockList.get(position).getCategory() + " / " +
-                blockList.get(position).getTask();
+        String monitorInfo = "    " + blockList.get(position).getCatName() + " / " +
+                blockList.get(position).getTaskName();
         holder.textViewData.setText(monitorInfo);
 
 

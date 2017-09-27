@@ -6,39 +6,47 @@ package de.tud.nhd.petimo.model;
 
 public class MonitorBlock {
 
-    private int id;
-    private String task;
-    private String category;
-    private long start;
-    private long end;
-    private long duration;
-    private int date;
-    private int weekDay;
-    private boolean overNight;
+    // status constants
+    public static final String ACTIVE = "ACTIVE";
+    public static final String DEACTIVE = "DEACTIVE";
 
-    public MonitorBlock(int id, String task, String category, long start, long end, long duration,
-                        int date, int weekDay, int overNight) {
+    // column fields
+    private final int id;
+    private final long start;
+    private final long end;
+    private final long duration;
+    private final int date;
+    private final int weekDay;
+    private final boolean overNight;
+    private final int ovThreshold;
+    private final String status;
+    private final String note;
+    private final int taskId;
+    private final int catId;
+    private final String taskName;
+    private final String catName;
+
+    public MonitorBlock(int id, String taskName, int taskId, String catName, int catId, long start,
+                        long end, long duration, int date, int weekDay, int overNight,
+                        int ovThreshold, String status, String note) {
         this.id = id;
-        this.task = task;
-        this.category = category;
+        this.taskId = taskId;
+        this.catId = catId;
+        this.taskName = taskName;
+        this.catName = catName;
         this.start = start;
         this.end = end;
         this.duration = duration;
         this.date = date;
         this.weekDay = weekDay;
         this.overNight = overNight == 0 ? false : true;
+        this.ovThreshold = ovThreshold;
+        this.status = status;
+        this.note = note;
     }
 
     public int getId() {
         return id;
-    }
-
-    public String getTask() {
-        return task;
-    }
-
-    public String getCategory() {
-        return category;
     }
 
     public long getStart() {
@@ -65,8 +73,39 @@ public class MonitorBlock {
         return overNight;
     }
 
+    public boolean isOverNight() {
+        return overNight;
+    }
+
+    public int getOvThreshold() {
+        return ovThreshold;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public int getCatId() {
+        return catId;
+    }
+
+    public String getCatName(){
+        return this.catName;
+    }
+
+    public String getTaskName(){
+        return this.taskName;
+    }
     /**
-     * TODO comment em
+     * TODO: get Task/Cat name by ID!
      * @return
      */
     public String toXml(int indentLevel){
@@ -74,8 +113,8 @@ public class MonitorBlock {
         for (int i = 1; i <= indentLevel; i++)
             indent = indent + "\t";
 
-        String xml = indent + "<MonitorBlock id='" + this.id + "' task='" + this.task + "' category='" +
-                this.category + "' start='" + this.start + "' end='" + this.end + "' duration='" +
+        String xml = indent + "<MonitorBlock id='" + this.id + "' task='" + this.taskId + "' category='" +
+                this.catId + "' start='" + this.start + "' end='" + this.end + "' duration='" +
                 this.duration + "' date='" + this.date + "' weekday='" +
                 this.weekDay + "' overnight='" + this.overNight+ "' />";
         return xml;

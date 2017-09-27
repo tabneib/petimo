@@ -3,7 +3,6 @@ package de.tud.nhd.petimo.view.fragments.lists.adapters;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -181,7 +180,7 @@ public class CategoryRecyclerViewAdapter extends
                                                                 getName(),
                                                         holder.taskAdapter.taskList.get(
                                                                 vHolder.getLayoutPosition()).
-                                                                getCategory());
+                                                                getCatName());
 
                                                 holder.taskAdapter.
                                                         notifyItemRemoved(vHolder.
@@ -227,7 +226,7 @@ public class CategoryRecyclerViewAdapter extends
                                                 holder.taskAdapter.taskList.get(
                                                         vHolder.getLayoutPosition()).getName(),
                                                 holder.taskAdapter.taskList.get(
-                                                        vHolder.getLayoutPosition()).getCategory());
+                                                        vHolder.getLayoutPosition()).getCatName());
 
                                         holder.taskAdapter.
                                                 notifyItemRemoved(vHolder.getLayoutPosition());

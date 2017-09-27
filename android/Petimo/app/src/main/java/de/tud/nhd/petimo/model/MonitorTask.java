@@ -5,16 +5,33 @@ package de.tud.nhd.petimo.model;
  */
 
 public class MonitorTask {
+
+    // status constraints
+    public static final String ACTIVE = "ACTIVE";
+    public static final String DEACTIVE = "DEACTIVE";
+    public static final String DELETED = "DELETED";
+
+    // column fields
     private final int id;
     private final String name;
-    private final String category;
     private final int priority;
+    private final String status;
+    private final long deleteTime;
+    private final String note;
+    private final String catName;
+    private final int catId;
 
-    public MonitorTask(int id, String name, String category, int priority) {
+
+    public MonitorTask(int id, String name, String catName, int catId, int priority, String status,
+                       long deleteTime, String note) {
         this.id = id;
         this.name = name;
-        this.category = category;
+        this.catName = catName;
         this.priority = priority;
+        this.status = status;
+        this.deleteTime = deleteTime;
+        this.note = note;
+        this.catId = catId;
     }
 
     public int getId() {
@@ -25,16 +42,32 @@ public class MonitorTask {
         return name;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
     public int getPriority() {
         return priority;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public long getDeleteTime() {
+        return deleteTime;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public int getCatId() {
+        return catId;
+    }
+
+    public String getCatName(){
+        return this.catName;
+    }
+
     /**
-     * TODO comment em
+     * TODO Get Cat/Task name by IDs !
      * @return
      */
     public String toXml(int indentLevel){
@@ -43,8 +76,9 @@ public class MonitorTask {
             indent = indent + "\t";
 
         String xml = indent + "<MonitorCategory id='" + this.id + "' name='" +
-                this.name + "' category='" + this.category + "' priority='"
+                this.name + "' category='" + this.catId + "' priority='"
                 + this.priority + "' />";
         return xml;
     }
+
 }

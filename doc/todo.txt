@@ -4,6 +4,13 @@
 
 done	[+] Database: 
 		[+] Change to ID-References
+			Model
+done				MonitorCategory
+done				MonitorTask
+done				MonitorBlock
+done				PetimoDbWrapper
+				PetimoSharedPref
+				Fragments
 done		[+] Adding new columns:
 			Category: status, delete_time, note
 			Task:	  status, delete_time, note

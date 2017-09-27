@@ -1,7 +1,6 @@
 package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import de.tud.nhd.petimo.model.MonitorTask;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -71,7 +69,7 @@ public class TaskRecyclerViewAdapter extends
 
                 boolean notFound = true;
                 for (String[] catTask : PetimoSharedPref.getInstance().getSelectedTasks()) {
-                    if (catTask[0].equals(holder.task.getCategory()) &&
+                    if (catTask[0].equals(holder.task.getCatName()) &&
                             catTask[1].equals(holder.task.getName())){
                         onBind = true;
                         holder.taskCheckBox.setChecked(true);
@@ -131,10 +129,10 @@ public class TaskRecyclerViewAdapter extends
                                         CompoundButton buttonView, boolean isChecked) {
                                     if (isChecked)
                                         PetimoSharedPref.getInstance().addSelectedTask(
-                                                task.getCategory(), task.getName());
+                                                task.getCatName(), task.getName());
                                     else
                                         PetimoSharedPref.getInstance().removeSelectedTask(
-                                                task.getCategory(), task.getName());
+                                                task.getCatName(), task.getName());
                                     // Rebind the corresponding category
                                     //catAdapter.onBindViewHolder(catViewHolder, catPosition);
                                     // Notify the corresponding cat viewHolder to update its check box
