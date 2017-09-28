@@ -2,7 +2,6 @@ package de.tud.nhd.petimo.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +10,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import de.tud.nhd.petimo.R;
+import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.utils.StringParsingException;
 import de.tud.nhd.petimo.utils.PetimoStringUtils;
 
@@ -76,7 +76,7 @@ public class PetimoSharedPref {
 
     public static final String TIME = "time";
     public static final String FREQUENCY = "frequency";
-    public static final String NONE = "none";
+    public static final String UNSORTED = "none";
     //<---------------------------------------------------------------------------------------------
     // Init
     // -------------------------------------------------------------------------------------------->
@@ -97,7 +97,6 @@ public class PetimoSharedPref {
             throw new Exception("Cannot initialize multiple instances of PetimoSharedPref!");
         else {
             context = kontext;
-            Log.d(TAG, "Initialized!");
         }
     }
 
@@ -115,16 +114,18 @@ public class PetimoSharedPref {
     // -------------------------------------------------------------------------------------------->
 
     //------------------------------------------ Write -------------------------------------------->
+
     /**
      * Save information about the ongoing monitor into the preferences
-     * @param category  category of the ongoing monitor
-     * @param task      task of the ongoing monitor
+     * Database version: V.2
+     * @param catId     category of the ongoing monitor
+     * @param taskId    task of the ongoing monitor
      * @param date      date of the ongoing monitor
      * @param start     start of the ongoing monitor
      */
-    public void setLiveMonitor(String category, String task, int date, long start){
-        monitorEditor.putString(MONITOR_LIVE_CAT, category);
-        monitorEditor.putString(MONITOR_LIVE_TASK, task);
+    public void setLiveMonitor(int catId, int taskId, int date, long start){
+        monitorEditor.putInt(MONITOR_LIVE_CAT, catId);
+        monitorEditor.putInt(MONITOR_LIVE_TASK, taskId);
         monitorEditor.putInt(MONITOR_LIVE_DATE, date);
         monitorEditor.putLong(MONITOR_LIVE_START, start);
         monitorEditor.apply();
@@ -143,17 +144,20 @@ public class PetimoSharedPref {
 
     /**
      * Save or update information about monitored task
-     * @param category  the category of the given monitored task
-     * @param task  the
+     * Database version: V.2
+     * @param catId  the category of the given monitored task
+     * @param taskId  the task of the given monitored task
+     * @param monitorTime the time point the monitor stopped
      */
-    public void updateMonitoredTask(String category, String task, long time){
-        ArrayList<String[]> monitoredTasks = this.getMonitored(this.NONE);
+    public void updateMonitoredTask(int catId, int taskId, long monitorTime){
+        ArrayList<String[]> monitoredTasks = this.getMonitored(this.UNSORTED);
         boolean notExist = true;
         if (monitoredTasks!=null){
             for (String[] item : monitoredTasks){
-                if(item[0].equals(category) && item[1].equals(task)){
+                if(item[0].equals(Integer.toString(catId)) &&
+                        item[1].equals(Integer.toString(taskId))){
                     // update time
-                    item[2] = Long.toHexString(time);
+                    item[2] = Long.toHexString(monitorTime);
                     // update frequency;
                     item[3] = Integer.toString(Integer.parseInt(item[3]) + 1);
                     notExist = false;
@@ -163,17 +167,20 @@ public class PetimoSharedPref {
             if (notExist){
                 // Add a new item to the monitored task list
                 monitoredTasks.add(
-                        new String[]{category, task, Long.toHexString(time), Integer.toString(1)});
+                        new String[]{Integer.toString(catId), Integer.toString(taskId),
+                                Long.toHexString(monitorTime), Integer.toString(1)});
             }
         }
         else{
             // initialize
             monitoredTasks = new ArrayList<>();
             monitoredTasks.add(
-                    new String[]{category, task, Long.toHexString(time), Integer.toString(1)});
+                    new String[]{Integer.toString(catId), Integer.toString(taskId),
+                            Long.toHexString(monitorTime), Integer.toString(1)});
         }
 
-        monitorEditor.putString(MONITOR_MONITORED_TASKS, PetimoStringUtils.encode(monitoredTasks, 4));
+        monitorEditor.putString(
+                MONITOR_MONITORED_TASKS, PetimoStringUtils.encode(monitoredTasks, 4));
         monitorEditor.apply();
     }
 
@@ -188,7 +195,7 @@ public class PetimoSharedPref {
 
     /**
      * Save the sort order chosen by user to display monitored task.
-     * If the given value is NONE or invalid, the sort order is set to NONE
+     * If the given value is UNSORTED or invalid, the sort order is set to UNSORTED
      * @param sortOrder the given sort order
      */
     public void setUsrMonitoredSortOrder(String sortOrder){
@@ -200,7 +207,7 @@ public class PetimoSharedPref {
                 settingsEditor.putString(SETTINGS_MONITORED_TASKS_SORT_ORDER, TIME);
                 break;
             default:
-                settingsEditor.putString(SETTINGS_MONITORED_TASKS_SORT_ORDER, NONE);
+                settingsEditor.putString(SETTINGS_MONITORED_TASKS_SORT_ORDER, UNSORTED);
         }
         settingsEditor.apply();
     }
@@ -210,87 +217,100 @@ public class PetimoSharedPref {
      * @param cat   category of the task
      * @param task  the task
      */
+    /*@Deprecated
     public void setLastMonitored(String cat, String task){
         monitorEditor.putString(MONITOR_LAST_MONITORED_CATEGORY, cat);
         monitorEditor.putString(MONITOR_LAST_MONITORED_TASK, task);
         monitorEditor.apply();
-    }
+    }*/
 
     /**
-     *
-     * @param category
-     * @param task
+     * Stored the last monitored task
+     * Database version: V.2
+     * @param catId   ID of the category of the task
+     * @param taskId  ID of the task
      */
-    public void addSelectedTask(String category, String task){
-        ArrayList<String[]> selectedTasks = this.getSelectedTasks();
+    public void setLastMonitored(int catId, int taskId){
+        monitorEditor.putInt(MONITOR_LAST_MONITORED_CATEGORY, catId);
+        monitorEditor.putInt(MONITOR_LAST_MONITORED_TASK, taskId);
+        monitorEditor.apply();
+    }
+
+
+    /**
+     * Database version: V.2
+     * @param taskId
+     */
+    public void addSelectedTask(int taskId){
+        ArrayList<Integer> selectedTasks = this.getSelectedTasks();
         if (selectedTasks!=null){
             // If the cat/task is already there then do nothing
-            for (String[] item : selectedTasks)
-                if(item[0].equals(category) && item[1].equals(task))
-                    return;
+            if(selectedTasks.contains(taskId))
+                return;
             // Add a new item to the selected task list
-            selectedTasks.add(new String[]{category, task});
+            selectedTasks.add(taskId);
         }
         else{
             // initialize
             selectedTasks = new ArrayList<>();
-            selectedTasks.add(new String[]{category, task});
+            selectedTasks.add(taskId);
         }
         settingsEditor.putString(SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS,
-                PetimoStringUtils.encode(selectedTasks, 2));
+                PetimoStringUtils.encodeIntList(selectedTasks, 1));
         settingsEditor.apply();
     }
 
     /**
-     *
-     * @param category
-     * @param task
+     * Database version: V.2
+     * @param taskId
      */
-    public void removeSelectedTask(String category, String task){
-        ArrayList<String[]> selectedTasks = this.getSelectedTasks();
+    public void removeSelectedTask(int taskId){
+        ArrayList<Integer> selectedTasks = this.getSelectedTasks();
         if (selectedTasks!=null){
             boolean contained = false;
-            Iterator<String[]> selectedTasksIterator = selectedTasks.iterator();
+            Iterator<Integer> selectedTasksIterator = selectedTasks.iterator();
             while(selectedTasksIterator.hasNext()){
-                String[] item = selectedTasksIterator.next();
-                if(item[0].equals(category) && item[1].equals(task)){
+                int item = selectedTasksIterator.next();
+                if(item == taskId){
                     contained = true;
                     selectedTasksIterator.remove();
                 }
             }
             if (contained){
                 if (selectedTasks.isEmpty())
+                    // The last selected Task is removed, clear sharedPref entry
                     settingsEditor.putString(SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS, null);
                 else
                     settingsEditor.putString(SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS,
-                            PetimoStringUtils.encode(selectedTasks, 2));
+                            PetimoStringUtils.encodeIntList(selectedTasks, 1));
                 settingsEditor.apply();
             }
             else
-                // If the cat/task is not there then do nothing
+                // If the task is not there then do nothing
                 return;
         }
         return;
 
     }
 
-
     //------------------------------------------- Read -------------------------------------------->
 
     /**
-     * Return the category string of the ongoing monitor
-     * @return the category string, or null if there is no ongoing monitor
+     * Return the category id of the ongoing monitor
+     * Database version: V.2
+     * @return the category id, or -1 if there is no ongoing monitor
      */
-    public String getMonitorCat(){
-        return monitorPref.getString(MONITOR_LIVE_CAT, null);
+    public int getMonitorCatId(){
+        return monitorPref.getInt(MONITOR_LIVE_CAT, -1);
     }
 
     /**
-     * Return the task string of the ongoing monitor
-     * @return the task string, or null if there is no ongoing monitor
+     * Database version: V.2
+     * Return the task id of the ongoing monitor
+     * @return the task id, or -1 if there is no ongoing monitor
      */
-    public String getMonitorTask(){
-        return monitorPref.getString(MONITOR_LIVE_TASK, null);
+    public int getMonitorTaskId(){
+        return monitorPref.getInt(MONITOR_LIVE_TASK, -1);
     }
 
     /**
@@ -319,6 +339,7 @@ public class PetimoSharedPref {
 
     /**
      * Return a list of all monitored tasks
+     * Database version: V.2
      * @return  the list of monitored tasks, or null if there is no saved monitored task or
      *          some error occurs.
      *          Each item contains the category, the task, last monitored time, and the monitor
@@ -334,11 +355,11 @@ public class PetimoSharedPref {
             while (monitoredTaskIterator.hasNext()) {
                 String[] catTask = monitoredTaskIterator.next();
 
-                // Check if the cat/task is not yet removed by the user
-                if (!PetimoDbWrapper.getInstance().checkCatExists(catTask[0]) ||
-                        !PetimoDbWrapper.getInstance().checkTaskExists(catTask[0], catTask[1])) {
+                // Check if the cat/task is not yet removed (by the user)
+                if (!PetimoDbWrapper.getInstance().checkCatExists(Integer.parseInt(catTask[0])) ||
+                        !PetimoDbWrapper.getInstance().checkTaskExists(
+                                Integer.parseInt(catTask[0]), Integer.parseInt(catTask[1]))) {
                     monitoredTaskIterator.remove();
-                    // TODO: consider to remove it from the saved list
                     //removeMonitoredTask(catTask[0], catTask[1]);
                 }
             }
@@ -383,27 +404,31 @@ public class PetimoSharedPref {
         }
     }
 
+
     /**
      * Return a list of all selected cat/task to display on EditBlockFragment
+     * Database version: V.2
      * @return
      */
-    public ArrayList<String[]> getSelectedTasks(){
+    public ArrayList<Integer> getSelectedTasks(){
 
         try{
-            ArrayList<String[]> selectedTasks = PetimoStringUtils.parse(
-                    settingPref.getString(SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS, null), 2);
-            // Remove all cat / task that don't exist anymore
-            Iterator<String[]> selectedTaskIterator = selectedTasks.iterator();
-            while (selectedTaskIterator.hasNext()) {
-                String[] catTask = selectedTaskIterator.next();
+            ArrayList<String[]> selectedTasksTmp = PetimoStringUtils.parse(
+                    settingPref.getString(SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS, null), 1);
 
-                // Check if the cat/task is not yet removed by the user
-                if (!PetimoDbWrapper.getInstance().checkCatExists(catTask[0]) ||
-                        !PetimoDbWrapper.getInstance().checkTaskExists(catTask[0], catTask[1])) {
+            // Convert to int list
+            ArrayList<Integer> selectedTasks = new ArrayList<>();
+            for (String[] item : selectedTasksTmp)
+                    selectedTasks.add(Integer.parseInt(item[0]));
+
+            // Remove all task that don't exist anymore
+            Iterator<Integer> selectedTaskIterator = selectedTasks.iterator();
+            while (selectedTaskIterator.hasNext()) {
+                int taskId = selectedTaskIterator.next();
+                // Check if the task is not yet removed (by the user)
+                if (!PetimoDbWrapper.getInstance().checkTaskExists(taskId))
                     selectedTaskIterator.remove();
-                    // TODO: consider to remove it from the saved list
                     //removeMonitoredTask(catTask[0], catTask[1]);
-                }
             }
             return selectedTasks;
         }
@@ -413,17 +438,19 @@ public class PetimoSharedPref {
     }
 
     /**
-     * Get the last monitored cat/task
-     * @return a string array containing the category and task, null if no category/task is stored
+     * Get the last monitored task
+     * Database version: V.2
+     * @return a Integer array containing the category and task Ids,
+     *          null if no category/task is stored
      */
-    public String[] getLastMonitoredTask(){
-        String cat = monitorPref.getString(MONITOR_LAST_MONITORED_CATEGORY, null);
-        String task = monitorPref.getString(MONITOR_LAST_MONITORED_TASK, null);
+    public int[] getLastMonitoredTask(){
+        int catId = monitorPref.getInt(MONITOR_LAST_MONITORED_CATEGORY, -1);
+        int taskId = monitorPref.getInt(MONITOR_LAST_MONITORED_TASK, -1);
 
-        if (cat != null && task != null && PetimoDbWrapper.getInstance().checkCatExists(cat) &&
-                PetimoDbWrapper.getInstance().checkTaskExists(cat, task))
-                return new String[]{cat, task};
-        return new String[]{null, null};
+        if (catId != -1 && taskId != -1 && PetimoDbWrapper.getInstance().checkCatExists(catId) &&
+                PetimoDbWrapper.getInstance().checkTaskExists(catId, taskId))
+                return new int[]{catId, taskId};
+        return new int[]{-1, -1};
     }
 
 
@@ -432,7 +459,7 @@ public class PetimoSharedPref {
     * @return the sort order
     */
     public String getUsrMonitoredSortOrder(){
-        switch (settingPref.getString(SETTINGS_MONITORED_TASKS_SORT_ORDER, NONE)){
+        switch (settingPref.getString(SETTINGS_MONITORED_TASKS_SORT_ORDER, UNSORTED)){
             case FREQUENCY:
                 return FREQUENCY;
             case TIME:

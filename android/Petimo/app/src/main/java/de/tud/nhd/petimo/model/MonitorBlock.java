@@ -1,5 +1,7 @@
 package de.tud.nhd.petimo.model;
 
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
+
 /**
  * Created by nhd on 28.08.17.
  */
@@ -26,7 +28,7 @@ public class MonitorBlock {
     private final String taskName;
     private final String catName;
 
-    public MonitorBlock(int id, String taskName, int taskId, String catName, int catId, long start,
+    MonitorBlock(int id, String taskName, int taskId, String catName, int catId, long start,
                         long end, long duration, int date, int weekDay, int overNight,
                         int ovThreshold, String status, String note) {
         this.id = id;
@@ -113,9 +115,13 @@ public class MonitorBlock {
         for (int i = 1; i <= indentLevel; i++)
             indent = indent + "\t";
 
-        String xml = indent + "<MonitorBlock id='" + this.id + "' task='" + this.taskId + "' category='" +
-                this.catId + "' start='" + this.start + "' end='" + this.end + "' duration='" +
-                this.duration + "' date='" + this.date + "' weekday='" +
+        String xml = indent + "<MonitorBlock id='" + this.id + "' task='" +
+                PetimoDbWrapper.getInstance().getTaskNameById(taskId) + "' category='" +
+                PetimoDbWrapper.getInstance().getCatNameById(this.catId) + "' start='" +
+                PetimoTimeUtils.getDayTimeFromMsTime(this.start) + "' end='" +
+                PetimoTimeUtils.getDayTimeFromMsTime(this.end) + "' duration='" +
+                PetimoTimeUtils.getTimeFromMs(this.duration) + "' date='" + this.date +
+                "' weekday='" +
                 this.weekDay + "' overnight='" + this.overNight+ "' />";
         return xml;
     }

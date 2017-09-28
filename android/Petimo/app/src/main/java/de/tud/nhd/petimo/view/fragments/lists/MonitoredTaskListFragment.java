@@ -26,9 +26,7 @@ import de.tud.nhd.petimo.view.fragments.lists.adapters.MonitoredTaskRecyclerView
 public class MonitoredTaskListFragment extends Fragment {
 
     private static final String TAG = "MonitoredTasksFragment";
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 2;
     private OnModeFragmentInteractionListener mListener;
 
@@ -52,8 +50,6 @@ public class MonitoredTaskListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Log.d(TAG, "onCreate !");
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -91,19 +87,11 @@ public class MonitoredTaskListFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnMonitoredTaskFragmentInteractionListener");
         }
-
-        Log.d(TAG, "onAttach!!!!!!");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume!!!!!!!!!!!!!!!");
     }
 }

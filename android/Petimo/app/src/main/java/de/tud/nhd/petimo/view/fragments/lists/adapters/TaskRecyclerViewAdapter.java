@@ -68,16 +68,17 @@ public class TaskRecyclerViewAdapter extends
                 holder.taskCheckBox.setText(taskList.get(position).getName());
 
                 boolean notFound = true;
-                for (String[] catTask : PetimoSharedPref.getInstance().getSelectedTasks()) {
-                    if (catTask[0].equals(holder.task.getCatName()) &&
-                            catTask[1].equals(holder.task.getName())){
-                        onBind = true;
-                        holder.taskCheckBox.setChecked(true);
-                        onBind = false;
-                        notFound = false;
-                        break;
-                    }
+
+                // Check if the task is already selected
+                if (PetimoSharedPref.getInstance().getSelectedTasks().
+                        contains(holder.task.getId())){
+                    onBind = true;
+                    holder.taskCheckBox.setChecked(true);
+                    onBind = false;
+                    notFound = false;
+                    break;
                 }
+
                 if (notFound) {
                     onBind = true;
                     holder.taskCheckBox.setChecked(false);
@@ -128,11 +129,11 @@ public class TaskRecyclerViewAdapter extends
                                 public void onCheckedChanged(
                                         CompoundButton buttonView, boolean isChecked) {
                                     if (isChecked)
-                                        PetimoSharedPref.getInstance().addSelectedTask(
-                                                task.getCatName(), task.getName());
+                                        PetimoSharedPref.getInstance().
+                                                addSelectedTask(task.getId());
                                     else
-                                        PetimoSharedPref.getInstance().removeSelectedTask(
-                                                task.getCatName(), task.getName());
+                                        PetimoSharedPref.getInstance().
+                                                removeSelectedTask(task.getId());
                                     // Rebind the corresponding category
                                     //catAdapter.onBindViewHolder(catViewHolder, catPosition);
                                     // Notify the corresponding cat viewHolder to update its check box

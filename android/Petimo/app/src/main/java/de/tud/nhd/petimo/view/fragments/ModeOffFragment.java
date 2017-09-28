@@ -19,8 +19,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStartDialogFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
@@ -117,20 +121,15 @@ public class ModeOffFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                final Bundle args = new Bundle();
-                if (catSpinner.getSelectedItem() != null)
-                    args.putString(ConfirmStartDialogFragment.CATEGORY,
-                            catSpinner.getSelectedItem().toString());
-                if (taskSpinner.getSelectedItem() != null)
-                    args.putString(ConfirmStartDialogFragment.TASK,
-                            taskSpinner.getSelectedItem().toString());
+                final int catId = PetimoDbWrapper.getInstance().getAllCatIds().get(
+                        catSpinner.getSelectedItemPosition());
+                final int taskId = PetimoDbWrapper.getInstance().getTaskIdsByCat(catId).
+                        get(taskSpinner.getSelectedItemPosition());
 
                 final ConfirmStartDialogFragment contentFragment =
-                        new ConfirmStartDialogFragment();
-                contentFragment.setArguments(args);
+                        ConfirmStartDialogFragment.newInstance(catId, taskId);
 
-                if (args.getString(ConfirmStartDialogFragment.CATEGORY) != null &&
-                        args.getString(ConfirmStartDialogFragment.TASK) != null) {
+                if (catId != -1 && taskId != -1) {
                     PetimoDialog confirmStartDialog = PetimoDialog.newInstance(getActivity())
                             .setIcon(PetimoDialog.ICON_TIME_EMPTY)
                             .setTitle(getActivity().getString(R.string.title_start_monitor))
@@ -142,20 +141,14 @@ public class ModeOffFragment extends Fragment {
                                         public void onClick(View view) {
                                             if (contentFragment.manualTime != null){
                                                 mListener.onConfirmStartButtonClicked(
-                                                        args.getString(
-                                                                ConfirmStartDialogFragment.CATEGORY)
-                                                        , args.getString(
-                                                                ConfirmStartDialogFragment.TASK),
+                                                        catId,taskId,
                                                         PetimoTimeUtils.getTimeMillisFromHM(
                                                                 contentFragment.manualTime[0],
                                                                 contentFragment.manualTime[1]));
                                             }
                                             else{
                                                 mListener.onConfirmStartButtonClicked(
-                                                        args.getString(
-                                                                ConfirmStartDialogFragment.CATEGORY)
-                                                        , args.getString(
-                                                                ConfirmStartDialogFragment.TASK),
+                                                        catId, taskId,
                                                         System.currentTimeMillis());
                                             }
                                         }
@@ -197,9 +190,14 @@ public class ModeOffFragment extends Fragment {
                 // Up date the cat/task displayed on start monitor button
                 // bug: If db is empty, only catSpinner is empty but not taskSpinner, so we have
                 // to check for this case
-                if (catSpinner.getSelectedItem() != null)
-                    updateStartButtonText(catSpinner.getSelectedItem().toString(),
-                            taskSpinner.getSelectedItem().toString());
+                if (catSpinner.getSelectedItem() != null){
+                    int catId = PetimoDbWrapper.getInstance().getAllCatIds().get(
+                            catSpinner.getSelectedItemPosition());
+                    int taskId = PetimoDbWrapper.getInstance().getTaskIdsByCat(catId).get(
+                            taskSpinner.getSelectedItemPosition());
+                    updateStartButtonText(catId, taskId);
+                }
+
             }
 
             @Override
@@ -314,7 +312,7 @@ public class ModeOffFragment extends Fragment {
             public void run(){
                 ArrayAdapter<String> catSpinnerAdapter = new ArrayAdapter<>(getContext(),
                         R.layout.support_simple_spinner_dropdown_item,
-                        PetimoController.getInstance().getAllCatNames());
+                        PetimoDbWrapper.getInstance().getAllCatNames());
                 catSpinner.setAdapter(catSpinnerAdapter);
                 int catPos = PetimoController.getInstance().getLastMonitoredTask()[0];
                 catSpinner.setSelection(catPos, true);
@@ -342,42 +340,51 @@ public class ModeOffFragment extends Fragment {
                 if (catSpinner.getSelectedItem() != null) {
                     ArrayAdapter<String> taskSpinnerAdapter = new ArrayAdapter<String>(getContext(),
                             R.layout.support_simple_spinner_dropdown_item,
-                            PetimoController.getInstance().getTaskNameByCat(
-                                    catSpinner.getSelectedItem().toString()));
+                            PetimoDbWrapper.getInstance().getTaskNamesByCat(
+                                    PetimoDbWrapper.getInstance().getAllCatIds().get(
+                                            catSpinner.getSelectedItemPosition())));
                     taskSpinner.setAdapter(taskSpinnerAdapter);
                     taskSpinnerAdapter.notifyDataSetChanged();
                     // Also display the chosen cat/task on the start monitor button
-                    updateStartButtonText(catSpinner.getSelectedItem().toString(),
-                            taskSpinner.getSelectedItem().toString());
+                    int catId = PetimoDbWrapper.getInstance().getAllCatIds().get(
+                            catSpinner.getSelectedItemPosition());
+                    int taskId = PetimoDbWrapper.getInstance().getTaskIdsByCat(catId).get(
+                            taskSpinner.getSelectedItemPosition());
+                    Log.d(TAG, "catSpinner.getSelectedItemPosition() ===>  " +
+                            catSpinner.getSelectedItemPosition());
+                    Log.d(TAG, "catIds ===> " +
+                            PetimoDbWrapper.getInstance().getAllCatIds());
+                    updateStartButtonText(catId, taskId);
                 }
                 // There is no task selected => display no cat/task on the start monitor button
-                updateStartButtonText(null, null);
+                updateStartButtonText(-1, -1);
             }
         });
     }
 
     /**
      * Update all spinners selection according to the given chosen cat and task
-     * @param category
+     * @param catId
      */
-    public void updateAllSpinner(String category, String task){
-        int catPos = PetimoController.getInstance().getAllCatNames().indexOf(category);
+    public void updateAllSpinner(int catId, int taskId){
+        int catPos = PetimoDbWrapper.getInstance().getAllCatIds().indexOf(catId);
         catSpinner.setSelection(catPos);
         // Set the tag up-to-date in order to avoid undesired call of catSpinner.onItemSelected
         catSpinnerPosition = catPos;
         updateTaskSpinner();
         taskSpinner.setSelection(
-                PetimoController.getInstance().getTaskNameByCat(category).indexOf(task));
+                PetimoDbWrapper.getInstance().getTaskIdsByCat(catId).indexOf(taskId));
     }
 
     /**
      * Display the current chosen cat/task on the start monitor button
-     * @param category
-     * @param task
+     * @param catId
+     * @param taskId
      */
-    public void updateStartButtonText(String category, String task){
-        if(category != null && task != null)
+    public void updateStartButtonText(int catId, int taskId){
+        if(catId != -1 && taskId != -1)
             startButton.setText(getString(R.string.button_start_monitor) + "\n\n" +
-            category + " / " + task);
+            PetimoDbWrapper.getInstance().getCatNameById(catId) + " / " +
+                    PetimoDbWrapper.getInstance().getTaskNameById(taskId));
     }
 }

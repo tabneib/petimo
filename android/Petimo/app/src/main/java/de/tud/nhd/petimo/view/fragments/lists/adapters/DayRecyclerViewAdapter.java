@@ -18,6 +18,7 @@ import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputTimeException;
 import de.tud.nhd.petimo.controller.exception.InvalidTimeException;
+import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.model.MonitorDay;
@@ -73,7 +74,8 @@ public class DayRecyclerViewAdapter extends
                         .setTitle(fragment.getActivity().
                                 getString(R.string.title_new_monitor_block))
                         .setContentFragment(addBlockFragment)
-                        .setPositiveButton(fragment.getActivity().getString(R.string.button_add_block),
+                        .setPositiveButton(
+                                fragment.getActivity().getString(R.string.button_add_block),
                                 new PetimoDialog.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -88,13 +90,14 @@ public class DayRecyclerViewAdapter extends
                                                                 getSelectedItem().toString(),
                                                         addBlockFragment.manualTime[0],
                                                         addBlockFragment.manualTime[1],
-                                                        holder.monitorDay.getDate());
+                                                        holder.monitorDay.getDate(), "");
                                                 Toast.makeText(fragment.getActivity(),
                                                         fragment.getActivity().getString(
                                                                 R.string.message_block_added),
                                                         Toast.LENGTH_LONG).show();
                                                 // Refresh the list
-                                                fragment.refreshList();                                            } catch (DbErrorException e) {
+                                                fragment.refreshList();
+                                            } catch (DbErrorException e) {
                                                 e.printStackTrace();
                                             } catch (InvalidInputTimeException e) {
                                                 e.printStackTrace();
@@ -188,8 +191,8 @@ public class DayRecyclerViewAdapter extends
                                                 @Override
                                                 public void onClick(View view) {
                                                     // Remove the block from the database
-                                                    PetimoController.getInstance().
-                                                            removeBlock(monitorDay.
+                                                    PetimoDbWrapper.getInstance().
+                                                            removeBlockById(monitorDay.
                                                                     getMonitorBlocks().get(vHolder.
                                                                     getLayoutPosition()).getId());
                                                     blockAdapter.blockList.remove(

@@ -151,7 +151,8 @@ public class PetimoDbDemo {
         Log.d(TAG, "Inserting Categories");
         for (String[] cat: cats)
             try {
-                dbWrapper.insertCategory(cat[0], Integer.parseInt(cat[1]));
+                dbWrapper.insertCategory(
+                        cat[0], Integer.parseInt(cat[1]), MonitorCategory.ACTIVE, -1, "");
             } catch (DbErrorException e) {
                 e.printStackTrace();
             } catch (InvalidInputNameException e) {
@@ -163,7 +164,8 @@ public class PetimoDbDemo {
         Log.d(TAG, "Inserting Tasks");
         for (String[] task: tasks)
             try {
-                dbWrapper.insertTask(task[0], task[1], Integer.parseInt(task[2]));
+                dbWrapper.insertTask(task[0], dbWrapper.getCatIdFromName(task[1]),
+                        Integer.parseInt(task[2]), MonitorTask.ACTIVE, -1, "");
             } catch (DbErrorException e) {
                 e.printStackTrace();
             } catch (InvalidInputNameException e) {
@@ -175,10 +177,12 @@ public class PetimoDbDemo {
         Log.d(TAG, "Inserting Monitor Blocks");
         for (String[] block: blocks)
             try {
-                dbWrapper.insertMonitorBlock(block[0], block[1], Long.parseLong(block[2]),
+                dbWrapper.insertMonitorBlock(dbWrapper.getTaskIdFromName(block[0],
+                        dbWrapper.getCatIdFromName(block[1])),
+                        dbWrapper.getCatIdFromName(block[1]), Long.parseLong(block[2]),
                         Long.parseLong(block[3]), Long.parseLong(block[4]),
                         Integer.parseInt(block[5]), Integer.parseInt(block[6]),
-                        Integer.parseInt(block[7]));
+                        Integer.parseInt(block[7]), 6, MonitorBlock.ACTIVE, "");
             } catch (DbErrorException e) {
                 e.printStackTrace();
             } catch (InvalidCategoryException e) {

@@ -90,7 +90,8 @@ public class EditTasksFragment extends Fragment {
                                         mListener.onConfirmAddingCatButtonClicked(
                                                 catListFragment,
                                                 catInput.getText().toString(),
-                                                prioritySpinner.getSelectedItemPosition());
+                                                prioritySpinner.getSelectedItemPosition(),
+                                                "");
                                     }
                                 })
                         .setNegativeButton(getActivity().getString(R.string.button_cancel),

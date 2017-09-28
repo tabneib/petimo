@@ -21,14 +21,16 @@ import java.util.Calendar;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 
 public class ConfirmStartDialogFragment extends Fragment {
 
     public static final String TAG = "ConfirmStartDialog";
     OnModeFragmentInteractionListener mListener;
-    public static final String CATEGORY = "category";
-    public static final String TASK = "task";
+
+    int catId;
+    int taskId;
 
     private TextView textViewCatTask;
     private TextView textViewStartTime;
@@ -38,10 +40,17 @@ public class ConfirmStartDialogFragment extends Fragment {
     // array storing the hour and minute chosen by user as start time
     public int[] manualTime = null;
 
+    public static ConfirmStartDialogFragment newInstance(int catId, int taskId){
+        ConfirmStartDialogFragment fragment = new ConfirmStartDialogFragment();
+        fragment.catId = catId;
+        fragment.taskId = taskId;
+        Log.d(TAG, "catId/taskId ====> " + catId + " / " + taskId);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.d(TAG, "onAttach !!!!!!!!!!!!!!!");
 
         try {
             mListener = (OnModeFragmentInteractionListener) getActivity();
@@ -70,7 +79,8 @@ public class ConfirmStartDialogFragment extends Fragment {
         buttonEdit = (Button) getView().findViewById(R.id.button_edit);
 
         final Bundle args = getArguments();
-        textViewCatTask.setText(args.getString(CATEGORY) + " / " + args.getString(TASK));
+        textViewCatTask.setText(PetimoDbWrapper.getInstance().getCatNameById(catId) + " / " +
+                PetimoDbWrapper.getInstance().getTaskNameById(taskId));
         textViewStartTime.setVisibility(View.INVISIBLE);
 
         buttonEdit.setOnClickListener(new View.OnClickListener(){

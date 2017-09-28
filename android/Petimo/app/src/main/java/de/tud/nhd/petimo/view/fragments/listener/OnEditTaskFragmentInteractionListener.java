@@ -17,19 +17,19 @@ public interface OnEditTaskFragmentInteractionListener {
 
     /**
      * Call-back method which is called when the user confirm adding a new category
-     * @param inputCat name of the category to be added
+     * @param newCatName name of the category to be added
      */
     void onConfirmAddingCatButtonClicked(
-            CategoryListFragment catListFragment, String inputCat, int priority);
+            CategoryListFragment catListFragment, String newCatName, int priority, String note);
 
     /**
      * Call-back method which is called when the user confirm adding a new task
      * @param viewHolder
-     * @param inputCat
-     * @param inputTask
+     * @param catId
+     * @param inputTaskName
      * @param priority
      */
-    void onConfirmAddingTaskStopButtonClicked(
+    void onConfirmAddingTaskButtonClicked(
             CategoryRecyclerViewAdapter.ViewHolder viewHolder,
-            String inputCat, String inputTask, int priority);
+            int catId, String inputTaskName, int priority, String note);
 }

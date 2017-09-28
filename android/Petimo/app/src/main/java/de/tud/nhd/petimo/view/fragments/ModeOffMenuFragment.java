@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.view.activities.MainActivity;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
@@ -64,7 +65,7 @@ public class ModeOffMenuFragment extends Fragment {
         buttonClear = (ImageButton) getView().findViewById(R.id.buttonClear);
 
         // update the selection of radioButtons
-        switch (PetimoController.getInstance().getUsrMonitoredTasksSortOrder()){
+        switch (PetimoSharedPref.getInstance().getUsrMonitoredSortOrder()){
             case PetimoSharedPref.FREQUENCY:
                 radioButtonFreq.setChecked(true);
                 break;
@@ -115,7 +116,7 @@ public class ModeOffMenuFragment extends Fragment {
                                     @Override
                                     public void onClick(View view) {
                                         // Delete the saved monitored task
-                                        PetimoController.getInstance().clearMonitoredTaskList();
+                                        PetimoSharedPref.getInstance().clearMonitoredTasks();
                                         updateMonitoredTaskList();
                                     }
                                 })

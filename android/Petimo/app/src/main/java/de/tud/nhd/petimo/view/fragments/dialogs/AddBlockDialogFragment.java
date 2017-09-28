@@ -19,6 +19,8 @@ import java.util.Calendar;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.model.PetimoContract;
+import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 
 public class AddBlockDialogFragment extends Fragment {
@@ -188,7 +190,7 @@ public class AddBlockDialogFragment extends Fragment {
             public void run(){
                 ArrayAdapter<String> catSpinnerAdapter = new ArrayAdapter<>(getContext(),
                         R.layout.support_simple_spinner_dropdown_item,
-                        PetimoController.getInstance().getAllCatNames());
+                        PetimoDbWrapper.getInstance().getAllCatNames());
                 catSpinner.setAdapter(catSpinnerAdapter);
                 int catPos = PetimoController.getInstance().getLastMonitoredTask()[0];
                 catSpinner.setSelection(catPos, true);
@@ -214,8 +216,9 @@ public class AddBlockDialogFragment extends Fragment {
                 if (catSpinner.getSelectedItem() != null) {
                     ArrayAdapter<String> taskSpinnerAdapter = new ArrayAdapter<String>(getContext(),
                             R.layout.support_simple_spinner_dropdown_item,
-                            PetimoController.getInstance().getTaskNameByCat(
-                                    catSpinner.getSelectedItem().toString()));
+                            PetimoDbWrapper.getInstance().getTaskNamesByCat(
+                                    PetimoDbWrapper.getInstance().getAllCatIds().
+                                            get(catSpinner.getSelectedItemPosition())));
                     taskSpinner.setAdapter(taskSpinnerAdapter);
                     taskSpinnerAdapter.notifyDataSetChanged();
                 }

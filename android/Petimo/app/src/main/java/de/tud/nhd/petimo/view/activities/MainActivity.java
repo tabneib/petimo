@@ -30,6 +30,7 @@ import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
 import de.tud.nhd.petimo.model.MonitorBlock;
 import de.tud.nhd.petimo.model.PetimoDbDemo;
+import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.utils.PetimoContextWrapper;
 import de.tud.nhd.petimo.view.fragments.DemoFragment;
@@ -165,7 +166,7 @@ public class MainActivity extends AppCompatActivity
 
         //Log.d(TAG, "Changing display to " + position);
         // If the database wrapper is not yet ready
-        if (!controller.isDbReady()) {
+        if (!PetimoDbWrapper.getInstance().isReady()) {
             new WaitForDb(position).execute((Void) null);
             return;
         }
@@ -214,7 +215,7 @@ public class MainActivity extends AppCompatActivity
      * Choose the monitor mode (on/off) to display
      */
     private void chooseModeToDisplay(){
-        if (controller.isMonitoring())
+        if (PetimoSharedPref.getInstance().isMonitoring())
             // There is ongoing live monitor
             displayFragment(MODE_ON_FRAGMENT_TAG);
         else
@@ -289,10 +290,10 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public void onConfirmStartButtonClicked(String inputCat, String inputTask, long startTime) {
+    public void onConfirmStartButtonClicked(int catId, int taskId, long startTime) {
         // Start the monitor
         try {
-            controller.monitor(inputCat, inputTask, startTime, 0);
+            controller.monitor(catId, taskId, startTime, -1);
         } catch (InvalidCategoryException e){
             // TODO
         } catch (DbErrorException e){
@@ -311,7 +312,7 @@ public class MainActivity extends AppCompatActivity
             // store the last monitored cat/task
             controller.updateLastMonitored();
             // add the monitored block
-            controller.monitor(null, null, 0, stopTime);
+            controller.monitor(-1, -1, 0, stopTime);
         } catch (DbErrorException e) {
             // TODO
         } catch (InvalidCategoryException e) {
@@ -323,22 +324,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLastMonitoredTaskSelected(String category, String task) {
+    public void onLastMonitoredTaskSelected(int catId, int taskId) {
         ModeOffFragment modeOffFragment = (ModeOffFragment)
                 getSupportFragmentManager().findFragmentByTag(MODE_OFF_FRAGMENT_TAG);
         if (modeOffFragment != null){
-            modeOffFragment.updateAllSpinner(category, task);
-            modeOffFragment.updateStartButtonText(category, task);
-            controller.updateLastMonitored(category, task);
+            modeOffFragment.updateAllSpinner(catId, taskId);
+            modeOffFragment.updateStartButtonText(catId, taskId);
+            controller.updateLastMonitored(catId, taskId);
         }
     }
 
     @Override
     public void onConfirmAddingCatButtonClicked(
-            CategoryListFragment catListFragment, String inputCat, int priority) {
+            CategoryListFragment catListFragment, String newCatName, int priority, String note) {
 
         try{
-            controller.addCategory(inputCat, priority);
+            controller.addCategory(newCatName, priority, note);
         }
         catch (DbErrorException e){
             // TODO Notify the user !
@@ -352,10 +353,10 @@ public class MainActivity extends AppCompatActivity
 
         // TODO display a snack bar to notify the usr
         // Just for now: display a Toast
-        Toast.makeText(this, "Added new category: " + inputCat, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Added new category: " + newCatName, Toast.LENGTH_LONG).show();
 
         // Update the recyclerView
-        catListFragment.updateView(inputCat);
+        catListFragment.updateView(newCatName);
 
 
         /* Hard-coded: Re-add the whole CategoryListFragment
@@ -369,13 +370,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onConfirmAddingTaskStopButtonClicked(
+    public void onConfirmAddingTaskButtonClicked(
             CategoryRecyclerViewAdapter.ViewHolder viewHolder,
-            String inputCat, String inputTask, int priority) {
+            int catId, String inputTask, int priority, String note) {
 
         // Add new task
         try{
-            controller.addTask(inputTask, inputCat, priority);
+            controller.addTask(inputTask, catId, priority, note);
         }
         catch (InvalidInputNameException e){
             e.printStackTrace();
@@ -391,10 +392,10 @@ public class MainActivity extends AppCompatActivity
         }
         // TODO display a snack bar to notify the usr
         // Just for now: display a Toast
-        Toast.makeText(this, "Added new category: " + inputCat, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Added new category: " + catId, Toast.LENGTH_LONG).show();
 
         // Update the recyclerView
-        viewHolder.updateView(inputTask, inputCat);
+        viewHolder.updateView(inputTask, catId);
 
     }
 
@@ -461,7 +462,7 @@ public class MainActivity extends AppCompatActivity
         }
         @Override
         protected Void doInBackground(Void... params) {
-            while (!controller.isDbReady()){
+            while (!PetimoDbWrapper.getInstance().isReady()){
             //while (true){
                 try{
                     //Log.d(TAG, "waiting for DB");
@@ -470,7 +471,10 @@ public class MainActivity extends AppCompatActivity
                 catch (Exception e){
                     e.printStackTrace();
                 }
+
             }
+            // update database
+            //PetimoDbWrapper.getInstance().updateV1toV2();
             return null;
         }
 

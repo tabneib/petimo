@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
+import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.BlockRecyclerViewAdapter;
 
@@ -31,9 +32,6 @@ public class BlockListFragment extends Fragment {
     // Default values for date range: today blocks
     private int mStartDate = PetimoTimeUtils.getTodayDate();
     private int mEndDate = PetimoTimeUtils.getTodayDate();
-
-
-    PetimoController controller;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -62,11 +60,6 @@ public class BlockListFragment extends Fragment {
             mStartDate = getArguments().getInt(ARG_START_DATE);
             mEndDate = getArguments().getInt(ARG_END_DATE);
         }
-        try {
-            controller = PetimoController.getInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -84,7 +77,7 @@ public class BlockListFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             recyclerView.setAdapter(new BlockRecyclerViewAdapter(getActivity(),
-                    controller.getBlocksFromRange(mStartDate, mEndDate)));
+                    PetimoDbWrapper.getInstance().getBlocksByRange(mStartDate, mEndDate)));
         }
         return view;
     }

@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tud.nhd.petimo.controller.ResponseCode;
-import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
@@ -124,30 +123,6 @@ public class PetimoDbWrapper {
     // Core - Database - Inserting Data
     //--------------------------------------------------------------------------------------------->
 
-
-    /**
-     * Write a new category into the database
-     * @param name  name of the new category
-     * @param priority  The priority of the the category
-     * @return The corresponding response code
-     */
-    @Deprecated
-    public ResponseCode insertCategory(String name, int priority)
-            throws DbErrorException, InvalidInputNameException, InvalidCategoryException {
-        if (!checkName(name))
-            throw new InvalidInputNameException(
-                    "Invalid input category name: " + name + " - please use other name");
-        if (checkCatExists(name))
-            throw new InvalidCategoryException("Category already exists: " + name);
-        ContentValues values = new ContentValues();
-        values.put(PetimoContract.Categories.COLUMN_NAME_NAME, name);
-        values.put(PetimoContract.Categories.COLUMN_NAME_PRIORITY, priority);
-        if(writableDb.insert(PetimoContract.Categories.TABLE_NAME, null, values) == -1)
-            throw new DbErrorException("Some DB error has occured, please try again");
-        else
-            return ResponseCode.OK;
-    }
-
     /**
      * Write a new category into the database
      * Database version: V.2
@@ -175,35 +150,6 @@ public class PetimoDbWrapper {
             return ResponseCode.OK;
     }
 
-    /**
-     * Write a new task into the database
-     * @param task  The name of the task
-     * @param category  The corresponding category
-     * @param priority  The priority of the new task
-     * @return a response code according to the result of the insertion
-     */
-    @Deprecated
-    public ResponseCode insertTask(String task, String category, int priority)
-            throws DbErrorException, InvalidInputNameException, InvalidCategoryException {
-        if(!checkName(task))
-            throw new InvalidInputNameException("The input task name is invalid: " + task +
-                    " - please use other task name");
-        if (!checkCatExists(category))
-            throw new InvalidCategoryException("Category does not exist: " + category);
-        if (checkTaskExists(category, task))
-            throw new InvalidCategoryException("Task already exists for the given category: "
-                    + category + " / " + task);
-        else{
-            ContentValues values = new ContentValues();
-            values.put(PetimoContract.Tasks.COLUMN_NAME_NAME, task);
-            values.put(PetimoContract.Tasks.COLUMN_NAME_CATEGORY, category);
-            values.put(PetimoContract.Tasks.COLUMN_NAME_PRIORITY, priority);
-            if(writableDb.insert(PetimoContract.Tasks.TABLE_NAME, null, values) == -1)
-                throw new DbErrorException("Some DB error has occured, please try again");
-            else
-                return ResponseCode.OK;
-        }
-    }
 
     /**
      * Write a new task into the database
@@ -219,7 +165,7 @@ public class PetimoDbWrapper {
             throw new InvalidInputNameException("Task name is invalid: " + taskName);
         if (!checkCatExists(catId))
             throw new InvalidCategoryException("Category does not exist: " + catId);
-        if (checkTaskExists(catId, taskName))
+        if (checkTaskNameExists(catId, taskName))
             throw new InvalidCategoryException("Task already exists for the given category ID: "
                     + catId + " / " + taskName);
         else{
@@ -234,50 +180,10 @@ public class PetimoDbWrapper {
             values.put(PetimoContract.Tasks.COLUMN_NAME_NOTE, note);
             if(writableDb.insert(PetimoContract.Tasks.TABLE_NAME, null, values) == -1)
                 throw new DbErrorException("Some DB error has occured, please try again");
-            else
+            else {
                 return ResponseCode.OK;
+            }
         }
-    }
-
-    /**
-     * Write a new monitor block into the database
-     * @param task
-     * @param category
-     * @param start
-     * @param end
-     * @param duration
-     * @param date
-     * @param weekDay
-     * @param overNight
-     * @return The corresponding response code
-     */
-    @Deprecated
-    public ResponseCode insertMonitorBlock(
-            String task, String category, long start, long end,
-            long duration, int date, int weekDay, int overNight)
-            throws DbErrorException, InvalidCategoryException {
-
-        if (!checkCatExists(category)) {
-            throw new InvalidCategoryException("Category already exists: " + category);
-        }
-
-        if (task != null && !checkTaskExists(category, task)){
-            throw new InvalidCategoryException("Task already exists for the given category: "
-                    + category + " / " + task);
-        }
-        ContentValues values = new ContentValues();
-        values.put(PetimoContract.Monitor.COLUMN_NAME_TASK, task);
-        values.put(PetimoContract.Monitor.COLUMN_NAME_CATEGORY, category);
-        values.put(PetimoContract.Monitor.COLUMN_NAME_START, start);
-        values.put(PetimoContract.Monitor.COLUMN_NAME_END, end);
-        values.put(PetimoContract.Monitor.COLUMN_NAME_DURATION, duration);
-        values.put(PetimoContract.Monitor.COLUMN_NAME_DATE, date);
-        values.put(PetimoContract.Monitor.COLUMN_NAME_WEEKDAY, weekDay);
-        values.put(PetimoContract.Monitor.COLUMN_NAME_OVERNIGHT, overNight);
-        if (writableDb.insert(PetimoContract.Monitor.TABLE_NAME, null, values) == -1)
-            throw new DbErrorException("Some DB error has occured, please try again");
-        else
-            return ResponseCode.OK;
     }
 
     /**
@@ -310,7 +216,7 @@ public class PetimoDbWrapper {
         ContentValues values = new ContentValues();
         values.put(PetimoContract.Monitor.COLUMN_NAME_TASK_ID, taskId);
         values.put(PetimoContract.Monitor.COLUMN_NAME_CATEGORY_ID, catId);
-        //TODO Category column is NOT NULL. Remove this line in db V.3
+        //TODO Category column is NOT NULL. Remove this line in db V.3 when Cat column is removed
         values.put(PetimoContract.Monitor.COLUMN_NAME_CATEGORY, getCatNameById(catId));
         values.put(PetimoContract.Monitor.COLUMN_NAME_START, start);
         values.put(PetimoContract.Monitor.COLUMN_NAME_END, end);
@@ -354,8 +260,8 @@ public class PetimoDbWrapper {
     }
 
     /**
-     * TODO: -> DB V.2 : convert selected tasks from using name to ID <= work in PetimoSharedPref first !
      * Generate a list of MonitorDay objects represent the given date range
+     * Database version: V.2
      * @param startDate
      * @param endDate
      * @return
@@ -369,10 +275,12 @@ public class PetimoDbWrapper {
             if (PetimoSharedPref.getInstance().getSelectedTasks().isEmpty())
                 return new ArrayList<>();
             selection = selection + " AND ";
-            for (String[] catTask : PetimoSharedPref.getInstance().getSelectedTasks()){
-                selection = selection + "((" + PetimoContract.Monitor.COLUMN_NAME_CATEGORY +
+            for (int taskId : PetimoSharedPref.getInstance().getSelectedTasks()){
+                /*selection = selection + "((" + PetimoContract.Monitor.COLUMN_NAME_CATEGORY +
                         " = '" + catTask[0] + "') AND (" + PetimoContract.Monitor.COLUMN_NAME_TASK +
-                        " = '" + catTask[1] + "')) OR ";
+                        " = '" + catTask[1] + "')) OR ";*/
+                selection = selection + "(" + PetimoContract.Monitor.COLUMN_NAME_TASK_ID +
+                        " = " + Integer.toString(taskId) + ") OR ";
             }
             // remove the last " OR "
             selection = selection.substring(0, selection.length()-4);
@@ -444,38 +352,6 @@ public class PetimoDbWrapper {
         return blocks;
     }
 
-
-    /**
-     * Get the category object from the given category name
-     * @param catName the name of the category
-     * @return the category object
-     */
-    @Deprecated
-    public MonitorCategory getCatByName(String catName){
-        MonitorCategory category = null;
-        String selection = PetimoContract.Categories.COLUMN_NAME_NAME + " = ?";
-        String[] selectionArgs = {catName};
-        Cursor cursor = readableDb.query(PetimoContract.Categories.TABLE_NAME,
-                PetimoContract.Categories.getAllColumns(),
-                selection, selectionArgs, null, null, null, null);
-
-        while(cursor.moveToNext())
-            category = new MonitorCategory(
-                    cursor.getInt(cursor.getColumnIndexOrThrow(
-                            PetimoContract.Categories._ID)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(
-                            PetimoContract.Categories.COLUMN_NAME_NAME)),
-                    cursor.getInt(cursor.getColumnIndexOrThrow(
-                            PetimoContract.Categories.COLUMN_NAME_PRIORITY)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(
-                            PetimoContract.Categories.COLUMN_NAME_STATUS)),
-                    cursor.getLong(cursor.getColumnIndexOrThrow(
-                            PetimoContract.Categories.COLUMN_NAME_DELETE_TIME)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(
-                            PetimoContract.Categories.COLUMN_NAME_NOTE)));
-        cursor.close();
-        return category;
-    }
 
     /**
      * Get the category object from the given category name
@@ -716,18 +592,41 @@ public class PetimoDbWrapper {
      * @return
      */
     public List<Integer> getTaskIdsByCat(int catId){
+        Log.d(TAG, "catId ===> " + catId);
         String selection = PetimoContract.Tasks.COLUMN_NAME_CATEGORY_ID + " = ?";
         String[] selectionArgs = {Integer.toString(catId)};
         List<Integer> taskIds = new ArrayList<>();
         Cursor cursor = readableDb.query(PetimoContract.Tasks.TABLE_NAME,
-                PetimoContract.Tasks.getAllColumns(), selection,
+                new String[]{PetimoContract.Tasks._ID}, selection,
                 selectionArgs, null, null, null);
 
         while (cursor.moveToNext())
             taskIds.add(cursor.getInt(cursor.getColumnIndexOrThrow(
                     PetimoContract.Tasks._ID)));
         cursor.close();
+        Log.d(TAG, "taskIds sze ===> " + taskIds.size());
         return taskIds;
+    }
+
+
+    /**
+     * Find the category that contains the given task and return its ID
+     * @param taskId
+     * @return
+     */
+    public int getCatIdFromTask(int taskId){
+        String selection = PetimoContract.Tasks._ID + " = ?";
+        String[] selectionArgs = {Integer.toString(taskId)};
+        int catId = -1;
+        Cursor cursor = readableDb.query(PetimoContract.Tasks.TABLE_NAME,
+                new String[]{PetimoContract.Tasks.COLUMN_NAME_CATEGORY_ID}, selection,
+                selectionArgs, null, null, null);
+
+        while (cursor.moveToNext())
+            catId = cursor.getInt(cursor.getColumnIndexOrThrow(
+                    PetimoContract.Tasks.COLUMN_NAME_CATEGORY_ID));
+        cursor.close();
+        return catId;
     }
 
 
@@ -783,12 +682,13 @@ public class PetimoDbWrapper {
     public List<Integer> getAllCatIds(){
         List<Integer> catIds = new ArrayList<>();
         Cursor cursor = readableDb.query(PetimoContract.Categories.TABLE_NAME,
-                PetimoContract.Categories.getAllColumns(), null, null, null, null, null, null);
-
+                new String[]{PetimoContract.Categories._ID}, null, null, null, null,
+                PetimoContract.Categories._ID + " ASC", null);
         while(cursor.moveToNext())
             catIds.add(cursor.getInt(cursor.getColumnIndexOrThrow(
                     PetimoContract.Categories._ID)));
         cursor.close();
+        Log.d(TAG, "catIds size ====> " + catIds.size());
         return catIds;
     }
 
@@ -808,6 +708,59 @@ public class PetimoDbWrapper {
         return tasks;
     }
 
+    /**
+     * Generate a list of IDs of all the tasks
+     * @return
+     */
+    public List<Integer> getAllTaskIds(){
+        List<Integer> taskIds = new ArrayList<>();
+        Cursor cursor = readableDb.query(PetimoContract.Tasks.TABLE_NAME,
+                new String[]{PetimoContract.Tasks._ID}, null, null, null, null,
+                PetimoContract.Tasks._ID + " ASC", null);
+
+        while(cursor.moveToNext())
+            taskIds.add(cursor.getInt(cursor.getColumnIndexOrThrow(
+                    PetimoContract.Tasks._ID)));
+        cursor.close();
+        return taskIds;
+    }
+
+    public int getCatIdFromName(String catName){
+        String selection = PetimoContract.Categories.COLUMN_NAME_NAME + " = ?";
+        String[] selectionArgs = {catName};
+        int catId = -1;
+        Cursor cursor = readableDb.query(PetimoContract.Categories.TABLE_NAME,
+                new String[]{PetimoContract.Categories._ID}, selection,
+                selectionArgs, null, null, null);
+
+        while (cursor.moveToNext()){
+            catId = cursor.getInt(cursor.getColumnIndexOrThrow(PetimoContract.Categories._ID));
+            break;
+        }
+        cursor.close();
+        return catId;
+    }
+
+    /**
+     *
+     * @param taskName
+     * @param catId
+     * @return
+     */
+    public int getTaskIdFromName(String taskName, int catId){
+        String selection = PetimoContract.Tasks.COLUMN_NAME_NAME + " = ? AND " +
+                PetimoContract.Tasks.COLUMN_NAME_CATEGORY_ID + " = ?";
+        String[] selectionArgs = {taskName, Integer.toString(catId)};
+        int taskId = -1;
+        Cursor cursor = readableDb.query(PetimoContract.Tasks.TABLE_NAME,
+                new String[]{PetimoContract.Tasks._ID}, selection,
+                selectionArgs, null, null, null);
+
+        while (cursor.moveToNext())
+            taskId = cursor.getInt(cursor.getColumnIndexOrThrow(PetimoContract.Tasks._ID));
+        cursor.close();
+        return taskId;
+    }
 
     //<---------------------------------------------------------------------------------------------
     // Core - Database - Deleting Data
@@ -818,6 +771,7 @@ public class PetimoDbWrapper {
      * @param date
      * @return
      */
+    // unused
     public int removeDay(int date){
         String selection = PetimoContract.Monitor.COLUMN_NAME_DATE + " = ?";
         String[] selectionArgs = {Integer.toString(date)};
@@ -837,42 +791,14 @@ public class PetimoDbWrapper {
 
     /**
      * Remove a monitor task
-     * @param taskName
-     * @param catName
-     * @return
-     */
-    @Deprecated
-    public int removeTask(String taskName, String catName){
-        String selection = PetimoContract.Tasks.COLUMN_NAME_NAME + " = ? AND " +
-                PetimoContract.Tasks.COLUMN_NAME_CATEGORY + " = ? ";
-        String[] selectionArgs = {taskName, catName};
-        return writableDb.delete(PetimoContract.Tasks.TABLE_NAME, selection, selectionArgs);
-    }
-
-    /**
-     * Remove a monitor task
      * Database version: V.2
      * @param taskId
      * @return
      */
-    @Deprecated
     public int removeTask(int taskId){
         String selection = PetimoContract.Tasks._ID+ " = ? ";
         String[] selectionArgs = {Integer.toString(taskId)};
         return writableDb.delete(PetimoContract.Tasks.TABLE_NAME, selection, selectionArgs);
-    }
-
-    /**
-     * Remove a monitor category
-     * @param catName
-     * @return
-     */
-    @Deprecated
-    public int removeCategory(String catName){
-        String selection = PetimoContract.Tasks.COLUMN_NAME_NAME + " = ? ";
-
-        String[] selectionArgs = {catName};
-        return writableDb.delete(PetimoContract.Categories.TABLE_NAME, selection, selectionArgs);
     }
 
     /**
@@ -943,18 +869,37 @@ public class PetimoDbWrapper {
      * @return
      */
     @Deprecated
-    public boolean checkTaskExists(String category, String task){
+    public boolean checkTaskNameExists(String category, String task){
         return this.getTaskNamesByCat(category).contains(task);
     }
 
     /**
-     * Check if there is a task with the given name and belongs to the given category
+     * Check if there is a task with the given name and belongs to the given category.
      * @param catId
      * @param taskName
      * @return
      */
-    public boolean checkTaskExists(int catId, String taskName){
+    public boolean checkTaskNameExists(int catId, String taskName){
         return this.getTaskNamesByCat(catId).contains(taskName);
+    }
+
+    /**
+     * Check if there is a task with the given id and belongs to the given category.
+     * @param catId
+     * @param taskId
+     * @return
+     */
+    public boolean checkTaskExists(int catId, int taskId){
+        return this.getTaskIdsByCat(catId).contains(taskId);
+    }
+
+    /**
+     * Check if there is a task with the given id
+     * @param taskId
+     * @return
+     */
+    public boolean checkTaskExists(int taskId){
+        return this.getAllTaskIds().contains(taskId);
     }
 
     /**
@@ -1021,7 +966,65 @@ public class PetimoDbWrapper {
         }
     }
 
+    //<---------------------------------------------------------------------------------------------
+    // Core - Upgrade Database
+    //--------------------------------------------------------------------------------------------->
 
+    /**
+     * Fill the newly inserted columns with the corresponding values
+     */
+    public void updateV1toV2(){
+        // Select everything from Monitor table, can also do this with raw query
+        Cursor cursor = readableDb.query(PetimoContract.Monitor.TABLE_NAME,
+                PetimoContract.Monitor.getAllColumns(), "1 = 1", null, null, null, null);
+        while (cursor.moveToNext()){
+            ContentValues values = new ContentValues();
+            values.put(PetimoContract.Monitor.COLUMN_NAME_CATEGORY_ID,
+                    findCatIdByName(cursor.getString(cursor.getColumnIndexOrThrow(
+                            PetimoContract.Monitor.COLUMN_NAME_CATEGORY))));
+            values.put(PetimoContract.Monitor.COLUMN_NAME_TASK_ID,
+                    findTaskIdByName(cursor.getString(cursor.getColumnIndexOrThrow(
+                            PetimoContract.Monitor.COLUMN_NAME_TASK))));
+            // Hard-coded. This is just for me who is the only user of the app till now ;)
+            values.put(PetimoContract.Monitor.COLUMN_NAME_STATUS, MonitorBlock.ACTIVE);
+            values.put(PetimoContract.Monitor.COLUMN_NAME_OV_THRESHOLD, 6);
+            // Update the row
+            Log.d(TAG, "updateV1toV2: Gonna update monitor id ===> " +
+                    cursor.getInt(cursor.getColumnIndexOrThrow(PetimoContract.Monitor._ID)));
+
+            int affectedRows = writableDb.update(PetimoContract.Monitor.TABLE_NAME, values,
+                    PetimoContract.Monitor._ID + " = " + Integer.toString(
+                            cursor.getInt(cursor.getColumnIndexOrThrow(PetimoContract.Monitor._ID))),
+                    null);
+            Log.d(TAG, "done, affectedRows =====> " + affectedRows);
+        }
+
+    }
+
+    private int findCatIdByName(String catName){
+        String selection = PetimoContract.Categories.COLUMN_NAME_NAME + " = ? ";
+        String selectionArgs[] = {catName};
+        Cursor cursor = readableDb.query(PetimoContract.Categories.TABLE_NAME,
+                new String[]{PetimoContract.Categories._ID}, selection, selectionArgs,
+                null, null, null);
+        int catId = -1;
+        while (cursor.moveToNext())
+                catId = cursor.getInt(cursor.getColumnIndexOrThrow(PetimoContract.Categories._ID));
+        return catId;
+    }
+
+
+    private int findTaskIdByName(String taskName){
+        String selection = PetimoContract.Tasks.COLUMN_NAME_NAME + " = ? ";
+        String selectionArgs[] = {taskName};
+        Cursor cursor = readableDb.query(PetimoContract.Tasks.TABLE_NAME,
+                new String[]{PetimoContract.Tasks._ID}, selection, selectionArgs,
+                null, null, null);
+        int taskId = -1;
+        while (cursor.moveToNext())
+            taskId = cursor.getInt(cursor.getColumnIndexOrThrow(PetimoContract.Tasks._ID));
+        return taskId;
+    }
 
     //<---------------------------------------------------------------------------------------------
     // Auxiliary

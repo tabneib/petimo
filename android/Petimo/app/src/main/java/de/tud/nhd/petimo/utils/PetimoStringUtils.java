@@ -66,4 +66,13 @@ public class PetimoStringUtils {
             throw new StringEncodingException();
         }
     }
+
+
+
+    public static String encodeIntList(ArrayList<Integer> intList, int itemSize){
+        ArrayList<String[]> strArrList = new ArrayList<>();
+        for (Integer item : intList)
+            strArrList.add(new String[]{Integer.toString(item)});
+        return encode(strArrList, itemSize);
+    }
 }

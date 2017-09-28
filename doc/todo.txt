@@ -9,12 +9,12 @@ done				MonitorCategory
 done				MonitorTask
 done				MonitorBlock
 done				PetimoDbWrapper
-				PetimoSharedPref
-				Fragments
+done				PetimoSharedPref
+done				Fragments
 done		[+] Adding new columns:
-			Category: status, delete_time, note
-			Task:	  status, delete_time, note
-			Monitor:  status, note
+done			Category: status, delete_time, note
+done			Task:	  status, delete_time, note
+done			Monitor:  status, note
 
 	[+] App:
 		[+] (secret) Admin Activity

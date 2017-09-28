@@ -72,7 +72,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignRight="@+id/spinnerCat"
-                        android:entries="@array/spinner_default"
                         android:id="@+id/spinnerTask" />
                 </LinearLayout>
 

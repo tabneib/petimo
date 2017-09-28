@@ -14,10 +14,10 @@ public interface OnModeFragmentInteractionListener {
 
     /**
      * Call-back method which is called when the start monitor button is clicked
-     * @param inputCat
-     * @param inputTask
+     * @param catId
+     * @param taskId
      */
-    void onConfirmStartButtonClicked(String inputCat, String inputTask, long startTime);
+    void onConfirmStartButtonClicked(int catId, int taskId, long startTime);
 
     /**
      * Call-back method which is called when the stop confirm button is clicked
@@ -25,5 +25,5 @@ public interface OnModeFragmentInteractionListener {
     void onConfirmStopButtonClicked(long stopTime);
 
 
-    void onLastMonitoredTaskSelected(String category, String task);
+    void onLastMonitoredTaskSelected(int catId, int taskId);
 }

@@ -14,8 +14,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.MonitorCategory;
+import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
@@ -90,7 +90,7 @@ public class CategoryRecyclerViewAdapter extends
      */
     private void onBindViewHolderEditMode(final ViewHolder holder, final int position) {
 
-        holder.catName = catList.get(position).getName();
+        holder.category = catList.get(position);
         holder.catTextView.setText(catList.get(position).getName());
         holder.newTaskButton.setOnClickListener(new View.OnClickListener(){
 
@@ -118,16 +118,17 @@ public class CategoryRecyclerViewAdapter extends
                                                             + " must implement " +
                                                             "OnEditTaskFragmentInteractionListener");
                                         }
-                                        mListener.onConfirmAddingTaskStopButtonClicked(
+                                        mListener.onConfirmAddingTaskButtonClicked(
                                                 holder,
                                                 // This is a bug! The value of position will be
                                                 // fixed at this point, Hence it is nor updated
                                                 // upon adding new category => yield wrong category
                                                 // name
                                                 //catList.get(position).getName();
-                                                holder.catName,
+                                                holder.category.getId(),
                                                 taskInput.getText().toString(),
-                                                prioritySpinner.getSelectedItemPosition());
+                                                prioritySpinner.getSelectedItemPosition(),
+                                                "");
                                     }
                                 })
                         .setNegativeButton(fragment.getActivity().getString(R.string.button_cancel),
@@ -143,7 +144,7 @@ public class CategoryRecyclerViewAdapter extends
 
         // Nesting fragments inside RecyclerView is not recommended, so I use recyclerView directly
         holder.taskAdapter = new TaskRecyclerViewAdapter(
-                PetimoController.getInstance().getAllTasks(catList.get(position).getName()),
+                PetimoDbWrapper.getInstance().getTasksByCat(catList.get(position).getId()),
                 mode, this, position);
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
@@ -174,13 +175,10 @@ public class CategoryRecyclerViewAdapter extends
                                             @Override
                                             public void onClick(View view) {
                                                 // Delete the task
-                                                PetimoController.getInstance().removeTask(
+                                                PetimoDbWrapper.getInstance().removeTask(
                                                         holder.taskAdapter.taskList.get(
                                                                 vHolder.getLayoutPosition()).
-                                                                getName(),
-                                                        holder.taskAdapter.taskList.get(
-                                                                vHolder.getLayoutPosition()).
-                                                                getCatName());
+                                                                getId());
 
                                                 holder.taskAdapter.
                                                         notifyItemRemoved(vHolder.
@@ -302,23 +300,24 @@ public class CategoryRecyclerViewAdapter extends
      */
     private void onBindViewHolderSelectMode(final ViewHolder holder, final int position) {
 
-        holder.catName = catList.get(position).getName();
+        holder.category = catList.get(position);
         holder.catCheckBox.setText(catList.get(position).getName());
         holder.taskAdapter = new TaskRecyclerViewAdapter(
-                PetimoController.getInstance().getAllTasks(catList.get(position).getName()), mode,
+                PetimoDbWrapper.getInstance().getTasksByCat(catList.get(position).getId()), mode,
                 this, position);
         holder.taskListRecyclerView.setLayoutManager(
                 new LinearLayoutManager(fragment.getActivity()));
         holder.taskListRecyclerView.setAdapter(holder.taskAdapter);
 
-        ArrayList<String[]> tasks = PetimoSharedPref.getInstance().getSelectedTasks();
+        ArrayList<Integer> tasks = PetimoSharedPref.getInstance().getSelectedTasks();
         int selectedTaskNum = 0;
-        for (String[] catTask: tasks)
-            if (catTask[0].equals(catList.get(position).getName()))
+        for (int taskId: tasks)
+            if (PetimoDbWrapper.getInstance().getCatIdFromTask(taskId) ==
+                    catList.get(position).getId())
                 selectedTaskNum++;
         // If all tasks belonging to this category are selected => checked
-        if (selectedTaskNum == PetimoController.getInstance().
-                getTaskNameByCat(catList.get(position).getName()).size()) {
+        if (selectedTaskNum == PetimoDbWrapper.getInstance().
+                getTaskIdsByCat(catList.get(position).getId()).size()) {
             onBind = true;
             holder.catCheckBox.setChecked(true);
             onBind = false;
@@ -346,7 +345,7 @@ public class CategoryRecyclerViewAdapter extends
 
         // Common Attributes
         public RecyclerView taskListRecyclerView;
-        public String catName;
+        public MonitorCategory category;
         // Each BlockListViewHolder must have its own TaskRecyclerViewAdapter
         public TaskRecyclerViewAdapter taskAdapter;
 
@@ -375,17 +374,19 @@ public class CategoryRecyclerViewAdapter extends
                                 public void onCheckedChanged(
                                         CompoundButton buttonView, boolean isChecked) {
                                     if (isChecked)
-                                        for (String task :
-                                                PetimoController.getInstance().
-                                                        getTaskNameByCat(catName))
+                                        // Add all tasks that belong to this cat
+                                        for (int taskId :
+                                                PetimoDbWrapper.getInstance().
+                                                        getTaskIdsByCat(category.getId()))
                                             PetimoSharedPref.getInstance().
-                                                    addSelectedTask(catName, task);
+                                                    addSelectedTask(taskId);
                                     else
-                                        for (String task :
-                                                PetimoController.getInstance().
-                                                        getTaskNameByCat(catName))
+                                        // remove all tasks of this cat
+                                        for (int taskId :
+                                                PetimoDbWrapper.getInstance().
+                                                        getTaskIdsByCat(category.getId()))
                                             PetimoSharedPref.getInstance().
-                                                    removeSelectedTask(catName, task);
+                                                    removeSelectedTask(taskId);
                                     if (!onBind)
                                         taskAdapter.notifyDataSetChanged();
                                 }
@@ -398,13 +399,15 @@ public class CategoryRecyclerViewAdapter extends
          * Update the view in case there is some item newly added
          * @param taskName
          */
-        public void updateView(String taskName, String catName){
+        public void updateView(String taskName, int catId){
             if (mode.equals(CategoryListFragment.EDIT_MODE)){
                 this.taskAdapter.taskList.add(0,
-                        PetimoController.getInstance().getTaskByName(taskName, catName));
+                        PetimoDbWrapper.getInstance().getTaskById(
+                                PetimoDbWrapper.getInstance().getTaskIdFromName(taskName, catId)));
                 taskAdapter.notifyItemInserted(0);
                 this.taskAdapter.taskList.clear();
-                this.taskAdapter.taskList.addAll(PetimoController.getInstance().getAllTasks(catName));
+                this.taskAdapter.taskList.addAll(
+                        PetimoDbWrapper.getInstance().getTasksByCat(catId));
                 this.taskAdapter.notifyDataSetChanged();
 
             }

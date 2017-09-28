@@ -16,6 +16,7 @@ import java.util.List;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.MonitorCategory;
+import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapter;
 
@@ -121,17 +122,17 @@ public class CategoryListFragment extends Fragment {
                                             .setIcon(android.R.drawable.ic_dialog_alert)
                                             .setMessage(getActivity().
                                                     getString(R.string.message_confirm_remove) +
-                                                    vHolder.catName + "?")
+                                                    vHolder.category.getName() + "?")
                                             .setPositiveButton(getString(R.string.button_yes),
                                                     new PetimoDialog.OnClickListener(){
                                                         @Override
                                                         public void onClick(View v) {
                                                             // Delete the category
-                                                            PetimoController.getInstance().
+                                                            PetimoDbWrapper.getInstance().
                                                                     removeCategory(
                                                                     adapter.catList.get(vHolder.
                                                                             getLayoutPosition()).
-                                                                            getName());
+                                                                            getId());
                                                             adapter.notifyItemRemoved(
                                                                     vHolder.getLayoutPosition());
                                                             adapter.catList.remove(
@@ -152,7 +153,7 @@ public class CategoryListFragment extends Fragment {
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
             itemTouchHelper.attachToRecyclerView(recyclerView);
 
-            this.catList = PetimoController.getInstance().getAllCats();
+            this.catList = PetimoDbWrapper.getInstance().getAllCategories();
             this.adapter = new CategoryRecyclerViewAdapter(this, catList, mode);
             recyclerView.setAdapter(adapter);
         }
@@ -180,7 +181,7 @@ public class CategoryListFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            this.catList = PetimoController.getInstance().getAllCats();
+            this.catList = PetimoDbWrapper.getInstance().getAllCategories();
             this.adapter = new CategoryRecyclerViewAdapter(this, catList, mode);
             recyclerView.setAdapter(adapter);
 
@@ -204,12 +205,13 @@ public class CategoryListFragment extends Fragment {
      */
     public void updateView(String newCatName){
         // Update the category list of the recyclerView and force it to rebind all items
-        this.catList.add(0, PetimoController.getInstance().getCatByName(newCatName));
+        this.catList.add(0, PetimoDbWrapper.getInstance().getCatById(
+                PetimoDbWrapper.getInstance().getCatIdFromName(newCatName)));
         this.adapter.notifyItemInserted(0);
         this.adapter.notifyDataSetChanged();
 
         this.catList.clear();
-        this.catList.addAll(PetimoController.getInstance().getAllCats());
+        this.catList.addAll(PetimoDbWrapper.getInstance().getAllCategories());
         // bug: this.catList now points to other arrayList object, while adapter.catList still
         // points to the old object
         //this.catList = new ArrayList<>(PetimoController.getInstance().getAllCats());

@@ -72,87 +72,83 @@ public class PetimoController {
             return _instance;
     }
 
-    /*
-    public static void initialize(Context fragmentActivity) throws Exception{
-        if(_instance != null)
-            throw new Exception("Cannot initialize multiple instances of Controller!");
-        else {
-            _instance = new PetimoController(fragmentActivity);
-        }
-    }
-
-
-    public static PetimoController getInstance() throws Exception{
-        if (_instance == null)
-            throw new Exception("PetimoController is not yet initialized!");
-        else
-            return _instance;
-    }
-    */
-
     //<---------------------------------------------------------------------------------------------
     //  Core - Inputting
     // -------------------------------------------------------------------------------------------->
 
     /**
-     * TODO comment em
      * @param name
      * @param priority
      * @return The corresponding response code
      */
-    public ResponseCode addCategory(String name, int priority)
+    public ResponseCode addCategory(String name, int priority, String note)
             throws DbErrorException, InvalidCategoryException, InvalidInputNameException {
-        return this.dbWrapper.insertCategory(name, priority);
+        return this.dbWrapper.insertCategory(name, priority, MonitorCategory.ACTIVE, -1, note);
     }
 
     /**
      * TODO comment em
      * @param name
-     * @param category
+     * @param catId
      * @param priority
      */
-    public ResponseCode addTask(String name, String category, int priority)
+    public ResponseCode addTask(String name, int catId, int priority, String note)
             throws DbErrorException, InvalidCategoryException, InvalidInputNameException {
-        return this.dbWrapper.insertTask(name, category, priority);
+        return this.dbWrapper.insertTask(name, catId, priority, MonitorTask.ACTIVE, -1, note);
     }
 
     /**
      * TODO: Check for invalid information - Time in the future; Time conflicts with other blocks
-     * @param inputTask
-     * @param inputCat
+     * @param catId
+     * @param taskId
      * @param start
      * @param end
      * @param date
+     * @param note
      * @return
+     * @throws DbErrorException
+     * @throws InvalidInputTimeException
+     * @throws InvalidTimeException
+     * @throws InvalidCategoryException
      */
     public ResponseCode addBlockManually(
-            String inputCat, String inputTask, long start, long end, int date)
+            int catId, int taskId, long start, long end, int date, String note)
             throws DbErrorException, InvalidInputTimeException,
             InvalidTimeException, InvalidCategoryException {
         if (end <= start)
             throw new InvalidTimeException(
                     "End time lays before start time: " + end + " < " + start);
         return this.dbWrapper.insertMonitorBlock(
-                inputTask, inputCat, start, end, end - start, date, PetimoTimeUtils.getWeekDay(date),
-                isOverNight(date, start, end));
+                taskId, catId, start, end, end - start, date, PetimoTimeUtils.getWeekDay(date),
+                isOverNight(date, start, end), sharedPref.getOvThreshold(), MonitorBlock.ACTIVE,
+                note);
     }
 
+    public ResponseCode addBlockManually(
+            String catName, String taskName, long start, long end, int date, String note)
+            throws DbErrorException, InvalidInputTimeException,
+            InvalidTimeException, InvalidCategoryException {
+        return addBlockManually(dbWrapper.getCatIdFromName(catName),
+                dbWrapper.getTaskIdFromName(taskName, dbWrapper.getCatIdFromName(catName)),
+                start, end, date, note);
+    }
     /**
      *
      * We assume that the input category, task are correct because the user has to choose them from
      * a drop down menu.
-     * @param inputCat
-     * @param inputTask
+     * Database version: V.2
+     * @param catId
+     * @param taskId
      * @return the corresponding response code
      */
     public ResponseCode monitor(
-            String inputCat, String inputTask, long startTime, long stopTime)
+            int catId, int taskId, long startTime, long stopTime)
             throws DbErrorException, InvalidCategoryException {
         //Date current = new Date();
         if (!sharedPref.isMonitoring()){
             // Case there is no ongoing monitor
             //sharedPref.setLiveMonitor(inputCat, inputTask, getLiveDate(current), current.getTime());
-            sharedPref.setLiveMonitor(inputCat, inputTask,
+            sharedPref.setLiveMonitor(catId, taskId,
                     getDateFromMillis(startTime, sharedPref.getOvThreshold()), startTime);
             return ResponseCode.OK;
         }
@@ -163,72 +159,40 @@ public class PetimoController {
             // TODO If the monitor go to another day so add multiple blocks !
             long start = sharedPref.getMonitorStart();
             int date = sharedPref.getMonitorDate();
-            String cat = sharedPref.getMonitorCat();
-            String task = sharedPref.getMonitorTask();
+            catId = sharedPref.getMonitorCatId();
+            taskId = sharedPref.getMonitorTaskId();
             sharedPref.clearLiveMonitor();
-            ResponseCode rCode =  this.dbWrapper.insertMonitorBlock(task, cat,start, stopTime, stopTime - start,
-                    date, PetimoTimeUtils.getWeekDay(date), isOverNight(date, start, stopTime));
+            ResponseCode rCode =  this.dbWrapper.insertMonitorBlock(
+                    taskId, catId, start, stopTime, stopTime - start,
+                    date, PetimoTimeUtils.getWeekDay(date), isOverNight(date, start, stopTime),
+                    sharedPref.getSettingsInt(PetimoSharedPref.SETTINGS_OVERNIGHT_THRESHOLD, 6),
+                    MonitorBlock.ACTIVE, "");
             return rCode;
         }
     }
-
-    /**
-     * Remove a monitor task
-     * @param taskName
-     * @param catName
-     * @return
-     */
-    public int removeTask(String taskName, String catName){
-        return this.dbWrapper.removeTask(taskName, catName);
-    }
-
-    /**
-     * Remove a monitor catefory
-     * @param catName
-     * @return
-     */
-    public int removeCategory(String catName){
-        return this.dbWrapper.removeCategory(catName);
-    }
-
-    /**
-     * Remove a monitor block
-     * @param id id of the block to be removed
-     * @return
-     */
-    public int removeBlock(int id){
-        return this.dbWrapper.removeBlockById(id);
-    }
-
 
     /**
      * Update the saved list of monitored tasks.
      * This must be called just before stopping the monitor
      */
     public void updateMonitoredTaskList(){
-        this.sharedPref.updateMonitoredTask(this.sharedPref.getMonitorCat(),
-                this.sharedPref.getMonitorTask(), System.currentTimeMillis());
-    }
-
-    /**
-     * Remove all saved monitored tasks
-     */
-    public void clearMonitoredTaskList(){
-        this.sharedPref.clearMonitoredTasks();
+        this.sharedPref.updateMonitoredTask(this.sharedPref.getMonitorCatId(),
+                this.sharedPref.getMonitorTaskId(), System.currentTimeMillis());
     }
 
     /**
      * update the last monitored cat/task to the current one
      */
     public void updateLastMonitored(){
-        this.sharedPref.setLastMonitored(sharedPref.getMonitorCat(), sharedPref.getMonitorTask());
+        this.sharedPref.setLastMonitored(
+                sharedPref.getMonitorCatId(), sharedPref.getMonitorTaskId());
     }
 
     /**
      * update the last monitored cat/task to the given one
      */
-    public void updateLastMonitored(String category, String task){
-        this.sharedPref.setLastMonitored(category, task);
+    public void updateLastMonitored(int catId, int taskId){
+        this.sharedPref.setLastMonitored(catId, taskId);
     }
 
     /**
@@ -247,22 +211,6 @@ public class PetimoController {
     //<---------------------------------------------------------------------------------------------
     //  Core - Outputting
     // -------------------------------------------------------------------------------------------->
-
-    /**
-     *
-     * @param inputStartDate
-     * @param inputEndDate
-     * @return the list of all satisfied monitor days, or null if the inputs are invalid
-     */
-    public List<MonitorDay> getDaysFromRange(
-            String inputStartDate, String inputEndDate, boolean selectedTasks){
-        long startDate = PetimoTimeUtils.getDateFromStr(inputStartDate);
-        long endDate = PetimoTimeUtils.getDateFromStr(inputEndDate);
-        if (startDate == -1 || endDate == -1)
-            return null;
-        else
-            return this.dbWrapper.getDaysByRange((int) startDate, (int) endDate, selectedTasks);
-    }
 
     /**
      *
@@ -301,6 +249,7 @@ public class PetimoController {
      * @param inputEndDate
      * @return the list of all satisfied monitor blocks, or null if the inputs are invalid
      */
+    // unused
     public List<MonitorBlock> getBlocksFromRange(String inputStartDate, String inputEndDate){
         long startDate = PetimoTimeUtils.getDateFromStr(inputStartDate);
         long endDate = PetimoTimeUtils.getDateFromStr(inputEndDate);
@@ -311,84 +260,21 @@ public class PetimoController {
     }
 
     /**
-     * Get a list of all categories
-     * @return the list of {@link MonitorCategory} objects
-     */
-    public List<MonitorCategory> getAllCats(){
-        return dbWrapper.getAllCategories();
-    }
-
-    /**
-     * Return all tasks the belong to the given category
-     * @param cat name of the category
-     * @return  the list of all corresponding tasks
-     */
-    public List<MonitorTask> getAllTasks(String cat){
-        return dbWrapper.getTasksByCat(cat);
-    }
-
-    /**
-     *
-     * @param catName
-     * @return
-     */
-    public List<String> getTaskNameByCat(String catName){
-        return dbWrapper.getTaskNamesByCat(catName);
-    }
-    /**
-     *
-     * @param startDate
-     * @param endDate
-     * @return the list of all satisfied monitor blocks
-     */
-    public List<MonitorBlock> getBlocksFromRange(int startDate, int endDate){
-        return this.dbWrapper.getBlocksByRange(startDate, endDate);
-    }
-
-    /**
-     *
-     * @return
-     */
-    public List<String> getAllCatNames(){
-        return dbWrapper.getAllCatNames();
-    }
-
-
-    /**
-     *
-     * @param catName
-     * @return
-     */
-    public MonitorCategory getCatByName(String catName){
-        return dbWrapper.getCatByName(catName);
-    }
-
-    /**
-     *
-     * @param taskName
-     * @param catName
-     * @return
-     */
-    public MonitorTask getTaskByName(String taskName, String catName){
-        return dbWrapper.getTaskByName(taskName, catName);
-    }
-
-
-    /**
      * Return a string of size 5 containing all information of the ongoing monitor.
      * The information includes: Category, Task, Date, Start time in HH:MM, Start time in millis
      * @return  the string, or null if there is no ongoing monitor
      */
     public String[] getLiveMonitorInfo(){
-        if (!isMonitoring())
+        if (!sharedPref.isMonitoring())
             return null;
         else
-            return new String[] {sharedPref.getMonitorCat(), sharedPref.getMonitorTask(),
+            return new String[] {
+                    PetimoDbWrapper.getInstance().getCatNameById(sharedPref.getMonitorCatId()),
+                    PetimoDbWrapper.getInstance().getTaskNameById(sharedPref.getMonitorTaskId()),
                     PetimoTimeUtils.getDateStrFromInt(sharedPref.getMonitorDate()),
                     PetimoTimeUtils.getDayTimeFromMsTime(sharedPref.getMonitorStart()),
                     Long.toString(sharedPref.getMonitorStart())};
     }
-
 
     /**
      *
@@ -398,21 +284,22 @@ public class PetimoController {
         ArrayList<String[]> monitoredTasks =
                 sharedPref.getMonitored(sharedPref.getUsrMonitoredSortOrder());
         if (monitoredTasks == null)
-            return new ArrayList<String[]>();
+            return new ArrayList<>();
         else
             return monitoredTasks;
     }
 
     /**
      * Calculate the position of the last monitored cat/task
+     * Database version: V.2
      * @return
      */
     public int[] getLastMonitoredTask(){
-        String[] lastCatTask = sharedPref.getLastMonitoredTask();
-        if (lastCatTask[0] != null && lastCatTask[1] != null) {
+        int[] lastCatTask = sharedPref.getLastMonitoredTask();
+        if (lastCatTask[0] != -1 && lastCatTask[1] != -1) {
             return new int[]{
-                    getAllCatNames().indexOf(lastCatTask[0]),
-                    getTaskNameByCat(lastCatTask[0]).indexOf(lastCatTask[1])
+                    dbWrapper.getAllCatIds().indexOf(lastCatTask[0]),
+                    dbWrapper.getTaskIdsByCat(lastCatTask[0]).indexOf(lastCatTask[1])
             };
         }
         else
@@ -420,34 +307,9 @@ public class PetimoController {
             return new int[]{0,0};
     }
 
-    /**
-     *
-     * @return
-     */
-    public String getUsrMonitoredTasksSortOrder(){
-        return sharedPref.getUsrMonitoredSortOrder();
-    }
-
-    /**
-     *
-     * @return
-     */
-    public boolean isDbReady(){
-        return dbWrapper.isReady();
-    }
-
-
     //<---------------------------------------------------------------------------------------------
     //  Auxiliary
     // -------------------------------------------------------------------------------------------->
-
-
-    /**
-     *
-     */
-    public boolean isMonitoring(){
-        return sharedPref.isMonitoring();
-    }
 
     /**
      * Determine the monitor date according to the given time.
@@ -477,11 +339,12 @@ public class PetimoController {
      */
     public int isOverNight(String date, String start, String end){
         return isOverNight(Integer.parseInt(date),
-                PetimoTimeUtils.getMsTimeFromStr(start, date), PetimoTimeUtils.getMsTimeFromStr(end,date));
+                PetimoTimeUtils.getMsTimeFromStr(start, date),
+                PetimoTimeUtils.getMsTimeFromStr(end,date));
     }
 
     /**
-     * TODO remove me !
+     * TODO Implement me !
      * @param date
      * @param start
      * @param end
@@ -616,16 +479,21 @@ public class PetimoController {
      */
     public boolean checkValidManualTime(int date, int hour, int minute){
 
+        Log.d(TAG, "checkValidManualTime: date/hour/minute ===> " + date + " / "+ hour + " / " + minute);
         long startTimeMillis = PetimoTimeUtils.getTimeMillisFromHM(date, hour, minute);
         // Check if the chosen time is not between any pair of existed start/stop time
         List<MonitorBlock> todayBlocks = dbWrapper.getBlocksByRange(date, date);
+        Log.d(TAG, "checkValidManualTime: todayBlocks size ===> " + todayBlocks.size());
+        for (MonitorBlock block : todayBlocks)
+            Log.d(TAG, block.toXml(0));
         if (todayBlocks == null || todayBlocks.isEmpty())
             // If there is not yet any monitor block today, so any given time is valid
             return true;
-        for (MonitorBlock block : todayBlocks)
+        for (MonitorBlock block : todayBlocks) {
             if (startTimeMillis >= block.getStart() && startTimeMillis <= block.getEnd())
                 // If the given time lays between any pair of start/stop time, so it is invalid
                 return false;
+        }
         return true;
     }
 
@@ -646,7 +514,6 @@ public class PetimoController {
     }
 
     public String getLangFromId(int id){
-        Log.d(TAG, "getLangFromId "+ id +" ===> " + PetimoSharedPref.LANGUAGES.get(id));
         if (id < PetimoSharedPref.LANGUAGES.size() && id >= 0)
             return PetimoSharedPref.LANGUAGES.get(id);
         else
