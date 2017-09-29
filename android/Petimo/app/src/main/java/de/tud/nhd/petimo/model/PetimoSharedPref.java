@@ -2,6 +2,7 @@ package de.tud.nhd.petimo.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import java.util.Iterator;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
+import de.tud.nhd.petimo.utils.PetimoContextWrapper;
 import de.tud.nhd.petimo.utils.StringParsingException;
 import de.tud.nhd.petimo.utils.PetimoStringUtils;
 
@@ -342,8 +344,8 @@ public class PetimoSharedPref {
      * Database version: V.2
      * @return  the list of monitored tasks, or null if there is no saved monitored task or
      *          some error occurs.
-     *          Each item contains the category, the task, last monitored time, and the monitor
-     *          frequency
+     *          Each item contains the category ID, the task ID, last monitored time, and the
+     *          monitor frequency
      */
     public ArrayList<String[]> getMonitored(String sortOpt){
 
@@ -360,7 +362,7 @@ public class PetimoSharedPref {
                         !PetimoDbWrapper.getInstance().checkTaskExists(
                                 Integer.parseInt(catTask[0]), Integer.parseInt(catTask[1]))) {
                     monitoredTaskIterator.remove();
-                    //removeMonitoredTask(catTask[0], catTask[1]);
+                    //removeMonitoredTask(Integer.parseInt(catTask[0]), Integer.parseInt(catTask[1]));
                 }
             }
             switch (sortOpt){
@@ -596,5 +598,89 @@ public class PetimoSharedPref {
      */
     public int getOvThreshold(){
         return settingPref.getInt(SETTINGS_OVERNIGHT_THRESHOLD, DEFAULT_OVERNIGHT_THRESHOLD);
+    }
+
+    //<---------------------------------------------------------------------------------------------
+    // Settings Preferences
+    // -------------------------------------------------------------------------------------------->
+
+    /**
+     * Update the way Petimo stores data in SharedPreferences due to Database upgrade/update from
+     * V.1 to V.2. This is to avoid user data loss
+     * Hard-coded
+     */
+    public void updateV1toV2(){
+
+        // Update saved last monitored task
+        try{
+            String catName = monitorPref.getString(MONITOR_LAST_MONITORED_CATEGORY, null);
+            String taskName = monitorPref.getString(MONITOR_LAST_MONITORED_TASK, null);
+            if (catName != null && taskName != null) {
+                int catId = PetimoDbWrapper.getInstance().getCatIdFromName(catName);
+                int taskId = PetimoDbWrapper.getInstance().getTaskIdFromName(taskName, catId);
+
+                monitorEditor.putInt(MONITOR_LAST_MONITORED_CATEGORY, catId);
+                monitorEditor.putInt(MONITOR_LAST_MONITORED_TASK, taskId);
+                monitorEditor.apply();
+            }
+            Log.d(TAG, "updateV1toV2: lastMonitoredTask is updated:");
+            Log.d(TAG, "Last cat/task ====> " +
+                    monitorPref.getInt(MONITOR_LAST_MONITORED_CATEGORY, -1) + " / " +
+                    monitorPref.getInt(MONITOR_LAST_MONITORED_TASK, -1));
+        }
+        catch(ClassCastException e){
+            e.printStackTrace();
+            Log.d(TAG, "updateV1toV2: lastMonitoredTask is already up-to-date");
+        }
+
+        // Update saved selected tasks
+        try{
+            ArrayList<String[]> oldSelectedTasks = PetimoStringUtils.parse(
+                    settingPref.getString(SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS, null), 2);
+
+            ArrayList<Integer> newSelectedTasks = new ArrayList<>();
+            for (String[] catTask: oldSelectedTasks)
+                newSelectedTasks.add(PetimoDbWrapper.getInstance().getTaskIdFromName(
+                        catTask[1], PetimoDbWrapper.getInstance().getCatIdFromName(catTask[0])));
+            monitorEditor.putString(SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS,
+                    PetimoStringUtils.encodeIntList(newSelectedTasks, 1));
+            monitorEditor.apply();
+
+            Log.d(TAG, "updateV1toV2: saved selected tasks is updated:");
+            for (String[] item: PetimoStringUtils.parse(
+                    settingPref.getString(SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS, null), 2))
+                Log.d(TAG, Arrays.toString(item));
+
+        }
+        catch (StringParsingException e){
+            e.printStackTrace();
+            Log.d(TAG, "updateV1toV2: lastMonitoredTask is probably already up-to-date");
+        }
+
+        // Update saved monitored tasks
+        try{
+            ArrayList<String[]> oldMonitoredTaskList = PetimoStringUtils.parse(
+                    monitorPref.getString(MONITOR_MONITORED_TASKS, null), 4);
+            ArrayList<String[]> newMonitoredTaskList = new ArrayList<>();
+            for (String[] monitoredTask: oldMonitoredTaskList){
+                int catId = PetimoDbWrapper.getInstance().getCatIdFromName(monitoredTask[0]);
+                int taskId =
+                        PetimoDbWrapper.getInstance().getTaskIdFromName(monitoredTask[0], catId);
+                newMonitoredTaskList.add(new String[]{
+                        Integer.toString(catId), Integer.toString(taskId),
+                        monitoredTask[2], monitoredTask[3]});
+            }
+            monitorEditor.putString(MONITOR_MONITORED_TASKS,
+                    PetimoStringUtils.encode(newMonitoredTaskList, 4));
+            monitorEditor.apply();
+            Log.d(TAG, "updateV1toV2: Monitored tasks is updated:");
+            for (String[] item : PetimoStringUtils.parse(
+                    monitorPref.getString(MONITOR_MONITORED_TASKS, null), 4))
+                Log.d(TAG, Arrays.toString(item));
+        }
+        catch (StringParsingException e){
+            e.printStackTrace();
+            Log.d(TAG, "updateV1toV2: lastMonitoredTask is probably already up-to-date");
+        }
     }
 }

@@ -392,7 +392,7 @@ public class MainActivity extends AppCompatActivity
         }
         // TODO display a snack bar to notify the usr
         // Just for now: display a Toast
-        Toast.makeText(this, "Added new category: " + catId, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Added new task: " + inputTask, Toast.LENGTH_LONG).show();
 
         // Update the recyclerView
         viewHolder.updateView(inputTask, catId);
@@ -473,15 +473,20 @@ public class MainActivity extends AppCompatActivity
                 }
 
             }
+
+            // Hard-coded here !!!!!! ;)
             // update database
             //PetimoDbWrapper.getInstance().updateV1toV2();
+            // printout db
+            //PetimoDbWrapper.getInstance().generateXml();
+            // update sharedPref
+            //PetimoSharedPref.getInstance().updateV1toV2();
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            //Log.d(TAG, "DB ready.");
             chooseDisplay(position);
         }
     }

@@ -62,7 +62,10 @@ public class MonitorCategory {
             indent = indent + "\t";
 
         String xml = indent + "<MonitorCategory id='" + this.id + "' name='" +
-                this.name + "' priority='" + this.priority + "' />";
+                this.name + "' priority='" + this.priority + "' status='" +
+                this.status + "' delete_time='" +
+                this.deleteTime + "' note='" +
+                this.note + "' />";
         return xml;
     }
 }

@@ -863,17 +863,6 @@ public class PetimoDbWrapper {
     }
 
     /**
-     * Check if there is a task with the given name and belongs to the given category
-     * @param task
-     * @param category
-     * @return
-     */
-    @Deprecated
-    public boolean checkTaskNameExists(String category, String task){
-        return this.getTaskNamesByCat(category).contains(task);
-    }
-
-    /**
      * Check if there is a task with the given name and belongs to the given category.
      * @param catId
      * @param taskName
@@ -940,7 +929,11 @@ public class PetimoDbWrapper {
                         cursor.getString(cursor.getColumnIndexOrThrow(
                                 PetimoContract.Monitor.COLUMN_NAME_TASK)) + "' category='" +
                         cursor.getString(cursor.getColumnIndexOrThrow(
-                                PetimoContract.Monitor.COLUMN_NAME_CATEGORY)) + "' start='" +
+                                PetimoContract.Monitor.COLUMN_NAME_CATEGORY)) + "' task_id='" +
+                        cursor.getInt(cursor.getColumnIndexOrThrow(
+                                PetimoContract.Monitor.COLUMN_NAME_TASK_ID)) + "' category_id='" +
+                        cursor.getInt(cursor.getColumnIndexOrThrow(
+                                PetimoContract.Monitor.COLUMN_NAME_CATEGORY_ID)) + "' start='" +
                         cursor.getInt(cursor.getColumnIndexOrThrow(
                                 PetimoContract.Monitor.COLUMN_NAME_START)) + "' end='" +
                         cursor.getInt(cursor.getColumnIndexOrThrow(
@@ -952,7 +945,13 @@ public class PetimoDbWrapper {
                         cursor.getInt(cursor.getColumnIndexOrThrow(
                                 PetimoContract.Monitor.COLUMN_NAME_WEEKDAY)) + "' overnight='" +
                         cursor.getInt(cursor.getColumnIndexOrThrow(
-                                PetimoContract.Monitor.COLUMN_NAME_OVERNIGHT)) + "' />\n";
+                                PetimoContract.Monitor.COLUMN_NAME_OVERNIGHT)) + "' ovThreshold='" +
+                        cursor.getInt(cursor.getColumnIndexOrThrow(
+                                PetimoContract.Monitor.COLUMN_NAME_OV_THRESHOLD)) + "' status='" +
+                        cursor.getInt(cursor.getColumnIndexOrThrow(
+                                PetimoContract.Monitor.COLUMN_NAME_STATUS)) + "' note='" +
+                        cursor.getInt(cursor.getColumnIndexOrThrow(
+                                PetimoContract.Monitor.COLUMN_NAME_NOTE)) + "' />\n";
             }
             s = s + "\t</blocks>\n";
             s = s + "</petimo>\n";
@@ -966,41 +965,6 @@ public class PetimoDbWrapper {
         }
     }
 
-    //<---------------------------------------------------------------------------------------------
-    // Core - Upgrade Database
-    //--------------------------------------------------------------------------------------------->
-
-    /**
-     * Fill the newly inserted columns with the corresponding values
-     */
-    public void updateV1toV2(){
-        // Select everything from Monitor table, can also do this with raw query
-        Cursor cursor = readableDb.query(PetimoContract.Monitor.TABLE_NAME,
-                PetimoContract.Monitor.getAllColumns(), "1 = 1", null, null, null, null);
-        while (cursor.moveToNext()){
-            ContentValues values = new ContentValues();
-            values.put(PetimoContract.Monitor.COLUMN_NAME_CATEGORY_ID,
-                    findCatIdByName(cursor.getString(cursor.getColumnIndexOrThrow(
-                            PetimoContract.Monitor.COLUMN_NAME_CATEGORY))));
-            values.put(PetimoContract.Monitor.COLUMN_NAME_TASK_ID,
-                    findTaskIdByName(cursor.getString(cursor.getColumnIndexOrThrow(
-                            PetimoContract.Monitor.COLUMN_NAME_TASK))));
-            // Hard-coded. This is just for me who is the only user of the app till now ;)
-            values.put(PetimoContract.Monitor.COLUMN_NAME_STATUS, MonitorBlock.ACTIVE);
-            values.put(PetimoContract.Monitor.COLUMN_NAME_OV_THRESHOLD, 6);
-            // Update the row
-            Log.d(TAG, "updateV1toV2: Gonna update monitor id ===> " +
-                    cursor.getInt(cursor.getColumnIndexOrThrow(PetimoContract.Monitor._ID)));
-
-            int affectedRows = writableDb.update(PetimoContract.Monitor.TABLE_NAME, values,
-                    PetimoContract.Monitor._ID + " = " + Integer.toString(
-                            cursor.getInt(cursor.getColumnIndexOrThrow(PetimoContract.Monitor._ID))),
-                    null);
-            Log.d(TAG, "done, affectedRows =====> " + affectedRows);
-        }
-
-    }
-
     private int findCatIdByName(String catName){
         String selection = PetimoContract.Categories.COLUMN_NAME_NAME + " = ? ";
         String selectionArgs[] = {catName};
@@ -1009,7 +973,7 @@ public class PetimoDbWrapper {
                 null, null, null);
         int catId = -1;
         while (cursor.moveToNext())
-                catId = cursor.getInt(cursor.getColumnIndexOrThrow(PetimoContract.Categories._ID));
+            catId = cursor.getInt(cursor.getColumnIndexOrThrow(PetimoContract.Categories._ID));
         return catId;
     }
 
@@ -1025,6 +989,85 @@ public class PetimoDbWrapper {
             taskId = cursor.getInt(cursor.getColumnIndexOrThrow(PetimoContract.Tasks._ID));
         return taskId;
     }
+
+    //<---------------------------------------------------------------------------------------------
+    // Core - Upgrade Database
+    //--------------------------------------------------------------------------------------------->
+
+    /**
+     * Fill the newly inserted columns with the corresponding values
+     */
+    public void updateV1toV2(){
+
+        // Update Cats Table
+        Cursor catsCursor = readableDb.query(PetimoContract.Categories.TABLE_NAME,
+                PetimoContract.Categories.getAllColumns(), "1 = 1", null, null, null, null);
+        while (catsCursor.moveToNext()){
+            ContentValues values = new ContentValues();
+            values.put(PetimoContract.Categories.COLUMN_NAME_STATUS, MonitorCategory.ACTIVE);
+            Log.d(TAG, "updateV1toV2: Gonna update cat id ===> " +
+                    catsCursor.getInt(catsCursor.getColumnIndexOrThrow(PetimoContract.Categories._ID)));
+
+            int affectedRows = writableDb.update(PetimoContract.Categories.TABLE_NAME, values,
+                    PetimoContract.Categories._ID + " = " + Integer.toString(
+                            catsCursor.getInt(catsCursor.getColumnIndexOrThrow(
+                                    PetimoContract.Categories._ID))),
+                    null);
+            Log.d(TAG, "done, affectedRows =====> " + affectedRows);
+        }
+        catsCursor.close();
+
+        // Update Tasks Table
+        Cursor tasksCursor = readableDb.query(PetimoContract.Tasks.TABLE_NAME,
+                PetimoContract.Tasks.getAllColumns(), "1 = 1", null, null, null, null);
+        while (tasksCursor.moveToNext()){
+            ContentValues values = new ContentValues();
+            values.put(PetimoContract.Tasks.COLUMN_NAME_CATEGORY_ID,
+                    findCatIdByName(tasksCursor.getString(tasksCursor.getColumnIndexOrThrow(
+                            PetimoContract.Tasks.COLUMN_NAME_CATEGORY))));
+            values.put(PetimoContract.Tasks.COLUMN_NAME_STATUS, MonitorTask.ACTIVE);
+            Log.d(TAG, "updateV1toV2: Gonna update task id ===> " +
+                    tasksCursor.getInt(tasksCursor.getColumnIndexOrThrow(PetimoContract.Tasks._ID)));
+
+            int affectedRows = writableDb.update(PetimoContract.Tasks.TABLE_NAME, values,
+                    PetimoContract.Tasks._ID + " = " + Integer.toString(
+                            tasksCursor.getInt(tasksCursor.getColumnIndexOrThrow(
+                                    PetimoContract.Tasks._ID))),
+                    null);
+            Log.d(TAG, "done, affectedRows =====> " + affectedRows);
+        }
+        tasksCursor.close();
+
+        // Update Monitor Table
+        // Select everything from Monitor table, can also do this with raw query
+        Cursor monitorsCursor = readableDb.query(PetimoContract.Monitor.TABLE_NAME,
+                PetimoContract.Monitor.getAllColumns(), "1 = 1", null, null, null, null);
+        while (monitorsCursor.moveToNext()){
+            ContentValues values = new ContentValues();
+            values.put(PetimoContract.Monitor.COLUMN_NAME_CATEGORY_ID,
+                    findCatIdByName(monitorsCursor.getString(monitorsCursor.getColumnIndexOrThrow(
+                            PetimoContract.Monitor.COLUMN_NAME_CATEGORY))));
+            values.put(PetimoContract.Monitor.COLUMN_NAME_TASK_ID,
+                    findTaskIdByName(monitorsCursor.getString(monitorsCursor.getColumnIndexOrThrow(
+                            PetimoContract.Monitor.COLUMN_NAME_TASK))));
+            // Set to default
+            values.put(PetimoContract.Monitor.COLUMN_NAME_STATUS, MonitorBlock.ACTIVE);
+            values.put(PetimoContract.Monitor.COLUMN_NAME_OV_THRESHOLD, 6);
+            // Update the row
+            Log.d(TAG, "updateV1toV2: Gonna update monitor id ===> " +
+                    monitorsCursor.getInt(monitorsCursor.getColumnIndexOrThrow(PetimoContract.Monitor._ID)));
+
+            int affectedRows = writableDb.update(PetimoContract.Monitor.TABLE_NAME, values,
+                    PetimoContract.Monitor._ID + " = " + Integer.toString(
+                            monitorsCursor.getInt(monitorsCursor.getColumnIndexOrThrow(PetimoContract.Monitor._ID))),
+                    null);
+            Log.d(TAG, "done, affectedRows =====> " + affectedRows);
+        }
+        monitorsCursor.close();
+
+    }
+
+
 
     //<---------------------------------------------------------------------------------------------
     // Auxiliary

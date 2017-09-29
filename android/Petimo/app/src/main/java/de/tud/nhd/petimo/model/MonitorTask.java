@@ -75,9 +75,13 @@ public class MonitorTask {
         for (int i = 1; i <= indentLevel; i++)
             indent = indent + "\t";
 
-        String xml = indent + "<MonitorCategory id='" + this.id + "' name='" +
-                this.name + "' category_id='" + this.catId + "' priority='"
-                + this.priority + "' />";
+        String xml = indent + "<MonitorTask id='" + this.id + "' name='" +
+                this.name + "' category_id='" + this.catId +
+                "' category='" + this.catName + "' priority='"
+                + this.priority + "' status='" +
+                this.status + "' delete_time='" +
+                this.deleteTime + "' note='" +
+                this.note + "' />";
         return xml;
     }
 
