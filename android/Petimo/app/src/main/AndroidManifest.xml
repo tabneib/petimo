@@ -17,16 +17,17 @@
         </activity>
         <activity android:name=".view.activities.MonitorResultActivity"/>
         <activity
-            android:name=".view.activities.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".view.activities.MainActivity">
+            android:name=".view.activities.AdminActivity"
+            android:label="@string/title_activity_admin"
+            android:parentActivityName=".view.activities.MainActivity"
+            android:theme="@style/PetimoTheme.Light">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tud.nhd.petimo.view.activities.MainActivity"/>
         </activity>
         <activity
-            android:name=".view.activities.AdminActivity"
-            android:label="@string/title_activity_admin"
+            android:name=".view.activities.StatisticsActivity"
+            android:label="StatisticsActivity"
             android:parentActivityName=".view.activities.MainActivity"
             android:theme="@style/PetimoTheme.Light">
             <meta-data

@@ -12,7 +12,8 @@
     <!-- Orange 800 -->
     <color name="colorAccent">#EF6C00</color>
     <!-- Grey (300) (200) Deep Orange 50-->
-    <color name="windowBackground">#FBE9E7</color>
+    <!-- <color name="windowBackground">#FBE9E7</color> -->
+    <color name="windowBackground">#F5F5F5</color>
     <!-- Grey 100 -->
     <color name="textColorPrimary">#F5F5F5</color>
     <!-- Grey 900 -->

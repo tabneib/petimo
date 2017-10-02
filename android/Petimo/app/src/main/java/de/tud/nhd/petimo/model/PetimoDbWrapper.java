@@ -911,7 +911,7 @@ public class PetimoDbWrapper {
                 s = s + cat.toXml(2) + "\n";
             s = s + "\t<categories>\n\n";
 
-            // Tasks TODO change the structure here. Tasks should be within the corresponding cat !
+            // Tasks
             s = s + "\t<tasks>\n";
             for (MonitorTask task : getAllTasks())
                 s = s + task.toXml(2) + "\n";
@@ -997,6 +997,7 @@ public class PetimoDbWrapper {
     /**
      * Fill the newly inserted columns with the corresponding values
      */
+    // unused
     public void updateV1toV2(){
 
         // Update Cats Table
@@ -1066,8 +1067,6 @@ public class PetimoDbWrapper {
         monitorsCursor.close();
 
     }
-
-
 
     //<---------------------------------------------------------------------------------------------
     // Auxiliary

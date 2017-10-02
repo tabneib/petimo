@@ -180,7 +180,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             case 2:
                 //Statistics
-                displayFragment = 2;
+                // TODO: step by step change all display to activity instead of fragment
+                //displayFragment = 2;
                 displayFragment(STATISTICS_FRAGMENT_TAG);
                 break;
             case 3:
@@ -224,7 +225,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     *
+     * TODO: step by step change to use activity instead of fragment !
      * @param fTag
      */
     private void displayFragment(String fTag){
@@ -243,8 +244,11 @@ public class MainActivity extends AppCompatActivity
                     fragment = EditTasksFragment.getInstance();
                     break;
                 case STATISTICS_FRAGMENT_TAG:
-                    fragment = StatisticsFragment.getInstance();
-                    break;
+                    /*fragment = StatisticsFragment.getInstance();
+                    break;*/
+                    Intent intent = new Intent(this, StatisticsActivity.class);
+                    startActivity(intent);
+                    return;
                 case SETTING_FRAGMENT_TAG:
                     fragment = SettingsFragment.getInstance();
                     break;
