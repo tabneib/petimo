@@ -19,9 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.PetimoDbWrapper;
@@ -30,6 +27,7 @@ import de.tud.nhd.petimo.view.fragments.dialogs.ConfirmStartDialogFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.MonitoredTaskListFragment;
+import de.tud.nhd.petimo.view.fragments.menu.ModeOffMenuFragment;
 
 /**
  * Activities that contain this fragment must implement the

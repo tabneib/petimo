@@ -1,4 +1,4 @@
-package de.tud.nhd.petimo.view.fragments;
+package de.tud.nhd.petimo.view.fragments.menu;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,6 +24,7 @@ import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.view.activities.MainActivity;
+import de.tud.nhd.petimo.view.fragments.ModeOffFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.MonitoredTaskListFragment;
@@ -162,7 +163,7 @@ public class ModeOffMenuFragment extends Fragment {
             mListener = (OnModeFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnDateRangeChangeListener");
         }
     }
 

@@ -6,14 +6,12 @@ import android.app.DatePickerDialog;
 import java.util.Calendar;
 import java.util.Date;
 
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +26,7 @@ import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.lists.DayListFragment;
+import de.tud.nhd.petimo.view.fragments.menu.EditBlocksMenuFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -90,13 +89,7 @@ public class EditBlocksFragment extends Fragment {
         showButton = (ImageButton) view.findViewById(R.id.button_display_day_range);
 
 
-        // default date range is the last 1 week
-        fromCalendar.setTime(new Date());
-        toCalendar.setTime(new Date());
-        fromCalendar.add(Calendar.DATE, -6);
 
-        fromDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(fromCalendar));
-        toDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(toCalendar));
         //fromDateButton.setPaintFlags(fromDateButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         //toDateButton.setPaintFlags(toDateButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 

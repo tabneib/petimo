@@ -1,0 +1,95 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:padding="@dimen/pane_padding"
+    tools:context="de.tud.nhd.petimo.view.fragments.menu.PetimoDatePickerMenu">
+
+
+    <!-- The Floating Menu at the bottom-->
+    <android.support.v7.widget.CardView
+        android:id="@+id/menu"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        card_view:cardBackgroundColor="@android:color/transparent"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="4dp"
+        android:scrollbars="none">
+        <!-- chart controlling header -->
+        <RelativeLayout
+            android:id="@+id/menu_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/pane_padding"
+            android:background="@color/background_primary">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/menu_content">
+                <ImageButton
+                    android:id="@+id/menu_button"
+                    android:background="@drawable/ic_exit_to_app_black_36dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/menu_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:text="@string/colon_from"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/sub_pane_padding"/>
+                <Button
+                    android:text="@string/loading_text"
+                    android:background="@android:color/transparent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_date_from" />
+                <TextView
+                    android:text="@string/colon_to"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/sub_pane_padding" />
+                <Button
+                    android:text="@string/loading_text"
+                    android:background="@android:color/transparent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_date_to" />
+
+
+            </LinearLayout>
+
+
+
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+    <!-- The Floating Menu Button at the bottom-right corner-->
+    <!-- New approach: We don't need a separate button any more !
+    <ImageButton
+        android:id="@+id/menu_button"
+        android:background="@drawable/ic_date_range_black_48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"/>
+    -->
+</RelativeLayout>

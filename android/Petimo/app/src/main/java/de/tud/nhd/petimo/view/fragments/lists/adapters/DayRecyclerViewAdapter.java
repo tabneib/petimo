@@ -1,10 +1,8 @@
 package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,15 +22,12 @@ import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.model.MonitorDay;
 import de.tud.nhd.petimo.view.fragments.dialogs.AddBlockDialogFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
-import de.tud.nhd.petimo.view.fragments.listener.OnEditDayFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.DayListFragment;
+import de.tud.nhd.petimo.view.fragments.lists.DayListFragment.OnEditDayFragmentInteractionListener;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link MonitorDay} and makes a call to the
- * specified {@link OnEditDayFragmentInteractionListener}.
- */
+
 public class DayRecyclerViewAdapter extends
         RecyclerView.Adapter<DayRecyclerViewAdapter.ViewHolder> {
 

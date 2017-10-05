@@ -269,21 +269,19 @@ public class PetimoDbWrapper {
     public ArrayList<MonitorDay> getDaysByRange(int startDate, int endDate, boolean selectedTasks){
         String selection = PetimoContract.Monitor.COLUMN_NAME_DATE + " BETWEEN ? AND ?";
 
-        // If only selected taks should be fetched
+        // If only selected tasks should be fetched
         if (selectedTasks){
             // If there is no task selected, return an empty list
             if (PetimoSharedPref.getInstance().getSelectedTasks().isEmpty())
                 return new ArrayList<>();
-            selection = selection + " AND ";
+            selection = selection + " AND (";
             for (int taskId : PetimoSharedPref.getInstance().getSelectedTasks()){
-                /*selection = selection + "((" + PetimoContract.Monitor.COLUMN_NAME_CATEGORY +
-                        " = '" + catTask[0] + "') AND (" + PetimoContract.Monitor.COLUMN_NAME_TASK +
-                        " = '" + catTask[1] + "')) OR ";*/
                 selection = selection + "(" + PetimoContract.Monitor.COLUMN_NAME_TASK_ID +
                         " = " + Integer.toString(taskId) + ") OR ";
             }
             // remove the last " OR "
             selection = selection.substring(0, selection.length()-4);
+            selection = selection + ")";
         }
 
         String[] selectionArgs = {Integer.toString(startDate), Integer.toString(endDate)};
@@ -592,7 +590,6 @@ public class PetimoDbWrapper {
      * @return
      */
     public List<Integer> getTaskIdsByCat(int catId){
-        Log.d(TAG, "catId ===> " + catId);
         String selection = PetimoContract.Tasks.COLUMN_NAME_CATEGORY_ID + " = ?";
         String[] selectionArgs = {Integer.toString(catId)};
         List<Integer> taskIds = new ArrayList<>();
@@ -604,7 +601,6 @@ public class PetimoDbWrapper {
             taskIds.add(cursor.getInt(cursor.getColumnIndexOrThrow(
                     PetimoContract.Tasks._ID)));
         cursor.close();
-        Log.d(TAG, "taskIds sze ===> " + taskIds.size());
         return taskIds;
     }
 
@@ -688,7 +684,6 @@ public class PetimoDbWrapper {
             catIds.add(cursor.getInt(cursor.getColumnIndexOrThrow(
                     PetimoContract.Categories._ID)));
         cursor.close();
-        Log.d(TAG, "catIds size ====> " + catIds.size());
         return catIds;
     }
 

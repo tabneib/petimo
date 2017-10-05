@@ -34,6 +34,14 @@
         <item>Tiếng Việt</item>
     </string-array>
 
+    <!-- Menu ############################################################################-->
+    <!-- Navigation Drawer -->
+    <string name="menu_monitor">Giám Sát</string>
+    <string name="menu_monitored_task">Công Việc Đã Giám Sát</string>
+    <string name="menu_statistics">Thống Kê</string>
+    <string name="menu_manage_tasks">Quản Lý Công Việc</string>
+    <string name="menu_settings">Cài Đặt</string>
+
 
     <!-- Short text ######################################################################-->
 

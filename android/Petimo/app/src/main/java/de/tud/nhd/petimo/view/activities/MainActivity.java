@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,7 +15,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,19 +29,15 @@ import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
 import de.tud.nhd.petimo.model.MonitorBlock;
-import de.tud.nhd.petimo.model.PetimoDbDemo;
 import de.tud.nhd.petimo.model.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.PetimoSharedPref;
 import de.tud.nhd.petimo.utils.PetimoContextWrapper;
 import de.tud.nhd.petimo.view.fragments.DemoFragment;
-import de.tud.nhd.petimo.view.fragments.EditBlocksFragment;
 import de.tud.nhd.petimo.view.fragments.EditTasksFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOffFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOnFragment;
 import de.tud.nhd.petimo.view.fragments.SettingsFragment;
-import de.tud.nhd.petimo.view.fragments.StatisticsFragment;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditBlocksMenuFragmentInteractionListener;
-import de.tud.nhd.petimo.view.fragments.listener.OnEditDayFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
@@ -49,7 +45,7 @@ import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapt
 
 public class MainActivity extends AppCompatActivity
         implements OnModeFragmentInteractionListener, OnEditTaskFragmentInteractionListener,
-        OnEditDayFragmentInteractionListener, OnEditBlocksMenuFragmentInteractionListener {
+        OnEditBlocksMenuFragmentInteractionListener {
 
     private static final String TAG = "PetimoMainActivity";
 
@@ -119,7 +115,7 @@ public class MainActivity extends AppCompatActivity
                 super.onDrawerOpened(drawerView);
                 //toolBar.setTitle(drawerTitle);
 
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override
@@ -127,7 +123,7 @@ public class MainActivity extends AppCompatActivity
                 super.onDrawerClosed(drawerView);
                 //toolBar.setTitle(title);
 
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
         };
 
@@ -141,6 +137,13 @@ public class MainActivity extends AppCompatActivity
         // debug
         //Log.d(TAG, "gonna run the db demo!");
         //new PetimoDbDemo(this).executeDemo();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // TODO Hard-coded, no item should be selected !
+        drawerList.setItemChecked(0, true);
     }
 
 
@@ -236,17 +239,21 @@ public class MainActivity extends AppCompatActivity
         if (fragment != null)
             ft.replace(R.id.content_frame, fragment).commit();
         else{
+            Intent intent;
             switch (fTag) {
                 case EDIT_BLOCKS_FRAGMENT_TAG:
-                    fragment = EditBlocksFragment.getInstance();
-                    break;
+                    /*fragment = EditBlocksFragment.getInstance();
+                    break;*/
+                    intent = new Intent(this, EditBlockActivity.class);
+                    startActivity(intent);
+                    return;
                 case EDIT_TASKS_FRAGMENT_TAG:
                     fragment = EditTasksFragment.getInstance();
                     break;
                 case STATISTICS_FRAGMENT_TAG:
                     /*fragment = StatisticsFragment.getInstance();
                     break;*/
-                    Intent intent = new Intent(this, StatisticsActivity.class);
+                    intent = new Intent(this, StatisticsActivity.class);
                     startActivity(intent);
                     return;
                 case SETTING_FRAGMENT_TAG:
@@ -403,12 +410,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    // TODO: what is this??? remove it!
-    @Override
-    public void onRemovingMonitorBlock(MonitorBlock item) {
-
-    }
-
 
     //--------------------------------------------------------------------------------------------->
     //  Drawer
@@ -450,8 +451,8 @@ public class MainActivity extends AppCompatActivity
             chooseDisplay(position);
             // Close the drawer
             drawerLayout.closeDrawer(drawerList);
-
-            setTitle(titleList[position]);
+            if(position != 1 && position != 2)
+                setTitle(titleList[position]);
         }
     }
 

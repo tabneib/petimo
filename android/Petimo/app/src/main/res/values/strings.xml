@@ -35,6 +35,15 @@
         <item>Vietnamese</item>
     </string-array>
 
+    <!-- Menu ############################################################################-->
+    <!-- Navigation Drawer -->
+    <string name="menu_monitor">Monitor</string>
+    <string name="menu_monitored_task">Monitored Task</string>
+    <string name="menu_statistics">Statistics</string>
+    <string name="menu_manage_tasks">Manage Tasks</string>
+    <string name="menu_settings">Settings</string>
+
+
     <!-- Short text ######################################################################-->
 
     <!-- Short text with colon ###########################################################-->

@@ -2,6 +2,7 @@ package de.tud.nhd.petimo.view.fragments.dialogs;
 
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -173,6 +174,7 @@ public class PetimoDialog extends DialogFragment {
         /*if (buttonPositive != null)
             buttonPositive.setText(positiveButton);*/
         this.posListener = posListener;
+
         return this;
     }
 

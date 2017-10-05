@@ -12,6 +12,7 @@
         <item name="android:navigationBarColor">@color/navigationBarColor</item>
         <item name="android:windowBackground">@color/windowBackground</item>
         <item name="android:spinnerStyle">@style/PetimoTheme.Light.Spinner</item>
+        <item name="android:popupMenuStyle">@style/PetimoTheme.Light.PopupMenu</item>
         <!--  From AppCompat v7:21+ onwards the standard theme attributes needs to be used WITHOUT
          the "android:" prefix in the styles -->
         <item name="editTextStyle">@style/PetimoTheme.Light.EditText</item>
@@ -20,6 +21,11 @@
         <item name="android:textSize">@dimen/primary_text_size</item>
     </style>
 
+
+    <style name="PetimoTheme.Light.PopupMenu" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
     <!-- Containers #############################################################################-->
 
     <!-- Single container for the whole screen which is filled with a CardView -->

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.EditBlockActivity">
+
+    <item
+        android:id="@+id/show_selected_tasks"
+        android:title="Show selected tasks"
+        app:showAsAction="never"
+        android:checkable="true"
+        android:actionViewClass="android.widget.CheckBox"/>
+
+    <item
+        android:id="@+id/show_empty_days"
+        android:title="Show empty days"
+        app:showAsAction="never"
+        android:checkable="true"
+        android:actionViewClass="android.widget.CheckBox" />
+
+    <item
+        android:id="@+id/swipe_to_delete"
+        android:title="Swipe to delete"
+        app:showAsAction="never"
+        android:checkable="true"
+        android:actionViewClass="android.widget.CheckBox" />
+</menu>

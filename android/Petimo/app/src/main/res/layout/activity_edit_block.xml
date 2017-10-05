@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="de.tud.nhd.petimo.view.activities.StatisticsActivity">
+    tools:context="de.tud.nhd.petimo.view.activities.EditBlockActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/activity_editblock_toolbar"
@@ -16,7 +16,7 @@
         android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
+        app:popupTheme="@style/PetimoTheme.Light.PopupMenu" />
 
     <RelativeLayout
         android:theme="@style/PetimoTheme.Container"
@@ -24,7 +24,7 @@
         android:layout_height="match_parent">
 
         <FrameLayout
-            android:id="@+id/chart_container"
+            android:id="@+id/day_list_fragment_container"
             android:theme="@style/PetimoTheme.Light.Pane"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -42,3 +42,4 @@
     </RelativeLayout>
 
 </LinearLayout>
+
