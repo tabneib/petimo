@@ -15,6 +15,7 @@
     <dimen name="big_text_size">20dp</dimen>
     <dimen name="middle_big_text_size">18dp</dimen>
     <dimen name="primary_text_size">16dp</dimen>
+    <dimen name="a_little_small_text_size">15dp</dimen>
     <dimen name="middle_small_text_size">14dp</dimen>
     <dimen name="small_text_size">11dp</dimen>
 

@@ -16,8 +16,16 @@
         android:minHeight="?attr/actionBarSize"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/PetimoTheme.Light.PopupMenu" />
+
+        app:popupTheme="@style/PetimoTheme.Light.OverFlowMenu" >
+
+        <ImageView
+            android:id="@+id/overflow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/overflow_icon"
+            android:layout_gravity="right"/>
+        </android.support.v7.widget.Toolbar>
 
     <RelativeLayout
         android:theme="@style/PetimoTheme.Wrapper"
@@ -41,6 +49,10 @@
             />
 
     </RelativeLayout>
+    <View
+        android:id="@+id/view_anchor"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
 

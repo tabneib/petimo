@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activity.EditBlockActivity">
+    tools:context=".activity.EditBlockActivity"
+    tools:style="@style/PetimoTheme.Light.OverFlowMenu">
 
     <item
         android:id="@+id/show_selected_tasks"
@@ -25,4 +26,5 @@
         app:showAsAction="never"
         android:checkable="true"
         android:actionViewClass="android.widget.CheckBox" />
+
 </menu>

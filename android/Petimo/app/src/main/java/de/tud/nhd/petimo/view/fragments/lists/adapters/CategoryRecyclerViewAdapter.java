@@ -319,7 +319,7 @@ public class CategoryRecyclerViewAdapter extends
                 selectedTaskNum++;
         // If all tasks belonging to this category are selected => checked
         if (selectedTaskNum == PetimoDbWrapper.getInstance().
-                getTaskIdsByCat(catList.get(position).getId()).size()) {
+                getTaskIdsByCat(catList.get(position).getId()).size() && selectedTaskNum != 0) {
             onBind = true;
             holder.catCheckBox.setChecked(true);
             onBind = false;
@@ -331,11 +331,9 @@ public class CategoryRecyclerViewAdapter extends
         }
     }
 
-
-
-        /**
-         * BlockListViewHolder that hold the view of a block displaying a category
-         */
+    /**
+     * BlockListViewHolder that hold the view of a block displaying a category
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public View view;
         // Edit Mode Attributes

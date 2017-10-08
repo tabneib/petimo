@@ -2,12 +2,15 @@ package de.tud.nhd.petimo.view.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -16,7 +19,6 @@ import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.db.MonitorBlock;
 import de.tud.nhd.petimo.model.sharedpref.SettingsSharedPref;
-import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
@@ -34,7 +36,10 @@ public class EditBlockActivity extends AppCompatActivity
     private static final String MENU_FRAGMENT_TAG = TAG + "-menu";
 
 
+    ImageView overFlowIcon;
     FrameLayout listContainer;
+
+    PopupMenu popup;
     MenuItem mItemSelectedTask;
     MenuItem mItemEmptyDays;
     MenuItem mItemSwipeToDel;
@@ -47,7 +52,7 @@ public class EditBlockActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_block);
 
-        // Overflow menu
+        // Toolbar
         Toolbar mToolbar = (Toolbar) findViewById(R.id.activity_editblock_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -68,6 +73,33 @@ public class EditBlockActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().add(
                 R.id.menu_container, PetimoDatePickerMenu.newInstance(),
                 MENU_FRAGMENT_TAG).commit();
+
+
+        // Popup for overflow menu ---------------------------------------------------------------->
+
+        overFlowIcon = (ImageView) findViewById(R.id.overflow);
+        popup = new PopupMenu(this, findViewById(R.id.view_anchor), Gravity.TOP);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                return onOptionsItemSelected(item);
+            }
+        });
+        popup.getMenuInflater()
+                .inflate(R.menu.toolbar_menu, popup.getMenu());
+
+        mItemSelectedTask = popup.getMenu().findItem(R.id.show_selected_tasks);
+        mItemEmptyDays = popup.getMenu().findItem(R.id.show_empty_days);
+        mItemSwipeToDel = popup.getMenu().findItem(R.id.swipe_to_delete);
+        updateChecked();
+
+        overFlowIcon.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                popup.show();
+            }
+        });
     }
 
     @Override
@@ -78,17 +110,16 @@ public class EditBlockActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-
+       // getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        mItemSelectedTask = menu.findItem(R.id.show_selected_tasks);
+        /*mItemSelectedTask = menu.findItem(R.id.show_selected_tasks);
         mItemEmptyDays = menu.findItem(R.id.show_empty_days);
         mItemSwipeToDel = menu.findItem(R.id.swipe_to_delete);
-        updateChecked();
+        updateChecked();*/
         //menu.findItem(R.id.show_selected_tasks).setChecked(true);
         return super.onPrepareOptionsMenu(menu);
     }
@@ -162,16 +193,15 @@ public class EditBlockActivity extends AppCompatActivity
      * Update the checked state of overflow menu items
      */
     private void updateChecked(){
-        if (SharedPref.getInstance().getSettingsBoolean(
-                SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false))
+        if (SettingsSharedPref.getInstance().getSettingsBoolean(
+                SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false))
             mItemSelectedTask.setChecked(true);
-        if (SharedPref.getInstance().getSettingsBoolean(
-                SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, false))
+        if (SettingsSharedPref.getInstance().getSettingsBoolean(
+                SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, false))
             mItemEmptyDays.setChecked(true);
 
-
-        if (SharedPref.getInstance().getSettingsBoolean(
-                SharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, false)){
+        if (SettingsSharedPref.getInstance().getSettingsBoolean(
+                SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, false)){
             mItemSwipeToDel.setChecked(true);
         }
     }
@@ -187,9 +217,9 @@ public class EditBlockActivity extends AppCompatActivity
             dayListFragment.adapter.dayList = PetimoController.getInstance().
                     getDaysFromRange(PetimoTimeUtils.getDateIntFromCalendatr(fromCalendar),
                             PetimoTimeUtils.getDateIntFromCalendatr(toCalendar),
-                            SharedPref.getInstance().getSettingsBoolean(SharedPref.
+                            SettingsSharedPref.getInstance().getSettingsBoolean(SettingsSharedPref.
                                     SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
-                            SharedPref.getInstance().getSettingsBoolean(SharedPref.
+                            SettingsSharedPref.getInstance().getSettingsBoolean(SettingsSharedPref.
                                     SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false));
             dayListFragment.adapter.notifyDataSetChanged();
         }
@@ -212,8 +242,6 @@ public class EditBlockActivity extends AppCompatActivity
     public void onDateChanged(Calendar fromCalendar, Calendar toCalendar) {
         this.fromCalendar = fromCalendar;
         this.toCalendar = toCalendar;
-        //Toast.makeText(this, "From: " + PetimoTimeUtils.getDateStrFromCalendar(this.fromCalendar) +
-        //         "  -  To: " + PetimoTimeUtils.getDateStrFromCalendar(this.toCalendar), Toast.LENGTH_SHORT).show();
         updateDayList();
     }
 
