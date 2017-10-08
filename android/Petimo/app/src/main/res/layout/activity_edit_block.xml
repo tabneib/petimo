@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+
+<FrameLayout
+    android:id="@+id/activity_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,52 +9,62 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:theme="@style/PetimoTheme.Wrapper"
+    android:foreground="@drawable/shape_window_dim"
     tools:context="de.tud.nhd.petimo.view.activities.EditBlockActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/activity_editblock_toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:elevation="4dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:theme="@style/PetimoTheme.Wrapper">
 
-        app:popupTheme="@style/PetimoTheme.Light.OverFlowMenu" >
-
-        <ImageView
-            android:id="@+id/overflow"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/activity_editblock_toolbar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/overflow_icon"
-            android:layout_gravity="right"/>
+            android:minHeight="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:elevation="4dp"
+
+            app:popupTheme="@style/PetimoTheme.Light.OverFlowMenu" >
+
+            <ImageView
+                android:id="@+id/overflow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/overflow_icon"
+                android:layout_gravity="right"/>
         </android.support.v7.widget.Toolbar>
 
-    <RelativeLayout
-        android:theme="@style/PetimoTheme.Wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <FrameLayout
-            android:id="@+id/day_list_fragment_container"
+        <RelativeLayout
             android:theme="@style/PetimoTheme.Wrapper"
             android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/day_list_fragment_container"
+                android:theme="@style/PetimoTheme.Wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+            <FrameLayout
+                android:id="@+id/menu_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:clipToPadding="false"
+                />
+
+        </RelativeLayout>
+        <View
+            android:id="@+id/view_anchor"
+            android:layout_width="0dp"
             android:layout_height="match_parent" />
 
+    </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/menu_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:clipToPadding="false"
-            />
 
-    </RelativeLayout>
-    <View
-        android:id="@+id/view_anchor"
-        android:layout_width="0dp"
-        android:layout_height="match_parent" />
-
-</LinearLayout>
+</FrameLayout>
 

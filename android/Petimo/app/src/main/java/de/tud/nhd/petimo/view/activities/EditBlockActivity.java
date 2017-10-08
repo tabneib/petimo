@@ -1,17 +1,30 @@
 package de.tud.nhd.petimo.view.activities;
 
+import android.graphics.SweepGradient;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.PopupWindow;
+import android.widget.Switch;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -38,19 +51,26 @@ public class EditBlockActivity extends AppCompatActivity
 
     ImageView overFlowIcon;
     FrameLayout listContainer;
+    FrameLayout activityLayout;
 
-    PopupMenu popup;
-    MenuItem mItemSelectedTask;
-    MenuItem mItemEmptyDays;
-    MenuItem mItemSwipeToDel;
+    PopupWindow popupWindow;
+    Switch switchSelectedTask;
+    Switch switchEmptyDays;
+    Switch switchSwipeToDel;
+    private boolean updateDayList = false;
+    private boolean reloadDayList = false;
 
     Calendar fromCalendar = Calendar.getInstance();
     Calendar toCalendar = Calendar.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_block);
+
+        activityLayout = (FrameLayout) findViewById(R.id.activity_layout);
+        activityLayout.getForeground().setAlpha(0);
 
         // Toolbar
         Toolbar mToolbar = (Toolbar) findViewById(R.id.activity_editblock_toolbar);
@@ -75,31 +95,111 @@ public class EditBlockActivity extends AppCompatActivity
                 MENU_FRAGMENT_TAG).commit();
 
 
-        // Popup for overflow menu ---------------------------------------------------------------->
+        setupPopup();
+    }
 
+    /**
+     *
+     */
+    private void setupPopup(){
         overFlowIcon = (ImageView) findViewById(R.id.overflow);
-        popup = new PopupMenu(this, findViewById(R.id.view_anchor), Gravity.TOP);
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                return onOptionsItemSelected(item);
-            }
-        });
-        popup.getMenuInflater()
-                .inflate(R.menu.toolbar_menu, popup.getMenu());
-
-        mItemSelectedTask = popup.getMenu().findItem(R.id.show_selected_tasks);
-        mItemEmptyDays = popup.getMenu().findItem(R.id.show_empty_days);
-        mItemSwipeToDel = popup.getMenu().findItem(R.id.swipe_to_delete);
-        updateChecked();
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        View mView = layoutInflater.inflate(R.layout.popup_menu_monitored_tasks, null);
+        popupWindow = new PopupWindow(mView, ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        // Hack to dismiss the popup by clicking outside
+        popupWindow.setBackgroundDrawable(new ColorDrawable());
+        popupWindow.setOutsideTouchable(true);
 
         overFlowIcon.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                popup.show();
+                // Dim the activity
+                activityLayout.getForeground().setAlpha(130);
+                popupWindow.showAtLocation(activityLayout, Gravity.BOTTOM, 0, 0);
+                //popupWindow.showAsDropDown(findViewById(R.id.view_anchor), 0,0, Gravity.TOP);
             }
         });
+
+        switchSelectedTask = (Switch) mView.findViewById(R.id.switch_selected_tasks);
+        switchEmptyDays = (Switch) mView.findViewById(R.id.switch_show_empty_days);
+        switchSwipeToDel = (Switch) mView.findViewById(R.id.switch_swipe_to_delete);
+        updateChecked();
+
+
+        switchSelectedTask.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateDayList = true;
+                SettingsSharedPref.getInstance().putBoolean(
+                        SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS,
+                        isChecked);
+
+                // Display task selector dialog if checked
+                if (isChecked){
+                    TaskSelector.getInstance().startTransaction(TaskSelector.Mode.MONITOR_HISTORY);
+                    CategoryListFragment catListFragment = CategoryListFragment.
+                            getInstance(CategoryListFragment.SELECT_MODE);
+                    PetimoDialog taskSelectorDialog =
+                            PetimoDialog.newInstance(getBaseContext(), true)
+                                    .setIcon(PetimoDialog.ICON_SAVE)
+                                    .setTitle(getString(R.string.title_select_tasks_to_display))
+                                    .setContentFragment(catListFragment)
+                                    .setPositiveButton(getString(R.string.button_ok),
+                                            new PetimoDialog.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    TaskSelector.getInstance().commit();
+                                                    // Update Day List
+                                                    //updateDayList();
+                                                }
+                                            });
+                    taskSelectorDialog.show(getSupportFragmentManager(), null);
+                }
+            }
+        });
+
+        switchEmptyDays.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateDayList = true;
+                SettingsSharedPref.getInstance().putBoolean(
+                        SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, isChecked);
+                // Update Day List
+                //updateDayList();
+            }
+        });
+
+
+        switchSwipeToDel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                reloadDayList = true;
+                SettingsSharedPref.getInstance().putBoolean(
+                        SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, isChecked);
+                // Update Day List & Adapter
+                reloadDayList();
+            }
+        });
+
+
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                if (updateDayList){
+                    updateDayList();
+                    updateDayList = false;
+                }
+                if (reloadDayList){
+                    reloadDayList();
+                    reloadDayList = false;
+                }
+                // un-dim the activity
+                activityLayout.getForeground().setAlpha(0);
+            }
+        });
+
     }
 
     @Override
@@ -127,60 +227,6 @@ public class EditBlockActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.show_selected_tasks:
-
-                // Negate the checked status
-                item.setChecked(!item.isChecked());
-
-                // TODO: Make use of TaskSelector transaction
-                SettingsSharedPref.getInstance().putBoolean(
-                        SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS,
-                        item.isChecked());
-
-                // Display task selector dialog if checked
-                if (item.isChecked()){
-                    TaskSelector.getInstance().startTransaction(TaskSelector.Mode.MONITOR_HISTORY);
-                    CategoryListFragment catListFragment = CategoryListFragment.
-                            getInstance(CategoryListFragment.SELECT_MODE);
-                    PetimoDialog taskSelectorDialog =
-                            PetimoDialog.newInstance(this, true)
-                                    .setIcon(PetimoDialog.ICON_SAVE)
-                                    .setTitle(getString(R.string.title_select_tasks_to_display))
-                                    .setContentFragment(catListFragment)
-                                    .setPositiveButton(getString(R.string.button_ok),
-                                            new PetimoDialog.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    TaskSelector.getInstance().commit();
-                                                    // Update Day List
-                                                    updateDayList();
-                                                }
-                                            });
-                    taskSelectorDialog.show(getSupportFragmentManager(), null);
-                }
-                else
-                    // User un-checks => display all
-                    updateDayList();
-                return true;
-
-            case R.id.show_empty_days:
-                // Negate the checked status
-                item.setChecked(!item.isChecked());
-                SettingsSharedPref.getInstance().putBoolean(
-                        SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS,
-                        item.isChecked());
-                // Update Day List
-                updateDayList();
-                return true;
-
-            case R.id.swipe_to_delete:
-                // Negate the checked status
-                item.setChecked(!item.isChecked());
-                SettingsSharedPref.getInstance().putBoolean(
-                        SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, item.isChecked());
-                // Update Day List & Adapter
-                reloadDayList();
-                return true;
 
             case android.R.id.home:
                 onBackPressed();
@@ -195,14 +241,14 @@ public class EditBlockActivity extends AppCompatActivity
     private void updateChecked(){
         if (SettingsSharedPref.getInstance().getSettingsBoolean(
                 SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false))
-            mItemSelectedTask.setChecked(true);
+            switchSelectedTask.setChecked(true);
         if (SettingsSharedPref.getInstance().getSettingsBoolean(
                 SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, false))
-            mItemEmptyDays.setChecked(true);
+            switchEmptyDays.setChecked(true);
 
         if (SettingsSharedPref.getInstance().getSettingsBoolean(
                 SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, false)){
-            mItemSwipeToDel.setChecked(true);
+            switchSwipeToDel.setChecked(true);
         }
     }
 
@@ -250,4 +296,6 @@ public class EditBlockActivity extends AppCompatActivity
     public void onRemovingMonitorBlock(MonitorBlock item) {
 
     }
+
+
 }

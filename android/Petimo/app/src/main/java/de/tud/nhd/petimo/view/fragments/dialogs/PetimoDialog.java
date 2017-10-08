@@ -1,6 +1,8 @@
 package de.tud.nhd.petimo.view.fragments.dialogs;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
@@ -23,7 +25,7 @@ public class PetimoDialog extends DialogFragment {
     private static final String TAG = "PetimoDialog";
     public static final String CONTENT_FRAGMENT_TAG = TAG + "-ContentFragment";
 
-    public FragmentActivity fragmentActivity;
+    public Context fragmentActivity;
 
     private String title;
     //private String subtitle;
@@ -60,7 +62,7 @@ public class PetimoDialog extends DialogFragment {
         // Required empty public constructor
     }
 
-    public static PetimoDialog newInstance(FragmentActivity activity, boolean fullScreen){
+    public static PetimoDialog newInstance(Context activity, boolean fullScreen){
         PetimoDialog dialog = new PetimoDialog();
         dialog.fragmentActivity = activity;
         dialog.fullScreen = fullScreen;
