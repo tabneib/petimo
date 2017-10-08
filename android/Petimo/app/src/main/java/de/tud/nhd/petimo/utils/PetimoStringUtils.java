@@ -51,7 +51,8 @@ public class PetimoStringUtils {
     public static String encode(ArrayList<String[]> strList, int itemSize){
         String encoded = "";
         if (strList == null || strList.isEmpty())
-            throw new StringEncodingException();
+            //throw new StringEncodingException();
+            return null;
         try {
             for (String[] item : strList){
                 for (int i=0; i < (itemSize-1); i++)

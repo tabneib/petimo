@@ -11,6 +11,7 @@ import android.widget.TextView;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.model.db.MonitorTask;
 import de.tud.nhd.petimo.model.sharedpref.SharedPref;
+import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
 import java.util.List;
@@ -70,7 +71,7 @@ public class TaskRecyclerViewAdapter extends
                 boolean notFound = true;
 
                 // Check if the task is already selected
-                if (SharedPref.getInstance().getSelectedTasks().
+                if (TaskSelector.getInstance().getSelectedTasks(TaskSelector.Mode.MONITOR_HISTORY).
                         contains(holder.task.getId())){
                     onBind = true;
                     holder.taskCheckBox.setChecked(true);
@@ -129,11 +130,9 @@ public class TaskRecyclerViewAdapter extends
                                 public void onCheckedChanged(
                                         CompoundButton buttonView, boolean isChecked) {
                                     if (isChecked)
-                                        SharedPref.getInstance().
-                                                addSelectedTask(task.getId());
+                                        TaskSelector.getInstance().add(task.getId());
                                     else
-                                        SharedPref.getInstance().
-                                                removeSelectedTask(task.getId());
+                                        TaskSelector.getInstance().remove(task.getId());
                                     // Rebind the corresponding category
                                     //catAdapter.onBindViewHolder(catViewHolder, catPosition);
                                     // Notify the corresponding cat viewHolder to update its check box

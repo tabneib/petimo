@@ -22,7 +22,7 @@ import de.tud.nhd.petimo.utils.StringParsingException;
 public class MonitorSharedPref extends PetimoSharedPref {
 
     private static final String TAG = "MonitorSharedPref";
-    MonitorSharedPref _instance = null;
+    static MonitorSharedPref _instance = null;
 
     private SharedPreferences monitorPref;
     private SharedPreferences.Editor monitorEditor;
@@ -51,11 +51,10 @@ public class MonitorSharedPref extends PetimoSharedPref {
         this.monitorEditor = monitorPref.edit();
     }
 
-    @Override
-    public PetimoSharedPref getInstance() throws Exception {
+    public static MonitorSharedPref getInstance() throws RuntimeException {
         if (_instance == null)
             if (context == null)
-                throw new Exception("PetimoSharedPref must be initialized first!");
+                throw new RuntimeException("PetimoSharedPref must be initialized first!");
             else
                 _instance = new MonitorSharedPref(context);
         return _instance;

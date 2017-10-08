@@ -3,6 +3,7 @@ package de.tud.nhd.petimo.view.activities;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +15,9 @@ import java.util.Date;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.db.MonitorBlock;
+import de.tud.nhd.petimo.model.sharedpref.SettingsSharedPref;
 import de.tud.nhd.petimo.model.sharedpref.SharedPref;
+import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
@@ -68,6 +71,12 @@ public class EditBlockActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        Log.d(TAG, "onResume!");
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
 
@@ -92,14 +101,14 @@ public class EditBlockActivity extends AppCompatActivity
                 // Negate the checked status
                 item.setChecked(!item.isChecked());
 
-                SharedPref.getInstance().setSettingsBoolean(
-                        SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS,
+                // TODO: Make use of TaskSelector transaction
+                SettingsSharedPref.getInstance().putBoolean(
+                        SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS,
                         item.isChecked());
 
                 // Display task selector dialog if checked
                 if (item.isChecked()){
-                            /*CatTaskListFragment taskListFragment =
-                                    CatTaskListFragment.newInstance();*/
+                    TaskSelector.getInstance().startTransaction(TaskSelector.Mode.MONITOR_HISTORY);
                     CategoryListFragment catListFragment = CategoryListFragment.
                             getInstance(CategoryListFragment.SELECT_MODE);
                     PetimoDialog taskSelectorDialog =
@@ -111,6 +120,7 @@ public class EditBlockActivity extends AppCompatActivity
                                             new PetimoDialog.OnClickListener() {
                                                 @Override
                                                 public void onClick(View view) {
+                                                    TaskSelector.getInstance().commit();
                                                     // Update Day List
                                                     updateDayList();
                                                 }
@@ -118,14 +128,15 @@ public class EditBlockActivity extends AppCompatActivity
                     taskSelectorDialog.show(getSupportFragmentManager(), null);
                 }
                 else
+                    // User un-checks => display all
                     updateDayList();
                 return true;
 
             case R.id.show_empty_days:
                 // Negate the checked status
                 item.setChecked(!item.isChecked());
-                SharedPref.getInstance().setSettingsBoolean(
-                        SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS,
+                SettingsSharedPref.getInstance().putBoolean(
+                        SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS,
                         item.isChecked());
                 // Update Day List
                 updateDayList();
@@ -134,8 +145,8 @@ public class EditBlockActivity extends AppCompatActivity
             case R.id.swipe_to_delete:
                 // Negate the checked status
                 item.setChecked(!item.isChecked());
-                SharedPref.getInstance().setSettingsBoolean(
-                        SharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, item.isChecked());
+                SettingsSharedPref.getInstance().putBoolean(
+                        SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, item.isChecked());
                 // Update Day List & Adapter
                 reloadDayList();
                 return true;

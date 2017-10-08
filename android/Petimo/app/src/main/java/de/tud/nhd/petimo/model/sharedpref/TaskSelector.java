@@ -17,7 +17,7 @@ import de.tud.nhd.petimo.utils.StringParsingException;
 public class TaskSelector extends SettingsSharedPref{
 
     private static final String TAG = "TaskSelector";
-    TaskSelector _instance = null;
+    static TaskSelector _instance = null;
 
     private Mode activeMode = null;
 
@@ -35,11 +35,10 @@ public class TaskSelector extends SettingsSharedPref{
         super();
     }
 
-    @Override
-    public TaskSelector getInstance() throws Exception{
+    public static TaskSelector getInstance() throws RuntimeException{
         if (_instance == null)
             if (context == null)
-                throw new Exception("PetimoSharedPref must be initialized first!");
+                throw new RuntimeException("PetimoSharedPref must be initialized first!");
             else
                 _instance = new TaskSelector(context);
         return _instance;
@@ -53,6 +52,15 @@ public class TaskSelector extends SettingsSharedPref{
      */
     public ArrayList<Integer> getSelectedTasks(Mode mode) throws IllegalStateException {
 
+        // If there is ongoing transaction, so we only work on the copy of selected task list
+        if (activeMode != null){
+            if (activeMode != mode)
+                throw new IllegalStateException("Wrong mode!");
+            else
+                return tmpSelectedTask;
+        }
+
+        // If there is no on-going transaction, then return the original list
         try{
             ArrayList<String[]> selectedTasksStr;
             switch (mode) {
@@ -116,7 +124,6 @@ public class TaskSelector extends SettingsSharedPref{
             // Store the tmp data to sharedPref permanently
             switch (activeMode){
                 case MONITOR_HISTORY:
-                    // TODO
                     settingsEditor.putString(SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS,
                             PetimoStringUtils.encodeIntList(tmpSelectedTask, 1));
                     settingsEditor.apply();

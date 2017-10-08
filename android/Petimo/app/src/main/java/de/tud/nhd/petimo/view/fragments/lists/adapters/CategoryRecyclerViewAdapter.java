@@ -17,6 +17,7 @@ import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.model.db.MonitorCategory;
 import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.sharedpref.SharedPref;
+import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
@@ -309,7 +310,8 @@ public class CategoryRecyclerViewAdapter extends
                 new LinearLayoutManager(fragment.getActivity()));
         holder.taskListRecyclerView.setAdapter(holder.taskAdapter);
 
-        ArrayList<Integer> tasks = SharedPref.getInstance().getSelectedTasks();
+        ArrayList<Integer> tasks = TaskSelector.getInstance().
+                getSelectedTasks(TaskSelector.Mode.MONITOR_HISTORY);
         int selectedTaskNum = 0;
         for (int taskId: tasks)
             if (PetimoDbWrapper.getInstance().getCatIdFromTask(taskId) ==
@@ -378,15 +380,13 @@ public class CategoryRecyclerViewAdapter extends
                                         for (int taskId :
                                                 PetimoDbWrapper.getInstance().
                                                         getTaskIdsByCat(category.getId()))
-                                            SharedPref.getInstance().
-                                                    addSelectedTask(taskId);
+                                            TaskSelector.getInstance().add(taskId);
                                     else
                                         // remove all tasks of this cat
                                         for (int taskId :
                                                 PetimoDbWrapper.getInstance().
                                                         getTaskIdsByCat(category.getId()))
-                                            SharedPref.getInstance().
-                                                    removeSelectedTask(taskId);
+                                            TaskSelector.getInstance().remove(taskId);
                                     if (!onBind)
                                         taskAdapter.notifyDataSetChanged();
                                 }

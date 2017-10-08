@@ -124,8 +124,8 @@ public class DayRecyclerViewAdapter extends
         // Set adapter for the recyclerView displaying block list
 
         // Swipe to Delete is enable?
-        if (!SharedPref.getInstance().
-                getSettingsBoolean(SharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, true))
+        if (SharedPref.getInstance().
+                getSettingsBoolean(SharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, false))
             holder.itemTouchHelper.attachToRecyclerView(holder.recyclerView);
         else
             holder.itemTouchHelper.attachToRecyclerView(null);

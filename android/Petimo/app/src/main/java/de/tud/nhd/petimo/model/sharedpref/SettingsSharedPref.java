@@ -65,11 +65,10 @@ public class SettingsSharedPref extends PetimoSharedPref {
         this.settingsEditor = settingPref.edit();
     }
 
-    @Override
-    public PetimoSharedPref getInstance() throws Exception{
+    public static SettingsSharedPref getInstance() throws RuntimeException{
         if (_instance == null)
             if (context == null)
-                throw new Exception("PetimoSharedPref must be initialized first!");
+                throw new RuntimeException("PetimoSharedPref must be initialized first!");
             else
                 _instance = new SettingsSharedPref();
         return _instance;

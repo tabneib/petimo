@@ -15,14 +15,12 @@ public abstract class PetimoSharedPref {
     PetimoSharedPref(){
     }
 
-    public static void initialize(Context kontext) throws Exception{
+    public static void initialize(Context kontext) throws RuntimeException{
         if(context != null)
-            throw new Exception("Cannot initialize multiple instances of PetimoSharedPref!");
+            throw new RuntimeException("Cannot initialize multiple instances of PetimoSharedPref!");
         else
             context = kontext;
     }
-
-    public abstract PetimoSharedPref getInstance() throws Exception;
 
     /**
      * Update the way Petimo stores data in SharedPreferences due to Database upgrade/update from
