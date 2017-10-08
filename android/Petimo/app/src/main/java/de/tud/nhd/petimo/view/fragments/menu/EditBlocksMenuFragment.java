@@ -13,7 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.model.PetimoSharedPref;
+import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.view.fragments.EditBlocksFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditBlocksMenuFragmentInteractionListener;
@@ -92,8 +92,8 @@ public class EditBlocksMenuFragment extends Fragment {
 
         // There is no need for remember option ;)
         checkBoxRemember.setVisibility(View.INVISIBLE);
-        /*if (PetimoSharedPref.getInstance().getSettingsBoolean(
-                PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_REMEMBER, false))
+        /*if (SharedPref.getInstance().getSettingsBoolean(
+                SharedPref.SETTINGS_MONITORED_BLOCKS_REMEMBER, false))
             checkBoxRemember.setChecked(true);*/
 
         // If Remember is not checked and not yet reset to default
@@ -101,26 +101,26 @@ public class EditBlocksMenuFragment extends Fragment {
         /*if (!checkBoxRemember.isChecked() &&
                 !PetimoController.getInstance().getTag(RESET_TO_DEFAULT_TAG, false)) {
             PetimoController.getInstance().setTag(RESET_TO_DEFAULT_TAG, true);
-            PetimoSharedPref.getInstance().setSettingsBoolean(
-                    PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false);
-            PetimoSharedPref.getInstance().setSettingsBoolean(
-                    PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, false);
+            SharedPref.getInstance().putBoolean(
+                    SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false);
+            SharedPref.getInstance().putBoolean(
+                    SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, false);
             //update List
             parentFragment.updateDayList();
         }*/
 
 
 
-        if (PetimoSharedPref.getInstance().getSettingsBoolean(
-                PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false))
+        if (SharedPref.getInstance().getSettingsBoolean(
+                SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false))
             checkBoxSelectedTasks.setChecked(true);
-        if (PetimoSharedPref.getInstance().getSettingsBoolean(
-                PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, false))
+        if (SharedPref.getInstance().getSettingsBoolean(
+                SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, false))
             checkBoxEmptyDays.setChecked(true);
 
 
-        if (PetimoSharedPref.getInstance().getSettingsBoolean(
-                PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, false)){
+        if (SharedPref.getInstance().getSettingsBoolean(
+                SharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, false)){
             checkBoxLock.setChecked(true);
             checkBoxLock.setButtonDrawable(R.drawable.ic_lock_outline_black_24dp);
         }
@@ -132,8 +132,8 @@ public class EditBlocksMenuFragment extends Fragment {
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        PetimoSharedPref.getInstance().setSettingsBoolean(
-                                PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS,
+                        SharedPref.getInstance().setSettingsBoolean(
+                                SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS,
                                 isChecked);
 
                         // Display task selector dialog if checked
@@ -167,8 +167,8 @@ public class EditBlocksMenuFragment extends Fragment {
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        PetimoSharedPref.getInstance().setSettingsBoolean(
-                                PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS,
+                        SharedPref.getInstance().setSettingsBoolean(
+                                SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS,
                                 isChecked);
                         // Update Day List
                         parentFragment.updateDayList();
@@ -179,8 +179,8 @@ public class EditBlocksMenuFragment extends Fragment {
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        PetimoSharedPref.getInstance().setSettingsBoolean(
-                                PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_REMEMBER, isChecked);
+                        SharedPref.getInstance().putBoolean(
+                                SharedPref.SETTINGS_MONITORED_BLOCKS_REMEMBER, isChecked);
                     }
                 });*/
 
@@ -189,8 +189,8 @@ public class EditBlocksMenuFragment extends Fragment {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         Log.d("EditBlocksFragment", "Lock isChecked ====> " + isChecked);
-                        PetimoSharedPref.getInstance().setSettingsBoolean(
-                                PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, isChecked);
+                        SharedPref.getInstance().setSettingsBoolean(
+                                SharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, isChecked);
                         checkBoxLock.setButtonDrawable(
                                 isChecked ? R.drawable.ic_lock_outline_black_24dp :
                                         R.drawable.ic_lock_open_black_24dp);

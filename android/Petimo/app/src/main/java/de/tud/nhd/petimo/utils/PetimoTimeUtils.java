@@ -1,14 +1,12 @@
 package de.tud.nhd.petimo.utils;
 
-import android.util.Log;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
-import de.tud.nhd.petimo.model.PetimoSharedPref;
+import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 
 /**
  * Created by nhd on 01.09.17.
@@ -121,7 +119,7 @@ public class PetimoTimeUtils {
      */
     public static int getTodayDate(){
         int date = Integer.parseInt(dateFormat.format(new Date()));
-        if (getCurrentHour() < PetimoSharedPref.getInstance().getOvThreshold())
+        if (getCurrentHour() < SharedPref.getInstance().getOvThreshold())
             date--;
         return date;
     }
@@ -169,8 +167,8 @@ public class PetimoTimeUtils {
         // If user manually set the time to a time point on yesterday and the current time
         // has passed midnight but not yet passed overnight threshold
         // => set millis to 1 day earlier
-        if (hour >= PetimoSharedPref.getInstance().getOvThreshold() &&
-                getCurrentHour() < PetimoSharedPref.getInstance().getOvThreshold())
+        if (hour >= SharedPref.getInstance().getOvThreshold() &&
+                getCurrentHour() < SharedPref.getInstance().getOvThreshold())
             millis = millis - 24 * 60 * 60 * 1000;
         return millis;
     }
@@ -184,7 +182,7 @@ public class PetimoTimeUtils {
      * @return
      */
     public static long getTimeMillisFromHM(int date, int hour, int minute){
-        if (hour < PetimoSharedPref.getInstance().getOvThreshold())
+        if (hour < SharedPref.getInstance().getOvThreshold())
             hour = hour + 24;
         return getDayStartInMillis(date) + hour * 60*60*1000 + minute * 60*1000;
     }
@@ -229,5 +227,23 @@ public class PetimoTimeUtils {
             e.printStackTrace();
         }
         return calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
+
+    /**
+     * Return a list of dates (integer representation) belonging to the given date range
+     * @param start start of the range
+     * @param end   end of the range
+     * @return The list of date int
+     */
+    public static ArrayList<Integer> getDateIntFromRange(Calendar start, Calendar end){
+        Calendar tmpStart = Calendar.getInstance();
+        tmpStart.setTime(start.getTime());
+        ArrayList<Integer> dates = new ArrayList<>();
+        while (!tmpStart.getTime().after(end.getTime())){
+            dates.add(getDateIntFromCalendatr(start));
+            tmpStart.add(Calendar.DATE, 1);
+        }
+        return dates;
     }
 }

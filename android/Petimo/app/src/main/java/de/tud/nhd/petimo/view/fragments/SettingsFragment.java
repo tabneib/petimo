@@ -20,8 +20,8 @@ import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.libs.HorizontalPicker;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.model.PetimoDbDemo;
-import de.tud.nhd.petimo.model.PetimoSharedPref;
+import de.tud.nhd.petimo.model.db.PetimoDbDemo;
+import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 
 /**
@@ -76,13 +76,13 @@ public class SettingsFragment extends Fragment {
         Spinner langSpinner = (Spinner) view.findViewById(R.id.spinnerLang);
         langSpinner.setSelection(
                 PetimoController.getInstance().getLangId(
-                        PetimoSharedPref.getInstance().getSettingsString(
-                                PetimoSharedPref.SETTINGS_LANGUAGE, PetimoSharedPref.LANG_EN)));
+                        SharedPref.getInstance().getSettingsString(
+                                SharedPref.SETTINGS_LANGUAGE, SharedPref.LANG_EN)));
         langSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                PetimoSharedPref.getInstance().setSettingsString(
-                        PetimoSharedPref.SETTINGS_LANGUAGE,
+                SharedPref.getInstance().setSettingsString(
+                        SharedPref.SETTINGS_LANGUAGE,
                         PetimoController.getInstance().getLangFromId(position));
             }
 
@@ -143,13 +143,13 @@ public class SettingsFragment extends Fragment {
 
 
         ovPicker = (HorizontalPicker) view.findViewById(R.id.horizontal_picker_ov);
-        ovPicker.setSelectedItem(PetimoSharedPref.getInstance().
-                getSettingsInt(PetimoSharedPref.SETTINGS_OVERNIGHT_THRESHOLD, 5));
+        ovPicker.setSelectedItem(SharedPref.getInstance().
+                getSettingsInt(SharedPref.SETTINGS_OVERNIGHT_THRESHOLD, 5));
         ovPicker.setOnItemSelectedListener(new HorizontalPicker.OnItemSelected() {
             @Override
             public void onItemSelected(int index) {
-                PetimoSharedPref.getInstance().
-                        setSettingsInt(PetimoSharedPref.SETTINGS_OVERNIGHT_THRESHOLD, index);
+                SharedPref.getInstance().
+                        setSettingsInt(SharedPref.SETTINGS_OVERNIGHT_THRESHOLD, index);
             }
         });
     }

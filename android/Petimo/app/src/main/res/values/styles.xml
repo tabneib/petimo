@@ -57,6 +57,12 @@
         <item name="android:layout_margin">0dp</item>
     </style>
 
+    <!-- Wrapper is a layout whose purpose is only to wrap some content in it. Its presence must be
+     transparent to the user -->
+    <style name="PetimoTheme.Wrapper">
+        <item name="android:padding">0dp</item>
+        <item name="android:layout_margin">0dp</item>
+    </style>
 
     <!-- Header layout ##########################################################################-->
 

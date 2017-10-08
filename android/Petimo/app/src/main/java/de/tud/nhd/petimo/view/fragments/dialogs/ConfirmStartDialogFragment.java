@@ -21,7 +21,7 @@ import java.util.Calendar;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.model.PetimoDbWrapper;
+import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 
 public class ConfirmStartDialogFragment extends Fragment {

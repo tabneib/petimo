@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:theme="@style/PetimoTheme.Wrapper"
     tools:context="de.tud.nhd.petimo.view.activities.EditBlockActivity">
 
     <android.support.v7.widget.Toolbar
@@ -19,13 +20,13 @@
         app:popupTheme="@style/PetimoTheme.Light.PopupMenu" />
 
     <RelativeLayout
-        android:theme="@style/PetimoTheme.Container"
+        android:theme="@style/PetimoTheme.Wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <FrameLayout
             android:id="@+id/day_list_fragment_container"
-            android:theme="@style/PetimoTheme.Light.Pane"
+            android:theme="@style/PetimoTheme.Wrapper"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

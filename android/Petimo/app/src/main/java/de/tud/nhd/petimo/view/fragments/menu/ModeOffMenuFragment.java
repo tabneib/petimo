@@ -1,34 +1,25 @@
 package de.tud.nhd.petimo.view.fragments.menu;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 
-import java.util.ArrayList;
-
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.model.PetimoDbWrapper;
-import de.tud.nhd.petimo.model.PetimoSharedPref;
+import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.view.activities.MainActivity;
 import de.tud.nhd.petimo.view.fragments.ModeOffFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.MonitoredTaskListFragment;
-import de.tud.nhd.petimo.view.fragments.lists.adapters.TaskRecyclerViewAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,8 +57,8 @@ public class ModeOffMenuFragment extends Fragment {
         buttonClear = (ImageButton) getView().findViewById(R.id.buttonClear);
 
         // update the selection of radioButtons
-        switch (PetimoSharedPref.getInstance().getUsrMonitoredSortOrder()){
-            case PetimoSharedPref.FREQUENCY:
+        switch (SharedPref.getInstance().getUsrMonitoredSortOrder()){
+            case SharedPref.FREQUENCY:
                 radioButtonFreq.setChecked(true);
                 break;
             default:
@@ -80,7 +71,7 @@ public class ModeOffMenuFragment extends Fragment {
                 // save the chosen option
                 if (isChecked) {
                     PetimoController.getInstance().
-                            updateUsrMonitoredTasksSortOrder(PetimoSharedPref.TIME);
+                            updateUsrMonitoredTasksSortOrder(SharedPref.TIME);
                     // Update the monitored Task List
                     updateMonitoredTaskList();
                 }
@@ -94,7 +85,7 @@ public class ModeOffMenuFragment extends Fragment {
                 // save the chosen option
                 if (isChecked) {
                     PetimoController.getInstance().
-                            updateUsrMonitoredTasksSortOrder(PetimoSharedPref.FREQUENCY);
+                            updateUsrMonitoredTasksSortOrder(SharedPref.FREQUENCY);
                     // Update the monitored Task List
                     updateMonitoredTaskList();
                 }
@@ -117,7 +108,7 @@ public class ModeOffMenuFragment extends Fragment {
                                     @Override
                                     public void onClick(View view) {
                                         // Delete the saved monitored task
-                                        PetimoSharedPref.getInstance().clearMonitoredTasks();
+                                        SharedPref.getInstance().clearMonitoredTasks();
                                         updateMonitoredTaskList();
                                     }
                                 })

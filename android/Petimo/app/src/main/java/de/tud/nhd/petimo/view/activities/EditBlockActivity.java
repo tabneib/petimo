@@ -7,15 +7,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.model.MonitorBlock;
-import de.tud.nhd.petimo.model.PetimoSharedPref;
+import de.tud.nhd.petimo.model.db.MonitorBlock;
+import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
@@ -93,8 +92,8 @@ public class EditBlockActivity extends AppCompatActivity
                 // Negate the checked status
                 item.setChecked(!item.isChecked());
 
-                PetimoSharedPref.getInstance().setSettingsBoolean(
-                        PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS,
+                SharedPref.getInstance().setSettingsBoolean(
+                        SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS,
                         item.isChecked());
 
                 // Display task selector dialog if checked
@@ -125,8 +124,8 @@ public class EditBlockActivity extends AppCompatActivity
             case R.id.show_empty_days:
                 // Negate the checked status
                 item.setChecked(!item.isChecked());
-                PetimoSharedPref.getInstance().setSettingsBoolean(
-                        PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS,
+                SharedPref.getInstance().setSettingsBoolean(
+                        SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS,
                         item.isChecked());
                 // Update Day List
                 updateDayList();
@@ -135,8 +134,8 @@ public class EditBlockActivity extends AppCompatActivity
             case R.id.swipe_to_delete:
                 // Negate the checked status
                 item.setChecked(!item.isChecked());
-                PetimoSharedPref.getInstance().setSettingsBoolean(
-                        PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, item.isChecked());
+                SharedPref.getInstance().setSettingsBoolean(
+                        SharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, item.isChecked());
                 // Update Day List & Adapter
                 reloadDayList();
                 return true;
@@ -152,16 +151,16 @@ public class EditBlockActivity extends AppCompatActivity
      * Update the checked state of overflow menu items
      */
     private void updateChecked(){
-        if (PetimoSharedPref.getInstance().getSettingsBoolean(
-                PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false))
+        if (SharedPref.getInstance().getSettingsBoolean(
+                SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false))
             mItemSelectedTask.setChecked(true);
-        if (PetimoSharedPref.getInstance().getSettingsBoolean(
-                PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, false))
+        if (SharedPref.getInstance().getSettingsBoolean(
+                SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, false))
             mItemEmptyDays.setChecked(true);
 
 
-        if (PetimoSharedPref.getInstance().getSettingsBoolean(
-                PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, false)){
+        if (SharedPref.getInstance().getSettingsBoolean(
+                SharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, false)){
             mItemSwipeToDel.setChecked(true);
         }
     }
@@ -177,9 +176,9 @@ public class EditBlockActivity extends AppCompatActivity
             dayListFragment.adapter.dayList = PetimoController.getInstance().
                     getDaysFromRange(PetimoTimeUtils.getDateIntFromCalendatr(fromCalendar),
                             PetimoTimeUtils.getDateIntFromCalendatr(toCalendar),
-                            PetimoSharedPref.getInstance().getSettingsBoolean(PetimoSharedPref.
+                            SharedPref.getInstance().getSettingsBoolean(SharedPref.
                                     SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
-                            PetimoSharedPref.getInstance().getSettingsBoolean(PetimoSharedPref.
+                            SharedPref.getInstance().getSettingsBoolean(SharedPref.
                                     SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false));
             dayListFragment.adapter.notifyDataSetChanged();
         }

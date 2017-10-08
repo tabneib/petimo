@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.model.MonitorBlock;
-import de.tud.nhd.petimo.model.PetimoSharedPref;
+import de.tud.nhd.petimo.model.db.MonitorBlock;
+import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.DayRecyclerViewAdapter;
 
@@ -95,10 +95,10 @@ public class DayListFragment extends Fragment {
     public DayRecyclerViewAdapter generateAdapter(){
         return new DayRecyclerViewAdapter(
                 this, PetimoController.getInstance().getDaysFromRange(
-                fromDate, toDate, PetimoSharedPref.getInstance().getSettingsBoolean(
-                        PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
-                PetimoSharedPref.getInstance().getSettingsBoolean(
-                        PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false)),
+                fromDate, toDate, SharedPref.getInstance().getSettingsBoolean(
+                        SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
+                SharedPref.getInstance().getSettingsBoolean(
+                        SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false)),
                 mListener);
     }
 
@@ -107,10 +107,10 @@ public class DayListFragment extends Fragment {
      */
     public void refreshList(){
         adapter.dayList = PetimoController.getInstance().getDaysFromRange(
-                fromDate, toDate, PetimoSharedPref.getInstance().getSettingsBoolean(
-                        PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
-                PetimoSharedPref.getInstance().getSettingsBoolean(
-                        PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false));
+                fromDate, toDate, SharedPref.getInstance().getSettingsBoolean(
+                        SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
+                SharedPref.getInstance().getSettingsBoolean(
+                        SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false));
         adapter.notifyDataSetChanged();
     }
 

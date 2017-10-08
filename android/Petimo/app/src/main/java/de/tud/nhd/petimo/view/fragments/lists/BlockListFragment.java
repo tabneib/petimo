@@ -11,8 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.model.PetimoDbWrapper;
+import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.BlockRecyclerViewAdapter;
 

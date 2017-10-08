@@ -17,25 +17,52 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/background_title" />
-        
-        <TextView
-            android:id="@+id/fragment_monitorblock_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/pane_padding"
-            android:layout_marginLeft="@dimen/sub_pane_padding"
-            android:textAppearance="?attr/textAppearanceListItem" />
 
-        <TextView
-            android:id="@+id/fragment_monitorblock_monitor_data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/sub_pane_padding"
-            android:layout_marginBottom="@dimen/pane_padding"
-            android:textAppearance="?attr/textAppearanceListItem" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Cat/Task name-->
+            <TextView
+                android:id="@+id/textView_catTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/middle_text_margin"/>
+
+            <!-- Start time - End time - Duration -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView_startTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/middle_small_text_size"
+                    android:textColor="@color/textColorSecondary"
+                    android:layout_margin="@dimen/middle_text_margin" />
+
+                <TextView
+                    android:id="@+id/textView_endTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/middle_small_text_size"
+                    android:textColor="@color/textColorSecondary"
+                    android:layout_margin="@dimen/middle_text_margin"/>
+
+                <TextView
+                    android:id="@+id/textView_duration"
+                    android:textSize="@dimen/middle_big_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/middle_text_margin" />
+
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
-
-
-
-
 </FrameLayout>

@@ -4,7 +4,6 @@ package de.tud.nhd.petimo.view.fragments;
 import android.app.DatePickerDialog;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,7 +22,7 @@ import android.widget.RelativeLayout;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.model.PetimoSharedPref;
+import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.lists.DayListFragment;
 import de.tud.nhd.petimo.view.fragments.menu.EditBlocksMenuFragment;
@@ -182,9 +181,9 @@ public class EditBlocksFragment extends Fragment {
             dayListFragment.adapter.dayList = PetimoController.getInstance().
                     getDaysFromRange(PetimoTimeUtils.getDateIntFromCalendatr(fromCalendar),
                             PetimoTimeUtils.getDateIntFromCalendatr(toCalendar),
-                            PetimoSharedPref.getInstance().getSettingsBoolean(PetimoSharedPref.
+                            SharedPref.getInstance().getSettingsBoolean(SharedPref.
                                     SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
-                            PetimoSharedPref.getInstance().getSettingsBoolean(PetimoSharedPref.
+                            SharedPref.getInstance().getSettingsBoolean(SharedPref.
                                     SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false));
             dayListFragment.adapter.notifyDataSetChanged();
         }

@@ -6,7 +6,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,10 +16,10 @@ import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputTimeException;
 import de.tud.nhd.petimo.controller.exception.InvalidTimeException;
-import de.tud.nhd.petimo.model.PetimoDbWrapper;
-import de.tud.nhd.petimo.model.PetimoSharedPref;
+import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
+import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
-import de.tud.nhd.petimo.model.MonitorDay;
+import de.tud.nhd.petimo.model.db.MonitorDay;
 import de.tud.nhd.petimo.view.fragments.dialogs.AddBlockDialogFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.lists.DayListFragment;
@@ -55,8 +55,8 @@ public class DayRecyclerViewAdapter extends
         holder.monitorDay = dayList.get(position);
         holder.textViewDate.setText(
                 PetimoTimeUtils.getDateStrFromInt(dayList.get(position).getDate()));
-        holder.textViewInfo.setText(dayList.get(position).getInfo());
-
+        holder.textViewSum.setText(dayList.get(position).getDurationStr());
+        holder.buttonAddBlock.getBackground().setAlpha(177);
         // Listener for Add Button
         holder.buttonAddBlock.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,13 +117,15 @@ public class DayRecyclerViewAdapter extends
         });
 
 
+        // TODO 2 other modes: grouped by task / grouped by cat
         // The adapter for the recyclerView that displays the given list of monitor blocks
         holder.blockAdapter = new BlockRecyclerViewAdapter(
                 fragment.getActivity(), dayList.get(position).getMonitorBlocks());
         // Set adapter for the recyclerView displaying block list
 
-        if (!PetimoSharedPref.getInstance().
-                getSettingsBoolean(PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, true))
+        // Swipe to Delete is enable?
+        if (!SharedPref.getInstance().
+                getSettingsBoolean(SharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, true))
             holder.itemTouchHelper.attachToRecyclerView(holder.recyclerView);
         else
             holder.itemTouchHelper.attachToRecyclerView(null);
@@ -141,8 +143,8 @@ public class DayRecyclerViewAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder {
         public View mView;
         public TextView textViewDate;
-        public TextView textViewInfo;
-        public Button buttonAddBlock;
+        public TextView textViewSum;
+        public ImageButton buttonAddBlock;
         public RecyclerView recyclerView;
 
         public MonitorDay monitorDay;
@@ -153,8 +155,8 @@ public class DayRecyclerViewAdapter extends
             super(view);
             mView = view;
             textViewDate = (TextView) view.findViewById(R.id.textView_date);
-            textViewInfo = (TextView) view.findViewById(R.id.textView_info);
-            buttonAddBlock = (Button) view.findViewById(R.id.button_add_block);
+            textViewSum = (TextView) view.findViewById(R.id.textView_sum);
+            buttonAddBlock = (ImageButton) view.findViewById(R.id.button_add_block);
             recyclerView = (RecyclerView) view.findViewById(R.id.block_list_recyclerview);
 
             ItemTouchHelper.SimpleCallback simpleCallback =
@@ -179,7 +181,7 @@ public class DayRecyclerViewAdapter extends
                                             R.string.title_remove_block))
                                     .setMessage(fragment.getActivity().
                                             getString(R.string.message_confirm_remove) + "\n"
-                                            + vHolder.textViewData.getText() + "?")
+                                            + vHolder.textViewCatTask.getText() + "?")
                                     .setPositiveButton(fragment.getActivity().
                                             getString(R.string.button_yes),
                                             new PetimoDialog.OnClickListener() {
@@ -195,7 +197,7 @@ public class DayRecyclerViewAdapter extends
                                                     blockAdapter.notifyItemRemoved(
                                                             vHolder.getLayoutPosition());
                                                     //Update displayed info of the corresponding day
-                                                    textViewInfo.setText(monitorDay.getInfo());
+                                                    textViewSum.setText(monitorDay.getDurationStr());
                                                 }
                                             })
                                     .setNegativeButton(fragment.getActivity().

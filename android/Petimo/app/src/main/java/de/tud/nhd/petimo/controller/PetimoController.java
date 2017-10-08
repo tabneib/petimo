@@ -5,23 +5,21 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
-import de.tud.nhd.petimo.controller.exception.InvalidInputDateException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputTimeException;
 import de.tud.nhd.petimo.controller.exception.InvalidTimeException;
-import de.tud.nhd.petimo.model.MonitorBlock;
-import de.tud.nhd.petimo.model.MonitorCategory;
-import de.tud.nhd.petimo.model.MonitorDay;
-import de.tud.nhd.petimo.model.MonitorTask;
-import de.tud.nhd.petimo.model.PetimoDbWrapper;
-import de.tud.nhd.petimo.model.PetimoSharedPref;
+import de.tud.nhd.petimo.model.db.MonitorBlock;
+import de.tud.nhd.petimo.model.db.MonitorCategory;
+import de.tud.nhd.petimo.model.db.MonitorDay;
+import de.tud.nhd.petimo.model.db.MonitorTask;
+import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
+import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 
 /**
@@ -33,7 +31,7 @@ public class PetimoController {
     private static final String TAG = "PetimoController";
     private static PetimoController _instance;
     private PetimoDbWrapper dbWrapper;
-    private PetimoSharedPref sharedPref;
+    private SharedPref sharedPref;
     private static Context context;
 
 
@@ -46,13 +44,13 @@ public class PetimoController {
     private PetimoController(Context context){
         try{
             PetimoDbWrapper.setContext(context);
-            PetimoSharedPref.initialize(context);
+            SharedPref.initialize(context);
         }
         catch (Exception e){
             e.printStackTrace();
         }
         this.dbWrapper = PetimoDbWrapper.getInstance();
-        this.sharedPref = PetimoSharedPref.getInstance();
+        this.sharedPref = SharedPref.getInstance();
     }
 
     /**
@@ -165,7 +163,7 @@ public class PetimoController {
             ResponseCode rCode =  this.dbWrapper.insertMonitorBlock(
                     taskId, catId, start, stopTime, stopTime - start,
                     date, PetimoTimeUtils.getWeekDay(date), isOverNight(date, start, stopTime),
-                    sharedPref.getSettingsInt(PetimoSharedPref.SETTINGS_OVERNIGHT_THRESHOLD, 6),
+                    sharedPref.getSettingsInt(SharedPref.SETTINGS_OVERNIGHT_THRESHOLD, 6),
                     MonitorBlock.ACTIVE, "");
             return rCode;
         }
@@ -201,11 +199,11 @@ public class PetimoController {
      */
     public void updateUsrMonitoredTasksSortOrder(String sortOrder){
         switch (sortOrder){
-            case PetimoSharedPref.FREQUENCY:
-                sharedPref.setUsrMonitoredSortOrder(PetimoSharedPref.FREQUENCY);
+            case SharedPref.FREQUENCY:
+                sharedPref.setUsrMonitoredSortOrder(SharedPref.FREQUENCY);
                 break;
             default:
-                sharedPref.setUsrMonitoredSortOrder(PetimoSharedPref.TIME);
+                sharedPref.setUsrMonitoredSortOrder(SharedPref.TIME);
         }
     }
     //<---------------------------------------------------------------------------------------------
@@ -504,20 +502,20 @@ public class PetimoController {
      */
     public int getLangId(String lang){
         switch (lang){
-            case PetimoSharedPref.LANG_EN:
-            case PetimoSharedPref.LANG_DE:
-            case PetimoSharedPref.LANG_VI:
-                return PetimoSharedPref.LANGUAGES.indexOf(lang);
+            case SharedPref.LANG_EN:
+            case SharedPref.LANG_DE:
+            case SharedPref.LANG_VI:
+                return SharedPref.LANGUAGES.indexOf(lang);
             default:
-                return PetimoSharedPref.LANGUAGES.indexOf(PetimoSharedPref.LANG_EN);
+                return SharedPref.LANGUAGES.indexOf(SharedPref.LANG_EN);
         }
     }
 
     public String getLangFromId(int id){
-        if (id < PetimoSharedPref.LANGUAGES.size() && id >= 0)
-            return PetimoSharedPref.LANGUAGES.get(id);
+        if (id < SharedPref.LANGUAGES.size() && id >= 0)
+            return SharedPref.LANGUAGES.get(id);
         else
-            return PetimoSharedPref.LANG_EN;
+            return SharedPref.LANG_EN;
     }
 
 

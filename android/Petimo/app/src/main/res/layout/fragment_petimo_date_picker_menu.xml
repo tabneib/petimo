@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipToPadding="false"
-    android:padding="@dimen/pane_padding"
+    android:padding="@dimen/large_pane_padding"
     tools:context="de.tud.nhd.petimo.view.fragments.menu.PetimoDatePickerMenu">
 
 

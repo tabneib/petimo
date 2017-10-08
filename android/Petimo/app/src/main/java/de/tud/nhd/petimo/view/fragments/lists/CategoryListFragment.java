@@ -14,9 +14,8 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.controller.PetimoController;
-import de.tud.nhd.petimo.model.MonitorCategory;
-import de.tud.nhd.petimo.model.PetimoDbWrapper;
+import de.tud.nhd.petimo.model.db.MonitorCategory;
+import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapter;
 

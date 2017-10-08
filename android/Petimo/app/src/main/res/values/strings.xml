@@ -148,6 +148,9 @@
     <string name="hello_blank_fragment">Under construction</string>
 
 
+    <!-- Symbols ################################################################################-->
+    <string name="symbol_sigma">Σ:</string>
+
     <!-- Individual Strings #####################################################################-->
 
     <!-- ModeOffFragment -->

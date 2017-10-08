@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.model.PetimoDbDemo;
+import de.tud.nhd.petimo.model.db.PetimoDbDemo;
 
 /**
  * A simple {@link Fragment} subclass.

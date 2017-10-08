@@ -14,9 +14,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.model.MonitorCategory;
-import de.tud.nhd.petimo.model.PetimoDbWrapper;
-import de.tud.nhd.petimo.model.PetimoSharedPref;
+import de.tud.nhd.petimo.model.db.MonitorCategory;
+import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
+import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link de.tud.nhd.petimo.model.MonitorCategory}
+ * {@link RecyclerView.Adapter} that can display a {@link MonitorCategory}
  */
 public class CategoryRecyclerViewAdapter extends
         RecyclerView.Adapter<CategoryRecyclerViewAdapter.ViewHolder> {
@@ -309,7 +309,7 @@ public class CategoryRecyclerViewAdapter extends
                 new LinearLayoutManager(fragment.getActivity()));
         holder.taskListRecyclerView.setAdapter(holder.taskAdapter);
 
-        ArrayList<Integer> tasks = PetimoSharedPref.getInstance().getSelectedTasks();
+        ArrayList<Integer> tasks = SharedPref.getInstance().getSelectedTasks();
         int selectedTaskNum = 0;
         for (int taskId: tasks)
             if (PetimoDbWrapper.getInstance().getCatIdFromTask(taskId) ==
@@ -378,14 +378,14 @@ public class CategoryRecyclerViewAdapter extends
                                         for (int taskId :
                                                 PetimoDbWrapper.getInstance().
                                                         getTaskIdsByCat(category.getId()))
-                                            PetimoSharedPref.getInstance().
+                                            SharedPref.getInstance().
                                                     addSelectedTask(taskId);
                                     else
                                         // remove all tasks of this cat
                                         for (int taskId :
                                                 PetimoDbWrapper.getInstance().
                                                         getTaskIdsByCat(category.getId()))
-                                            PetimoSharedPref.getInstance().
+                                            SharedPref.getInstance().
                                                     removeSelectedTask(taskId);
                                     if (!onBind)
                                         taskAdapter.notifyDataSetChanged();

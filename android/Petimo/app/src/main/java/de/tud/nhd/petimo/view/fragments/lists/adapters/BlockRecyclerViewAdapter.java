@@ -12,7 +12,7 @@ import android.widget.TextView;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.utils.PetimoColorUtils;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
-import de.tud.nhd.petimo.model.MonitorBlock;
+import de.tud.nhd.petimo.model.db.MonitorBlock;
 
 import java.util.List;
 
@@ -63,19 +63,19 @@ public class BlockRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(final BlockListViewHolder holder, int position) {
+
         holder.monitorBlock = blockList.get(position);
-        String timeInfo = "► " +
-               PetimoTimeUtils.getDayTimeFromMsTime(blockList.get(position).getStart()) +
-                " -> " + PetimoTimeUtils.getDayTimeFromMsTime(blockList.get(position).getEnd()) +
-                " : " + PetimoTimeUtils.getTimeFromMs(blockList.get(position).getDuration());
-        //Log.d(TAG, timeInfo);
 
-        holder.textViewTime.setText(timeInfo);
-
-        String monitorInfo = "    " + blockList.get(position).getCatName() + " / " +
+        String catTask =  blockList.get(position).getCatName() + " / " +
                 blockList.get(position).getTaskName();
-        holder.textViewData.setText(monitorInfo);
+        holder.textViewCatTask.setText(catTask);
 
+        holder.textViewDuration.setText(
+                PetimoTimeUtils.getTimeFromMs(blockList.get(position).getDuration()));
+        holder.textViewStart.setText(
+                PetimoTimeUtils.getDayTimeFromMsTime(blockList.get(position).getStart()));
+        holder.textViewEnd.setText(
+                PetimoTimeUtils.getDayTimeFromMsTime(blockList.get(position).getEnd()));
 
         int durationLevel = (int)
                 holder.monitorBlock.getDuration() / (durationStep * 60000);
@@ -87,22 +87,11 @@ public class BlockRecyclerViewAdapter extends
                 ContextCompat.getColor(context, bgColors[durationLevel]));
 
         if (PetimoColorUtils.isDarkColor(ContextCompat.getColor(context, bgColors[durationLevel]))) {
-            holder.textViewTime.setTextColor(
+            holder.textViewDuration.setTextColor(
                     ContextCompat.getColor(context, R.color.textColorPrimary));
-            holder.textViewData.setTextColor(
+            holder.textViewCatTask.setTextColor(
                     ContextCompat.getColor(context, R.color.textColorPrimary));
         }
-
-
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // do nothing
-            }
-        });
-
-
-
     }
 
     @Override
@@ -113,8 +102,10 @@ public class BlockRecyclerViewAdapter extends
 
     public class BlockListViewHolder extends RecyclerView.ViewHolder {
         public View mView;
-        public TextView textViewTime;
-        public TextView textViewData;
+        public TextView textViewCatTask;
+        public TextView textViewStart;
+        public TextView textViewEnd;
+        public TextView textViewDuration;
         public MonitorBlock monitorBlock;
         public FrameLayout itemContainer;
 
@@ -122,15 +113,17 @@ public class BlockRecyclerViewAdapter extends
         public BlockListViewHolder(View view) {
             super(view);
             mView = view;
-            textViewTime = (TextView) view.findViewById(R.id.fragment_monitorblock_time);
-            textViewData = (TextView) view.findViewById(R.id.fragment_monitorblock_monitor_data);
+            textViewCatTask = (TextView) view.findViewById(R.id.textView_catTask);
+            textViewStart = (TextView) view.findViewById(R.id.textView_startTime);
+            textViewEnd = (TextView) view.findViewById(R.id.textView_endTime);
+            textViewDuration = (TextView) view.findViewById(R.id.textView_duration);
             itemContainer = (FrameLayout) view.findViewById(R.id.item_container);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + textViewTime.getText() +
-                    " ==> " + textViewData.getText() + "'";
+            return super.toString() + " '" + textViewDuration.getText() +
+                    " ==> " + textViewCatTask.getText() + "'";
         }
     }
 }

@@ -1,4 +1,4 @@
-package de.tud.nhd.petimo.model;
+package de.tud.nhd.petimo.model.sharedpref;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,50 +11,50 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
-import de.tud.nhd.petimo.utils.PetimoContextWrapper;
+import de.tud.nhd.petimo.model.SettingsException;
+import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
 import de.tud.nhd.petimo.utils.StringParsingException;
 import de.tud.nhd.petimo.utils.PetimoStringUtils;
 
 /**
  * Created by nhd on 01.09.17.
  */
+@Deprecated
+public class SharedPref {
 
-public class PetimoSharedPref {
-
-    private static final String TAG = "PetimoSharedPref";
+    private static final String TAG = "SharedPref";
     private final String MONITOR_LIVE_DATE =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LIVE_DATE";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITOR_LIVE_DATE";
     private final String MONITOR_LIVE_START =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LIVE_START";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITOR_LIVE_START";
     private final String MONITOR_LIVE_CAT =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LIVE_CAT";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITOR_LIVE_CAT";
     private final String MONITOR_LIVE_TASK =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LIVE_TASK";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITOR_LIVE_TASK";
     private final String MONITOR_MONITORED_TASKS =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_MONITORED_TASKS";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITOR_MONITORED_TASKS";
     private final String MONITOR_LAST_MONITORED_CATEGORY =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LAST_MONITORED_CATEGORY";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITOR_LAST_MONITORED_CATEGORY";
     private final String MONITOR_LAST_MONITORED_TASK =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.MONITOR_LAST_MONITORED_TASK";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITOR_LAST_MONITORED_TASK";
 
     //------------------------------- User's choices ---------------------------------------------->
     public static final String SETTINGS_MONITORED_TASKS_SORT_ORDER =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_MONITORED_TASKS_SORT_ORDER";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_TASKS_SORT_ORDER";
 
     public static final String SETTINGS_MONITORED_BLOCKS_REMEMBER =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_REMEMBER";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_BLOCKS_REMEMBER";
     public static final String SETTINGS_MONITORED_BLOCKS_LOCK =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_BLOCKS_LOCK";
     public static final String SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS";
     public static final String SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS";
     public static final String SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS";
 
     public static final String SETTINGS_LANGUAGE =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_LANGUAGE";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_LANGUAGE";
     public static final String LANG_VI = "vi";
     public static final String LANG_EN = "en";
     public static final String LANG_DE = "de";
@@ -63,12 +63,12 @@ public class PetimoSharedPref {
             new ArrayList(Arrays.asList(new String[]{LANG_EN, LANG_DE, LANG_VI}));
 
     public static final String SETTINGS_OVERNIGHT_THRESHOLD =
-            "de.tud.nhd.petimo.model.PetimoSharedPref.SETTINGS_OVERNIGHT_THRESHOLD";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_OVERNIGHT_THRESHOLD";
 
     private final int DEFAULT_OVERNIGHT_THRESHOLD = 6;
 
 
-    private static PetimoSharedPref _instance;
+    private static SharedPref _instance;
     private static Context context;
 
     private SharedPreferences settingPref;
@@ -83,9 +83,8 @@ public class PetimoSharedPref {
     // Init
     // -------------------------------------------------------------------------------------------->
 
-    private PetimoSharedPref(Context c){
+    private SharedPref(Context c){
         this.context = c;
-        // TODO get monitor data from shared preferences
         this.settingPref = this.context.getSharedPreferences(
                 this.context.getString(R.string.preference_file_settings), Context.MODE_PRIVATE);
         this.monitorPref = this.context.getSharedPreferences(
@@ -96,15 +95,15 @@ public class PetimoSharedPref {
 
     public static void initialize(Context kontext) throws Exception{
         if(_instance != null)
-            throw new Exception("Cannot initialize multiple instances of PetimoSharedPref!");
+            throw new Exception("Cannot initialize multiple instances of SharedPref!");
         else {
             context = kontext;
         }
     }
 
-    public static PetimoSharedPref getInstance() {
+    public static SharedPref getInstance() {
         if (_instance == null) {
-            _instance = new PetimoSharedPref(context);
+            _instance = new SharedPref(context);
             return _instance;
         }
         else
@@ -423,7 +422,7 @@ public class PetimoSharedPref {
             for (String[] item : selectedTasksTmp)
                     selectedTasks.add(Integer.parseInt(item[0]));
 
-            // Remove all task that don't exist anymore
+            // Remove all tasks that don't exist anymore
             Iterator<Integer> selectedTaskIterator = selectedTasks.iterator();
             while (selectedTaskIterator.hasNext()) {
                 int taskId = selectedTaskIterator.next();
@@ -489,7 +488,7 @@ public class PetimoSharedPref {
                 settingsEditor.apply();
                 break;
             default:
-                throw new SettingsException("setSettingsInt: Unknown settings tag ==> " + tag);
+                throw new SettingsException("putInt: Unknown settings tag ==> " + tag);
         }
     }
 
@@ -517,7 +516,7 @@ public class PetimoSharedPref {
                 settingsEditor.apply();
                 break;
             default:
-                throw new SettingsException("setSettingsString: Unknown settings tag ==> " + tag);
+                throw new SettingsException("putString: Unknown settings tag ==> " + tag);
         }
     }
 
@@ -536,7 +535,7 @@ public class PetimoSharedPref {
                 settingsEditor.apply();
                 break;
             default:
-                throw new SettingsException("setSettingsBoolean: Unknown settings tag ==> " + tag);
+                throw new SettingsException("putBoolean: Unknown settings tag ==> " + tag);
         }
     }
 
@@ -601,7 +600,7 @@ public class PetimoSharedPref {
     }
 
     //<---------------------------------------------------------------------------------------------
-    // Settings Preferences
+    //
     // -------------------------------------------------------------------------------------------->
 
     /**
@@ -612,7 +611,7 @@ public class PetimoSharedPref {
     public void updateV1toV2(){
 
         // Update saved last monitored task
-        try{
+        /*try{
             String catName = monitorPref.getString(MONITOR_LAST_MONITORED_CATEGORY, null);
             String taskName = monitorPref.getString(MONITOR_LAST_MONITORED_TASK, null);
             if (catName != null && taskName != null) {
@@ -631,9 +630,10 @@ public class PetimoSharedPref {
         catch(ClassCastException e){
             e.printStackTrace();
             Log.d(TAG, "updateV1toV2: lastMonitoredTask is already up-to-date");
-        }
+        }*/
 
         // Update saved selected tasks
+        /*
         try{
             ArrayList<String[]> oldSelectedTasks = PetimoStringUtils.parse(
                     settingPref.getString(SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS, null), 2);
@@ -655,10 +655,10 @@ public class PetimoSharedPref {
         catch (StringParsingException e){
             e.printStackTrace();
             Log.d(TAG, "updateV1toV2: lastMonitoredTask is probably already up-to-date");
-        }
+        }*/
 
         // Update saved monitored tasks
-        try{
+        /*try{
             ArrayList<String[]> oldMonitoredTaskList = PetimoStringUtils.parse(
                     monitorPref.getString(MONITOR_MONITORED_TASKS, null), 4);
             ArrayList<String[]> newMonitoredTaskList = new ArrayList<>();
@@ -681,6 +681,7 @@ public class PetimoSharedPref {
         catch (StringParsingException e){
             e.printStackTrace();
             Log.d(TAG, "updateV1toV2: lastMonitoredTask is probably already up-to-date");
-        }
+        }*/
+
     }
 }

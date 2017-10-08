@@ -9,14 +9,14 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
-import de.tud.nhd.petimo.model.MonitorTask;
-import de.tud.nhd.petimo.model.PetimoSharedPref;
+import de.tud.nhd.petimo.model.db.MonitorTask;
+import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link de.tud.nhd.petimo.model.MonitorTask}
+ * {@link RecyclerView.Adapter} that can display a {@link MonitorTask}
  */
 public class TaskRecyclerViewAdapter extends
         RecyclerView.Adapter<TaskRecyclerViewAdapter.ViewHolder> {
@@ -70,7 +70,7 @@ public class TaskRecyclerViewAdapter extends
                 boolean notFound = true;
 
                 // Check if the task is already selected
-                if (PetimoSharedPref.getInstance().getSelectedTasks().
+                if (SharedPref.getInstance().getSelectedTasks().
                         contains(holder.task.getId())){
                     onBind = true;
                     holder.taskCheckBox.setChecked(true);
@@ -129,10 +129,10 @@ public class TaskRecyclerViewAdapter extends
                                 public void onCheckedChanged(
                                         CompoundButton buttonView, boolean isChecked) {
                                     if (isChecked)
-                                        PetimoSharedPref.getInstance().
+                                        SharedPref.getInstance().
                                                 addSelectedTask(task.getId());
                                     else
-                                        PetimoSharedPref.getInstance().
+                                        SharedPref.getInstance().
                                                 removeSelectedTask(task.getId());
                                     // Rebind the corresponding category
                                     //catAdapter.onBindViewHolder(catViewHolder, catPosition);

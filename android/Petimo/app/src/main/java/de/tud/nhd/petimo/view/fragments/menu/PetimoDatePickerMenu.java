@@ -29,7 +29,6 @@ public class PetimoDatePickerMenu extends Fragment {
     private OnDateRangeChangeListener mListener;
     private android.support.v7.widget.CardView menu;
     private ImageButton menuButton;
-    private LinearLayout menuContent;
     private RelativeLayout menuLayout;
     Button fromDateButton;
     Button toDateButton;
@@ -70,7 +69,6 @@ public class PetimoDatePickerMenu extends Fragment {
 
         menu = (android.support.v7.widget.CardView) view.findViewById(R.id.menu);
         menuLayout = (RelativeLayout) view.findViewById(R.id.menu_layout);
-        menuContent = (LinearLayout) view.findViewById(R.id.menu_content);
         menuButton = (ImageButton) view.findViewById(R.id.menu_button);
         menuButton.getBackground().setAlpha(127);
         menuLayout.getBackground().setAlpha(255);

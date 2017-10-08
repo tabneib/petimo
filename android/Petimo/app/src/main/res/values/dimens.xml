@@ -8,15 +8,26 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="text_margin">4dp</dimen>
+    <dimen name="middle_text_margin">8dp</dimen>
+    <dimen name="large_text_margin">12dp</dimen>
+
     <dimen name="header_text_size">17dp</dimen>
+    <dimen name="big_text_size">20dp</dimen>
+    <dimen name="middle_big_text_size">18dp</dimen>
     <dimen name="primary_text_size">16dp</dimen>
+    <dimen name="middle_small_text_size">14dp</dimen>
     <dimen name="small_text_size">11dp</dimen>
 
+
     <dimen name="large_pane_padding">16dp</dimen>
+    <dimen name="middle_large_pane_padding">12dp</dimen>
+    <dimen name="middle_pane_padding">8dp</dimen>
     <dimen name="pane_padding">4dp</dimen>
     <dimen name="sub_pane_padding">2dp</dimen>
     <dimen name="dialog_header_padding">8dp</dimen>
     <dimen name="dialog_content_padding">8dp</dimen>
+
+    <dimen name="margin_list_items">12dp</dimen>
 
     <dimen name="container_padding">8dp</dimen>
     <dimen name="container_padding_single">4dp</dimen>

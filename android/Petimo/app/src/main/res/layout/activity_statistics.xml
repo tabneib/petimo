@@ -19,16 +19,18 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
 
     <RelativeLayout
-        android:theme="@style/PetimoTheme.Container"
+        android:paddingTop="@dimen/middle_large_pane_padding"
+        android:paddingBottom="@dimen/middle_large_pane_padding"
+        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <FrameLayout
             android:id="@+id/chart_container"
-            android:theme="@style/PetimoTheme.Light.Pane"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <!-- Floating menu -->
 
         <FrameLayout
             android:id="@+id/menu_container"

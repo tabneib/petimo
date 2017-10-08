@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -28,9 +27,8 @@ import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
-import de.tud.nhd.petimo.model.MonitorBlock;
-import de.tud.nhd.petimo.model.PetimoDbWrapper;
-import de.tud.nhd.petimo.model.PetimoSharedPref;
+import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
+import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.utils.PetimoContextWrapper;
 import de.tud.nhd.petimo.view.fragments.DemoFragment;
 import de.tud.nhd.petimo.view.fragments.EditTasksFragment;
@@ -80,8 +78,8 @@ public class MainActivity extends AppCompatActivity
         PetimoController.setContext(newBase);
         this.controller = PetimoController.getInstance();
         // Update Language
-        super.attachBaseContext(PetimoContextWrapper.wrapLanguage(newBase, PetimoSharedPref.getInstance().
-                getSettingsString(PetimoSharedPref.SETTINGS_LANGUAGE, PetimoSharedPref.LANG_EN)));
+        super.attachBaseContext(PetimoContextWrapper.wrapLanguage(newBase, SharedPref.getInstance().
+                getSettingsString(SharedPref.SETTINGS_LANGUAGE, SharedPref.LANG_EN)));
     }
 
 
@@ -219,7 +217,7 @@ public class MainActivity extends AppCompatActivity
      * Choose the monitor mode (on/off) to display
      */
     private void chooseModeToDisplay(){
-        if (PetimoSharedPref.getInstance().isMonitoring())
+        if (SharedPref.getInstance().isMonitoring())
             // There is ongoing live monitor
             displayFragment(MODE_ON_FRAGMENT_TAG);
         else
@@ -485,7 +483,7 @@ public class MainActivity extends AppCompatActivity
             // printout db
             //PetimoDbWrapper.getInstance().generateXml();
             // update sharedPref
-            //PetimoSharedPref.getInstance().updateV1toV2();
+            //SharedPref.getInstance().updateV1toV2();
             return null;
         }
 
