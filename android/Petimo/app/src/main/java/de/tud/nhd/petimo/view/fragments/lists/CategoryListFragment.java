@@ -90,7 +90,7 @@ public class CategoryListFragment extends Fragment {
                                     Bundle savedInstanceState){
         final View view = inflater.inflate(R.layout.list_fragment_category, container, false);
 
-        // Set the adapter
+        // Set the dayAdapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
@@ -170,7 +170,7 @@ public class CategoryListFragment extends Fragment {
                                     Bundle savedInstanceState){
        final View view = inflater.inflate(R.layout.list_fragment_category, container, false);
 
-        // Set the adapter
+        // Set the dayAdapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
@@ -211,14 +211,14 @@ public class CategoryListFragment extends Fragment {
 
         this.catList.clear();
         this.catList.addAll(PetimoDbWrapper.getInstance().getAllCategories());
-        // bug: this.catList now points to other arrayList object, while adapter.catList still
+        // bug: this.catList now points to other arrayList object, while dayAdapter.catList still
         // points to the old object
         //this.catList = new ArrayList<>(PetimoController.getInstance().getAllCats());
         this.adapter.notifyDataSetChanged();
 
         // Old approach: add the new cat to the top of the recyclerView
         //this.catList.add(0, PetimoController.getInstance().getCatByName(newCatName));
-        //this.adapter.notifyItemInserted(0);
+        //this.dayAdapter.notifyItemInserted(0);
     }
 
 }

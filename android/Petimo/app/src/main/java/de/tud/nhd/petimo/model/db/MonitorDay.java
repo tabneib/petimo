@@ -1,6 +1,12 @@
 package de.tud.nhd.petimo.model.db;
 
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 
@@ -13,12 +19,100 @@ public class MonitorDay {
     private List<MonitorBlock> monitorBlocks;
     private int date;
 
+    ArrayList<MonitorDayGrouped> groupedByTask = null;
+    ArrayList<MonitorDayGrouped> groupedByCat = null;
+
     public MonitorDay(int date, List<MonitorBlock> monitorBlocks){
         this.date = date;
         this.monitorBlocks = monitorBlocks;
         // TODO: Make a list of
 
     }
+
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<MonitorDayGrouped> getGroupedByTask() {
+
+        if (this.groupedByTask == null){
+            this.groupedByTask = new ArrayList<>();
+            HashMap<String, MonitorDayGrouped> found = new HashMap<>();
+
+            for (MonitorBlock block: monitorBlocks){
+                // check if the corresponding task is already found
+                String descrName = PetimoDbWrapper.getInstance().
+                        getTaskById(block.getTaskId()).getDescriptiveName();
+                if (found.containsKey(descrName)){
+                    found.get(descrName).addBlock(block.getId());
+                    found.get(descrName).increaseDuration(block.getDuration());
+                }
+                else{
+                    found.put(descrName, new MonitorDayGrouped(this, descrName));
+                    found.get(descrName).addBlock(block.getId());
+                    found.get(descrName).increaseDuration(block.getDuration());
+                }
+            }
+            // this is a hack to workaround the "100% percentage sum" issue
+            int percentageSum = 0;
+            Iterator iterator = found.entrySet().iterator();
+            while (iterator.hasNext()){
+                Map.Entry pair = (Map.Entry) iterator.next();
+                MonitorDayGrouped aGroup = (MonitorDayGrouped) pair.getValue();
+                aGroup.setPercentage((int)
+                        (aGroup.getDuration() *100 / this.getDuration()));
+                percentageSum = percentageSum + aGroup.getPercentage();
+                if (!iterator.hasNext() && percentageSum < 100)
+                    aGroup.setPercentage(aGroup.getPercentage() + 100 - percentageSum);
+                //aGroup.setPercentage(aGroup.getDuration() * 100 / this.getDuration());
+                this.groupedByTask.add(aGroup);
+            }
+        }
+        return this.groupedByTask;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<MonitorDayGrouped> getGroupedByCat() {
+        if(this.groupedByCat == null){
+            this.groupedByCat = new ArrayList<>();
+            HashMap<String, MonitorDayGrouped> found = new HashMap<>();
+
+            for (MonitorBlock block: monitorBlocks){
+                // check if the corresponding task is already found
+                String descrName = PetimoDbWrapper.getInstance().
+                        getCatById(block.getCatId()).getDescriptiveName();
+                if (found.containsKey(descrName)){
+                    found.get(descrName).addBlock(block.getId());
+                    found.get(descrName).increaseDuration(block.getDuration());
+                }
+                else{
+                    found.put(descrName, new MonitorDayGrouped(this, descrName));
+                    found.get(descrName).addBlock(block.getId());
+                    found.get(descrName).increaseDuration(block.getDuration());
+                }
+            }
+
+            Iterator iterator = found.entrySet().iterator();
+            // this is a hack to workaround the "100% percentage sum" issue
+            int percentageSum = 0;
+            while (iterator.hasNext()){
+                Map.Entry pair = (Map.Entry) iterator.next();
+                MonitorDayGrouped aGroup = (MonitorDayGrouped) pair.getValue();
+                aGroup.setPercentage((int)
+                        (aGroup.getDuration() * 100 / this.getDuration()));
+                percentageSum = percentageSum + aGroup.getPercentage();
+                if (!iterator.hasNext() && percentageSum < 100)
+                    aGroup.setPercentage(aGroup.getPercentage() + 100 - percentageSum);
+                this.getGroupedByCat().add(aGroup);
+            }
+        }
+        return this.groupedByCat;
+    }
+
 
     public List<MonitorBlock> getMonitorBlocks() {
         return monitorBlocks;

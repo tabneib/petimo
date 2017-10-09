@@ -31,7 +31,7 @@
                 android:layout_centerVertical="true"
                 android:layout_margin="@dimen/middle_text_margin"/>
 
-            <!-- Start time - End time - Duration -->
+            <!-- Percentage - Duration -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -39,10 +39,13 @@
                 android:layout_centerVertical="true"
                 android:orientation="horizontal">
 
-                <ProgressBar
-                    android:id="@+id/progressBar"
+                <TextView
+                    android:id="@+id/textView_percentage"
+                    android:textSize="@dimen/a_little_small_text_size"
+                    android:textColor="@color/textColorSecondary"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/middle_text_margin"/>
 
                 <TextView
                     android:id="@+id/textView_duration"

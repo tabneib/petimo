@@ -280,6 +280,8 @@ public class PetimoDatePickerMenu extends Fragment {
     public void deactivate(PostTask task){
         if (menuOpened)
             hideMenu(ANIMATION_SPEED / 2, task);
+        else
+            task.execute();
     }
 
     /**

@@ -2,75 +2,72 @@ package de.tud.nhd.petimo.model.sharedpref;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.model.SettingsException;
-import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
-import de.tud.nhd.petimo.utils.PetimoStringUtils;
-import de.tud.nhd.petimo.utils.StringParsingException;
 
 /**
  * Created by nhd on 08.10.17.
  */
 
-public class SettingsSharedPref extends PetimoSharedPref {
+public class PetimoSettingsSPref extends PetimoSPref {
 
-    static SettingsSharedPref _instance = null;
+    static PetimoSettingsSPref _instance = null;
 
-    private final String TAG = "SettingsSharedPref";
+    private final String TAG = "PetimoSettingsSPref";
 
     SharedPreferences settingPref;
     SharedPreferences.Editor settingsEditor;
 
     //------------------------------- User's choices ---------------------------------------------->
-    public static final String SETTINGS_MONITORED_TASKS_SORT_ORDER =
-            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_TASKS_SORT_ORDER";
+    public static final String MONITORED_TASKS_SORT_ORDER =
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITORED_TASKS_SORT_ORDER";
 
     @Deprecated
-    public static final String SETTINGS_MONITORED_BLOCKS_REMEMBER =
-            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_BLOCKS_REMEMBER";
-    public static final String SETTINGS_MONITORED_BLOCKS_LOCK =
-            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_BLOCKS_LOCK";
-    public static final String SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS =
-            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS";
-    public static final String SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS =
-            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS";
+    public static final String MONITORED_BLOCKS_REMEMBER =
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITORED_BLOCKS_REMEMBER";
+    public static final String MONITORED_BLOCKS_LOCK =
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITORED_BLOCKS_LOCK";
+    public static final String MONITORED_BLOCKS_SHOW_SELECTED_TASKS =
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITORED_BLOCKS_SHOW_SELECTED_TASKS";
+    public static final String MONITORED_BLOCKS_SHOW_EMPTY_DAYS =
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITORED_BLOCKS_SHOW_EMPTY_DAYS";
+    public static final String MONITORED_BLOCKS_GROUP_BY =
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITORED_BLOCKS_GROUP_BY";
 
 
-    public static final String SETTINGS_LANGUAGE =
-            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_LANGUAGE";
+    public static final String LANGUAGE =
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.LANGUAGE";
     public static final String LANG_VI = "vi";
     public static final String LANG_EN = "en";
     public static final String LANG_DE = "de";
     // This order is fixed
-    public static final ArrayList<String> LANGUAGES =
+    public static final ArrayList<String> LANGS =
             new ArrayList(Arrays.asList(new String[]{LANG_EN, LANG_DE, LANG_VI}));
 
-    public static final String SETTINGS_OVERNIGHT_THRESHOLD =
-            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_OVERNIGHT_THRESHOLD";
+    public static final String OVERNIGHT_THRESHOLD =
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.OVERNIGHT_THRESHOLD";
 
     private final int DEFAULT_OVERNIGHT_THRESHOLD = 6;
 
 
 
-    SettingsSharedPref(){
+    PetimoSettingsSPref(){
         super();
         this.settingPref = this.context.getSharedPreferences(
                 this.context.getString(R.string.preference_file_settings), Context.MODE_PRIVATE);
         this.settingsEditor = settingPref.edit();
     }
 
-    public static SettingsSharedPref getInstance() throws RuntimeException{
+    public static PetimoSettingsSPref getInstance() throws RuntimeException{
         if (_instance == null)
             if (context == null)
-                throw new RuntimeException("PetimoSharedPref must be initialized first!");
+                throw new RuntimeException("PetimoSPref must be initialized first!");
             else
-                _instance = new SettingsSharedPref();
+                _instance = new PetimoSettingsSPref();
         return _instance;
     }
 
@@ -86,7 +83,7 @@ public class SettingsSharedPref extends PetimoSharedPref {
      */
     public void putInt(String tag, int content){
         switch (tag){
-            case SETTINGS_OVERNIGHT_THRESHOLD:
+            case OVERNIGHT_THRESHOLD:
                 settingsEditor.putInt(tag, content);
                 settingsEditor.apply();
                 break;
@@ -102,11 +99,12 @@ public class SettingsSharedPref extends PetimoSharedPref {
      */
     public void putString(String tag, String content){
         switch (tag){
-            case SETTINGS_MONITORED_TASKS_SORT_ORDER:
+            case MONITORED_TASKS_SORT_ORDER:
+            case MONITORED_BLOCKS_GROUP_BY:
                 settingsEditor.putString(tag, content);
                 settingsEditor.apply();
                 break;
-            case SETTINGS_LANGUAGE:
+            case LANGUAGE:
                 switch (content){
                     case LANG_VI:
                     case LANG_DE:
@@ -130,10 +128,10 @@ public class SettingsSharedPref extends PetimoSharedPref {
      */
     public void putBoolean(String tag, boolean content){
         switch (tag){
-            case SETTINGS_MONITORED_BLOCKS_LOCK:
-            case SETTINGS_MONITORED_BLOCKS_REMEMBER:
-            case SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS:
-            case SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS:
+            case MONITORED_BLOCKS_LOCK:
+            case MONITORED_BLOCKS_REMEMBER:
+            case MONITORED_BLOCKS_SHOW_SELECTED_TASKS:
+            case MONITORED_BLOCKS_SHOW_EMPTY_DAYS:
                 settingsEditor.putBoolean(tag, content);
                 settingsEditor.apply();
                 break;
@@ -147,19 +145,19 @@ public class SettingsSharedPref extends PetimoSharedPref {
      * If the given value is UNSORTED or invalid, the sort order is set to UNSORTED
      * @param sortOrder the given sort order
      */
-    public void setUsrMonitoredSortOrder(Sort sortOrder){
+    public void setUsrMonitoredSortOrder(String sortOrder){
         switch (sortOrder){
-            case FREQUENCY:
+            case Consts.FREQUENCY:
                 settingsEditor.putString(
-                        SETTINGS_MONITORED_TASKS_SORT_ORDER, Sort.FREQUENCY.toString());
+                        MONITORED_TASKS_SORT_ORDER, Consts.FREQUENCY.toString());
                 break;
-            case TIME:
+            case Consts.TIME:
                 settingsEditor.putString(
-                        SETTINGS_MONITORED_TASKS_SORT_ORDER, Sort.TIME.toString());
+                        MONITORED_TASKS_SORT_ORDER, Consts.TIME.toString());
                 break;
             default:
                 settingsEditor.putString(
-                        SETTINGS_MONITORED_TASKS_SORT_ORDER, Sort.UNSORTED.toString());
+                        MONITORED_TASKS_SORT_ORDER, Consts.UNSORTED.toString());
         }
         settingsEditor.apply();
     }
@@ -177,7 +175,7 @@ public class SettingsSharedPref extends PetimoSharedPref {
      */
     public int getSettingsInt(String tag, int defaultValue){
         switch (tag){
-            case SETTINGS_OVERNIGHT_THRESHOLD:
+            case OVERNIGHT_THRESHOLD:
                 return settingPref.getInt(tag, defaultValue);
             default:
                 throw new SettingsException("getSettingsInt: Unknown settings tag ==> " + tag);
@@ -192,8 +190,9 @@ public class SettingsSharedPref extends PetimoSharedPref {
      */
     public String getSettingsString(String tag, String defaultValue){
         switch (tag){
-            case SETTINGS_MONITORED_TASKS_SORT_ORDER:
-            case SETTINGS_LANGUAGE:
+            case MONITORED_TASKS_SORT_ORDER:
+            case MONITORED_BLOCKS_GROUP_BY:
+            case LANGUAGE:
                 return settingPref.getString(tag, defaultValue);
             default:
                 throw new SettingsException("getSettingsString: Unknown settings tag ==> " + tag);
@@ -208,10 +207,10 @@ public class SettingsSharedPref extends PetimoSharedPref {
      */
     public boolean getSettingsBoolean(String tag, boolean defaultValue){
         switch (tag){
-            case SETTINGS_MONITORED_BLOCKS_LOCK:
-            case SETTINGS_MONITORED_BLOCKS_REMEMBER:
-            case SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS:
-            case SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS:
+            case MONITORED_BLOCKS_LOCK:
+            case MONITORED_BLOCKS_REMEMBER:
+            case MONITORED_BLOCKS_SHOW_SELECTED_TASKS:
+            case MONITORED_BLOCKS_SHOW_EMPTY_DAYS:
                 return settingPref.getBoolean(tag, defaultValue);
             default:
                 throw new SettingsException("getSettingsBoolean: Unknown settings tag ==> " + tag);
@@ -224,14 +223,14 @@ public class SettingsSharedPref extends PetimoSharedPref {
      * @return the sort order
      */
     public String getUsrMonitoredSortOrder(){
-        switch (Sort.valueOf(settingPref.getString(
-                SETTINGS_MONITORED_TASKS_SORT_ORDER, Sort.UNSORTED.toString()))){
-            case FREQUENCY:
-                return Sort.FREQUENCY.toString();
-            case TIME:
-                return Sort.TIME.toString();
+        switch (settingPref.getString(
+                MONITORED_TASKS_SORT_ORDER, Consts.UNSORTED)){
+            case Consts.FREQUENCY:
+                return Consts.FREQUENCY.toString();
+            case Consts.TIME:
+                return Consts.TIME.toString();
             default:
-                return Sort.TIME.toString();
+                return Consts.TIME.toString();
         }
     }
 
@@ -241,7 +240,7 @@ public class SettingsSharedPref extends PetimoSharedPref {
      * TODO remove this method, use generic method above instead
      */
     public int getOvThreshold(){
-        return settingPref.getInt(SETTINGS_OVERNIGHT_THRESHOLD, DEFAULT_OVERNIGHT_THRESHOLD);
+        return settingPref.getInt(OVERNIGHT_THRESHOLD, DEFAULT_OVERNIGHT_THRESHOLD);
     }
 
 

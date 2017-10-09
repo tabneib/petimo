@@ -178,14 +178,14 @@ public class EditBlocksFragment extends Fragment {
         DayListFragment dayListFragment = (DayListFragment) getActivity().
                 getSupportFragmentManager().findFragmentByTag(TAG + "day_list_fragment");
         if(dayListFragment != null){
-            dayListFragment.adapter.dayList = PetimoController.getInstance().
+            dayListFragment.dayAdapter.dayList = PetimoController.getInstance().
                     getDaysFromRange(PetimoTimeUtils.getDateIntFromCalendatr(fromCalendar),
                             PetimoTimeUtils.getDateIntFromCalendatr(toCalendar),
                             SharedPref.getInstance().getSettingsBoolean(SharedPref.
                                     SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
                             SharedPref.getInstance().getSettingsBoolean(SharedPref.
                                     SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false));
-            dayListFragment.adapter.notifyDataSetChanged();
+            dayListFragment.dayAdapter.notifyDataSetChanged();
         }
     }
 
@@ -193,7 +193,7 @@ public class EditBlocksFragment extends Fragment {
         DayListFragment dayListFragment = (DayListFragment) getActivity().
                 getSupportFragmentManager().findFragmentByTag(TAG + "day_list_fragment");
         if(dayListFragment != null) {
-            dayListFragment.adapter.notifyDataSetChanged();
+            dayListFragment.dayAdapter.notifyDataSetChanged();
         }
     }
 

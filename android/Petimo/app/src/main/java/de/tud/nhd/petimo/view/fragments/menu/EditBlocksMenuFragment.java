@@ -93,7 +93,7 @@ public class EditBlocksMenuFragment extends Fragment {
         // There is no need for remember option ;)
         checkBoxRemember.setVisibility(View.INVISIBLE);
         /*if (SharedPref.getInstance().getSettingsBoolean(
-                SharedPref.SETTINGS_MONITORED_BLOCKS_REMEMBER, false))
+                SharedPref.MONITORED_BLOCKS_REMEMBER, false))
             checkBoxRemember.setChecked(true);*/
 
         // If Remember is not checked and not yet reset to default
@@ -102,9 +102,9 @@ public class EditBlocksMenuFragment extends Fragment {
                 !PetimoController.getInstance().getTag(RESET_TO_DEFAULT_TAG, false)) {
             PetimoController.getInstance().setTag(RESET_TO_DEFAULT_TAG, true);
             SharedPref.getInstance().putBoolean(
-                    SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false);
+                    SharedPref.MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false);
             SharedPref.getInstance().putBoolean(
-                    SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, false);
+                    SharedPref.MONITORED_BLOCKS_SHOW_EMPTY_DAYS, false);
             //update List
             parentFragment.updateDayList();
         }*/
@@ -180,7 +180,7 @@ public class EditBlocksMenuFragment extends Fragment {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         SharedPref.getInstance().putBoolean(
-                                SharedPref.SETTINGS_MONITORED_BLOCKS_REMEMBER, isChecked);
+                                SharedPref.MONITORED_BLOCKS_REMEMBER, isChecked);
                     }
                 });*/
 

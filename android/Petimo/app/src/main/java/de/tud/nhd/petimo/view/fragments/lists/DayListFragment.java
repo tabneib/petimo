@@ -10,12 +10,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.db.MonitorBlock;
+import de.tud.nhd.petimo.model.db.MonitorDay;
+import de.tud.nhd.petimo.model.db.MonitorDayGrouped;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
 import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
+import de.tud.nhd.petimo.view.fragments.lists.adapters.DayGroupedRecyclerViewAdapter;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.DayRecyclerViewAdapter;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSPref.Consts;
+
 
 /**
  * A fragment representing a list of Items.
@@ -39,7 +47,9 @@ public class DayListFragment extends Fragment {
 
     private OnEditDayFragmentInteractionListener mListener;
 
-    public DayRecyclerViewAdapter adapter;
+    public DayRecyclerViewAdapter dayAdapter = null;
+    public DayGroupedRecyclerViewAdapter groupedAdapter = null;
+
     public RecyclerView recyclerView;
 
     /**
@@ -76,9 +86,9 @@ public class DayListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_fragment_monitorday, container, false);
 
-        adapter = generateAdapter();
+        dayAdapter = generateDayAdapter();
 
-        // Set the adapter
+        // Set the dayAdapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             this.recyclerView = (RecyclerView) view;
@@ -87,31 +97,32 @@ public class DayListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(adapter);
+            recyclerView.setAdapter(dayAdapter);
         }
         return view;
     }
 
-    public DayRecyclerViewAdapter generateAdapter(){
+    private DayRecyclerViewAdapter generateDayAdapter(){
         return new DayRecyclerViewAdapter(
                 this, PetimoController.getInstance().getDaysFromRange(
-                fromDate, toDate, SharedPref.getInstance().getSettingsBoolean(
-                        SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
-                SharedPref.getInstance().getSettingsBoolean(
-                        SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false)),
+                fromDate, toDate, PetimoSettingsSPref.getInstance().getSettingsBoolean(
+                        PetimoSettingsSPref.MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
+                PetimoSettingsSPref.getInstance().getSettingsBoolean(
+                        PetimoSettingsSPref.MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false)),
                 mListener);
     }
+
 
     /**
      *
      */
     public void refreshList(){
-        adapter.dayList = PetimoController.getInstance().getDaysFromRange(
+        dayAdapter.dayList = PetimoController.getInstance().getDaysFromRange(
                 fromDate, toDate, SharedPref.getInstance().getSettingsBoolean(
                         SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
                 SharedPref.getInstance().getSettingsBoolean(
                         SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false));
-        adapter.notifyDataSetChanged();
+        dayAdapter.notifyDataSetChanged();
     }
 
 

@@ -14,7 +14,7 @@ import de.tud.nhd.petimo.utils.StringParsingException;
 /**
  * Task selector is implemented in form of transaction
  */
-public class TaskSelector extends SettingsSharedPref{
+public class TaskSelector extends PetimoSettingsSPref {
 
     private static final String TAG = "TaskSelector";
     static TaskSelector _instance = null;
@@ -38,7 +38,7 @@ public class TaskSelector extends SettingsSharedPref{
     public static TaskSelector getInstance() throws RuntimeException{
         if (_instance == null)
             if (context == null)
-                throw new RuntimeException("PetimoSharedPref must be initialized first!");
+                throw new RuntimeException("PetimoSPref must be initialized first!");
             else
                 _instance = new TaskSelector(context);
         return _instance;

@@ -66,6 +66,9 @@ public class MonitorTask {
         return this.catName;
     }
 
+    public String getDescriptiveName(){
+        return this.catName + " / " + this.name;
+    }
     /**
      * TODO Get Cat/Task name by IDs !
      * @return

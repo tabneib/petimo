@@ -40,21 +40,21 @@ public class SharedPref {
 
     //------------------------------- User's choices ---------------------------------------------->
     public static final String SETTINGS_MONITORED_TASKS_SORT_ORDER =
-            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_TASKS_SORT_ORDER";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITORED_TASKS_SORT_ORDER";
 
     public static final String SETTINGS_MONITORED_BLOCKS_REMEMBER =
-            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_BLOCKS_REMEMBER";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITORED_BLOCKS_REMEMBER";
     public static final String SETTINGS_MONITORED_BLOCKS_LOCK =
-            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_BLOCKS_LOCK";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITORED_BLOCKS_LOCK";
     public static final String SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS =
-            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITORED_BLOCKS_SHOW_SELECTED_TASKS";
     public static final String SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS =
-            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITORED_BLOCKS_SHOW_EMPTY_DAYS";
     public static final String SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS =
             "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS";
 
     public static final String SETTINGS_LANGUAGE =
-            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_LANGUAGE";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.LANGUAGE";
     public static final String LANG_VI = "vi";
     public static final String LANG_EN = "en";
     public static final String LANG_DE = "de";
@@ -63,7 +63,7 @@ public class SharedPref {
             new ArrayList(Arrays.asList(new String[]{LANG_EN, LANG_DE, LANG_VI}));
 
     public static final String SETTINGS_OVERNIGHT_THRESHOLD =
-            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_OVERNIGHT_THRESHOLD";
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.OVERNIGHT_THRESHOLD";
 
     private final int DEFAULT_OVERNIGHT_THRESHOLD = 6;
 

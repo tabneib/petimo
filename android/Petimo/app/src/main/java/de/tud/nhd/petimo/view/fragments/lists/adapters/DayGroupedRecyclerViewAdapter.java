@@ -10,6 +10,8 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import de.tud.nhd.petimo.R;
@@ -45,7 +47,7 @@ public class DayGroupedRecyclerViewAdapter extends
     };
 
     /**
-     * Construct the adapter.
+     * Construct the dayAdapter.
      * @param itemList
      */
     public DayGroupedRecyclerViewAdapter(Context context, List<MonitorDayGrouped> itemList) {
@@ -74,6 +76,7 @@ public class DayGroupedRecyclerViewAdapter extends
                 PetimoTimeUtils.getTimeFromMs(itemList.get(position).getDuration()));
         // TODO: display percentage beautifully !
         //holder.progressBar.setProgress();
+        holder.textViewPercentage.setText(itemList.get(position).getPercentage() + "%");
         int durationLevel = (int)
                 holder.monitorDayGrouped.getDuration() / (durationStep * 60000);
         // This is a hard-coded fix for any unwanted bug that makes durationLevel a negative int
@@ -100,7 +103,7 @@ public class DayGroupedRecyclerViewAdapter extends
     public class DayGroupedViewHolder extends RecyclerView.ViewHolder {
         public View mView;
         public TextView textViewCatTask;
-        ProgressBar progressBar;
+        public TextView textViewPercentage;
         public TextView textViewDuration;
         public MonitorDayGrouped monitorDayGrouped;
         public FrameLayout itemContainer;
@@ -110,7 +113,7 @@ public class DayGroupedRecyclerViewAdapter extends
             super(view);
             mView = view;
             textViewCatTask = (TextView) view.findViewById(R.id.textView_catTask);
-            progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+            textViewPercentage = (TextView) view.findViewById(R.id.textView_percentage);
             textViewDuration = (TextView) view.findViewById(R.id.textView_duration);
             itemContainer = (FrameLayout) view.findViewById(R.id.item_container);
         }

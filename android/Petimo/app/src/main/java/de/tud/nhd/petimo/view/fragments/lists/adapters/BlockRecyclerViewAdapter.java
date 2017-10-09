@@ -43,7 +43,7 @@ public class BlockRecyclerViewAdapter extends
     };
 
     /**
-     * Construct the adapter. Is the given block list is null then the adapter will query the
+     * Construct the dayAdapter. Is the given block list is null then the dayAdapter will query the
      * database by every view holder binding.
      * @param blockList
      */

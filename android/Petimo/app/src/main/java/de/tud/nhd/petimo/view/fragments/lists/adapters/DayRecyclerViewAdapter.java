@@ -16,7 +16,10 @@ import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputTimeException;
 import de.tud.nhd.petimo.controller.exception.InvalidTimeException;
+import de.tud.nhd.petimo.model.db.MonitorDayGrouped;
 import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
 import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.model.db.MonitorDay;
@@ -25,6 +28,7 @@ import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.lists.DayListFragment;
 import de.tud.nhd.petimo.view.fragments.lists.DayListFragment.OnEditDayFragmentInteractionListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -116,23 +120,46 @@ public class DayRecyclerViewAdapter extends
             }
         });
 
+        switch (PetimoSettingsSPref.getInstance().getSettingsString(
+                PetimoSettingsSPref.MONITORED_BLOCKS_GROUP_BY, PetimoSPref.Consts.NOT_GROUP)){
 
-        // TODO 2 other modes: grouped by task / grouped by cat
-        // The adapter for the recyclerView that displays the given list of monitor blocks
-        holder.blockAdapter = new BlockRecyclerViewAdapter(
-                fragment.getActivity(), dayList.get(position).getMonitorBlocks());
-        // Set adapter for the recyclerView displaying block list
+            case (PetimoSPref.Consts.NOT_GROUP):
+
+                // The dayAdapter for the recyclerView that displays the given list of monitor blocks
+                holder.blockAdapter = new BlockRecyclerViewAdapter(
+                        fragment.getActivity(), dayList.get(position).getMonitorBlocks());
+
+                break;
+
+            default:
+                ArrayList<MonitorDayGrouped> groups;
+                if (PetimoSettingsSPref.getInstance().getSettingsString(
+                        PetimoSettingsSPref.MONITORED_BLOCKS_GROUP_BY,
+                        PetimoSPref.Consts.GROUP_BY_TASK).equals(PetimoSPref.Consts.GROUP_BY_CAT))
+                    groups = dayList.get(position).getGroupedByCat();
+                else
+                    groups = dayList.get(position).getGroupedByTask();
+
+                holder.groupAdapter = new DayGroupedRecyclerViewAdapter(
+                        fragment.getActivity(), groups);
+
+                break;
+        }
+        // Set dayAdapter for the recyclerView displaying block list
 
         // Swipe to Delete is enable?
-        if (SharedPref.getInstance().
-                getSettingsBoolean(SharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, false))
+        if (PetimoSettingsSPref.getInstance().
+                getSettingsBoolean(PetimoSettingsSPref.MONITORED_BLOCKS_LOCK, false))
             holder.itemTouchHelper.attachToRecyclerView(holder.recyclerView);
         else
             holder.itemTouchHelper.attachToRecyclerView(null);
 
 
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(fragment.getActivity()));
-        holder.recyclerView.setAdapter(holder.blockAdapter);
+        if (holder.blockAdapter != null)
+            holder.recyclerView.setAdapter(holder.blockAdapter);
+        else if (holder.groupAdapter != null)
+            holder.recyclerView.setAdapter(holder.groupAdapter);
     }
 
     @Override
@@ -149,6 +176,7 @@ public class DayRecyclerViewAdapter extends
 
         public MonitorDay monitorDay;
         public BlockRecyclerViewAdapter blockAdapter;
+        public DayGroupedRecyclerViewAdapter groupAdapter;
         public ItemTouchHelper itemTouchHelper;
 
         public ViewHolder(View view) {

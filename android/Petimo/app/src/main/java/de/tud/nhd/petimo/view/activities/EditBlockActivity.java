@@ -20,13 +20,12 @@ import android.widget.Switch;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.Exchanger;
-import java.util.concurrent.ThreadFactory;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.db.MonitorBlock;
-import de.tud.nhd.petimo.model.sharedpref.SettingsSharedPref;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
 import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
@@ -58,6 +57,7 @@ public class EditBlockActivity extends AppCompatActivity
 
     private boolean updateDayList = false;
     private boolean reloadDayList = false;
+    private boolean recreateDayListFragment = false;
 
     Calendar fromCalendar = Calendar.getInstance();
     Calendar toCalendar = Calendar.getInstance();
@@ -151,8 +151,8 @@ public class EditBlockActivity extends AppCompatActivity
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 updateDayList = true;
-                SettingsSharedPref.getInstance().putBoolean(
-                        SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS,
+                PetimoSettingsSPref.getInstance().putBoolean(
+                        PetimoSettingsSPref.MONITORED_BLOCKS_SHOW_SELECTED_TASKS,
                         isChecked);
 
                 // Display task selector dialog if checked
@@ -183,22 +183,54 @@ public class EditBlockActivity extends AppCompatActivity
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 updateDayList = true;
-                SettingsSharedPref.getInstance().putBoolean(
-                        SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, isChecked);
+                PetimoSettingsSPref.getInstance().putBoolean(
+                        PetimoSettingsSPref.MONITORED_BLOCKS_SHOW_EMPTY_DAYS, isChecked);
                 // Update Day List
                 //updateDayList();
             }
         });
 
-
         switchSwipeToDel.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 reloadDayList = true;
-                SettingsSharedPref.getInstance().putBoolean(
-                        SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, isChecked);
+                PetimoSettingsSPref.getInstance().putBoolean(
+                        PetimoSettingsSPref.MONITORED_BLOCKS_LOCK, isChecked);
                 // Update Day List & Adapter
-                reloadDayList();
+                //reloadDayList();
+            }
+        });
+
+        radioGroupedByTask.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                recreateDayListFragment = true;
+                if (isChecked)
+                    PetimoSettingsSPref.getInstance().putString(
+                        PetimoSettingsSPref.MONITORED_BLOCKS_GROUP_BY,
+                        PetimoSPref.Consts.GROUP_BY_TASK);
+            }
+        });
+
+        radioGroupedByCat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                recreateDayListFragment = true;
+                if (isChecked)
+                    PetimoSettingsSPref.getInstance().putString(
+                        PetimoSettingsSPref.MONITORED_BLOCKS_GROUP_BY,
+                        PetimoSPref.Consts.GROUP_BY_CAT);
+            }
+        });
+
+        radioNotGrouped.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                recreateDayListFragment = true;
+                if (isChecked)
+                    PetimoSettingsSPref.getInstance().putString(
+                        PetimoSettingsSPref.MONITORED_BLOCKS_GROUP_BY,
+                        PetimoSPref.Consts.NOT_GROUP);
             }
         });
 
@@ -214,6 +246,11 @@ public class EditBlockActivity extends AppCompatActivity
                     reloadDayList();
                     reloadDayList = false;
                 }
+                if (recreateDayListFragment){
+                    recreateDayListFragment();
+                    recreateDayListFragment = false;
+                }
+
                 // un-dim the activity
                 activityLayout.getForeground().setAlpha(0);
 
@@ -224,29 +261,6 @@ public class EditBlockActivity extends AppCompatActivity
                     menu.reactivate();
             }
         });
-
-
-        radioGroupedByTask.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // TODO
-            }
-        });
-
-        radioGroupedByCat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // TODO
-            }
-        });
-
-        radioNotGrouped.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // TODO
-            }
-        });
-
     }
 
     @Override
@@ -286,16 +300,30 @@ public class EditBlockActivity extends AppCompatActivity
      * Update the checked state of overflow menu items
      */
     private void updateChecked(){
-        if (SettingsSharedPref.getInstance().getSettingsBoolean(
-                SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false))
+        if (PetimoSettingsSPref.getInstance().getSettingsBoolean(
+                PetimoSettingsSPref.MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false))
             switchSelectedTask.setChecked(true);
-        if (SettingsSharedPref.getInstance().getSettingsBoolean(
-                SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, false))
+
+        if (PetimoSettingsSPref.getInstance().getSettingsBoolean(
+                PetimoSettingsSPref.MONITORED_BLOCKS_SHOW_EMPTY_DAYS, false))
             switchEmptyDays.setChecked(true);
 
-        if (SettingsSharedPref.getInstance().getSettingsBoolean(
-                SettingsSharedPref.SETTINGS_MONITORED_BLOCKS_LOCK, false)){
+        if (PetimoSettingsSPref.getInstance().getSettingsBoolean(
+                PetimoSettingsSPref.MONITORED_BLOCKS_LOCK, false)){
             switchSwipeToDel.setChecked(true);
+        }
+
+        switch (PetimoSettingsSPref.getInstance().getSettingsString(
+                PetimoSettingsSPref.MONITORED_BLOCKS_GROUP_BY, PetimoSPref.Consts.NOT_GROUP)){
+            case PetimoSPref.Consts.GROUP_BY_CAT:
+                radioGroupedByCat.setChecked(true);
+                break;
+            case PetimoSPref.Consts.GROUP_BY_TASK:
+                radioGroupedByTask.setChecked(true);
+                break;
+            case PetimoSPref.Consts.NOT_GROUP:
+                radioNotGrouped.setChecked(true);
+                break;
         }
     }
 
@@ -307,14 +335,14 @@ public class EditBlockActivity extends AppCompatActivity
         DayListFragment dayListFragment = (DayListFragment)
                 getSupportFragmentManager().findFragmentByTag(DAY_LIST_FRAGMENT_TAG);
         if(dayListFragment != null){
-            dayListFragment.adapter.dayList = PetimoController.getInstance().
+            dayListFragment.dayAdapter.dayList = PetimoController.getInstance().
                     getDaysFromRange(PetimoTimeUtils.getDateIntFromCalendatr(fromCalendar),
                             PetimoTimeUtils.getDateIntFromCalendatr(toCalendar),
-                            SettingsSharedPref.getInstance().getSettingsBoolean(SettingsSharedPref.
-                                    SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
-                            SettingsSharedPref.getInstance().getSettingsBoolean(SettingsSharedPref.
-                                    SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false));
-            dayListFragment.adapter.notifyDataSetChanged();
+                            PetimoSettingsSPref.getInstance().getSettingsBoolean(PetimoSettingsSPref.
+                                    MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
+                            PetimoSettingsSPref.getInstance().getSettingsBoolean(PetimoSettingsSPref.
+                                    MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false));
+            dayListFragment.dayAdapter.notifyDataSetChanged();
         }
     }
 
@@ -325,11 +353,20 @@ public class EditBlockActivity extends AppCompatActivity
         DayListFragment dayListFragment = (DayListFragment)
                 getSupportFragmentManager().findFragmentByTag(DAY_LIST_FRAGMENT_TAG);
         if(dayListFragment != null) {
-            dayListFragment.adapter.notifyDataSetChanged();
+            dayListFragment.dayAdapter.notifyDataSetChanged();
         }
     }
 
+    private void recreateDayListFragment(){
+        DayListFragment dayListFragment = (DayListFragment)
+                getSupportFragmentManager().findFragmentByTag(DAY_LIST_FRAGMENT_TAG);
+        if (dayListFragment != null)
+            getSupportFragmentManager().beginTransaction().remove(dayListFragment).commit();
 
+        getSupportFragmentManager().beginTransaction().add(
+                R.id.day_list_fragment_container, DayListFragment.newInstance(),
+                DAY_LIST_FRAGMENT_TAG).commit();
+    }
 
     @Override
     public void onDateChanged(Calendar fromCalendar, Calendar toCalendar) {

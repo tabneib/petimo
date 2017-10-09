@@ -66,7 +66,7 @@ public class BlockListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_fragment_monitorblock, container, false);
 
-        // Set the adapter
+        // Set the dayAdapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;

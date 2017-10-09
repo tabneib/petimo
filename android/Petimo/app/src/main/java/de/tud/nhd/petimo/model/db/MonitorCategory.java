@@ -52,6 +52,9 @@ public class MonitorCategory {
         return note;
     }
 
+    public String getDescriptiveName(){
+        return this.name;
+    }
     /**
      * TODO comment em
      * @return

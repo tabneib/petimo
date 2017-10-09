@@ -19,9 +19,9 @@ import de.tud.nhd.petimo.model.db.MonitorCategory;
 import de.tud.nhd.petimo.model.db.MonitorDay;
 import de.tud.nhd.petimo.model.db.MonitorTask;
 import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
-import de.tud.nhd.petimo.model.sharedpref.MonitorSharedPref;
-import de.tud.nhd.petimo.model.sharedpref.PetimoSharedPref;
-import de.tud.nhd.petimo.model.sharedpref.SettingsSharedPref;
+import de.tud.nhd.petimo.model.sharedpref.PetimoMonitorSPref;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
 import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 
@@ -35,8 +35,8 @@ public class PetimoController {
     private static PetimoController _instance;
     private PetimoDbWrapper dbWrapper;
     private SharedPref sharedPref;
-    private SettingsSharedPref settingsPref;
-    private MonitorSharedPref monitorPref;
+    private PetimoSettingsSPref settingsPref;
+    private PetimoMonitorSPref monitorPref;
     private static Context context;
 
 
@@ -56,9 +56,9 @@ public class PetimoController {
         }
         this.dbWrapper = PetimoDbWrapper.getInstance();
         this.sharedPref = SharedPref.getInstance();
-        PetimoSharedPref.initialize(context);
-        this.settingsPref = SettingsSharedPref.getInstance();
-        this.monitorPref = MonitorSharedPref.getInstance();
+        PetimoSPref.initialize(context);
+        this.settingsPref = PetimoSettingsSPref.getInstance();
+        this.monitorPref = PetimoMonitorSPref.getInstance();
 
     }
 

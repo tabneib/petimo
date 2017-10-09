@@ -19,10 +19,10 @@ import de.tud.nhd.petimo.utils.StringParsingException;
  * Created by nhd on 08.10.17.
  */
 
-public class MonitorSharedPref extends PetimoSharedPref {
+public class PetimoMonitorSPref extends PetimoSPref {
 
-    private static final String TAG = "MonitorSharedPref";
-    static MonitorSharedPref _instance = null;
+    private static final String TAG = "PetimoMonitorSPref";
+    static PetimoMonitorSPref _instance = null;
 
     private SharedPreferences monitorPref;
     private SharedPreferences.Editor monitorEditor;
@@ -44,19 +44,19 @@ public class MonitorSharedPref extends PetimoSharedPref {
             "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITOR_LAST_MONITORED_TASK";
 
 
-    public MonitorSharedPref(Context context){
+    public PetimoMonitorSPref(Context context){
         super();
         this.monitorPref = this.context.getSharedPreferences(
                 this.context.getString(R.string.preference_file_monitor), Context.MODE_PRIVATE);
         this.monitorEditor = monitorPref.edit();
     }
 
-    public static MonitorSharedPref getInstance() throws RuntimeException {
+    public static PetimoMonitorSPref getInstance() throws RuntimeException {
         if (_instance == null)
             if (context == null)
-                throw new RuntimeException("PetimoSharedPref must be initialized first!");
+                throw new RuntimeException("PetimoSPref must be initialized first!");
             else
-                _instance = new MonitorSharedPref(context);
+                _instance = new PetimoMonitorSPref(context);
         return _instance;
     }
 
@@ -100,7 +100,7 @@ public class MonitorSharedPref extends PetimoSharedPref {
      * @param monitorTime the time point the monitor stopped
      */
     public void updateMonitoredTask(int catId, int taskId, long monitorTime){
-        ArrayList<String[]> monitoredTasks = this.getMonitored(Sort.FREQUENCY);
+        ArrayList<String[]> monitoredTasks = this.getMonitored(Consts.FREQUENCY);
         boolean notExist = true;
         if (monitoredTasks!=null){
             for (String[] item : monitoredTasks){
@@ -223,7 +223,7 @@ public class MonitorSharedPref extends PetimoSharedPref {
      *          Each item contains the category ID, the task ID, last monitored time, and the
      *          monitor frequency
      */
-    public ArrayList<String[]> getMonitored(Sort sortOpt){
+    public ArrayList<String[]> getMonitored(String sortOpt){
 
         try{
             ArrayList<String[]> monitoredTaskList = PetimoStringUtils.parse(
@@ -242,7 +242,7 @@ public class MonitorSharedPref extends PetimoSharedPref {
                 }
             }
             switch (sortOpt){
-                case TIME:
+                case Consts.TIME:
                     // DESC sort by time
                     Collections.sort(monitoredTaskList,
                             Collections.reverseOrder(new Comparator<String[]>() {
@@ -258,7 +258,7 @@ public class MonitorSharedPref extends PetimoSharedPref {
                             }));
                     return monitoredTaskList;
 
-                case FREQUENCY:
+                case Consts.FREQUENCY:
                     // DESC sort by frequency
                     Collections.sort(monitoredTaskList,
                             Collections.reverseOrder(new Comparator<String[]>() {
