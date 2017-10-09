@@ -10,22 +10,25 @@ import java.util.ArrayList;
 
 public class MonitorDayGrouped {
     private final String descriptiveName;
+    private final int id;
     private ArrayList<Integer> blockIds;
     private final MonitorDay day;
     private long duration = 0;
     private int percentage = 0;
 
-    public MonitorDayGrouped(MonitorDay day, String descriptiveName, ArrayList<Integer> blockIds,
+    public MonitorDayGrouped(MonitorDay day, int id, String descriptiveName, ArrayList<Integer> blockIds,
                              int duration, int percentage){
         this.day = day;
+        this.id = id;
         this.descriptiveName = descriptiveName;
         this.blockIds = blockIds;
         this.duration = duration;
         this.percentage = percentage;
     }
 
-    public MonitorDayGrouped(MonitorDay day, String descriptiveName){
+    public MonitorDayGrouped(MonitorDay day, int id, String descriptiveName){
         this.day = day;
+        this.id = id;
         this.descriptiveName = descriptiveName;
         blockIds = new ArrayList<>();
     }
@@ -61,5 +64,9 @@ public class MonitorDayGrouped {
     public void increaseDuration(long value){
         Log.d("foobar", "Increased Duration: " + duration + " --> " + this.duration + value);
         this.duration = this.duration + value;
+    }
+
+    public int getId() {
+        return id;
     }
 }

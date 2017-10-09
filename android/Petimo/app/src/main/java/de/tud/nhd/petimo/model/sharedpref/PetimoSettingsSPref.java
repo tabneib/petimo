@@ -221,6 +221,7 @@ public class PetimoSettingsSPref extends PetimoSPref {
             case MONITORED_BLOCKS_REMEMBER:
             case MONITORED_BLOCKS_SHOW_SELECTED_TASKS:
             case MONITORED_BLOCKS_SHOW_EMPTY_DAYS:
+            case STATISTICS_SHOW_SELECTED_TASKS:
                 return settingPref.getBoolean(tag, defaultValue);
             default:
                 throw new SettingsException("getSettingsBoolean: Unknown settings tag ==> " + tag);

@@ -711,8 +711,8 @@ public class PetimoDbWrapper {
      * Generate a list of IDs of all the tasks
      * @return
      */
-    public List<Integer> getAllTaskIds(){
-        List<Integer> taskIds = new ArrayList<>();
+    public ArrayList<Integer> getAllTaskIds(){
+        ArrayList<Integer> taskIds = new ArrayList<>();
         Cursor cursor = readableDb.query(PetimoContract.Tasks.TABLE_NAME,
                 new String[]{PetimoContract.Tasks._ID}, null, null, null, null,
                 PetimoContract.Tasks._ID + " ASC", null);

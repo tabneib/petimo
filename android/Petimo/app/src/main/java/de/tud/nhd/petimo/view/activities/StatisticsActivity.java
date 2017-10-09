@@ -2,18 +2,23 @@ package de.tud.nhd.petimo.view.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.chart.PetimoLineData;
 import de.tud.nhd.petimo.model.db.MonitorDay;
+import de.tud.nhd.petimo.model.db.PetimoContract;
+import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
+import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.ChartFragment;
 import de.tud.nhd.petimo.view.fragments.menu.PetimoDatePickerMenu;
@@ -35,15 +40,16 @@ public class StatisticsActivity extends AppCompatActivity
     private ChartFragment lineChartFragment;
 
     private Calendar toCalendar = Calendar.getInstance();
-    private Calendar fromCalendar;
-    private final int DEFAULT_DATE_RANGE = 7;
+    private Calendar fromCalendar = Calendar.getInstance();
+    private final int DEFAULT_DATE_RANGE = 30;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
-        fromCalendar = Calendar.getInstance();
+        fromCalendar.setTime(new Date());
+        toCalendar.setTime(new Date());
         fromCalendar.add(Calendar.DATE, -1 * (DEFAULT_DATE_RANGE - 1));
 
         getSupportFragmentManager().beginTransaction().add(
@@ -72,61 +78,50 @@ public class StatisticsActivity extends AppCompatActivity
 
     @Override
     public PetimoLineData getData() {
-        // TODO
 
         ArrayList<Integer> dates = PetimoTimeUtils.getDateIntFromRange(fromCalendar, toCalendar);
         PetimoLineData data = new PetimoLineData(dates);
 
+        // TODO: Next Step is SHOW SELECTED CATS
         ArrayList<MonitorDay> days = PetimoController.getInstance().
                 getDaysFromRange(PetimoSPref.Consts.STATISTICS,
                         fromCalendar, toCalendar, true,
                         PetimoSettingsSPref.getInstance().getSettingsBoolean(
                                 PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS, false));
 
+        for (MonitorDay day : days)
+            Log.d("foobar", "day: " + day.getDate() + " / " + day.getMonitorBlocks().size() + " / "
+                    + day.getDuration()/3600000);
 
+        ArrayList<Integer> tasks;
+        if (PetimoSettingsSPref.getInstance().getSettingsBoolean(
+                PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS, false))
+            tasks = TaskSelector.getInstance().getSelectedTasks(PetimoSPref.Consts.STATISTICS);
+        else
+            tasks = PetimoDbWrapper.getInstance().getAllTaskIds();
 
+        // First, add the sum line
+        ArrayList<Entry> sumEntries = new ArrayList<>();
+        int i = 0;
+        for (MonitorDay day: days) {
+            sumEntries.add(new Entry(i, day.getDuration()/3600000));
+            i++;
+        }
+        data.add(sumEntries, getString(R.string.text_sum));
 
-
-
-
-
-
-
-
-        int count = 10;
-        int range = 100;
-
-        ArrayList<Entry> yVals1 = new ArrayList<Entry>();
-
-        for (int i = 0; i < count; i++) {
-            float mult = range / 2f;
-            float val = (float) (Math.random() * mult) + 50;
-            yVals1.add(new Entry(i, val, "foo"));
+        // Then for each task go through the day list to collect information for the corresponding
+        // line
+        for (int task: tasks){
+            ArrayList<Entry> entries = new ArrayList<>();
+            i = 0;
+            for (MonitorDay day : days) {
+                entries.add(new Entry(i, day.getTaskDuration(task)/3600000));
+                i++;
+            }
+            data.add(entries, PetimoDbWrapper.getInstance().
+                    getTaskById(task).getDescriptiveName());
         }
 
-        ArrayList<Entry> yVals2 = new ArrayList<Entry>();
-
-        for (int i = 0; i < count-1; i++) {
-            float mult = range;
-            float val = (float) (Math.random() * mult) + 450;
-            yVals2.add(new Entry(i, val));
-//            if(i == 10) {
-//                yVals2.add(new Entry(i, val + 50));
-//            }
-        }
-
-        ArrayList<Entry> yVals3 = new ArrayList<Entry>();
-
-        for (int i = 0; i < count; i++) {
-            float mult = range;
-            float val = (float) (Math.random() * mult) + 500;
-            yVals3.add(new Entry(i, val));
-        }
-
-
-        data.add(yVals1, "foo");
-        data.add(yVals2, "bar");
-        data.add(yVals3, "tabneib");
         return data;
     }
 }

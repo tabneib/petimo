@@ -153,8 +153,8 @@ public class ChartFragment extends Fragment
         //        Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf"));
         leftAxis.setTextColor(ColorTemplate.getHoloBlue());
         // TODO this should be adapted to data each time data is changed
-        leftAxis.setAxisMaximum(200f);
-        leftAxis.setAxisMinimum(0f);
+        leftAxis.setAxisMaximum(20);
+        leftAxis.setAxisMinimum(0);
         leftAxis.setDrawGridLines(true);
         leftAxis.setGranularityEnabled(true);
 
@@ -162,9 +162,9 @@ public class ChartFragment extends Fragment
         // TODO Not Found, solve this
         //rightAxis.setTypeface(
         //        Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf"));
-        rightAxis.setTextColor(Color.RED);
-        rightAxis.setAxisMaximum(900);
-        rightAxis.setAxisMinimum(-200);
+        //rightAxis.setTextColor(Color.RED);
+        rightAxis.setAxisMaximum(20);
+        rightAxis.setAxisMinimum(0);
         rightAxis.setDrawGridLines(false);
         rightAxis.setDrawZeroLine(false);
         rightAxis.setGranularityEnabled(false);
@@ -198,7 +198,7 @@ public class ChartFragment extends Fragment
             aSet.setDrawCircleHole(false);
 
             // TODO: vary it !
-            aSet.setColor(colors[i]);
+            aSet.setColor(colors[i % colors.length]);
             aSet.setFillColor(ColorTemplate.getHoloBlue());
 
 

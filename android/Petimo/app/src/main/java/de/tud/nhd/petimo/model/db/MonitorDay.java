@@ -19,6 +19,8 @@ public class MonitorDay {
     private List<MonitorBlock> monitorBlocks;
     private int date;
 
+    ArrayList<Integer> foundTasks = null;
+    ArrayList<Integer> foundCats = null;
     ArrayList<MonitorDayGrouped> groupedByTask = null;
     ArrayList<MonitorDayGrouped> groupedByCat = null;
 
@@ -29,6 +31,22 @@ public class MonitorDay {
 
     }
 
+    /**
+     * Compute the total duration of the given task
+     * @param taskId
+     * @return
+     */
+    public long getTaskDuration(int taskId){
+        ArrayList<MonitorDayGrouped> groups = getGroupedByTask();
+        if (!foundTasks.contains(taskId))
+            return 0;
+        else
+            for (MonitorDayGrouped group : groups)
+                if (group.getId() == taskId)
+                    return group.getDuration();
+        return 0;
+    }
+
 
     /**
      *
@@ -37,6 +55,7 @@ public class MonitorDay {
     public ArrayList<MonitorDayGrouped> getGroupedByTask() {
 
         if (this.groupedByTask == null){
+            this.foundTasks = new ArrayList<>();
             this.groupedByTask = new ArrayList<>();
             HashMap<String, MonitorDayGrouped> found = new HashMap<>();
 
@@ -49,7 +68,8 @@ public class MonitorDay {
                     found.get(descrName).increaseDuration(block.getDuration());
                 }
                 else{
-                    found.put(descrName, new MonitorDayGrouped(this, descrName));
+                    foundTasks.add(block.getTaskId());
+                    found.put(descrName, new MonitorDayGrouped(this, block.getTaskId(), descrName));
                     found.get(descrName).addBlock(block.getId());
                     found.get(descrName).increaseDuration(block.getDuration());
                 }
@@ -78,6 +98,7 @@ public class MonitorDay {
      */
     public ArrayList<MonitorDayGrouped> getGroupedByCat() {
         if(this.groupedByCat == null){
+            this.foundCats = new ArrayList<>();
             this.groupedByCat = new ArrayList<>();
             HashMap<String, MonitorDayGrouped> found = new HashMap<>();
 
@@ -90,7 +111,8 @@ public class MonitorDay {
                     found.get(descrName).increaseDuration(block.getDuration());
                 }
                 else{
-                    found.put(descrName, new MonitorDayGrouped(this, descrName));
+                    foundCats.add(block.getCatId());
+                    found.put(descrName, new MonitorDayGrouped(this, block.getCatId(), descrName));
                     found.get(descrName).addBlock(block.getId());
                     found.get(descrName).increaseDuration(block.getDuration());
                 }

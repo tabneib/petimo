@@ -45,7 +45,8 @@
 
 
     <!-- Short text ######################################################################-->
-
+    <string name="text_sum">Sum</string>
+    
     <!-- Short text with colon ###########################################################-->
     <string name="colon_category">Category:</string>
     <string name="colon_task">Task:</string>

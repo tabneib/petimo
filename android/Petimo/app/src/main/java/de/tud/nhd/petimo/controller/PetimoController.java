@@ -244,6 +244,9 @@ public class PetimoController {
         ArrayList<Integer> selectedTasks = new ArrayList<>();
         if (showSelectedTasks)
             selectedTasks = taskSelector.getSelectedTasks(mode);
+        else
+            selectedTasks = null;
+
         ArrayList<MonitorDay> dayList =
                 this.dbWrapper.getDaysByRange(startDateInt, endDateInt, selectedTasks);
 
