@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
@@ -36,8 +37,9 @@ public class PetimoDatePickerMenu extends Fragment {
     Calendar fromCalendar = java.util.Calendar.getInstance();
     Calendar toCalendar = java.util.Calendar.getInstance();
 
-    private boolean menuOpened = true;
+    boolean menuOpened = true;
     private final long ANIMATION_SPEED = 300;
+
 
     public PetimoDatePickerMenu() {
         // Required empty public constructor
@@ -46,8 +48,10 @@ public class PetimoDatePickerMenu extends Fragment {
     /**
      * @return A new instance of fragment PetimoDatePickerMenu.
      */
-    public static PetimoDatePickerMenu newInstance() {
+    public static PetimoDatePickerMenu newInstance(boolean opened) {
         PetimoDatePickerMenu fragment = new PetimoDatePickerMenu();
+        // This hack is a work-around
+        fragment.menuOpened = !opened;
         return fragment;
     }
 
@@ -79,6 +83,20 @@ public class PetimoDatePickerMenu extends Fragment {
                 updateMenuDisplay();
             }
         });
+
+        // It takes sometime for the views of this fragment to receive their width
+        ViewTreeObserver vto = menu.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                updateMenuDisplay();
+                ViewTreeObserver obs = menu.getViewTreeObserver();
+                obs.removeOnGlobalLayoutListener(this);
+
+            }
+        });
+
+
 
         // DatePicker
         fromDateButton = (Button) view.findViewById(R.id.button_date_from);
@@ -162,57 +180,115 @@ public class PetimoDatePickerMenu extends Fragment {
     }
 
     /**
-     * Display or hide the menu
+     * Display or hide the menu.
+     * This method must be called after the fragment if added by the parent activity's fragment
+     * manager
      */
-    private void updateMenuDisplay(){
-
-        Drawable enterIcon = getResources().getDrawable(
-                R.drawable.ic_enter_to_app_black_36dp, null);
-        Drawable exitIcon = getResources().getDrawable(
-                R.drawable.ic_exit_to_app_black_36dp, null);
-
+    public void updateMenuDisplay(){
         menuOpened = !menuOpened;
-        if (!menuOpened) {
-
-            // Hide the menu
-            menuButton.setBackground(enterIcon);
-            menuButton.animate().alpha(1.0f).setDuration(ANIMATION_SPEED * 7);
-            menu.animate().translationX(menu.getWidth() - menuButton.getWidth()).
-                    setDuration(ANIMATION_SPEED).setListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    menu.setCardElevation(12.0f);
-                    menu.animate().alpha(1.0f).setDuration(ANIMATION_SPEED);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    if(!menuOpened){
-                        // Menu is hidden
-                        menu.setAlpha(0.5f);
-                        menu.setCardElevation(0.0f);
-                    }
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            });
-        }
-        else{
-            // Display the menu
-            menuButton.setBackground(exitIcon);
-            menuButton.animate().alpha(0.7f).setDuration(ANIMATION_SPEED * 2);
-            menu.animate().translationX(0).setDuration(ANIMATION_SPEED);
-        }
+        if (!menuOpened)
+            hideMenu(ANIMATION_SPEED, null);
+        else
+            displayMenu(ANIMATION_SPEED, null);
     }
 
+    /**
+     *
+     */
+    private void hideMenu(final long speed, final PostTask task){
+        Drawable enterIcon = getResources().getDrawable(
+                R.drawable.ic_enter_to_app_black_36dp, null);
+        menuButton.setBackground(enterIcon);
+        menuButton.animate().alpha(1.0f).setDuration(speed * 7);
+        menu.animate().translationX(menu.getWidth() - menuButton.getWidth()).
+                setDuration(speed).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                menu.setCardElevation(12.0f);
+                menu.setAlpha(1.0f);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if(!menuOpened){
+                    // Menu is hidden
+                    menu.setAlpha(0.5f);
+                    menu.setCardElevation(0.0f);
+                }
+                if (task != null)
+                    task.execute();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+    }
+
+    /**
+     *
+     */
+    private void displayMenu(final long speed, final PostTask task){
+
+        Drawable exitIcon = getResources().getDrawable(
+                R.drawable.ic_exit_to_app_black_36dp, null);
+        menuButton.setBackground(exitIcon);
+        menuButton.animate().alpha(0.7f).setDuration(speed * 2);
+        menu.animate().translationX(0).setDuration(speed).setListener(
+                new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                menu.setCardElevation(12.0f);
+                menu.setAlpha(1.0f);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if(!menuOpened){
+                    // Menu is hidden
+                    menu.setAlpha(0.5f);
+                    menu.setCardElevation(0.0f);
+                }
+                if (task != null)
+                    task.execute();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+    }
+
+
+    /**
+     * Call this method if there is some popup window is going to cover the menu.
+     * The menu will be hidden if it's currently displayed. Its previously state is stored and can
+     * be restored by calling reactivate()
+     */
+    public void deactivate(PostTask task){
+        if (menuOpened)
+            hideMenu(ANIMATION_SPEED / 2, task);
+    }
+
+    /**
+     * Restore the displaying state of the menu
+     */
+    public void reactivate(){
+        if (menuOpened)
+            displayMenu(ANIMATION_SPEED * 2, null);
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -221,5 +297,12 @@ public class PetimoDatePickerMenu extends Fragment {
      */
     public interface OnDateRangeChangeListener {
         void onDateChanged(Calendar fromCalendar, Calendar toCalendar);
+    }
+
+    /**
+     * The Task to execute after the hiding/displaying animation finishes
+     */
+    public interface PostTask{
+        public void execute();
     }
 }

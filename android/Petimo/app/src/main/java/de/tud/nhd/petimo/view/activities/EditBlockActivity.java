@@ -1,12 +1,8 @@
 package de.tud.nhd.petimo.view.activities;
 
-import android.graphics.SweepGradient;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ListPopupWindow;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -15,18 +11,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
 import android.widget.Switch;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.Exchanger;
+import java.util.concurrent.ThreadFactory;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
@@ -57,11 +52,16 @@ public class EditBlockActivity extends AppCompatActivity
     Switch switchSelectedTask;
     Switch switchEmptyDays;
     Switch switchSwipeToDel;
+    RadioButton radioGroupedByTask;
+    RadioButton radioGroupedByCat;
+    RadioButton radioNotGrouped;
+
     private boolean updateDayList = false;
     private boolean reloadDayList = false;
 
     Calendar fromCalendar = Calendar.getInstance();
     Calendar toCalendar = Calendar.getInstance();
+
 
 
     @Override
@@ -91,42 +91,61 @@ public class EditBlockActivity extends AppCompatActivity
 
         // Attach the menu fragment
         getSupportFragmentManager().beginTransaction().add(
-                R.id.menu_container, PetimoDatePickerMenu.newInstance(),
+                R.id.menu_container, PetimoDatePickerMenu.newInstance(true),
                 MENU_FRAGMENT_TAG).commit();
 
 
         setupPopup();
     }
 
+
     /**
      *
      */
     private void setupPopup(){
         overFlowIcon = (ImageView) findViewById(R.id.overflow);
+
+        // Inflate the popup window
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         View mView = layoutInflater.inflate(R.layout.popup_menu_monitored_tasks, null);
         popupWindow = new PopupWindow(mView, ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT, true);
+
         // Hack to dismiss the popup by clicking outside
         popupWindow.setBackgroundDrawable(new ColorDrawable());
         popupWindow.setOutsideTouchable(true);
+
+        popupWindow.setAnimationStyle(R.style.PetimoThemePopupWindow);
 
         overFlowIcon.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                // Dim the activity
-                activityLayout.getForeground().setAlpha(130);
-                popupWindow.showAtLocation(activityLayout, Gravity.BOTTOM, 0, 0);
-                //popupWindow.showAsDropDown(findViewById(R.id.view_anchor), 0,0, Gravity.TOP);
+
+                // hide the menu
+                PetimoDatePickerMenu menu = (PetimoDatePickerMenu)
+                        getSupportFragmentManager().findFragmentByTag(MENU_FRAGMENT_TAG);
+                if (menu != null)
+                    menu.deactivate(new PetimoDatePickerMenu.PostTask() {
+                        @Override
+                        public void execute() {
+                            // Dim the activity
+                            activityLayout.getForeground().setAlpha(130);
+                            popupWindow.showAtLocation(activityLayout, Gravity.BOTTOM, 0, 0);
+                        }
+                    });
             }
         });
 
         switchSelectedTask = (Switch) mView.findViewById(R.id.switch_selected_tasks);
         switchEmptyDays = (Switch) mView.findViewById(R.id.switch_show_empty_days);
         switchSwipeToDel = (Switch) mView.findViewById(R.id.switch_swipe_to_delete);
-        updateChecked();
 
+        radioGroupedByTask = (RadioButton) mView.findViewById(R.id.radioButton_grouped_by_task);
+        radioGroupedByCat = (RadioButton) mView.findViewById(R.id.radioButton_grouped_by_cat);
+        radioNotGrouped = (RadioButton) mView.findViewById(R.id.radioButton_not_grouped);
+
+        updateChecked();
 
         switchSelectedTask.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -197,6 +216,34 @@ public class EditBlockActivity extends AppCompatActivity
                 }
                 // un-dim the activity
                 activityLayout.getForeground().setAlpha(0);
+
+                // restore the menu
+                PetimoDatePickerMenu menu = (PetimoDatePickerMenu)
+                        getSupportFragmentManager().findFragmentByTag(MENU_FRAGMENT_TAG);
+                if (menu != null)
+                    menu.reactivate();
+            }
+        });
+
+
+        radioGroupedByTask.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // TODO
+            }
+        });
+
+        radioGroupedByCat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // TODO
+            }
+        });
+
+        radioNotGrouped.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // TODO
             }
         });
 

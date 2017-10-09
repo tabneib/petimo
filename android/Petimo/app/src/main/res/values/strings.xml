@@ -143,6 +143,10 @@
     <string name="option_remember">Remember</string>
     <string name="option_swipe_to_delete">Swipe to delete</string>
 
+    <string name="option_grouped_by_task">Grouped by task</string>
+    <string name="option_grouped_by_category">Grouped by category</string>
+    <string name="option_not_grouped">Not grouped</string>
+
     <!-- Other strings ##########################################################################-->
     <string name="loading_text">loading..</string>
     <string name="hello_blank_fragment">Under construction</string>

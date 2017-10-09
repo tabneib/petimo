@@ -6,12 +6,26 @@
     android:layout_height="match_parent"
     android:background="@color/background_primary">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/background_title_shadow"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/background_title"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/pane_padding"
+        android:background="@color/background_title_highlight"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
             android:text="@string/option_show_selected_tasks"
-            android:textSize="@dimen/big_text_size"
+            android:textSize="@dimen/middle_big_text_size"
             android:layout_margin="@dimen/middle_large_pane_padding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +45,7 @@
         android:layout_height="wrap_content">
         <TextView
             android:text="@string/option_show_empty_days"
-            android:textSize="@dimen/big_text_size"
+            android:textSize="@dimen/middle_big_text_size"
             android:layout_margin="@dimen/middle_large_pane_padding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,7 +65,7 @@
         android:layout_height="wrap_content">
         <TextView
             android:text="@string/option_swipe_to_delete"
-            android:textSize="@dimen/big_text_size"
+            android:textSize="@dimen/middle_big_text_size"
             android:layout_margin="@dimen/middle_large_pane_padding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,6 +80,58 @@
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/pane_padding"
+        android:background="@color/background_title"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/pane_padding"
+        android:background="@color/background_title_highlight"/>
+
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <RadioButton
+            android:id="@+id/radioButton_grouped_by_task"
+            android:text="@string/option_grouped_by_task"
+            android:textSize="@dimen/middle_big_text_size"
+            android:layoutDirection="rtl"
+            android:textAlignment="textStart"
+            android:layout_gravity="start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/middle_large_pane_padding"/>
+
+        <RadioButton
+            android:id="@+id/radioButton_grouped_by_cat"
+            android:text="@string/option_grouped_by_category"
+            android:textSize="@dimen/middle_big_text_size"
+            android:layoutDirection="rtl"
+            android:textAlignment="textStart"
+            android:layout_gravity="start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/middle_large_pane_padding"
+            android:layout_below="@id/radioButton_grouped_by_task"/>
+
+        <RadioButton
+            android:id="@+id/radioButton_not_grouped"
+            android:text="@string/option_not_grouped"
+            android:textSize="@dimen/middle_big_text_size"
+            android:layoutDirection="rtl"
+            android:textAlignment="textStart"
+            android:layout_gravity="start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/middle_large_pane_padding"
+            android:layout_below="@id/radioButton_grouped_by_cat"/>
+
+    </RadioGroup>
 
 
 </LinearLayout>

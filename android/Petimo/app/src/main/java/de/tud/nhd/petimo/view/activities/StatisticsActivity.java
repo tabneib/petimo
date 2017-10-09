@@ -2,6 +2,7 @@ package de.tud.nhd.petimo.view.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.data.Entry;
 
@@ -28,7 +29,6 @@ public class StatisticsActivity extends AppCompatActivity
     public static final String LINE_CHART_FRAGMENT_TAG = TAG + "LineChart-Fragment";
     public static final String MENU_FRAGMENT_TAG = TAG + "Menu-Fragment";
 
-    PetimoDatePickerMenu datePickerMenu;
     private ChartFragment lineChartFragment;
 
     private Calendar toCalendar = Calendar.getInstance();
@@ -43,9 +43,9 @@ public class StatisticsActivity extends AppCompatActivity
         fromCalendar = Calendar.getInstance();
         fromCalendar.add(Calendar.DATE, -1 * (DEFAULT_DATE_RANGE - 1));
 
-        datePickerMenu = PetimoDatePickerMenu.newInstance();
         getSupportFragmentManager().beginTransaction().add(
-                R.id.menu_container, datePickerMenu, MENU_FRAGMENT_TAG).commit();
+                R.id.menu_container, PetimoDatePickerMenu.newInstance(false),
+                MENU_FRAGMENT_TAG).commit();
 
         lineChartFragment = (ChartFragment)
                 getSupportFragmentManager().findFragmentByTag(LINE_CHART_FRAGMENT_TAG);
