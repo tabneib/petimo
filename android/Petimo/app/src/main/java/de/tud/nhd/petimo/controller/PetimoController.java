@@ -5,9 +5,12 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
@@ -23,7 +26,9 @@ import de.tud.nhd.petimo.model.sharedpref.PetimoMonitorSPref;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
 import de.tud.nhd.petimo.model.sharedpref.SharedPref;
+import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSPref.Consts;
 
 /**
  * Created by nhd on 31.08.17.
@@ -37,6 +42,7 @@ public class PetimoController {
     private SharedPref sharedPref;
     private PetimoSettingsSPref settingsPref;
     private PetimoMonitorSPref monitorPref;
+    private TaskSelector taskSelector;
     private static Context context;
 
 
@@ -59,6 +65,8 @@ public class PetimoController {
         PetimoSPref.initialize(context);
         this.settingsPref = PetimoSettingsSPref.getInstance();
         this.monitorPref = PetimoMonitorSPref.getInstance();
+        this.taskSelector = TaskSelector.getInstance();
+
 
     }
 
@@ -227,27 +235,57 @@ public class PetimoController {
      * @return the list of all satisfied monitor days in DESC order
      */
     public ArrayList<MonitorDay> getDaysFromRange(
-            int startDate, int endDate, boolean displayEmptyDay, boolean selectedTasks){
+            String mode, Calendar startDate, Calendar endDate,
+            boolean displayEmptyDay, boolean showSelectedTasks){
 
-        if(!displayEmptyDay)
-            // The list will not contain empty days
-            return this.dbWrapper.getDaysByRange(startDate, endDate, selectedTasks);
-        else {
-            ArrayList<MonitorDay> dayList =
-                    this.dbWrapper.getDaysByRange(startDate, endDate, selectedTasks);
-            ArrayList<MonitorDay> resultList = new ArrayList<>();
-            for (int day = endDate; day >= startDate; day--) {
-                if(!dayList.isEmpty() && dayList.get(0).getDate() == day) {
-                    // Insert the Monitor Day returned from DB
-                    resultList.add(dayList.get(0));
-                    dayList.remove(0);
+        int startDateInt = PetimoTimeUtils.getDateIntFromCalendar(startDate);
+        int endDateInt = PetimoTimeUtils.getDateIntFromCalendar(endDate);
+
+        ArrayList<Integer> selectedTasks = new ArrayList<>();
+        if (showSelectedTasks)
+            selectedTasks = taskSelector.getSelectedTasks(mode);
+        ArrayList<MonitorDay> dayList =
+                this.dbWrapper.getDaysByRange(startDateInt, endDateInt, selectedTasks);
+
+        ArrayList<MonitorDay> resultList = new ArrayList<>();
+        switch (mode){
+            case Consts.EDIT_BLOCK:
+                if(!displayEmptyDay)
+                    // The list will not contain empty days
+                    return dayList;
+            case Consts.STATISTICS:
+                ArrayList<Integer> dates =
+                        PetimoTimeUtils.getDateIntFromRange(startDate, endDate);
+                // Reverse order
+                ListIterator<Integer> iterator = dates.listIterator(dates.size());
+                while (iterator.hasPrevious()){
+                    int day = iterator.previous();
+                    if(!dayList.isEmpty() && dayList.get(0).getDate() == day) {
+                        // Insert the Monitor Day returned from DB
+                        resultList.add(dayList.get(0));
+                        dayList.remove(0);
+                    }
+                    else
+                        // Insert a MonitorDay with empty block list
+                        resultList.add(new MonitorDay(day, new ArrayList<MonitorBlock>()));
                 }
-                else
-                    // Insert a MonitorDay with empty block list
-                    resultList.add(new MonitorDay(day, new ArrayList<MonitorBlock>()));
-            }
-            return resultList;
         }
+        return resultList;
+    }
+
+    /**
+     *
+     * @param startDate
+     * @param endDate
+     * @param displayEmptyDay
+     * @return the list of all satisfied monitor days in DESC order
+     */
+    public ArrayList<MonitorDay> getDaysFromRange(
+            String mode, int startDate, int endDate,
+            boolean displayEmptyDay, boolean showSelectedTasks){
+        return getDaysFromRange(mode, PetimoTimeUtils.getCalendarFromDateInt(startDate),
+                PetimoTimeUtils.getCalendarFromDateInt(PetimoTimeUtils.getTodayDate()),
+                displayEmptyDay, showSelectedTasks);
     }
 
     /**

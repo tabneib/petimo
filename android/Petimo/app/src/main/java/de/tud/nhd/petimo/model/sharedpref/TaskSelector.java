@@ -19,19 +19,21 @@ public class TaskSelector extends PetimoSettingsSPref {
     private static final String TAG = "TaskSelector";
     static TaskSelector _instance = null;
 
-    private Mode activeMode = null;
+    private String activeMode = null;
 
     public static final String SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS =
             "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS";
+    public static final String STATISTICS_BLOCKS_SELECTED_TASKS =
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.SETTINGS_STATISTICS_BLOCKS_SELECTED_TASKS";
 
     /**
      * Multiple modules of the app let the user select tasks. The selected tasks should be stored
      * in this temporal shared pref first. Afterwards they will be copied to the corresponding
-     * permanent shared pref. This is realized in form of SelectedTaskTransaction
+     * permanent shared pref. This is realized in form of TaskSelector Transaction
      */
     private ArrayList<Integer> tmpSelectedTask;
 
-    TaskSelector(Context context) {
+    TaskSelector() {
         super();
     }
 
@@ -40,7 +42,7 @@ public class TaskSelector extends PetimoSettingsSPref {
             if (context == null)
                 throw new RuntimeException("PetimoSPref must be initialized first!");
             else
-                _instance = new TaskSelector(context);
+                _instance = new TaskSelector();
         return _instance;
     }
 
@@ -50,11 +52,11 @@ public class TaskSelector extends PetimoSettingsSPref {
      * Database version: V.2
      * @return
      */
-    public ArrayList<Integer> getSelectedTasks(Mode mode) throws IllegalStateException {
+    public ArrayList<Integer> getSelectedTasks(String mode) throws IllegalStateException {
 
         // If there is ongoing transaction, so we only work on the copy of selected task list
         if (activeMode != null){
-            if (activeMode != mode)
+            if (!activeMode.equals(mode))
                 throw new IllegalStateException("Wrong mode!");
             else
                 return tmpSelectedTask;
@@ -64,11 +66,11 @@ public class TaskSelector extends PetimoSettingsSPref {
         try{
             ArrayList<String[]> selectedTasksStr;
             switch (mode) {
-                case MONITOR_HISTORY:
+                case Consts.EDIT_BLOCK:
                     selectedTasksStr = PetimoStringUtils.parse(settingPref.getString(
                             SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS, null), 1);
                     break;
-                case STATISTICS:
+                case Consts.STATISTICS:
                     // TODO change this
                     selectedTasksStr = PetimoStringUtils.parse(settingPref.getString(
                             SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS, null), 1);
@@ -91,6 +93,7 @@ public class TaskSelector extends PetimoSettingsSPref {
                     selectedTaskIterator.remove();
                 //removeMonitoredTask(catTask[0], catTask[1]);
             }
+
             return selectedTasks;
         }
         catch (StringParsingException e) {
@@ -104,7 +107,7 @@ public class TaskSelector extends PetimoSettingsSPref {
      * @param mode
      * @throws IllegalStateException
      */
-    public void startTransaction(Mode mode) throws IllegalStateException {
+    public void startTransaction(String mode) throws IllegalStateException {
         if (activeMode == null) {
             // Make a copy of the corresponding Shared Pref
             tmpSelectedTask = this.getSelectedTasks(mode);
@@ -123,12 +126,12 @@ public class TaskSelector extends PetimoSettingsSPref {
         if (activeMode != null){
             // Store the tmp data to sharedPref permanently
             switch (activeMode){
-                case MONITOR_HISTORY:
+                case Consts.EDIT_BLOCK:
                     settingsEditor.putString(SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS,
                             PetimoStringUtils.encodeIntList(tmpSelectedTask, 1));
                     settingsEditor.apply();
                     break;
-                case STATISTICS:
+                case Consts.STATISTICS:
                     // TODO
                     break;
                 default:
@@ -239,20 +242,4 @@ public class TaskSelector extends PetimoSettingsSPref {
             Log.d(TAG, "updateV1toV2: lastMonitoredTask is probably already up-to-date");
         }
     }
-
-    public enum Mode {
-        MONITOR_HISTORY("MONITOR_HISTORY"),
-        STATISTICS("STATISTICS");
-
-        private String description;
-        Mode(String description){
-            this.description = description;
-        }
-
-        @Override
-        public String toString(){
-            return this.description;
-        }
-    }
-
 }

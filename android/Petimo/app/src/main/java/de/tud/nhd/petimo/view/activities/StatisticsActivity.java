@@ -2,7 +2,6 @@ package de.tud.nhd.petimo.view.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.data.Entry;
 
@@ -10,7 +9,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import de.tud.nhd.petimo.R;
+import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.chart.PetimoLineData;
+import de.tud.nhd.petimo.model.db.MonitorDay;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.ChartFragment;
 import de.tud.nhd.petimo.view.fragments.menu.PetimoDatePickerMenu;
@@ -71,9 +74,20 @@ public class StatisticsActivity extends AppCompatActivity
     public PetimoLineData getData() {
         // TODO
 
-
         ArrayList<Integer> dates = PetimoTimeUtils.getDateIntFromRange(fromCalendar, toCalendar);
         PetimoLineData data = new PetimoLineData(dates);
+
+        ArrayList<MonitorDay> days = PetimoController.getInstance().
+                getDaysFromRange(PetimoSPref.Consts.STATISTICS,
+                        fromCalendar, toCalendar, true,
+                        PetimoSettingsSPref.getInstance().getSettingsBoolean(
+                                PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS, false));
+
+
+
+
+
+
 
 
 

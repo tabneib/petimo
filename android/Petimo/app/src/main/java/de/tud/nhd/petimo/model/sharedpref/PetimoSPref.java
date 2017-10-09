@@ -62,5 +62,10 @@ public abstract class PetimoSPref {
         public static final String GROUP_BY_TASK = "GROUP_BY_TASK";
         public static final String GROUP_BY_CAT = "GROUP_BY_CAT";
         public static final String NOT_GROUP = "NOT_GROUP";
+
+
+        // Modes for getting days by range
+        public static final String EDIT_BLOCK = "EDIT_BLOCK";
+        public static final String STATISTICS = "STATISTICS";
     }
 }

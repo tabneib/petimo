@@ -20,13 +20,15 @@ import android.widget.Switch;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.db.MonitorBlock;
+import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
-import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
@@ -61,6 +63,7 @@ public class EditBlockActivity extends AppCompatActivity
 
     Calendar fromCalendar = Calendar.getInstance();
     Calendar toCalendar = Calendar.getInstance();
+
 
 
 
@@ -157,7 +160,7 @@ public class EditBlockActivity extends AppCompatActivity
 
                 // Display task selector dialog if checked
                 if (isChecked){
-                    TaskSelector.getInstance().startTransaction(TaskSelector.Mode.MONITOR_HISTORY);
+                    TaskSelector.getInstance().startTransaction(PetimoSPref.Consts.EDIT_BLOCK);
                     CategoryListFragment catListFragment = CategoryListFragment.
                             getInstance(CategoryListFragment.SELECT_MODE);
                     PetimoDialog taskSelectorDialog =
@@ -336,8 +339,8 @@ public class EditBlockActivity extends AppCompatActivity
                 getSupportFragmentManager().findFragmentByTag(DAY_LIST_FRAGMENT_TAG);
         if(dayListFragment != null){
             dayListFragment.dayAdapter.dayList = PetimoController.getInstance().
-                    getDaysFromRange(PetimoTimeUtils.getDateIntFromCalendatr(fromCalendar),
-                            PetimoTimeUtils.getDateIntFromCalendatr(toCalendar),
+                    getDaysFromRange(PetimoSPref.Consts.EDIT_BLOCK,
+                            fromCalendar, toCalendar,
                             PetimoSettingsSPref.getInstance().getSettingsBoolean(PetimoSettingsSPref.
                                     MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
                             PetimoSettingsSPref.getInstance().getSettingsBoolean(PetimoSettingsSPref.

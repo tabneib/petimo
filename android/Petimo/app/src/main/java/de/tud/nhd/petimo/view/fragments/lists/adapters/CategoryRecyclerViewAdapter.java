@@ -16,7 +16,8 @@ import android.widget.TextView;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.model.db.MonitorCategory;
 import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
-import de.tud.nhd.petimo.model.sharedpref.SharedPref;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
 import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
@@ -311,7 +312,7 @@ public class CategoryRecyclerViewAdapter extends
         holder.taskListRecyclerView.setAdapter(holder.taskAdapter);
 
         ArrayList<Integer> tasks = TaskSelector.getInstance().
-                getSelectedTasks(TaskSelector.Mode.MONITOR_HISTORY);
+                getSelectedTasks(PetimoSettingsSPref.Consts.EDIT_BLOCK);
         int selectedTaskNum = 0;
         for (int taskId: tasks)
             if (PetimoDbWrapper.getInstance().getCatIdFromTask(taskId) ==

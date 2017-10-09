@@ -2,6 +2,8 @@ package de.tud.nhd.petimo.model.sharedpref;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +24,7 @@ public class PetimoSettingsSPref extends PetimoSPref {
     SharedPreferences settingPref;
     SharedPreferences.Editor settingsEditor;
 
-    //------------------------------- User's choices ---------------------------------------------->
+    //------------------------------- Monitored Tasks --------------------------------------------->
     public static final String MONITORED_TASKS_SORT_ORDER =
             "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITORED_TASKS_SORT_ORDER";
 
@@ -37,6 +39,14 @@ public class PetimoSettingsSPref extends PetimoSPref {
             "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITORED_BLOCKS_SHOW_EMPTY_DAYS";
     public static final String MONITORED_BLOCKS_GROUP_BY =
             "de.tud.nhd.petimo.model.sharedpref.SharedPref.MONITORED_BLOCKS_GROUP_BY";
+
+
+    //-------------------------------- Statistics ------------------------------------------------->
+
+    public static final String STATISTICS_GROUP_BY =
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.STATISTICS_GROUP_BY";
+    public static final String STATISTICS_SHOW_SELECTED_TASKS =
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.STATISTICS_SHOW_SELECTED_TASKS";
 
 
     public static final String LANGUAGE =

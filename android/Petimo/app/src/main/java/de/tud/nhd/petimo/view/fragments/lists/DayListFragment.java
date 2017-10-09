@@ -104,7 +104,7 @@ public class DayListFragment extends Fragment {
 
     private DayRecyclerViewAdapter generateDayAdapter(){
         return new DayRecyclerViewAdapter(
-                this, PetimoController.getInstance().getDaysFromRange(
+                this, PetimoController.getInstance().getDaysFromRange(Consts.EDIT_BLOCK,
                 fromDate, toDate, PetimoSettingsSPref.getInstance().getSettingsBoolean(
                         PetimoSettingsSPref.MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
                 PetimoSettingsSPref.getInstance().getSettingsBoolean(
@@ -117,7 +117,7 @@ public class DayListFragment extends Fragment {
      *
      */
     public void refreshList(){
-        dayAdapter.dayList = PetimoController.getInstance().getDaysFromRange(
+        dayAdapter.dayList = PetimoController.getInstance().getDaysFromRange(Consts.EDIT_BLOCK,
                 fromDate, toDate, SharedPref.getInstance().getSettingsBoolean(
                         SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
                 SharedPref.getInstance().getSettingsBoolean(

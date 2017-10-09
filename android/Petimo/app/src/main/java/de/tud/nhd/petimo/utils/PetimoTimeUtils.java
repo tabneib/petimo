@@ -1,5 +1,7 @@
 package de.tud.nhd.petimo.utils;
 
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,7 +50,7 @@ public class PetimoTimeUtils {
      * @param calendar
      * @return
      */
-    public static int getDateIntFromCalendatr(Calendar calendar){
+    public static int getDateIntFromCalendar(Calendar calendar){
         return Integer.parseInt(dateFormat.format(new Date(calendar.getTimeInMillis())));
     }
 
@@ -86,6 +88,18 @@ public class PetimoTimeUtils {
         result = result + dateStr.substring(4,6) + ".";
         result = result + dateStr.substring(0,4);
         return result;
+    }
+
+    /**
+     *
+     * @param date
+     * @return
+     */
+    public static Calendar getCalendarFromDateInt(int date){
+        Calendar cal = Calendar.getInstance();
+        // minus 1 because Java Calendar counts month from 0 !
+        cal.set(date/10000, (date % 10000)/100 - 1, date % 100);
+        return cal;
     }
 
     /**
@@ -241,9 +255,11 @@ public class PetimoTimeUtils {
         tmpStart.setTime(start.getTime());
         ArrayList<Integer> dates = new ArrayList<>();
         while (!tmpStart.getTime().after(end.getTime())){
-            dates.add(getDateIntFromCalendatr(start));
+            dates.add(getDateIntFromCalendar(tmpStart));
             tmpStart.add(Calendar.DATE, 1);
         }
         return dates;
     }
+
+
 }

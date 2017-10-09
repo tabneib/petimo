@@ -267,16 +267,17 @@ public class PetimoDbWrapper {
      * @param endDate
      * @return
      */
-    public ArrayList<MonitorDay> getDaysByRange(int startDate, int endDate, boolean selectedTasks){
+    public ArrayList<MonitorDay> getDaysByRange(
+            int startDate, int endDate, ArrayList<Integer> selectedTasks){
         String selection = PetimoContract.Monitor.COLUMN_NAME_DATE + " BETWEEN ? AND ?";
 
         // If only selected tasks should be fetched
-        if (selectedTasks){
+        if (selectedTasks!=null){
             // If there is no task selected, return an empty list
-            if (SharedPref.getInstance().getSelectedTasks().isEmpty())
+            if (selectedTasks.isEmpty())
                 return new ArrayList<>();
             selection = selection + " AND (";
-            for (int taskId : SharedPref.getInstance().getSelectedTasks()){
+            for (int taskId : selectedTasks){
                 selection = selection + "(" + PetimoContract.Monitor.COLUMN_NAME_TASK_ID +
                         " = " + Integer.toString(taskId) + ") OR ";
             }
@@ -286,6 +287,7 @@ public class PetimoDbWrapper {
         }
 
         String[] selectionArgs = {Integer.toString(startDate), Integer.toString(endDate)};
+
         String sortOrder = PetimoContract.Monitor.COLUMN_NAME_DATE + " DESC, " +
                 PetimoContract.Monitor.COLUMN_NAME_START + " DESC";
         Cursor cursor = readableDb.query(PetimoContract.Monitor.TABLE_NAME,
@@ -324,6 +326,7 @@ public class PetimoDbWrapper {
             days.add(new MonitorDay(tmpDay, tmpBlocks));
         }
         cursor.close();
+
         return days;
     }
 

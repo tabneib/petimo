@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.model.db.MonitorTask;
-import de.tud.nhd.petimo.model.sharedpref.SharedPref;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
 import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
@@ -71,7 +71,8 @@ public class TaskRecyclerViewAdapter extends
                 boolean notFound = true;
 
                 // Check if the task is already selected
-                if (TaskSelector.getInstance().getSelectedTasks(TaskSelector.Mode.MONITOR_HISTORY).
+                if (TaskSelector.getInstance().
+                        getSelectedTasks(PetimoSPref.Consts.EDIT_BLOCK).
                         contains(holder.task.getId())){
                     onBind = true;
                     holder.taskCheckBox.setChecked(true);
