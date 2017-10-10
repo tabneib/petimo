@@ -1,5 +1,7 @@
 package de.tud.nhd.petimo.model.chart;
 
+import android.util.Log;
+
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
@@ -16,15 +18,19 @@ public class PetimoLineData {
     private ArrayList<String> lineLabels;
     private ArrayList<Integer> dates;
     private float maxYValue = 24;
+    private ArrayList<ArrayList<Long>> durations;
 
     public PetimoLineData(ArrayList<Integer> dates){
         this.dates = dates;
         allLinesEtries = new ArrayList<>();
         lineLabels = new ArrayList<>();
+        durations = new ArrayList<>();
     }
 
-    public void add(ArrayList<Entry> lineEntries, String lineLabel){
+    public void add(
+            ArrayList<Entry> lineEntries, final ArrayList<Long> originalDurations, String lineLabel){
         this.allLinesEtries.add(lineEntries);
+        this.durations.add(originalDurations);
         this.lineLabels.add(lineLabel);
     }
 
@@ -50,6 +56,10 @@ public class PetimoLineData {
 
     public float getMaxYValue() {
         return maxYValue;
+    }
+
+    public ArrayList<Long> getOriginalDurations(int linePosition){
+        return this.durations.get(linePosition);
     }
 
     public void setMaxYValue(float maxYValue) {

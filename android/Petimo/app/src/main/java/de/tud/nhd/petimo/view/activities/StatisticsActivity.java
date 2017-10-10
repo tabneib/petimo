@@ -2,6 +2,9 @@ package de.tud.nhd.petimo.view.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.github.mikephil.charting.data.Entry;
 
@@ -39,13 +42,17 @@ public class StatisticsActivity extends AppCompatActivity
 
     private Calendar toCalendar = Calendar.getInstance();
     private Calendar fromCalendar = Calendar.getInstance();
-    private final int DEFAULT_DATE_RANGE = 30;
+    private final int DEFAULT_DATE_RANGE = 7;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_statistics);
 
+        // Set fullscreen
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_statistics);
 
         fromCalendar.setTime(new Date());
         toCalendar.setTime(new Date());
@@ -72,7 +79,10 @@ public class StatisticsActivity extends AppCompatActivity
     public void onDateChanged(Calendar fromCalendar, Calendar toCalendar) {
         this.fromCalendar = fromCalendar;
         this.toCalendar = toCalendar;
-        // TODO update chart
+        ChartFragment chartFragment = (ChartFragment)
+                getSupportFragmentManager().findFragmentByTag(LINE_CHART_FRAGMENT_TAG);
+        if (chartFragment != null)
+            chartFragment.invalidateChart(false);
     }
 
     @Override
@@ -97,27 +107,32 @@ public class StatisticsActivity extends AppCompatActivity
             tasks = PetimoDbWrapper.getInstance().getAllTaskIds();
 
         // First, add the sum line
+        ArrayList<Long> originalSumLongs = new ArrayList<>();
         ArrayList<Entry> sumEntries = new ArrayList<>();
         int i = 0;
         for (MonitorDay day: days) {
-            sumEntries.add(new Entry(i, day.getDuration()/3600000));
+            sumEntries.add(new Entry(i, ((float)day.getDuration())/3600000));
+            originalSumLongs.add(day.getDuration());
             i++;
             maxYValue =
-                    maxYValue < day.getDuration()/3600000 ? day.getDuration()/3600000 : maxYValue;
+                    maxYValue < ((float)day.getDuration())/3600000 ?
+                            ((float)day.getDuration())/3600000 : maxYValue;
         }
-        data.add(sumEntries, getString(R.string.text_sum));
+        data.add(sumEntries, originalSumLongs, getString(R.string.text_sum));
         data.setMaxYValue(maxYValue);
 
         // Then for each task go through the day list to collect information for the corresponding
         // line
         for (int task: tasks){
             ArrayList<Entry> entries = new ArrayList<>();
+            ArrayList<Long> originalLongs = new ArrayList<>();
             i = 0;
             for (MonitorDay day : days) {
-                entries.add(new Entry(i, day.getTaskDuration(task)/3600000));
+                entries.add(new Entry(i, ((float)day.getTaskDuration(task))/3600000));
+                originalLongs.add(day.getTaskDuration(task));
                 i++;
             }
-            data.add(entries, PetimoDbWrapper.getInstance().
+            data.add(entries, originalLongs, PetimoDbWrapper.getInstance().
                     getTaskById(task).getName());
         }
 

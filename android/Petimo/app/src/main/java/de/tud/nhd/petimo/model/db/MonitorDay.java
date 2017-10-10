@@ -170,7 +170,7 @@ public class MonitorDay {
      * Calculate the total duration of all monitored blocks of this day
      * @return the total duration
      */
-    public int getDuration(){
+    public long getDuration(){
         int duration = 0;
         if (!monitorBlocks.isEmpty())
             for (MonitorBlock block : monitorBlocks)

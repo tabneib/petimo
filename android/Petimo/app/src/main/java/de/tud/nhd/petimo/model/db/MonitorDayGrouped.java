@@ -62,7 +62,6 @@ public class MonitorDayGrouped {
     }
 
     public void increaseDuration(long value){
-        Log.d("foobar", "Increased Duration: " + duration + " --> " + this.duration + value);
         this.duration = this.duration + value;
     }
 

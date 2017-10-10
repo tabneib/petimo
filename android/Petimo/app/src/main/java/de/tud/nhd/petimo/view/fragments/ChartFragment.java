@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +21,12 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
 
@@ -85,6 +88,13 @@ public class ChartFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
 
         mLineChart = (LineChart) view.findViewById(R.id.lineChart);
+        invalidateChart(true);
+    }
+
+    /**
+     *
+     */
+    public void invalidateChart(boolean initCall){
 
         //----------------------------------------------------------------------------------------->
         // Line Chart Setting
@@ -141,6 +151,10 @@ public class ChartFragment extends Fragment
         l.setWordWrapEnabled(true);
         // l.setYOffset(11f);
 
+
+
+        //------------- X-Axis -------------------------------------------------------------------->
+
         IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mLineChart);
 
         XAxis xAxis = mLineChart.getXAxis();
@@ -154,16 +168,20 @@ public class ChartFragment extends Fragment
         xAxis.setGranularity(1);
         xAxis.setValueFormatter(xAxisFormatter);
 
+
+        //------------- Y-Axises -------------------------------------------------------------------->
+
         YAxis leftAxis = mLineChart.getAxisLeft();
         // TODO Not Found, solve this
         //leftAxis.setTypeface(
         //        Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf"));
         leftAxis.setTextColor(ColorTemplate.getHoloBlue());
-        // TODO this should be adapted to data each time data is changed
+        // This is adapted to data each time data is changed
         leftAxis.setAxisMaximum(pLineData.getMaxYValue());
         leftAxis.setAxisMinimum(0);
         leftAxis.setDrawGridLines(true);
-        leftAxis.setGranularityEnabled(true);
+        leftAxis.setGranularityEnabled(false);
+        leftAxis.setGranularity(1);
 
         YAxis rightAxis = mLineChart.getAxisRight();
         // TODO Not Found, solve this
@@ -175,9 +193,10 @@ public class ChartFragment extends Fragment
         rightAxis.setDrawGridLines(false);
         rightAxis.setDrawZeroLine(false);
         rightAxis.setGranularityEnabled(false);
+        rightAxis.setGranularity(1);
 
-        //mLineChart.invalidate();
-
+        if (!initCall)
+            mLineChart.invalidate();
     }
 
     private LineData getLineData(){
@@ -208,6 +227,8 @@ public class ChartFragment extends Fragment
             aSet.setColor(colors[i % colors.length]);
             aSet.setFillColor(ColorTemplate.getHoloBlue());
 
+            // Set the valueFormatter to display time in HH:MM format
+            aSet.setValueFormatter(new TimeValueFormatter(i));
 
             //aSet.setFillFormatter(new MyFillFormatter(0f));
             //aSet.setDrawHorizontalHighlightIndicator(false);
@@ -225,6 +246,7 @@ public class ChartFragment extends Fragment
 
         return data;
     }
+
     @Override
     public void onValueSelected(Entry e, Highlight h) {
         mLineChart.centerViewToAnimated(
@@ -252,6 +274,7 @@ public class ChartFragment extends Fragment
         public PetimoLineData getData();
     }
 
+
     private class DayAxisValueFormatter implements IAxisValueFormatter {
 
         private BarLineChartBase<?> chart;
@@ -273,6 +296,26 @@ public class ChartFragment extends Fragment
                 return PetimoTimeUtils.getDescriptiveDay(date) + " " +
                         PetimoTimeUtils.getDescriptiveMonth(date);
         }
+    }
 
+    private class TimeValueFormatter implements IValueFormatter {
+
+        private int linePosition;
+        private ArrayList<Long> durations;
+
+        public TimeValueFormatter(int linePosition){
+            this.linePosition = linePosition;
+            this.durations = pLineData.getOriginalDurations(linePosition);
+        }
+
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex,
+                                        ViewPortHandler viewPortHandler) {
+            //Log.d("foobar", "dataSetIndex ===> " + dataSetIndex);
+
+            //Log.d("foobar", "entry.getX() ===> " + entry.getX());
+            //Log.d("foobar", "orig long ===> " + this.durations.get(dataSetIndex));
+            return PetimoTimeUtils.getTimeFromMs(this.durations.get((int)entry.getX()));
+        }
     }
 }
