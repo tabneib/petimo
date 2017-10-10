@@ -147,6 +147,8 @@
     <string name="option_grouped_by_category">Grouped by category</string>
     <string name="option_not_grouped">Not grouped</string>
 
+    <string name="option_task_statistics">Show selected categories</string>
+
     <!-- Other strings ##########################################################################-->
     <string name="loading_text">loading..</string>
     <string name="hello_blank_fragment">Under construction</string>

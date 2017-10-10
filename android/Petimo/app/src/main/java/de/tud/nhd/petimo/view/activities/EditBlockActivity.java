@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +19,6 @@ import android.widget.Switch;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
@@ -29,7 +26,6 @@ import de.tud.nhd.petimo.model.db.MonitorBlock;
 import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
-import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 import de.tud.nhd.petimo.view.fragments.lists.DayListFragment;
@@ -272,21 +268,6 @@ public class EditBlockActivity extends AppCompatActivity
         Log.d(TAG, "onResume!");
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-       // getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        /*mItemSelectedTask = menu.findItem(R.id.show_selected_tasks);
-        mItemEmptyDays = menu.findItem(R.id.show_empty_days);
-        mItemSwipeToDel = menu.findItem(R.id.swipe_to_delete);
-        updateChecked();*/
-        //menu.findItem(R.id.show_selected_tasks).setChecked(true);
-        return super.onPrepareOptionsMenu(menu);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -383,6 +364,4 @@ public class EditBlockActivity extends AppCompatActivity
     public void onRemovingMonitorBlock(MonitorBlock item) {
 
     }
-
-
 }

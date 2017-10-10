@@ -61,8 +61,16 @@ public class MonitorDay {
 
             for (MonitorBlock block: monitorBlocks){
                 // check if the corresponding task is already found
-                String descrName = PetimoDbWrapper.getInstance().
-                        getTaskById(block.getTaskId()).getDescriptiveName();
+                String descrName;
+                try {
+                    descrName = PetimoDbWrapper.getInstance().
+                            getTaskById(block.getTaskId()).getDescriptiveName();
+                }
+                catch (NullPointerException e){
+                    // Somehow the task with the given taskId cannot be found, just skip it
+                    continue;
+                }
+
                 if (found.containsKey(descrName)){
                     found.get(descrName).addBlock(block.getId());
                     found.get(descrName).increaseDuration(block.getDuration());

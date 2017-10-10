@@ -2,7 +2,6 @@ package de.tud.nhd.petimo.view.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
 
@@ -14,14 +13,13 @@ import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.chart.PetimoLineData;
 import de.tud.nhd.petimo.model.db.MonitorDay;
-import de.tud.nhd.petimo.model.db.PetimoContract;
 import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
 import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.ChartFragment;
-import de.tud.nhd.petimo.view.fragments.menu.PetimoDatePickerMenu;
+import de.tud.nhd.petimo.view.fragments.menu.PetimoStatisticsMenu;
 
 /**
  * TODO: customized IAxisValueFormatter for displaying monitor dates
@@ -30,7 +28,7 @@ import de.tud.nhd.petimo.view.fragments.menu.PetimoDatePickerMenu;
  * TODO: Overflow menu: Full Screen | Show selected tasks, Show selected categories | Line Chart, Bar Chart, Pie Chart | New Customized Report | Export As File
  */
 public class StatisticsActivity extends AppCompatActivity
-        implements PetimoDatePickerMenu.OnDateRangeChangeListener,
+        implements PetimoStatisticsMenu.OnDateRangeChangeListener,
                     ChartFragment.ChartDataProvider{
 
     private static final String TAG = "StatisticsActivity";
@@ -48,12 +46,13 @@ public class StatisticsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
+
         fromCalendar.setTime(new Date());
         toCalendar.setTime(new Date());
         fromCalendar.add(Calendar.DATE, -1 * (DEFAULT_DATE_RANGE - 1));
 
         getSupportFragmentManager().beginTransaction().add(
-                R.id.menu_container, PetimoDatePickerMenu.newInstance(false),
+                R.id.menu_container, PetimoStatisticsMenu.newInstance(false),
                 MENU_FRAGMENT_TAG).commit();
 
         lineChartFragment = (ChartFragment)
@@ -89,10 +88,6 @@ public class StatisticsActivity extends AppCompatActivity
                         PetimoSettingsSPref.getInstance().getSettingsBoolean(
                                 PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS, false));
 
-        for (MonitorDay day : days)
-            Log.d("foobar", "day: " + day.getDate() + " / " + day.getMonitorBlocks().size() + " / "
-                    + day.getDuration()/3600000);
-
         ArrayList<Integer> tasks;
         if (PetimoSettingsSPref.getInstance().getSettingsBoolean(
                 PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS, false))
@@ -119,7 +114,7 @@ public class StatisticsActivity extends AppCompatActivity
                 i++;
             }
             data.add(entries, PetimoDbWrapper.getInstance().
-                    getTaskById(task).getDescriptiveName());
+                    getTaskById(task).getName());
         }
 
         return data;

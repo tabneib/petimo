@@ -240,8 +240,6 @@ public class MainActivity extends AppCompatActivity
             Intent intent;
             switch (fTag) {
                 case EDIT_BLOCKS_FRAGMENT_TAG:
-                    /*fragment = EditBlocksFragment.getInstance();
-                    break;*/
                     intent = new Intent(this, EditBlockActivity.class);
                     startActivity(intent);
                     return;
@@ -249,8 +247,6 @@ public class MainActivity extends AppCompatActivity
                     fragment = EditTasksFragment.getInstance();
                     break;
                 case STATISTICS_FRAGMENT_TAG:
-                    /*fragment = StatisticsFragment.getInstance();
-                    break;*/
                     intent = new Intent(this, StatisticsActivity.class);
                     startActivity(intent);
                     return;

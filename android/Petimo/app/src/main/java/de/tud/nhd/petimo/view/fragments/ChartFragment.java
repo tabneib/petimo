@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -117,20 +118,25 @@ public class ChartFragment extends Fragment
         // TODO throw to a const
         mLineChart.animateX(1500);
 
+
+        //------------- Legend -------------------------------------------------------------------->
+
         // get the legend (only possible after setting data)
         Legend l = mLineChart.getLegend();
-
+        l.mNeededWidth = mLineChart.getWidth();
         // modify the legend ...
-        l.setForm(Legend.LegendForm.LINE);
+        l.setForm(Legend.LegendForm.SQUARE);
         // TODO Not Found, solve this
         //l.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf"));
         // TODO modularize
         l.setTextSize(11f);
         l.setTextColor(Color.BLACK);
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
+        //
+        l.setWordWrapEnabled(true);
         // l.setYOffset(11f);
 
         // TODO implement the ValueFormatter ;)

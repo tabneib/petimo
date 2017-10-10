@@ -14,7 +14,10 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -22,31 +25,32 @@ import java.util.Date;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 
-public class PetimoDatePickerMenu extends Fragment {
+public class PetimoStatisticsMenu extends Fragment {
 
     private OnDateRangeChangeListener mListener;
     private android.support.v7.widget.CardView menu;
     private ImageButton menuButton;
-    private RelativeLayout menuLayout;
+    private RelativeLayout buttonContainer;
+    private LinearLayout menuContainer;
     Button fromDateButton;
     Button toDateButton;
 
-    Calendar fromCalendar = java.util.Calendar.getInstance();
-    Calendar toCalendar = java.util.Calendar.getInstance();
+    Calendar fromCalendar = Calendar.getInstance();
+    Calendar toCalendar = Calendar.getInstance();
 
     boolean menuOpened = true;
     private final long ANIMATION_SPEED = 300;
 
 
-    public PetimoDatePickerMenu() {
+    public PetimoStatisticsMenu() {
         // Required empty public constructor
     }
 
     /**
-     * @return A new instance of fragment PetimoDatePickerMenu.
+     * @return A new instance of fragment PetimoStatisticsMenu.
      */
-    public static PetimoDatePickerMenu newInstance(boolean opened) {
-        PetimoDatePickerMenu fragment = new PetimoDatePickerMenu();
+    public static PetimoStatisticsMenu newInstance(boolean opened) {
+        PetimoStatisticsMenu fragment = new PetimoStatisticsMenu();
         // This hack is a work-around
         fragment.menuOpened = !opened;
         return fragment;
@@ -61,7 +65,7 @@ public class PetimoDatePickerMenu extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_petimo_date_picker_menu, container, false);
+        return inflater.inflate(R.layout.fragment_petimo_statistics_menu, container, false);
     }
 
     @Override
@@ -69,10 +73,11 @@ public class PetimoDatePickerMenu extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         menu = (android.support.v7.widget.CardView) view.findViewById(R.id.statistics_menu);
-        menuLayout = (RelativeLayout) view.findViewById(R.id.datePickerContainer);
+        buttonContainer = (RelativeLayout) view.findViewById(R.id.menu_button_container);
+        menuContainer = (LinearLayout) view.findViewById(R.id.menu_content);
         menuButton = (ImageButton) view.findViewById(R.id.menu_button);
         menuButton.getBackground().setAlpha(127);
-        menuLayout.getBackground().setAlpha(255);
+        buttonContainer.getBackground().setAlpha(255);
         menuButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -102,7 +107,7 @@ public class PetimoDatePickerMenu extends Fragment {
         // default date range is the last 1 week
         fromCalendar.setTime(new Date());
         toCalendar.setTime(new Date());
-        fromCalendar.add(java.util.Calendar.DATE, -6);
+        fromCalendar.add(Calendar.DATE, -6);
 
         fromDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(fromCalendar));
         toDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(toCalendar));
@@ -114,9 +119,9 @@ public class PetimoDatePickerMenu extends Fragment {
                         @Override
                         public void onDateSet(DatePicker view, int year, int month,
                                               int dayOfMonth) {
-                            fromCalendar.set(java.util.Calendar.YEAR, year);
-                            fromCalendar.set(java.util.Calendar.MONTH, month);
-                            fromCalendar.set(java.util.Calendar.DAY_OF_MONTH, dayOfMonth);
+                            fromCalendar.set(Calendar.YEAR, year);
+                            fromCalendar.set(Calendar.MONTH, month);
+                            fromCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                             mListener.onDateChanged(fromCalendar, toCalendar);
                             // Update the fromButton accordingly to display the date
                             fromDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(fromCalendar));
@@ -126,8 +131,8 @@ public class PetimoDatePickerMenu extends Fragment {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(getActivity(), onDateSetListener, fromCalendar
-                        .get(java.util.Calendar.YEAR), fromCalendar.get(java.util.Calendar.MONTH),
-                        fromCalendar.get(java.util.Calendar.DAY_OF_MONTH)).show();
+                        .get(Calendar.YEAR), fromCalendar.get(Calendar.MONTH),
+                        fromCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
@@ -139,9 +144,9 @@ public class PetimoDatePickerMenu extends Fragment {
                         @Override
                         public void onDateSet(DatePicker view, int year,
                                               int month, int dayOfMonth) {
-                            toCalendar.set(java.util.Calendar.YEAR, year);
-                            toCalendar.set(java.util.Calendar.MONTH, month);
-                            toCalendar.set(java.util.Calendar.DAY_OF_MONTH, dayOfMonth);
+                            toCalendar.set(Calendar.YEAR, year);
+                            toCalendar.set(Calendar.MONTH, month);
+                            toCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                             mListener.onDateChanged(fromCalendar, toCalendar);
                             // Update the toButton accordingly to display the date
                             toDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(toCalendar));
@@ -151,8 +156,8 @@ public class PetimoDatePickerMenu extends Fragment {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(getActivity(), onDateSetListener, toCalendar
-                        .get(java.util.Calendar.YEAR), toCalendar.get(java.util.Calendar.MONTH),
-                        toCalendar.get(java.util.Calendar.DAY_OF_MONTH)).show();
+                        .get(Calendar.YEAR), toCalendar.get(Calendar.MONTH),
+                        toCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
@@ -211,6 +216,7 @@ public class PetimoDatePickerMenu extends Fragment {
                     // Menu is hidden
                     menu.setAlpha(0.5f);
                     menu.setCardElevation(0.0f);
+                    menuContainer.setVisibility(View.INVISIBLE);
                 }
                 if (task != null)
                     task.execute();
@@ -241,6 +247,7 @@ public class PetimoDatePickerMenu extends Fragment {
                 new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
+                menuContainer.setVisibility(View.VISIBLE);
                 menu.setCardElevation(12.0f);
                 menu.setAlpha(1.0f);
             }
