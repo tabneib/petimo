@@ -15,7 +15,9 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 
 import com.github.mikephil.charting.data.LineDataSet;
 
@@ -23,6 +25,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import de.tud.nhd.petimo.R;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 
 public class PetimoStatisticsMenu extends Fragment {
@@ -34,6 +38,9 @@ public class PetimoStatisticsMenu extends Fragment {
     private LinearLayout menuContainer;
     Button fromDateButton;
     Button toDateButton;
+    RadioButton radioTask;
+    RadioButton radioCat;
+    Switch switchShowSelected;
 
     Calendar fromCalendar = Calendar.getInstance();
     Calendar toCalendar = Calendar.getInstance();
@@ -76,6 +83,12 @@ public class PetimoStatisticsMenu extends Fragment {
         buttonContainer = (RelativeLayout) view.findViewById(R.id.menu_button_container);
         menuContainer = (LinearLayout) view.findViewById(R.id.menu_content);
         menuButton = (ImageButton) view.findViewById(R.id.menu_button);
+        radioCat = (RadioButton) view.findViewById(R.id.radio_cats);
+        radioTask = (RadioButton) view.findViewById(R.id.radio_tasks);
+        switchShowSelected = (Switch) view.findViewById(R.id.switch_only_selected);
+
+        updateChecked();
+
         menuButton.getBackground().setAlpha(127);
         buttonContainer.getBackground().setAlpha(255);
         menuButton.setOnClickListener(new View.OnClickListener(){
@@ -94,7 +107,6 @@ public class PetimoStatisticsMenu extends Fragment {
                 updateMenuDisplay();
                 ViewTreeObserver obs = menu.getViewTreeObserver();
                 obs.removeOnGlobalLayoutListener(this);
-
             }
         });
 
@@ -179,6 +191,33 @@ public class PetimoStatisticsMenu extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    /**
+     *
+     */
+    private void updateChecked(){
+        switch (PetimoSettingsSPref.getInstance().getSettingsString(
+                PetimoSettingsSPref.STATISTICS_GROUP_BY, PetimoSPref.Consts.GROUP_BY_TASK)) {
+            case PetimoSPref.Consts.GROUP_BY_TASK:
+                this.radioTask.setChecked(true);
+                this.switchShowSelected.setChecked(PetimoSettingsSPref.getInstance().
+                        getSettingsBoolean(PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS,
+                                false));
+                this.switchShowSelected.setText(getString(R.string.option_show_selected_tasks));
+                break;
+            case PetimoSPref.Consts.GROUP_BY_CAT:
+                this.radioCat.setChecked(true);
+                this.switchShowSelected.setChecked(PetimoSettingsSPref.getInstance().
+                        getSettingsBoolean(PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_CATS,
+                                false));
+                this.switchShowSelected.setText(getString(R.string.option_show_selected_tasks));
+                this.switchShowSelected.setText(getString(R.string.option_show_selected_categories));
+                break;
+            default:
+                throw new RuntimeException("Unknown grouping mode!");
+        }
+
     }
 
     /**

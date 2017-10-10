@@ -47,6 +47,8 @@ public class PetimoSettingsSPref extends PetimoSPref {
             "de.tud.nhd.petimo.model.sharedpref.SharedPref.STATISTICS_GROUP_BY";
     public static final String STATISTICS_SHOW_SELECTED_TASKS =
             "de.tud.nhd.petimo.model.sharedpref.SharedPref.STATISTICS_SHOW_SELECTED_TASKS";
+    public static final String STATISTICS_SHOW_SELECTED_CATS =
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.STATISTICS_SHOW_SELECTED_CATS";
 
 
     public static final String LANGUAGE =
@@ -203,6 +205,7 @@ public class PetimoSettingsSPref extends PetimoSPref {
             case MONITORED_TASKS_SORT_ORDER:
             case MONITORED_BLOCKS_GROUP_BY:
             case LANGUAGE:
+            case STATISTICS_GROUP_BY:
                 return settingPref.getString(tag, defaultValue);
             default:
                 throw new SettingsException("getSettingsString: Unknown settings tag ==> " + tag);
@@ -222,6 +225,7 @@ public class PetimoSettingsSPref extends PetimoSPref {
             case MONITORED_BLOCKS_SHOW_SELECTED_TASKS:
             case MONITORED_BLOCKS_SHOW_EMPTY_DAYS:
             case STATISTICS_SHOW_SELECTED_TASKS:
+            case STATISTICS_SHOW_SELECTED_CATS:
                 return settingPref.getBoolean(tag, defaultValue);
             default:
                 throw new SettingsException("getSettingsBoolean: Unknown settings tag ==> " + tag);

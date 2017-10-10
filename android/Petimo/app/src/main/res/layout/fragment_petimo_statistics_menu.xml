@@ -43,7 +43,7 @@
                     android:orientation="vertical">
 
                     <RadioButton
-                        android:id="@+id/switch_tasks"
+                        android:id="@+id/radio_tasks"
                         android:textSize="@dimen/middle_big_text_size"
                         android:text="@string/option_task_statistics"
                         android:layout_width="match_parent"
@@ -53,7 +53,7 @@
                         android:textAlignment="textStart"/>
 
                     <RadioButton
-                        android:id="@+id/switch_cats"
+                        android:id="@+id/radio_cats"
                         android:textSize="@dimen/middle_big_text_size"
                         android:text="@string/option_cat_statistics"
                         android:layout_width="match_parent"
