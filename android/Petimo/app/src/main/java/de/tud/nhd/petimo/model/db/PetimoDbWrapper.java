@@ -268,7 +268,7 @@ public class PetimoDbWrapper {
      * @return
      */
     public ArrayList<MonitorDay> getDaysByRange(
-            int startDate, int endDate, ArrayList<Integer> selectedTasks){
+            int startDate, int endDate, ArrayList<Integer> selectedTasks, String sorting){
         String selection = PetimoContract.Monitor.COLUMN_NAME_DATE + " BETWEEN ? AND ?";
 
         // If only selected tasks should be fetched
@@ -288,8 +288,8 @@ public class PetimoDbWrapper {
 
         String[] selectionArgs = {Integer.toString(startDate), Integer.toString(endDate)};
 
-        String sortOrder = PetimoContract.Monitor.COLUMN_NAME_DATE + " DESC, " +
-                PetimoContract.Monitor.COLUMN_NAME_START + " DESC";
+        String sortOrder = PetimoContract.Monitor.COLUMN_NAME_DATE + " " + sorting + ", " +
+                PetimoContract.Monitor.COLUMN_NAME_START + " " + sorting;
         Cursor cursor = readableDb.query(PetimoContract.Monitor.TABLE_NAME,
                 PetimoContract.Monitor.getAllColumns(), selection,
                 selectionArgs, null, null, sortOrder);
@@ -1152,5 +1152,10 @@ public class PetimoDbWrapper {
         // Check if the name does not contain only whitespaces
 
         return result;
+    }
+
+    public static final class Sort {
+        public static final String DESC = "DESC";
+        public static final String ASC = "ASC";
     }
 }

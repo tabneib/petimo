@@ -247,22 +247,36 @@ public class PetimoController {
         else
             selectedTasks = null;
 
-        ArrayList<MonitorDay> dayList =
-                this.dbWrapper.getDaysByRange(startDateInt, endDateInt, selectedTasks);
-
+        ArrayList<MonitorDay> dayList;
         ArrayList<MonitorDay> resultList = new ArrayList<>();
+        ArrayList<Integer> dates;
         switch (mode){
             case Consts.EDIT_BLOCK:
+                dayList = this.dbWrapper.getDaysByRange(
+                        startDateInt, endDateInt, selectedTasks, PetimoDbWrapper.Sort.DESC);
                 if(!displayEmptyDay)
                     // The list will not contain empty days
                     return dayList;
-            case Consts.STATISTICS:
-                ArrayList<Integer> dates =
-                        PetimoTimeUtils.getDateIntFromRange(startDate, endDate);
+                dates = PetimoTimeUtils.getDateIntFromRange(startDate, endDate);
                 // Reverse order
                 ListIterator<Integer> iterator = dates.listIterator(dates.size());
                 while (iterator.hasPrevious()){
                     int day = iterator.previous();
+                    if(!dayList.isEmpty() && dayList.get(0).getDate() == day) {
+                        // Insert the Monitor Day returned from DB
+                        resultList.add(dayList.get(0));
+                        dayList.remove(0);
+                    }
+                    else
+                        // Insert a MonitorDay with empty block list
+                        resultList.add(new MonitorDay(day, new ArrayList<MonitorBlock>()));
+                }
+                break;
+            case Consts.STATISTICS:
+                dayList = this.dbWrapper.getDaysByRange(
+                        startDateInt, endDateInt, selectedTasks, PetimoDbWrapper.Sort.ASC);
+                dates = PetimoTimeUtils.getDateIntFromRange(startDate, endDate);
+                for (Integer day : dates) {
                     if(!dayList.isEmpty() && dayList.get(0).getDate() == day) {
                         // Insert the Monitor Day returned from DB
                         resultList.add(dayList.get(0));
