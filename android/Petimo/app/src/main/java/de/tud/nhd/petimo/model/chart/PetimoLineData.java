@@ -4,6 +4,8 @@ import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
 
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
+
 /**
  * Created by nhd on 06.10.17.
  */
@@ -13,6 +15,7 @@ public class PetimoLineData {
     private ArrayList<ArrayList<Entry>> allLinesEtries;
     private ArrayList<String> lineLabels;
     private ArrayList<Integer> dates;
+    private float maxYValue = 24;
 
     public PetimoLineData(ArrayList<Integer> dates){
         this.dates = dates;
@@ -40,4 +43,18 @@ public class PetimoLineData {
     public ArrayList<Integer> getDates() {
         return dates;
     }
+
+    public int getDate(int position){
+        return dates.get(position);
+    }
+
+    public float getMaxYValue() {
+        return maxYValue;
+    }
+
+    public void setMaxYValue(float maxYValue) {
+        // Set maxYValue bigger by 1
+        this.maxYValue = maxYValue < 3 ? 3 : (maxYValue < 24 ? maxYValue +1 : maxYValue);
+    }
+
 }

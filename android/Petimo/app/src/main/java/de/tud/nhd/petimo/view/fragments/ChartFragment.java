@@ -7,19 +7,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -29,6 +29,7 @@ import java.util.ArrayList;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.model.chart.PetimoLineData;
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +42,7 @@ public class ChartFragment extends Fragment
     public ChartType chartType;
     private LineChart mLineChart;
     private ChartDataProvider mDataProvider;
+    private PetimoLineData pLineData;
 
     public ChartFragment() {
         // Required empty public constructor
@@ -139,8 +141,7 @@ public class ChartFragment extends Fragment
         l.setWordWrapEnabled(true);
         // l.setYOffset(11f);
 
-        // TODO implement the ValueFormatter ;)
-        //IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mLineChart);
+        IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mLineChart);
 
         XAxis xAxis = mLineChart.getXAxis();
         // TODO Not Found, solve this
@@ -151,7 +152,7 @@ public class ChartFragment extends Fragment
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(true);
         xAxis.setGranularity(1);
-        //xAxis.setValueFormatter(xAxisFormatter);
+        xAxis.setValueFormatter(xAxisFormatter);
 
         YAxis leftAxis = mLineChart.getAxisLeft();
         // TODO Not Found, solve this
@@ -159,7 +160,7 @@ public class ChartFragment extends Fragment
         //        Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf"));
         leftAxis.setTextColor(ColorTemplate.getHoloBlue());
         // TODO this should be adapted to data each time data is changed
-        leftAxis.setAxisMaximum(20);
+        leftAxis.setAxisMaximum(pLineData.getMaxYValue());
         leftAxis.setAxisMinimum(0);
         leftAxis.setDrawGridLines(true);
         leftAxis.setGranularityEnabled(true);
@@ -169,7 +170,7 @@ public class ChartFragment extends Fragment
         //rightAxis.setTypeface(
         //        Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf"));
         //rightAxis.setTextColor(Color.RED);
-        rightAxis.setAxisMaximum(20);
+        rightAxis.setAxisMaximum(pLineData.getMaxYValue());
         rightAxis.setAxisMinimum(0);
         rightAxis.setDrawGridLines(false);
         rightAxis.setDrawZeroLine(false);
@@ -181,15 +182,15 @@ public class ChartFragment extends Fragment
 
     private LineData getLineData(){
 
-        PetimoLineData pData = this.mDataProvider.getData();
+        pLineData = this.mDataProvider.getData();
         ArrayList<ILineDataSet> lineDataSet = new ArrayList<>();
 
         //TODO: hard-code for now, delete it later
         int[] colors = new int[]{ColorTemplate.getHoloBlue(),
                 Color.RED, Color.YELLOW};
 
-        for (int i=0; i < pData.getDataSize(); i++){
-            LineDataSet aSet = new LineDataSet(pData.getLineEntries(i), pData.getLabel(i));
+        for (int i=0; i < pLineData.getDataSize(); i++){
+            LineDataSet aSet = new LineDataSet(pLineData.getLineEntries(i), pLineData.getLabel(i));
 
             // TODO: adapt (vary it)
             // TODO: Figure out if only the first line can depend on LEFT, all further -> RIGHT ?
@@ -249,5 +250,29 @@ public class ChartFragment extends Fragment
      */
     public interface ChartDataProvider{
         public PetimoLineData getData();
+    }
+
+    private class DayAxisValueFormatter implements IAxisValueFormatter {
+
+        private BarLineChartBase<?> chart;
+
+        public DayAxisValueFormatter(BarLineChartBase<?> chart) {
+            this.chart = chart;
+        }
+
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            int date = pLineData.getDate((int)value);
+
+            if (chart.getVisibleXRange() > 30 * 6) {
+
+                return PetimoTimeUtils.getDescriptiveMonth(date) + " " +
+                        PetimoTimeUtils.getDescriptiveYear(date);
+            }
+            else
+                return PetimoTimeUtils.getDescriptiveDay(date) + " " +
+                        PetimoTimeUtils.getDescriptiveMonth(date);
+        }
+
     }
 }

@@ -80,6 +80,7 @@ public class StatisticsActivity extends AppCompatActivity
 
         ArrayList<Integer> dates = PetimoTimeUtils.getDateIntFromRange(fromCalendar, toCalendar);
         PetimoLineData data = new PetimoLineData(dates);
+        float maxYValue = 0;
 
         // TODO: Next Step is SHOW SELECTED CATS
         ArrayList<MonitorDay> days = PetimoController.getInstance().
@@ -101,8 +102,11 @@ public class StatisticsActivity extends AppCompatActivity
         for (MonitorDay day: days) {
             sumEntries.add(new Entry(i, day.getDuration()/3600000));
             i++;
+            maxYValue =
+                    maxYValue < day.getDuration()/3600000 ? day.getDuration()/3600000 : maxYValue;
         }
         data.add(sumEntries, getString(R.string.text_sum));
+        data.setMaxYValue(maxYValue);
 
         // Then for each task go through the day list to collect information for the corresponding
         // line

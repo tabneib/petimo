@@ -139,6 +139,87 @@ public class PetimoTimeUtils {
     }
 
     /**
+     * Construct the descriptive string representation of the year the given date
+     * @param date
+     * @return
+     */
+    public static String getDescriptiveYear(int date){
+        return Integer.toString(date / 10000);
+    }
+
+    /**
+     * Construct the descriptive string representation of the month the given date
+     * @param date
+     * @return
+     */
+    public static String getDescriptiveMonth(int date){
+        switch ((date % 10000) / 100){
+            case 1:
+                return "Jan";
+            case 2:
+                return "Feb";
+            case 3:
+                return "Mar";
+            case 4:
+                return "Apr";
+            case 5:
+                return "May";
+            case 6:
+                return "Jun";
+            case 7:
+                return "Jul";
+            case 8:
+                return "Aug";
+            case 9:
+                return "Sep";
+            case 10:
+                return "Oct";
+            case 11:
+                return "Nov";
+            case 12:
+                return "Dec";
+            default:
+                throw new RuntimeException("Unknown month!");
+        }
+    }
+
+    /**
+     * Construct the descriptive string representation of the day the given date
+     * @param date
+     * @return
+     */
+    public static String getDescriptiveDay(int date){
+        int day = date % 100;
+        String appendix = "th";
+        switch (day) {
+            case 1:
+                appendix = "st";
+                break;
+            case 2:
+                appendix = "nd";
+                break;
+            case 3:
+                appendix = "rd";
+                break;
+            case 21:
+                appendix = "st";
+                break;
+            case 22:
+                appendix = "nd";
+                break;
+            case 23:
+                appendix = "rd";
+                break;
+            case 31:
+                appendix = "st";
+                break;
+        }
+        return day + appendix;
+    }
+
+
+
+    /**
      * @return the current hour
      */
     public static int getCurrentHour(){
