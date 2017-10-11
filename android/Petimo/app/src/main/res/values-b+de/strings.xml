@@ -45,6 +45,7 @@
 
 
     <!-- Short text ######################################################################-->
+    <string name="text_sum">Sum</string>
 
     <!-- Short text with colon ###########################################################-->
     <string name="colon_category">Category:</string>
@@ -147,7 +148,13 @@
     <string name="option_grouped_by_category">Grouped by category</string>
     <string name="option_not_grouped">Not grouped</string>
 
-    <string name="option_task_statistics">Show selected categories</string>
+    <string name="option_task_statistics">Task statistics</string>
+    <string name="option_cat_statistics">Categories statistics</string>
+    <string name="option_show_selected_categories">Show selected categories</string>
+    <string name="option_show_sum_line">Show sum line</string>
+    <string name="option_enable_pinch_zoom">Enable pinch zoom</string>
+
+
 
     <!-- Other strings ##########################################################################-->
     <string name="loading_text">loading..</string>

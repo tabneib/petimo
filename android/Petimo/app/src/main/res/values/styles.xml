@@ -112,4 +112,11 @@
         <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
     </style>
+
+    <style name= "PetimoThemePopupWindowItem">
+        <item name="android:textSize">@dimen/middle_big_text_size</item>
+        <item name="android:layout_marginTop">@dimen/middle_large_pane_padding</item>
+        <item name="android:layout_marginLeft">@dimen/middle_large_pane_padding</item>
+        <item name="android:layout_marginRight">@dimen/middle_large_pane_padding</item>
+    </style>
 </resources>

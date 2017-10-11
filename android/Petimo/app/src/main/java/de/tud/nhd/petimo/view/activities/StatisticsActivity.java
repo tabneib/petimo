@@ -107,8 +107,12 @@ public class StatisticsActivity extends AppCompatActivity
      *
      */
     private void setupPopupWindow(){
+
+        // Styling the menuButton
         menuButtonContainer = (CardView) findViewById(R.id.menuButtonContainer);
         menuButton = (ImageButton) findViewById(R.id.menuButton);
+        menuButtonContainer.getBackground().setAlpha(100);
+        menuButton.setAlpha(0.5f);
 
         // Inflate the popup window
         LayoutInflater layoutInflater = LayoutInflater.from(this);

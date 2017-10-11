@@ -150,6 +150,9 @@
     <string name="option_task_statistics">Task statistics</string>
     <string name="option_cat_statistics">Categories statistics</string>
     <string name="option_show_selected_categories">Show selected categories</string>
+    <string name="option_show_sum_line">Show sum line</string>
+    <string name="option_enable_pinch_zoom">Enable pinch zoom</string>
+
 
     <!-- Other strings ##########################################################################-->
     <string name="loading_text">..</string>

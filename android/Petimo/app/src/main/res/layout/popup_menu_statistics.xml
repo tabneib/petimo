@@ -6,102 +6,116 @@
     android:layout_height="match_parent"
     android:background="@color/background_primary">
 
-    <LinearLayout
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/background_title_shadow"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/background_title"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/pane_padding"
+        android:background="@color/background_title_highlight"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
-
-        <LinearLayout
-            android:id="@+id/menu_content"
-            android:background="@color/background_primary"
+        <RadioButton
+            android:id="@+id/radio_tasks"
+            style="@style/PetimoThemePopupWindowItem"
+            android:text="@string/option_task_statistics"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/middle_large_pane_padding"
-            android:orientation="vertical">
+            android:layoutDirection="rtl"
+            android:layout_gravity="start"
+            android:textAlignment="textStart"/>
 
-            <RadioGroup
-                android:id="@+id/radioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <RadioButton
+            android:id="@+id/radio_cats"
+            style="@style/PetimoThemePopupWindowItem"
+            android:text="@string/option_cat_statistics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layoutDirection="rtl"
+            android:layout_gravity="start"
+            android:textAlignment="textStart"/>
 
-                <RadioButton
-                    android:id="@+id/radio_tasks"
-                    android:textSize="@dimen/middle_big_text_size"
-                    android:text="@string/option_task_statistics"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layoutDirection="rtl"
-                    android:layout_gravity="start"
-                    android:textAlignment="textStart"/>
+    </RadioGroup>
 
-                <RadioButton
-                    android:id="@+id/radio_cats"
-                    android:textSize="@dimen/middle_big_text_size"
-                    android:text="@string/option_cat_statistics"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layoutDirection="rtl"
-                    android:layout_gravity="start"
-                    android:textAlignment="textStart"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/middle_large_pane_padding"
+        android:background="@color/background_title"/>
 
-            </RadioGroup>
+    <Switch
+        android:id="@+id/switch_only_selected"
+        style="@style/PetimoThemePopupWindowItem"
+        android:text="@string/option_show_selected_tasks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-            <Switch
-                android:id="@+id/switch_only_selected"
-                android:textSize="@dimen/middle_big_text_size"
-                android:text="@string/option_show_selected_tasks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pane_padding"/>
+    <Switch
+        android:id="@+id/switch_view_sum"
+        style="@style/PetimoThemePopupWindowItem"
+        android:text="@string/option_show_sum_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/pane_padding"
-                android:background="@color/background_title"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="@dimen/pane_padding"
-                android:background="@color/background_title_highlight"/>
+    <Switch
+        android:id="@+id/switch_pinch_zoom"
+        style="@style/PetimoThemePopupWindowItem"
+        android:text="@string/option_enable_pinch_zoom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-            <!-- DatePickers -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:orientation="horizontal">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/middle_large_pane_padding"
+        android:background="@color/background_title"/>
 
-                <TextView
-                    android:text="@string/colon_from"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/sub_pane_padding"/>
-                <Button
-                    android:text="@string/loading_text"
-                    android:background="@android:color/transparent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/button_date_from" />
-                <TextView
-                    android:text="@string/colon_to"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/sub_pane_padding" />
-                <Button
-                    android:text="@string/loading_text"
-                    android:background="@android:color/transparent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/button_date_to" />
-            </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/background_title_highlight"/>
 
-        </LinearLayout>
+    <!-- DatePickers -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/PetimoThemePopupWindowItem"
+        android:layout_gravity="right"
+        android:orientation="horizontal">
 
-
+        <TextView
+            android:text="@string/colon_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/sub_pane_padding"/>
+        <Button
+            android:text="@string/loading_text"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_date_from" />
+        <TextView
+            android:text="@string/colon_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/sub_pane_padding" />
+        <Button
+            android:text="@string/loading_text"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_date_to" />
     </LinearLayout>
 
 
