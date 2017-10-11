@@ -158,9 +158,11 @@ public class EditBlockActivity extends AppCompatActivity
                 if (isChecked){
                     TaskSelector.getInstance().startTransaction(PetimoSPref.Consts.EDIT_BLOCK);
                     CategoryListFragment catListFragment = CategoryListFragment.
-                            getInstance(CategoryListFragment.SELECT_MODE);
+                            getInstance(CategoryListFragment.SELECT_MODE,
+                                    PetimoSPref.Consts.EDIT_BLOCK);
                     PetimoDialog taskSelectorDialog =
                             PetimoDialog.newInstance(getBaseContext(), true)
+                                    .setSelectorMode(PetimoSPref.Consts.EDIT_BLOCK)
                                     .setIcon(PetimoDialog.ICON_SAVE)
                                     .setTitle(getString(R.string.title_select_tasks_to_display))
                                     .setContentFragment(catListFragment)

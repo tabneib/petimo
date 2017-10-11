@@ -37,6 +37,8 @@ import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
 import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.ChartFragment;
+import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
+import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
 /**
  * DONE: customized IAxisValueFormatter for displaying monitor dates
@@ -68,6 +70,7 @@ public class StatisticsActivity extends AppCompatActivity
     private final int ANIMATION_SPEED = 200;
 
     private boolean chartDataChanged = false;
+    private boolean chartSettingsChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -236,6 +239,33 @@ public class StatisticsActivity extends AppCompatActivity
                 //TODO
 
 
+                PetimoSettingsSPref.getInstance().putBoolean(
+                        PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS, isChecked);
+
+                // Display task selector dialog if checked
+                if (isChecked){
+                    TaskSelector.getInstance().startTransaction(PetimoSPref.Consts.STATISTICS);
+                    CategoryListFragment catListFragment = CategoryListFragment.
+                            getInstance(CategoryListFragment.SELECT_MODE,
+                                    PetimoSPref.Consts.STATISTICS);
+                    PetimoDialog taskSelectorDialog =
+                            PetimoDialog.newInstance(getBaseContext(), true)
+                                    .setSelectorMode(PetimoSPref.Consts.STATISTICS)
+                                    .setIcon(PetimoDialog.ICON_SAVE)
+                                    .setTitle(getString(R.string.title_select_tasks_to_display))
+                                    .setContentFragment(catListFragment)
+                                    .setPositiveButton(getString(R.string.button_ok),
+                                            new PetimoDialog.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    TaskSelector.getInstance().commit();
+                                                    // Update Day List
+                                                    //updateDayList();
+                                                }
+                                            });
+                    taskSelectorDialog.show(getSupportFragmentManager(), null);
+                }
+
                 // to update the Chart due to data change
                 chartDataChanged = true;
             }
@@ -310,21 +340,6 @@ public class StatisticsActivity extends AppCompatActivity
                     if (chartFragment != null)
                         chartFragment.invalidateChart(false);
                 }
-
-
-                /*
-                if (updateDayList){
-                    updateDayList();
-                    updateDayList = false;
-                }
-                if (reloadDayList){
-                    reloadDayList();
-                    reloadDayList = false;
-                }
-                if (recreateDayListFragment){
-                    recreateDayListFragment();
-                    recreateDayListFragment = false;
-                }*/
 
                 // un-dim the activity
                 activityLayout.getForeground().setAlpha(0);

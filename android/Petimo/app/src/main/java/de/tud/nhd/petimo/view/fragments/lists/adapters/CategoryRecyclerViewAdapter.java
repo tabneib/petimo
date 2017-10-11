@@ -36,14 +36,17 @@ public class CategoryRecyclerViewAdapter extends
     public List<MonitorCategory> catList;
     private CategoryListFragment fragment;
     private String mode;
+    private String selectorMode;
     private boolean onBind = false;
 
 
     public CategoryRecyclerViewAdapter(
-            CategoryListFragment fragment, List<MonitorCategory> items, String mode) {
+            CategoryListFragment fragment, List<MonitorCategory> items,
+            String mode, String selectorMode) {
         this.fragment = fragment;
         this.catList = items;
         this.mode = mode;
+        this.selectorMode = selectorMode;
     }
 
     @Override
@@ -147,7 +150,7 @@ public class CategoryRecyclerViewAdapter extends
         // Nesting fragments inside RecyclerView is not recommended, so I use recyclerView directly
         holder.taskAdapter = new TaskRecyclerViewAdapter(
                 PetimoDbWrapper.getInstance().getTasksByCat(catList.get(position).getId()),
-                mode, this, position);
+                selectorMode, mode, this, position);
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -201,49 +204,6 @@ public class CategoryRecyclerViewAdapter extends
                                 );
                         removeTaskDialog.show(
                                 fragment.getActivity().getSupportFragmentManager(), null);
-                        /*
-                        // Old approach: use Dialog builder, replaced with customized PetimoDialog ;)
-                        AlertDialog.Builder builder;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            builder = new AlertDialog.Builder(fragment.getActivity(),
-                                    android.R.style.Theme_Material_Dialog_Alert);
-                        } else {
-                            builder = new AlertDialog.Builder(fragment.getActivity());
-                        }
-                        final TaskRecyclerViewAdapter.ViewHolder vHolder =
-                                (TaskRecyclerViewAdapter.ViewHolder) viewHolder;
-                        builder.setTitle(
-                                fragment.getActivity().getString(R.string.title_remove_task))
-                                .setMessage(fragment.getActivity().
-                                        getString(R.string.message_confirm_remove)
-                                        + vHolder.taskNameTextView.getText() + "?")
-                                .setPositiveButton(android.R.string.yes,
-                                        new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        // Delete the task
-                                        PetimoController.getInstance().removeTask(
-                                                holder.taskAdapter.taskList.get(
-                                                        vHolder.getLayoutPosition()).getName(),
-                                                holder.taskAdapter.taskList.get(
-                                                        vHolder.getLayoutPosition()).getCatName());
-
-                                        holder.taskAdapter.
-                                                notifyItemRemoved(vHolder.getLayoutPosition());
-                                        holder.taskAdapter.
-                                                taskList.remove(vHolder.getLayoutPosition());
-                                    }
-                                })
-                                .setNegativeButton(
-                                        android.R.string.no, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        holder.taskAdapter.notifyDataSetChanged();
-                                        // do nothing
-                                    }
-                                })
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
-                         */
                     }
                 };
 
@@ -306,13 +266,13 @@ public class CategoryRecyclerViewAdapter extends
         holder.catCheckBox.setText(catList.get(position).getName());
         holder.taskAdapter = new TaskRecyclerViewAdapter(
                 PetimoDbWrapper.getInstance().getTasksByCat(catList.get(position).getId()), mode,
-                this, position);
+                selectorMode, this, position);
         holder.taskListRecyclerView.setLayoutManager(
                 new LinearLayoutManager(fragment.getActivity()));
         holder.taskListRecyclerView.setAdapter(holder.taskAdapter);
 
         ArrayList<Integer> tasks = TaskSelector.getInstance().
-                getSelectedTasks(PetimoSettingsSPref.Consts.EDIT_BLOCK);
+                getSelectedTasks(selectorMode);
         int selectedTaskNum = 0;
         for (int taskId: tasks)
             if (PetimoDbWrapper.getInstance().getCatIdFromTask(taskId) ==

@@ -147,7 +147,7 @@ public class ChartFragment extends Fragment
             l.setTextSize(11f);
             l.setTextColor(Color.BLACK);
             l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
             l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
             l.setDrawInside(false);
             //

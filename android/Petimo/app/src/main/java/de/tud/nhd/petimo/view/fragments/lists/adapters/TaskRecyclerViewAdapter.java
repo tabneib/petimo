@@ -24,18 +24,20 @@ public class TaskRecyclerViewAdapter extends
 
     public static final String TAG = "TaskAdapter";
     private String mode;
+    private String selectorMode;
     // Select mode attributes
     private CategoryRecyclerViewAdapter catAdapter;
     private int catPosition;
     public List<MonitorTask> taskList;
     private boolean onBind = false;
 
-    public TaskRecyclerViewAdapter(List<MonitorTask> items, String mode,
+    public TaskRecyclerViewAdapter(List<MonitorTask> items, String mode, String selectorMode,
                                    CategoryRecyclerViewAdapter catAdapter, int catPosition) {
         this.taskList = items;
         this.catAdapter = catAdapter;
         this.catPosition = catPosition;
         this.mode = mode;
+        this.selectorMode = selectorMode;
     }
 
     @Override
@@ -72,7 +74,7 @@ public class TaskRecyclerViewAdapter extends
 
                 // Check if the task is already selected
                 if (TaskSelector.getInstance().
-                        getSelectedTasks(PetimoSPref.Consts.EDIT_BLOCK).
+                        getSelectedTasks(selectorMode).
                         contains(holder.task.getId())){
                     onBind = true;
                     holder.taskCheckBox.setChecked(true);

@@ -28,6 +28,7 @@ public class CategoryListFragment extends Fragment {
     public static final String EDIT_MODE = "Edit-mode";
     public static final String SELECT_MODE = "Select-mode";
     public String mode;
+    public String selectorMode;
 
     private static CategoryListFragment _instance;
     public CategoryRecyclerViewAdapter adapter;
@@ -46,11 +47,12 @@ public class CategoryListFragment extends Fragment {
      * Get the (unique) instance of this fragment, if not yet exists, then initialize it
      * @return the unique instance
      */
-    public static CategoryListFragment getInstance(String mode){
+    public static CategoryListFragment getInstance(String mode, String selectorMode){
 
         // TODO: I still cannot figure out the cause of this bug, so I comment out the code fragment
         CategoryListFragment fragment = new CategoryListFragment();
         fragment.mode = mode;
+        fragment.selectorMode = selectorMode;
         return fragment;
 
         /*if (_instance == null) {
@@ -153,7 +155,7 @@ public class CategoryListFragment extends Fragment {
             itemTouchHelper.attachToRecyclerView(recyclerView);
 
             this.catList = PetimoDbWrapper.getInstance().getAllCategories();
-            this.adapter = new CategoryRecyclerViewAdapter(this, catList, mode);
+            this.adapter = new CategoryRecyclerViewAdapter(this, catList, mode, selectorMode);
             recyclerView.setAdapter(adapter);
         }
         return view;
@@ -181,7 +183,7 @@ public class CategoryListFragment extends Fragment {
             }
 
             this.catList = PetimoDbWrapper.getInstance().getAllCategories();
-            this.adapter = new CategoryRecyclerViewAdapter(this, catList, mode);
+            this.adapter = new CategoryRecyclerViewAdapter(this, catList, mode, selectorMode);
             recyclerView.setAdapter(adapter);
 
         }

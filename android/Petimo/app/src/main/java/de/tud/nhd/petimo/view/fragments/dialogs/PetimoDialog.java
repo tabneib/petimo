@@ -27,6 +27,8 @@ public class PetimoDialog extends DialogFragment {
 
     public Context fragmentActivity;
 
+    private String selectorMode;
+
     private String title;
     //private String subtitle;
     private String message;
@@ -201,6 +203,11 @@ public class PetimoDialog extends DialogFragment {
 
     public PetimoDialog setCanceledOnTouchOutside(boolean canceledOnTouchOutside){
         this.canceledOnTouchOutside = canceledOnTouchOutside;
+        return this;
+    }
+
+    public PetimoDialog setSelectorMode(String selectorMode) {
+        this.selectorMode = selectorMode;
         return this;
     }
 

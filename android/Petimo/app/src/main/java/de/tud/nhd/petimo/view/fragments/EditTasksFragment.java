@@ -56,7 +56,8 @@ public class EditTasksFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        catListFragment = CategoryListFragment.getInstance(CategoryListFragment.EDIT_MODE);
+        catListFragment = CategoryListFragment.getInstance(
+                CategoryListFragment.EDIT_MODE, null);
         getActivity().getSupportFragmentManager().beginTransaction().add(
                 R.id.tasks_list_fragment_container, catListFragment).commit();
 
