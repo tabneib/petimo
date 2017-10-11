@@ -100,103 +100,103 @@ public class ChartFragment extends Fragment
         // Line Chart Setting
         //<-----------------------------------------------------------------------------------------
 
-        mLineChart.setNoDataTextColor(Color.BLACK);
-        mLineChart.setOnChartValueSelectedListener(this);
+        if (initCall){
+            mLineChart.setNoDataTextColor(Color.BLACK);
+            mLineChart.setOnChartValueSelectedListener(this);
 
-        // no description text
-        mLineChart.getDescription().setEnabled(false);
+            // no description text
+            mLineChart.getDescription().setEnabled(false);
 
-        // enable touch gestures
-        mLineChart.setTouchEnabled(true);
+            // enable touch gestures
+            mLineChart.setTouchEnabled(true);
 
-        mLineChart.setDragDecelerationFrictionCoef(0.9f);
+            mLineChart.setDragDecelerationFrictionCoef(0.9f);
 
-        // enable scaling and dragging
-        mLineChart.setDragEnabled(true);
-        mLineChart.setScaleEnabled(true);
-        mLineChart.setDrawGridBackground(false);
-        //mLineChart.setHighlightPerDragEnabled(true);
+            // enable scaling and dragging
+            mLineChart.setDragEnabled(true);
+            mLineChart.setScaleEnabled(true);
+            mLineChart.setDrawGridBackground(false);
+            //mLineChart.setHighlightPerDragEnabled(true);
 
-        // if disabled, scaling can be done on x- and y-axis separately
-        mLineChart.setPinchZoom(false);
+            // if disabled, scaling can be done on x- and y-axis separately
+            mLineChart.setPinchZoom(false);
 
-        // set an alternative background color
-        mLineChart.setBackgroundColor(Color.WHITE);
-        //mLineChart.setBackgroundColor(Color.WHITE);
+            // set an alternative background color
+            mLineChart.setBackgroundColor(Color.WHITE);
+            //mLineChart.setBackgroundColor(Color.WHITE);
+
+            // TODO throw to a const
+            mLineChart.animateX(1500);
+
+        }
 
         // add data
         mLineChart.setData(this.getLineData());
-
-        // TODO throw to a const
-        mLineChart.animateX(1500);
 
 
         //------------- Legend -------------------------------------------------------------------->
 
         // get the legend (only possible after setting data)
         Legend l = mLineChart.getLegend();
-        l.mNeededWidth = mLineChart.getWidth();
-        // modify the legend ...
-        l.setForm(Legend.LegendForm.SQUARE);
-        // TODO Not Found, solve this
-        //l.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf"));
-        // TODO modularize
-        l.setTextSize(11f);
-        l.setTextColor(Color.BLACK);
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setDrawInside(false);
-        //
-        l.setWordWrapEnabled(true);
-        // l.setYOffset(11f);
 
+        if (initCall){
+            l.mNeededWidth = mLineChart.getWidth();
+            // modify the legend ...
+            l.setForm(Legend.LegendForm.SQUARE);
+            // TODO modularize
+            l.setTextSize(11f);
+            l.setTextColor(Color.BLACK);
+            l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+            l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+            l.setDrawInside(false);
+            //
+            l.setWordWrapEnabled(true);
+            // l.setYOffset(11f);
+        }
 
 
         //------------- X-Axis -------------------------------------------------------------------->
 
-        IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mLineChart);
-
-        XAxis xAxis = mLineChart.getXAxis();
-        // TODO Not Found, solve this
-        //xAxis.setTypeface(
-        //        Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf"));
-        xAxis.setTextSize(11f);
-        xAxis.setTextColor(Color.BLACK);
-        xAxis.setDrawGridLines(false);
-        xAxis.setDrawAxisLine(true);
-        xAxis.setGranularity(1);
-        xAxis.setValueFormatter(xAxisFormatter);
+        if (initCall){
+            XAxis xAxis = mLineChart.getXAxis();
+            xAxis.setTextSize(11f);
+            xAxis.setTextColor(Color.BLACK);
+            xAxis.setDrawGridLines(false);
+            xAxis.setDrawAxisLine(true);
+            xAxis.setGranularity(1);
+            xAxis.setValueFormatter(new DayAxisValueFormatter(mLineChart));
+        }
 
 
         //------------- Y-Axises -------------------------------------------------------------------->
 
         YAxis leftAxis = mLineChart.getAxisLeft();
-        // TODO Not Found, solve this
-        //leftAxis.setTypeface(
-        //        Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf"));
-        leftAxis.setTextColor(ColorTemplate.getHoloBlue());
-        // This is adapted to data each time data is changed
-        leftAxis.setAxisMaximum(pLineData.getMaxYValue());
-        leftAxis.setAxisMinimum(0);
-        leftAxis.setDrawGridLines(true);
-        leftAxis.setGranularityEnabled(false);
-        leftAxis.setGranularity(1);
-
         YAxis rightAxis = mLineChart.getAxisRight();
-        // TODO Not Found, solve this
-        //rightAxis.setTypeface(
-        //        Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf"));
-        //rightAxis.setTextColor(Color.RED);
-        rightAxis.setAxisMaximum(pLineData.getMaxYValue());
-        rightAxis.setAxisMinimum(0);
-        rightAxis.setDrawGridLines(false);
-        rightAxis.setDrawZeroLine(false);
-        rightAxis.setGranularityEnabled(false);
-        rightAxis.setGranularity(1);
 
-        if (!initCall)
+        if (initCall){
+            leftAxis.setTextColor(ColorTemplate.getHoloBlue());
+            // This is adapted to data each time data is changed
+            leftAxis.setAxisMinimum(0);
+            leftAxis.setDrawGridLines(true);
+            leftAxis.setGranularityEnabled(false);
+            leftAxis.setGranularity(1);
+
+            //rightAxis.setTextColor(Color.RED);
+            rightAxis.setAxisMinimum(0);
+            rightAxis.setDrawGridLines(false);
+            rightAxis.setDrawZeroLine(false);
+            rightAxis.setGranularityEnabled(false);
+            rightAxis.setGranularity(1);
+        }
+
+        leftAxis.setAxisMaximum(pLineData.getMaxYValue());
+        rightAxis.setAxisMaximum(pLineData.getMaxYValue());
+
+        if (!initCall) {
+            mLineChart.removeAllViews();
             mLineChart.invalidate();
+        }
     }
 
     private LineData getLineData(){
@@ -285,16 +285,28 @@ public class ChartFragment extends Fragment
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            int date = pLineData.getDate((int)value);
 
-            if (chart.getVisibleXRange() > 30 * 6) {
+            // This try catch is a hack to overcome some unknown error occurring when the user
+            // choose a smaller date range. This error causes an IndexOutOfBound to be thrown.
+            // TODO figure out if this is a bug of the lib or Petimo
+            try{
+                int date = pLineData.getDate((int)value);
 
-                return PetimoTimeUtils.getDescriptiveMonth(date) + " " +
-                        PetimoTimeUtils.getDescriptiveYear(date);
+                if (chart.getVisibleXRange() > 30 * 6) {
+
+                    return PetimoTimeUtils.getDescriptiveMonth(date) + " " +
+                            PetimoTimeUtils.getDescriptiveYear(date);
+                }
+                else
+                    return PetimoTimeUtils.getDescriptiveDay(date) + " " +
+                            PetimoTimeUtils.getDescriptiveMonth(date);
             }
-            else
-                return PetimoTimeUtils.getDescriptiveDay(date) + " " +
-                        PetimoTimeUtils.getDescriptiveMonth(date);
+            catch (IndexOutOfBoundsException e){
+                e.printStackTrace();
+                //return "wtf ??";
+                return null;
+            }
+
         }
     }
 

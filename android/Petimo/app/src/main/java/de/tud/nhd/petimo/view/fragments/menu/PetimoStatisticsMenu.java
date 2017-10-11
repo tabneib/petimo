@@ -19,8 +19,6 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 
-import com.github.mikephil.charting.data.LineDataSet;
-
 import java.util.Calendar;
 import java.util.Date;
 
