@@ -160,6 +160,7 @@ public class ChartFragment extends Fragment
 
         if (initCall){
             XAxis xAxis = mLineChart.getXAxis();
+            // TODO modularize
             xAxis.setTextSize(11f);
             xAxis.setTextColor(Color.BLACK);
             xAxis.setDrawGridLines(false);
@@ -176,13 +177,15 @@ public class ChartFragment extends Fragment
 
         if (initCall){
             leftAxis.setTextColor(ColorTemplate.getHoloBlue());
-            // This is adapted to data each time data is changed
+            leftAxis.setTextSize(13f);
             leftAxis.setAxisMinimum(0);
             leftAxis.setDrawGridLines(true);
             leftAxis.setGranularityEnabled(false);
             leftAxis.setGranularity(1);
 
             //rightAxis.setTextColor(Color.RED);
+            rightAxis.setTextColor(ColorTemplate.getHoloBlue());
+            rightAxis.setTextSize(13f);
             rightAxis.setAxisMinimum(0);
             rightAxis.setDrawGridLines(false);
             rightAxis.setDrawZeroLine(false);
@@ -190,6 +193,7 @@ public class ChartFragment extends Fragment
             rightAxis.setGranularity(1);
         }
 
+        // This is adapted to data each time data is changed
         leftAxis.setAxisMaximum(pLineData.getMaxYValue());
         rightAxis.setAxisMaximum(pLineData.getMaxYValue());
 
@@ -216,6 +220,8 @@ public class ChartFragment extends Fragment
             aSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
 
             // Equal for all lines
+            aSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+            aSet.setDrawFilled(false);
             aSet.setCircleColor(Color.BLACK);
             aSet.setLineWidth(2f);
             aSet.setCircleRadius(3f);
@@ -242,7 +248,7 @@ public class ChartFragment extends Fragment
 
         // x-axis text value text color
         data.setValueTextColor(Color.BLACK);
-        data.setValueTextSize(9f);
+        data.setValueTextSize(11f);
 
         return data;
     }

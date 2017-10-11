@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
+    android:id="@+id/activity_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="de.tud.nhd.petimo.view.activities.StatisticsActivity">
-
+    android:foreground="@android:color/black"
+    tools:context="de.tud.nhd.petimo.view.activities.StatisticsActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:paddingTop="@dimen/middle_large_pane_padding"
         android:paddingBottom="@dimen/middle_large_pane_padding"
         android:background="@android:color/white"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <FrameLayout
             android:id="@+id/chart_container"
+            android:clipToPadding="false"
+            android:layout_margin="@dimen/sub_pane_padding"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <!-- Floating menu -->
-
+        <!--
         <FrameLayout
             android:id="@+id/menu_container"
             android:layout_width="match_parent"
@@ -30,7 +35,28 @@
             android:layout_alignParentRight="true"
             android:clipToPadding="false"
             />
+        -->
+        <android.support.v7.widget.CardView
+            android:id="@+id/menuButtonContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:alpha="0.5"
+            app:cardElevation="1dp"
+            android:layout_alignParentRight="true">
+
+            <ImageButton
+                android:id="@+id/menuButton"
+                android:background="@drawable/ic_enter_to_app_up_36dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/sub_pane_padding"
+                android:clipToPadding="false"
+                />
+        </android.support.v7.widget.CardView>
+
 
     </RelativeLayout>
 
-</LinearLayout>
+</FrameLayout>

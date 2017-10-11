@@ -94,14 +94,14 @@ public class EditBlockActivity extends AppCompatActivity
                 MENU_FRAGMENT_TAG).commit();
 
 
-        setupPopup();
+        setupPopupWindow();
     }
 
 
     /**
      *
      */
-    private void setupPopup(){
+    private void setupPopupWindow(){
         overFlowIcon = (ImageView) findViewById(R.id.overflow);
 
         // Inflate the popup window

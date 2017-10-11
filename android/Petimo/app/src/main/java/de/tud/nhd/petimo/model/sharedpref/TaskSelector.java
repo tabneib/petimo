@@ -71,9 +71,8 @@ public class TaskSelector extends PetimoSettingsSPref {
                             SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS, null), 1);
                     break;
                 case Consts.STATISTICS:
-                    // TODO change this
                     selectedTasksStr = PetimoStringUtils.parse(settingPref.getString(
-                            SETTINGS_MONITORED_BLOCKS_SELECTED_TASKS, null), 1);
+                            STATISTICS_BLOCKS_SELECTED_TASKS, null), 1);
                     break;
                 default:
                     throw new IllegalStateException("Unknown mode!");
@@ -132,7 +131,9 @@ public class TaskSelector extends PetimoSettingsSPref {
                     settingsEditor.apply();
                     break;
                 case Consts.STATISTICS:
-                    // TODO
+                    settingsEditor.putString(STATISTICS_BLOCKS_SELECTED_TASKS,
+                            PetimoStringUtils.encodeIntList(tmpSelectedTask, 1));
+                    settingsEditor.apply();
                     break;
                 default:
                     throw new IllegalStateException(

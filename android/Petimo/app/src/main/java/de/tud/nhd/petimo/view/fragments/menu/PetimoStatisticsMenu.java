@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -122,6 +123,104 @@ public class PetimoStatisticsMenu extends Fragment {
         fromDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(fromCalendar));
         toDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(toCalendar));
 
+        setListeners();
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnDateRangeChangeListener) {
+            mListener = (OnDateRangeChangeListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnDateRangeChangeListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    /**
+     *
+     */
+    private void updateChecked(){
+        switch (PetimoSettingsSPref.getInstance().getSettingsString(
+                PetimoSettingsSPref.STATISTICS_GROUP_BY, PetimoSPref.Consts.GROUP_BY_TASK)) {
+            case PetimoSPref.Consts.GROUP_BY_TASK:
+                this.radioTask.setChecked(true);
+                this.switchShowSelected.setChecked(PetimoSettingsSPref.getInstance().
+                        getSettingsBoolean(PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS,
+                                false));
+                updateSwitchText();
+                break;
+            case PetimoSPref.Consts.GROUP_BY_CAT:
+                this.radioCat.setChecked(true);
+                this.switchShowSelected.setChecked(PetimoSettingsSPref.getInstance().
+                        getSettingsBoolean(PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_CATS,
+                                false));
+                updateSwitchText();
+                break;
+            default:
+                throw new RuntimeException("Unknown grouping mode!");
+        }
+
+    }
+
+
+    /**
+     *
+     */
+    private void setListeners(){
+
+        // Options -------------------------------------------------------------------------------->
+
+        radioTask.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //TODO
+                // Store the user's choice
+                PetimoSettingsSPref.getInstance().putBoolean(
+                        PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS, isChecked);
+                PetimoSettingsSPref.getInstance().putBoolean(
+                        PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_CATS, !isChecked);
+                // Update the switch's text
+                updateSwitchText();
+
+                // Act as dateChanged in order to force the parent activity to redraw the chart
+                mListener.onDateChanged(fromCalendar, toCalendar);
+            }
+        });
+
+        radioCat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //TODO
+                // Store the user's choice
+                PetimoSettingsSPref.getInstance().putBoolean(
+                        PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_CATS, isChecked);
+                PetimoSettingsSPref.getInstance().putBoolean(
+                        PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS, !isChecked);
+                // Update the switch's text
+                updateSwitchText();
+
+                // Act as dateChanged in order to force the parent activity to redraw the chart
+                mListener.onDateChanged(fromCalendar, toCalendar);
+            }
+        });
+
+        switchShowSelected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //TODO
+            }
+        });
+
+        // DatePickers ---------------------------------------------------------------------------->
+
         fromDateButton.setOnClickListener(new View.OnClickListener(){
 
             DatePickerDialog.OnDateSetListener onDateSetListener =
@@ -173,49 +272,17 @@ public class PetimoStatisticsMenu extends Fragment {
 
     }
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnDateRangeChangeListener) {
-            mListener = (OnDateRangeChangeListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnDateRangeChangeListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     *
-     */
-    private void updateChecked(){
+    private void updateSwitchText(){
+        // Update the Switch's text
         switch (PetimoSettingsSPref.getInstance().getSettingsString(
                 PetimoSettingsSPref.STATISTICS_GROUP_BY, PetimoSPref.Consts.GROUP_BY_TASK)) {
             case PetimoSPref.Consts.GROUP_BY_TASK:
-                this.radioTask.setChecked(true);
-                this.switchShowSelected.setChecked(PetimoSettingsSPref.getInstance().
-                        getSettingsBoolean(PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS,
-                                false));
-                this.switchShowSelected.setText(getString(R.string.option_show_selected_tasks));
+                switchShowSelected.setText(getString(R.string.option_show_selected_tasks));
                 break;
             case PetimoSPref.Consts.GROUP_BY_CAT:
-                this.radioCat.setChecked(true);
-                this.switchShowSelected.setChecked(PetimoSettingsSPref.getInstance().
-                        getSettingsBoolean(PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_CATS,
-                                false));
-                this.switchShowSelected.setText(getString(R.string.option_show_selected_tasks));
-                this.switchShowSelected.setText(getString(R.string.option_show_selected_categories));
+                switchShowSelected.setText(getString(R.string.option_show_selected_categories));
                 break;
-            default:
-                throw new RuntimeException("Unknown grouping mode!");
         }
-
     }
 
     /**
