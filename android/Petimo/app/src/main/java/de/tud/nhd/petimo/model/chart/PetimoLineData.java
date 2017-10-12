@@ -64,7 +64,8 @@ public class PetimoLineData {
 
     public void setMaxYValue(float maxYValue) {
         // Set maxYValue bigger by 1
-        this.maxYValue = maxYValue < 3 ? 3 : (maxYValue < 24 ? maxYValue +1 : maxYValue);
+        //this.maxYValue = maxYValue < 3 ? 6 : (maxYValue < (25 - 6) ? maxYValue + 6 : maxYValue);
+        this.maxYValue = 24;
     }
 
 }

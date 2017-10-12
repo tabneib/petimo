@@ -20,7 +20,6 @@ import de.tud.nhd.petimo.model.db.MonitorDayGrouped;
 import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
-import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.model.db.MonitorDay;
 import de.tud.nhd.petimo.view.fragments.dialogs.AddBlockDialogFragment;
@@ -120,7 +119,7 @@ public class DayRecyclerViewAdapter extends
             }
         });
 
-        switch (PetimoSettingsSPref.getInstance().getSettingsString(
+        switch (PetimoSettingsSPref.getInstance().getString(
                 PetimoSettingsSPref.MONITORED_BLOCKS_GROUP_BY, PetimoSPref.Consts.NOT_GROUP)){
 
             case (PetimoSPref.Consts.NOT_GROUP):
@@ -133,7 +132,7 @@ public class DayRecyclerViewAdapter extends
 
             default:
                 ArrayList<MonitorDayGrouped> groups;
-                if (PetimoSettingsSPref.getInstance().getSettingsString(
+                if (PetimoSettingsSPref.getInstance().getString(
                         PetimoSettingsSPref.MONITORED_BLOCKS_GROUP_BY,
                         PetimoSPref.Consts.GROUP_BY_TASK).equals(PetimoSPref.Consts.GROUP_BY_CAT))
                     groups = dayList.get(position).getGroupedByCat();
@@ -149,7 +148,7 @@ public class DayRecyclerViewAdapter extends
 
         // Swipe to Delete is enable?
         if (PetimoSettingsSPref.getInstance().
-                getSettingsBoolean(PetimoSettingsSPref.MONITORED_BLOCKS_LOCK, false))
+                getBoolean(PetimoSettingsSPref.MONITORED_BLOCKS_LOCK, false))
             holder.itemTouchHelper.attachToRecyclerView(holder.recyclerView);
         else
             holder.itemTouchHelper.attachToRecyclerView(null);

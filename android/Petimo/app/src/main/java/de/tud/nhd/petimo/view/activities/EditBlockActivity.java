@@ -286,20 +286,20 @@ public class EditBlockActivity extends AppCompatActivity
      * Update the checked state of overflow menu items
      */
     private void updateChecked(){
-        if (PetimoSettingsSPref.getInstance().getSettingsBoolean(
+        if (PetimoSettingsSPref.getInstance().getBoolean(
                 PetimoSettingsSPref.MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false))
             switchSelectedTask.setChecked(true);
 
-        if (PetimoSettingsSPref.getInstance().getSettingsBoolean(
+        if (PetimoSettingsSPref.getInstance().getBoolean(
                 PetimoSettingsSPref.MONITORED_BLOCKS_SHOW_EMPTY_DAYS, false))
             switchEmptyDays.setChecked(true);
 
-        if (PetimoSettingsSPref.getInstance().getSettingsBoolean(
+        if (PetimoSettingsSPref.getInstance().getBoolean(
                 PetimoSettingsSPref.MONITORED_BLOCKS_LOCK, false)){
             switchSwipeToDel.setChecked(true);
         }
 
-        switch (PetimoSettingsSPref.getInstance().getSettingsString(
+        switch (PetimoSettingsSPref.getInstance().getString(
                 PetimoSettingsSPref.MONITORED_BLOCKS_GROUP_BY, PetimoSPref.Consts.NOT_GROUP)){
             case PetimoSPref.Consts.GROUP_BY_CAT:
                 radioGroupedByCat.setChecked(true);
@@ -324,9 +324,9 @@ public class EditBlockActivity extends AppCompatActivity
             dayListFragment.dayAdapter.dayList = PetimoController.getInstance().
                     getDaysFromRange(PetimoSPref.Consts.EDIT_BLOCK,
                             fromCalendar, toCalendar,
-                            PetimoSettingsSPref.getInstance().getSettingsBoolean(PetimoSettingsSPref.
+                            PetimoSettingsSPref.getInstance().getBoolean(PetimoSettingsSPref.
                                     MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
-                            PetimoSettingsSPref.getInstance().getSettingsBoolean(PetimoSettingsSPref.
+                            PetimoSettingsSPref.getInstance().getBoolean(PetimoSettingsSPref.
                                     MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false));
             dayListFragment.dayAdapter.notifyDataSetChanged();
         }

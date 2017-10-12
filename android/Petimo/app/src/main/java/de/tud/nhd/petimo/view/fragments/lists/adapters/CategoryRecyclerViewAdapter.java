@@ -150,7 +150,7 @@ public class CategoryRecyclerViewAdapter extends
         // Nesting fragments inside RecyclerView is not recommended, so I use recyclerView directly
         holder.taskAdapter = new TaskRecyclerViewAdapter(
                 PetimoDbWrapper.getInstance().getTasksByCat(catList.get(position).getId()),
-                selectorMode, mode, this, position);
+                mode, selectorMode, this, position);
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {

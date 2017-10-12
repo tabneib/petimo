@@ -148,19 +148,19 @@ public class PetimoStatisticsMenu extends Fragment {
      *
      */
     private void updateChecked(){
-        switch (PetimoSettingsSPref.getInstance().getSettingsString(
+        switch (PetimoSettingsSPref.getInstance().getString(
                 PetimoSettingsSPref.STATISTICS_GROUP_BY, PetimoSPref.Consts.GROUP_BY_TASK)) {
             case PetimoSPref.Consts.GROUP_BY_TASK:
                 this.radioTask.setChecked(true);
                 this.switchShowSelected.setChecked(PetimoSettingsSPref.getInstance().
-                        getSettingsBoolean(PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS,
+                        getBoolean(PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS,
                                 false));
                 updateSwitchText();
                 break;
             case PetimoSPref.Consts.GROUP_BY_CAT:
                 this.radioCat.setChecked(true);
                 this.switchShowSelected.setChecked(PetimoSettingsSPref.getInstance().
-                        getSettingsBoolean(PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_CATS,
+                        getBoolean(PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_CATS,
                                 false));
                 updateSwitchText();
                 break;
@@ -274,7 +274,7 @@ public class PetimoStatisticsMenu extends Fragment {
 
     private void updateSwitchText(){
         // Update the Switch's text
-        switch (PetimoSettingsSPref.getInstance().getSettingsString(
+        switch (PetimoSettingsSPref.getInstance().getString(
                 PetimoSettingsSPref.STATISTICS_GROUP_BY, PetimoSPref.Consts.GROUP_BY_TASK)) {
             case PetimoSPref.Consts.GROUP_BY_TASK:
                 switchShowSelected.setText(getString(R.string.option_show_selected_tasks));

@@ -552,7 +552,7 @@ public class SharedPref {
             case SETTINGS_OVERNIGHT_THRESHOLD:
                 return settingPref.getInt(tag, defaultValue);
             default:
-                throw new SettingsException("getSettingsInt: Unknown settings tag ==> " + tag);
+                throw new SettingsException("getInt: Unknown settings tag ==> " + tag);
         }
     }
 
@@ -568,7 +568,7 @@ public class SharedPref {
             case SETTINGS_LANGUAGE:
                 return settingPref.getString(tag, defaultValue);
             default:
-                throw new SettingsException("getSettingsString: Unknown settings tag ==> " + tag);
+                throw new SettingsException("getString: Unknown settings tag ==> " + tag);
         }
     }
 
@@ -586,7 +586,7 @@ public class SharedPref {
             case SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS:
                 return settingPref.getBoolean(tag, defaultValue);
             default:
-                throw new SettingsException("getSettingsBoolean: Unknown settings tag ==> " + tag);
+                throw new SettingsException("getBoolean: Unknown settings tag ==> " + tag);
         }
     }
 

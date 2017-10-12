@@ -49,7 +49,10 @@ public class PetimoSettingsSPref extends PetimoSPref {
             "de.tud.nhd.petimo.model.sharedpref.SharedPref.STATISTICS_SHOW_SELECTED_TASKS";
     public static final String STATISTICS_SHOW_SELECTED_CATS =
             "de.tud.nhd.petimo.model.sharedpref.SharedPref.STATISTICS_SHOW_SELECTED_CATS";
-
+    public static final String STATISTICS_SHOW_SUM_LINE =
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.STATISTICS_SHOW_SUM_LINE";
+    public static final String STATISTICS_ENABLE_PINCH_ZOOM =
+            "de.tud.nhd.petimo.model.sharedpref.SharedPref.STATISTICS_ENABLE_PINCH_ZOOM";
 
     public static final String LANGUAGE =
             "de.tud.nhd.petimo.model.sharedpref.SharedPref.LANGUAGE";
@@ -146,6 +149,8 @@ public class PetimoSettingsSPref extends PetimoSPref {
             case MONITORED_BLOCKS_SHOW_EMPTY_DAYS:
             case STATISTICS_SHOW_SELECTED_CATS:
             case STATISTICS_SHOW_SELECTED_TASKS:
+            case STATISTICS_SHOW_SUM_LINE:
+            case STATISTICS_ENABLE_PINCH_ZOOM:
                 settingsEditor.putBoolean(tag, content);
                 settingsEditor.apply();
                 break;
@@ -187,12 +192,12 @@ public class PetimoSettingsSPref extends PetimoSPref {
      * @param defaultValue
      * @return
      */
-    public int getSettingsInt(String tag, int defaultValue){
+    public int getInt(String tag, int defaultValue){
         switch (tag){
             case OVERNIGHT_THRESHOLD:
                 return settingPref.getInt(tag, defaultValue);
             default:
-                throw new SettingsException("getSettingsInt: Unknown settings tag ==> " + tag);
+                throw new SettingsException("getInt: Unknown settings tag ==> " + tag);
         }
     }
 
@@ -202,7 +207,7 @@ public class PetimoSettingsSPref extends PetimoSPref {
      * @param defaultValue TODO passing null to use app default value
      * @return
      */
-    public String getSettingsString(String tag, String defaultValue){
+    public String getString(String tag, String defaultValue){
         switch (tag){
             case MONITORED_TASKS_SORT_ORDER:
             case MONITORED_BLOCKS_GROUP_BY:
@@ -210,7 +215,7 @@ public class PetimoSettingsSPref extends PetimoSPref {
             case STATISTICS_GROUP_BY:
                 return settingPref.getString(tag, defaultValue);
             default:
-                throw new SettingsException("getSettingsString: Unknown settings tag ==> " + tag);
+                throw new SettingsException("getString: Unknown settings tag ==> " + tag);
         }
     }
 
@@ -220,7 +225,7 @@ public class PetimoSettingsSPref extends PetimoSPref {
      * @param defaultValue
      * @return
      */
-    public boolean getSettingsBoolean(String tag, boolean defaultValue){
+    public boolean getBoolean(String tag, boolean defaultValue){
         switch (tag){
             case MONITORED_BLOCKS_LOCK:
             case MONITORED_BLOCKS_REMEMBER:
@@ -228,9 +233,11 @@ public class PetimoSettingsSPref extends PetimoSPref {
             case MONITORED_BLOCKS_SHOW_EMPTY_DAYS:
             case STATISTICS_SHOW_SELECTED_TASKS:
             case STATISTICS_SHOW_SELECTED_CATS:
+            case STATISTICS_SHOW_SUM_LINE:
+            case STATISTICS_ENABLE_PINCH_ZOOM:
                 return settingPref.getBoolean(tag, defaultValue);
             default:
-                throw new SettingsException("getSettingsBoolean: Unknown settings tag ==> " + tag);
+                throw new SettingsException("getBoolean: Unknown settings tag ==> " + tag);
         }
     }
 

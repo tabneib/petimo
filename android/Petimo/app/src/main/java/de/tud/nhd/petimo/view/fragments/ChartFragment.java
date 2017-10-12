@@ -32,6 +32,7 @@ import java.util.ArrayList;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.model.chart.PetimoLineData;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 
 /**
@@ -119,7 +120,8 @@ public class ChartFragment extends Fragment
             //mLineChart.setHighlightPerDragEnabled(true);
 
             // if disabled, scaling can be done on x- and y-axis separately
-            mLineChart.setPinchZoom(false);
+            mLineChart.setPinchZoom(PetimoSettingsSPref.getInstance().getBoolean(
+                    PetimoSettingsSPref.STATISTICS_ENABLE_PINCH_ZOOM, false));
 
             // set an alternative background color
             mLineChart.setBackgroundColor(Color.WHITE);
@@ -253,6 +255,17 @@ public class ChartFragment extends Fragment
         return data;
     }
 
+    public void updateSettings(String settings){
+        switch (settings){
+            case ChartSettings.PINCH_ZOOM:
+                mLineChart.setPinchZoom(PetimoSettingsSPref.getInstance().getBoolean(
+                        PetimoSettingsSPref.STATISTICS_ENABLE_PINCH_ZOOM, false));
+                break;
+            default:
+                throw new RuntimeException("Unknown Chart Settings: " + settings);
+        }
+    }
+
     @Override
     public void onValueSelected(Entry e, Highlight h) {
         mLineChart.centerViewToAnimated(
@@ -335,5 +348,9 @@ public class ChartFragment extends Fragment
             //Log.d("foobar", "orig long ===> " + this.durations.get(dataSetIndex));
             return PetimoTimeUtils.getTimeFromMs(this.durations.get((int)entry.getX()));
         }
+    }
+
+    public static final class ChartSettings{
+        public static final String PINCH_ZOOM = "PINCH_ZOOM";
     }
 }

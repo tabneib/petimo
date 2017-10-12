@@ -63,6 +63,8 @@ public class StatisticsActivity extends AppCompatActivity
     RadioButton radioTask;
     RadioButton radioCat;
     Switch switchShowSelected;
+    Switch switchShowSumLine;
+    Switch switchPinchZoom;
 
     private Calendar toCalendar = Calendar.getInstance();
     private Calendar fromCalendar = Calendar.getInstance();
@@ -70,7 +72,7 @@ public class StatisticsActivity extends AppCompatActivity
     private final int ANIMATION_SPEED = 200;
 
     private boolean chartDataChanged = false;
-    private boolean chartSettingsChanged = false;
+    private String chartSettingsChanged = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +146,8 @@ public class StatisticsActivity extends AppCompatActivity
         radioCat = (RadioButton) mView.findViewById(R.id.radio_cats);
         radioTask = (RadioButton) mView.findViewById(R.id.radio_tasks);
         switchShowSelected = (Switch) mView.findViewById(R.id.switch_only_selected);
+        switchShowSumLine = (Switch) mView.findViewById(R.id.switch_view_sum);
+        switchPinchZoom = (Switch) mView.findViewById(R.id.switch_pinch_zoom);
 
         updateChecked();
 
@@ -169,19 +173,19 @@ public class StatisticsActivity extends AppCompatActivity
      *
      */
     private void updateChecked(){
-        switch (PetimoSettingsSPref.getInstance().getSettingsString(
+        switch (PetimoSettingsSPref.getInstance().getString(
                 PetimoSettingsSPref.STATISTICS_GROUP_BY, PetimoSPref.Consts.GROUP_BY_TASK)) {
             case PetimoSPref.Consts.GROUP_BY_TASK:
                 this.radioTask.setChecked(true);
                 this.switchShowSelected.setChecked(PetimoSettingsSPref.getInstance().
-                        getSettingsBoolean(PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS,
+                        getBoolean(PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS,
                                 false));
                 updateSwitchText();
                 break;
             case PetimoSPref.Consts.GROUP_BY_CAT:
                 this.radioCat.setChecked(true);
                 this.switchShowSelected.setChecked(PetimoSettingsSPref.getInstance().
-                        getSettingsBoolean(PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_CATS,
+                        getBoolean(PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_CATS,
                                 false));
                 updateSwitchText();
                 break;
@@ -189,6 +193,10 @@ public class StatisticsActivity extends AppCompatActivity
                 throw new RuntimeException("Unknown grouping mode!");
         }
 
+        switchShowSumLine.setChecked(PetimoSettingsSPref.getInstance().getBoolean(
+                PetimoSettingsSPref.STATISTICS_SHOW_SUM_LINE, true));
+        switchPinchZoom.setChecked(PetimoSettingsSPref.getInstance().getBoolean(
+                PetimoSettingsSPref.STATISTICS_ENABLE_PINCH_ZOOM, false));
     }
 
 
@@ -202,7 +210,6 @@ public class StatisticsActivity extends AppCompatActivity
         radioTask.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                //TODO
                 // Store the user's choice
                 PetimoSettingsSPref.getInstance().putBoolean(
                         PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS, isChecked);
@@ -236,8 +243,6 @@ public class StatisticsActivity extends AppCompatActivity
         switchShowSelected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                //TODO
-
 
                 PetimoSettingsSPref.getInstance().putBoolean(
                         PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS, isChecked);
@@ -270,6 +275,30 @@ public class StatisticsActivity extends AppCompatActivity
                 chartDataChanged = true;
             }
         });
+
+        switchShowSumLine.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                PetimoSettingsSPref.getInstance().putBoolean(
+                        PetimoSettingsSPref.STATISTICS_SHOW_SUM_LINE, isChecked);
+
+                // to update the Chart due to data change
+                chartDataChanged = true;
+            }
+        });
+
+        switchPinchZoom.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                PetimoSettingsSPref.getInstance().putBoolean(
+                        PetimoSettingsSPref.STATISTICS_ENABLE_PINCH_ZOOM, isChecked);
+
+                // to update the corresponding Chart Settings
+                chartSettingsChanged = ChartFragment.ChartSettings.PINCH_ZOOM;
+            }
+        });
+
+
 
         // DatePickers ---------------------------------------------------------------------------->
 
@@ -332,13 +361,21 @@ public class StatisticsActivity extends AppCompatActivity
             @Override
             public void onDismiss() {
 
-                if (chartDataChanged){
+                if (chartDataChanged) {
                     chartDataChanged = false;
                     // Invalidate the chart
                     ChartFragment chartFragment = (ChartFragment)
                             getSupportFragmentManager().findFragmentByTag(LINE_CHART_FRAGMENT_TAG);
                     if (chartFragment != null)
                         chartFragment.invalidateChart(false);
+                }
+
+                if (chartSettingsChanged != null){
+                    ChartFragment chartFragment = (ChartFragment)
+                            getSupportFragmentManager().findFragmentByTag(LINE_CHART_FRAGMENT_TAG);
+                    if (chartFragment != null)
+                        chartFragment.updateSettings(chartSettingsChanged);
+                    chartSettingsChanged = null;
                 }
 
                 // un-dim the activity
@@ -353,7 +390,7 @@ public class StatisticsActivity extends AppCompatActivity
 
     private void updateSwitchText(){
         // Update the Switch's text
-        switch (PetimoSettingsSPref.getInstance().getSettingsString(
+        switch (PetimoSettingsSPref.getInstance().getString(
                 PetimoSettingsSPref.STATISTICS_GROUP_BY, PetimoSPref.Consts.GROUP_BY_TASK)) {
             case PetimoSPref.Consts.GROUP_BY_TASK:
                 switchShowSelected.setText(getString(R.string.option_show_selected_tasks));
@@ -434,30 +471,34 @@ public class StatisticsActivity extends AppCompatActivity
         ArrayList<MonitorDay> days = PetimoController.getInstance().
                 getDaysFromRange(PetimoSPref.Consts.STATISTICS,
                         fromCalendar, toCalendar, true,
-                        PetimoSettingsSPref.getInstance().getSettingsBoolean(
+                        PetimoSettingsSPref.getInstance().getBoolean(
                                 PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS, false));
 
         ArrayList<Integer> tasks;
-        if (PetimoSettingsSPref.getInstance().getSettingsBoolean(
+        if (PetimoSettingsSPref.getInstance().getBoolean(
                 PetimoSettingsSPref.STATISTICS_SHOW_SELECTED_TASKS, false))
             tasks = TaskSelector.getInstance().getSelectedTasks(PetimoSPref.Consts.STATISTICS);
         else
             tasks = PetimoDbWrapper.getInstance().getAllTaskIds();
 
-        // First, add the sum line
-        ArrayList<Long> originalSumLongs = new ArrayList<>();
-        ArrayList<Entry> sumEntries = new ArrayList<>();
+        // First, add the sum line if required
         int i = 0;
-        for (MonitorDay day: days) {
-            sumEntries.add(new Entry(i, ((float)day.getDuration())/3600000));
-            originalSumLongs.add(day.getDuration());
-            i++;
-            maxYValue =
-                    maxYValue < ((float)day.getDuration())/3600000 ?
-                            ((float)day.getDuration())/3600000 : maxYValue;
+        if (PetimoSettingsSPref.getInstance().getBoolean(
+                PetimoSettingsSPref.STATISTICS_SHOW_SUM_LINE, true)){
+            ArrayList<Long> originalSumLongs = new ArrayList<>();
+            ArrayList<Entry> sumEntries = new ArrayList<>();
+            for (MonitorDay day: days) {
+                sumEntries.add(new Entry(i, ((float)day.getDuration())/3600000));
+                originalSumLongs.add(day.getDuration());
+                i++;
+                maxYValue =
+                        maxYValue < ((float)day.getDuration())/3600000 ?
+                                ((float)day.getDuration())/3600000 : maxYValue;
+            }
+            data.add(sumEntries, originalSumLongs, getString(R.string.text_sum));
+            data.setMaxYValue(maxYValue);
         }
-        data.add(sumEntries, originalSumLongs, getString(R.string.text_sum));
-        data.setMaxYValue(maxYValue);
+
 
         // Then for each task go through the day list to collect information for the corresponding
         // line
