@@ -142,6 +142,20 @@ public class PetimoTimeUtils {
     }
 
     /**
+     * Get the calendar that represents today date
+     * overNightThreshold is also considered: If current time has passed midnight but not yet Over-
+     * night threshold, so today date is yesterday date
+     */
+    public static Calendar getTodayCalendar(){
+
+        Calendar cal = Calendar.getInstance();
+        if (cal.get(Calendar.HOUR_OF_DAY) < PetimoSettingsSPref.getInstance().getOvThreshold())
+            cal.add(Calendar.DATE, -1);
+
+        return cal;
+    }
+
+    /**
      * Construct the descriptive string representation of the year the given date
      * @param date
      * @return

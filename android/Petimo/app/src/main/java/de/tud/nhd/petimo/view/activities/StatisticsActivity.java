@@ -66,8 +66,8 @@ public class StatisticsActivity extends AppCompatActivity
     Switch switchShowSumLine;
     Switch switchPinchZoom;
 
-    private Calendar toCalendar = Calendar.getInstance();
-    private Calendar fromCalendar = Calendar.getInstance();
+    private Calendar toCalendar;
+    private Calendar fromCalendar;
     private final int DEFAULT_DATE_RANGE = 7;
     private final int ANIMATION_SPEED = 200;
 
@@ -88,11 +88,11 @@ public class StatisticsActivity extends AppCompatActivity
         // un-dim
         activityLayout.getForeground().setAlpha(0);
 
-        setupPopupWindow();
-
-        fromCalendar.setTime(new Date());
-        toCalendar.setTime(new Date());
+        fromCalendar = PetimoTimeUtils.getTodayCalendar();
+        toCalendar = PetimoTimeUtils.getTodayCalendar();
         fromCalendar.add(Calendar.DATE, -1 * (DEFAULT_DATE_RANGE - 1));
+
+        setupPopupWindow();
 
         lineChartFragment = (ChartFragment)
                 getSupportFragmentManager().findFragmentByTag(LINE_CHART_FRAGMENT_TAG);
@@ -155,11 +155,6 @@ public class StatisticsActivity extends AppCompatActivity
         // DatePicker
         fromDateButton = (Button) mView.findViewById(R.id.button_date_from);
         toDateButton = (Button) mView.findViewById(R.id.button_date_to);
-
-        // default date range is the last 1 week
-        fromCalendar.setTime(new Date());
-        toCalendar.setTime(new Date());
-        fromCalendar.add(Calendar.DATE, -6);
 
         fromDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(fromCalendar));
         toDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(toCalendar));

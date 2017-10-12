@@ -26,6 +26,7 @@ import de.tud.nhd.petimo.model.db.MonitorBlock;
 import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
+import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 import de.tud.nhd.petimo.view.fragments.lists.DayListFragment;
@@ -57,10 +58,9 @@ public class EditBlockActivity extends AppCompatActivity
     private boolean reloadDayList = false;
     private boolean recreateDayListFragment = false;
 
-    Calendar fromCalendar = Calendar.getInstance();
-    Calendar toCalendar = Calendar.getInstance();
-
-
+    Calendar fromCalendar;
+    Calendar toCalendar;
+    public final int DEFAULT_DATE_RANGE = 7;
 
 
     @Override
@@ -79,9 +79,9 @@ public class EditBlockActivity extends AppCompatActivity
         listContainer = (FrameLayout) findViewById(R.id.day_list_fragment_container);
 
         // default date range is the last 1 week
-        fromCalendar.setTime(new Date());
-        toCalendar.setTime(new Date());
-        fromCalendar.add(Calendar.DATE, -6);
+        fromCalendar = PetimoTimeUtils.getTodayCalendar();
+        toCalendar = PetimoTimeUtils.getTodayCalendar();
+        fromCalendar.add(Calendar.DATE,  -1 * (DEFAULT_DATE_RANGE - 1));
 
         // Attach the fragment to display day list
         getSupportFragmentManager().beginTransaction().add(

@@ -31,8 +31,9 @@ public class PetimoDatePickerMenu extends Fragment {
     Button fromDateButton;
     Button toDateButton;
 
-    Calendar fromCalendar = java.util.Calendar.getInstance();
-    Calendar toCalendar = java.util.Calendar.getInstance();
+    Calendar fromCalendar;
+    Calendar toCalendar;
+    private final int DEFAULT_DATE_RANGE = 7;
 
     boolean menuOpened = true;
     private final long ANIMATION_SPEED = 300;
@@ -100,10 +101,10 @@ public class PetimoDatePickerMenu extends Fragment {
         toDateButton = (Button) view.findViewById(R.id.button_date_to);
 
         // default date range is the last 1 week
-        fromCalendar.setTime(new Date());
-        toCalendar.setTime(new Date());
-        fromCalendar.add(java.util.Calendar.DATE, -6);
-
+        fromCalendar = PetimoTimeUtils.getTodayCalendar();
+        toCalendar = PetimoTimeUtils.getTodayCalendar();
+        fromCalendar.add(Calendar.DATE,  -1 * (DEFAULT_DATE_RANGE - 1));
+        
         fromDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(fromCalendar));
         toDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(toCalendar));
 
