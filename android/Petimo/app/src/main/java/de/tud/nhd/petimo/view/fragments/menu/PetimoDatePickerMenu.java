@@ -94,8 +94,6 @@ public class PetimoDatePickerMenu extends Fragment {
             }
         });
 
-
-
         // DatePicker
         fromDateButton = (Button) view.findViewById(R.id.button_date_from);
         toDateButton = (Button) view.findViewById(R.id.button_date_to);
@@ -104,7 +102,7 @@ public class PetimoDatePickerMenu extends Fragment {
         fromCalendar = PetimoTimeUtils.getTodayCalendar();
         toCalendar = PetimoTimeUtils.getTodayCalendar();
         fromCalendar.add(Calendar.DATE,  -1 * (DEFAULT_DATE_RANGE - 1));
-        
+
         fromDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(fromCalendar));
         toDateButton.setText(PetimoTimeUtils.getDateStrFromCalendar(toCalendar));
 
@@ -156,9 +154,7 @@ public class PetimoDatePickerMenu extends Fragment {
                         toCalendar.get(java.util.Calendar.DAY_OF_MONTH)).show();
             }
         });
-
     }
-
 
     @Override
     public void onAttach(Context context) {

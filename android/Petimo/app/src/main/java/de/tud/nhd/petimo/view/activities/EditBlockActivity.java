@@ -264,12 +264,6 @@ public class EditBlockActivity extends AppCompatActivity
         });
     }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        Log.d(TAG, "onResume!");
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

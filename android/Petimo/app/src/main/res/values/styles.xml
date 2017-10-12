@@ -108,6 +108,10 @@
 
     <style name="PetimoTheme.Light.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <style name="PetimoTheme.Light.Button" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:padding">@dimen/middle_large_pane_padding</item>
+    </style>
+
     <style name="PetimoThemePopupWindow">
         <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>

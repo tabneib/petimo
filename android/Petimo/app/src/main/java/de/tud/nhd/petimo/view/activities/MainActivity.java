@@ -251,8 +251,9 @@ public class MainActivity extends AppCompatActivity
                     startActivity(intent);
                     return;
                 case SETTING_FRAGMENT_TAG:
-                    fragment = SettingsFragment.getInstance();
-                    break;
+                    intent = new Intent(this, SettingsActivity.class);
+                    startActivity(intent);
+                    return;
                 case DEMO_FRAGMENT_TAG:
                     fragment = DemoFragment.getInstance();
                     break;
