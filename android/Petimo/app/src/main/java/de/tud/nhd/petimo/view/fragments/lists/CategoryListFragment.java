@@ -26,6 +26,9 @@ import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapt
 public class CategoryListFragment extends Fragment {
 
     public static final String TAG = "CatListFragment";
+    public static final String MODE = "MODE";
+    public static final String SELECTOR_MODE = "SELECTOR_MODE";
+
     public static final String EDIT_MODE = "Edit-mode";
     public static final String SELECT_MODE = "Select-mode";
     public String mode;
@@ -51,8 +54,10 @@ public class CategoryListFragment extends Fragment {
 
         // TODO: I still cannot figure out the cause of this bug, so I comment out the code fragment
         CategoryListFragment fragment = new CategoryListFragment();
-        fragment.mode = mode;
-        fragment.selectorMode = selectorMode;
+        Bundle args = new Bundle();
+        args.putString(MODE, mode);
+        args.putString(SELECTOR_MODE, selectorMode);
+        fragment.setArguments(args);
 
         return fragment;
 
@@ -67,6 +72,11 @@ public class CategoryListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null){
+            this.mode = args.getString(MODE);
+            this.selectorMode = args.getString(SELECTOR_MODE);
+        }
     }
 
     @Override
