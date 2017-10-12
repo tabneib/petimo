@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
 import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 
 /**
@@ -132,10 +133,12 @@ public class PetimoTimeUtils {
      * night threshold, so today date is yesterday date
      */
     public static int getTodayDate(){
-        int date = Integer.parseInt(dateFormat.format(new Date()));
-        if (getCurrentHour() < SharedPref.getInstance().getOvThreshold())
-            date--;
-        return date;
+
+        Calendar cal = Calendar.getInstance();
+        if (cal.get(Calendar.HOUR_OF_DAY) < PetimoSettingsSPref.getInstance().getOvThreshold())
+            cal.add(Calendar.DATE, -1);
+
+        return Integer.parseInt(dateFormat.format(new Date(cal.getTimeInMillis())));
     }
 
     /**
