@@ -1,6 +1,7 @@
 package de.tud.nhd.petimo.view.fragments.lists;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -30,7 +31,6 @@ public class CategoryListFragment extends Fragment {
     public String mode;
     public String selectorMode;
 
-    private static CategoryListFragment _instance;
     public CategoryRecyclerViewAdapter adapter;
     private int mColumnCount = 1;
     private List<MonitorCategory> catList;
@@ -53,6 +53,7 @@ public class CategoryListFragment extends Fragment {
         CategoryListFragment fragment = new CategoryListFragment();
         fragment.mode = mode;
         fragment.selectorMode = selectorMode;
+
         return fragment;
 
         /*if (_instance == null) {
@@ -157,6 +158,8 @@ public class CategoryListFragment extends Fragment {
             this.catList = PetimoDbWrapper.getInstance().getAllCategories();
             this.adapter = new CategoryRecyclerViewAdapter(this, catList, mode, selectorMode);
             recyclerView.setAdapter(adapter);
+            recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(40));
+
         }
         return view;
     }
@@ -223,4 +226,20 @@ public class CategoryListFragment extends Fragment {
         //this.dayAdapter.notifyItemInserted(0);
     }
 
+    public class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
+
+        private final int mVerticalSpaceHeight;
+
+        public VerticalSpaceItemDecoration(int mVerticalSpaceHeight) {
+            this.mVerticalSpaceHeight = mVerticalSpaceHeight;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            if (parent.getChildAdapterPosition(view) == 0) {
+                outRect.top = mVerticalSpaceHeight;
+            }
+        }
+    }
 }

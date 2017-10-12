@@ -43,8 +43,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tud.nhd.petimo.view.activities.MainActivity"/>
         </activity>
-        <activity android:name=".view.activities.SettingsActivity"
-                  android:label="@string/menu_settings"
+        <activity
+            android:name=".view.activities.SettingsActivity"
+            android:label="@string/menu_settings"
+            android:parentActivityName=".view.activities.MainActivity"
+            android:theme="@style/PetimoTheme.Light">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tud.nhd.petimo.view.activities.MainActivity"/>
+        </activity>
+        <activity android:name=".view.activities.EditTasksActivity"
+                  android:label="@string/menu_manage_tasks"
                   android:parentActivityName=".view.activities.MainActivity"
                   android:theme="@style/PetimoTheme.Light">
             <meta-data

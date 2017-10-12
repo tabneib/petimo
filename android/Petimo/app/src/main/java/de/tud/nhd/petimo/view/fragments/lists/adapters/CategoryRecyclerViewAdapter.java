@@ -10,14 +10,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.model.db.MonitorCategory;
 import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
-import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
-import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
 import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
@@ -299,7 +298,7 @@ public class CategoryRecyclerViewAdapter extends
         public View view;
         // Edit Mode Attributes
         public TextView catTextView;
-        public Button newTaskButton;
+        public ImageView newTaskButton;
 
         // Select Mode Attributes
         public CheckBox catCheckBox;
@@ -316,7 +315,7 @@ public class CategoryRecyclerViewAdapter extends
 
             // Edit Mode
             this.catTextView = (TextView) view.findViewById(R.id.textViewCatName);
-            this.newTaskButton = (Button) view.findViewById(R.id.button_add_task);
+            this.newTaskButton = (ImageView) view.findViewById(R.id.button_add_task);
 
             // Select Mode
             this.catCheckBox = (CheckBox) view.findViewById(R.id.checkboxCat);

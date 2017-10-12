@@ -19,8 +19,10 @@ public interface OnEditTaskFragmentInteractionListener {
      * Call-back method which is called when the user confirm adding a new category
      * @param newCatName name of the category to be added
      */
-    void onConfirmAddingCatButtonClicked(
+    /*void onConfirmAddingCatButtonClicked(
             CategoryListFragment catListFragment, String newCatName, int priority, String note);
+    */
+
 
     /**
      * Call-back method which is called when the user confirm adding a new task

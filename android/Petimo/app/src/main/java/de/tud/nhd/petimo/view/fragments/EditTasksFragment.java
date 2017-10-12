@@ -59,10 +59,10 @@ public class EditTasksFragment extends Fragment {
         catListFragment = CategoryListFragment.getInstance(
                 CategoryListFragment.EDIT_MODE, null);
         getActivity().getSupportFragmentManager().beginTransaction().add(
-                R.id.tasks_list_fragment_container, catListFragment).commit();
+                R.id.cat_list_fragment_container, catListFragment).commit();
 
 
-        addCatButton = (Button) this.getActivity().findViewById(R.id.button_add_task);
+        addCatButton = (Button) this.getActivity().findViewById(R.id.button_add_cat);
         addCatButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -88,11 +88,11 @@ public class EditTasksFragment extends Fragment {
                                                     + " must implement " +
                                                     "OnEditTaskFragmentInteractionListener");
                                         }
-                                        mListener.onConfirmAddingCatButtonClicked(
+                                        /*mListener.onConfirmAddingCatButtonClicked(
                                                 catListFragment,
                                                 catInput.getText().toString(),
                                                 prioritySpinner.getSelectedItemPosition(),
-                                                "");
+                                                "");*/
                                     }
                                 })
                         .setNegativeButton(getActivity().getString(R.string.button_cancel),

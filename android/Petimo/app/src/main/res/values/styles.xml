@@ -67,6 +67,11 @@
         <item name="android:layout_margin">0dp</item>
     </style>
 
+    <style name="PetimoTheme.Light.Wrapper">
+        <item name="android:padding">0dp</item>
+        <item name="android:layout_margin">0dp</item>
+    </style>
+
     <!-- Header layout ##########################################################################-->
 
     <style name="PetimoTheme.Light.Header">

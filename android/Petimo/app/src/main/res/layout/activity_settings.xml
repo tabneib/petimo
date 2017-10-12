@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
+
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/PetimoTheme.Wrapper"
+    android:theme="@style/PetimoTheme.Light.Wrapper"
+
     tools:context="de.tud.nhd.petimo.view.activities.SettingsActivity">
 
 
@@ -20,6 +22,7 @@
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
             android:background="@color/colorPrimary"
+            android:theme="@style/PetimoTheme"
             android:elevation="4dp"
 
             app:popupTheme="@style/PetimoTheme.Light.OverFlowMenu" />
@@ -145,21 +148,11 @@
 
         <!-- Demo ###############################################################################-->
 
-
-
         <Button
             android:id="@+id/button_demo"
             android:theme="@style/PetimoTheme.Light.Button"
             android:text="@string/button_execute_demo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
-
-
     </LinearLayout>
-
-
-
-
-
 </FrameLayout>

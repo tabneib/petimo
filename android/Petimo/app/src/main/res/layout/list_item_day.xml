@@ -11,94 +11,97 @@
     card_view:cardElevation="2dp"
     android:scrollbars="none">
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:theme="@style/PetimoTheme.Wrapper">
 
-        <!-- Header -->
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/PetimoTheme.Wrapper">
+            android:layout_margin="@dimen/pane_padding"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <!-- Date -->
+            <TextView
+                android:id="@+id/textView_date"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/middle_text_margin"
+                android:layout_marginLeft="@dimen/pane_padding"
+                android:textAppearance="?attr/textAppearanceListItem" />
+
+            <!-- Block List Container -->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/block_list_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/pane_padding"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:orientation="vertical">
+                android:padding="0dp"
+                android:background="@color/windowBackground"/>
 
-                <!-- Date -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/background_title_highlight" />
+
+            <!-- Date Sum Info -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/textView_date"
+                    android:id="@+id/textView_sigma"
+                    android:text="@string/symbol_sigma"
+                    android:textSize="@dimen/middle_big_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/textView_sum"
+                    android:layout_margin="@dimen/middle_text_margin" />
+                <TextView
+                    android:id="@+id/textView_sum"
+                    android:textSize="@dimen/middle_big_text_size"
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/middle_text_margin"
-                    android:layout_marginLeft="@dimen/pane_padding"
-                    android:textAppearance="?attr/textAppearanceListItem" />
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="@dimen/middle_text_margin" />
 
-                <!-- Block List Container -->
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/block_list_recyclerview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="0dp"
-                    android:background="@color/windowBackground"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/background_title_highlight" />
-
-                <!-- Date Sum Info -->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:id="@+id/textView_sigma"
-                        android:text="@string/symbol_sigma"
-                        android:textSize="@dimen/middle_big_text_size"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@+id/textView_sum"
-                        android:layout_margin="@dimen/middle_text_margin" />
-                    <TextView
-                        android:id="@+id/textView_sum"
-                        android:textSize="@dimen/middle_big_text_size"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_margin="@dimen/middle_text_margin" />
-
-                </RelativeLayout>
+            </RelativeLayout>
 
 
 
-            </LinearLayout>
+        </LinearLayout>
 
-            <!-- Floating ImageButton -->
-            <ImageButton
+        <!-- Floating ImageButton -->
+
+        <android.support.v7.widget.CardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_margin="@dimen/pane_padding"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            card_view:cardElevation="6dp"
+            card_view:cardCornerRadius="16dp"
+            card_view:cardBackgroundColor="@color/colorPrimary"
+            android:alpha="0.7">
+
+            <ImageView
                 android:id="@+id/button_add_block"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/pane_padding"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/ic_add_circle_36dp"
-                android:textSize="@dimen/small_text_size"
-                android:text="@string/button_new_block"/>
+                android:src="@drawable/ic_add_white_32dp"/>
 
-        </RelativeLayout>
 
-    </LinearLayout>
+        </android.support.v7.widget.CardView>
 
+
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>
 

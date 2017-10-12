@@ -55,7 +55,7 @@
         android:gravity="left">
 
         <Button
-            android:id="@+id/button_add_task"
+            android:id="@+id/button_add_cat"
             android:text="@string/button_new_category"
             android:drawableLeft="@drawable/ic_add_circle_outline_black_24dp"
             android:textSize="@dimen/small_text_size"
@@ -73,7 +73,7 @@
 
     <!-- Task List Container -->
     <FrameLayout
-        android:id="@+id/tasks_list_fragment_container"
+        android:id="@+id/cat_list_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="0dp"

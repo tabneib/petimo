@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +60,6 @@ public class DayRecyclerViewAdapter extends
         holder.textViewDate.setText(
                 PetimoTimeUtils.getDateStrFromInt(dayList.get(position).getDate()));
         holder.textViewSum.setText(dayList.get(position).getDurationStr());
-        holder.buttonAddBlock.getBackground().setAlpha(177);
         // Listener for Add Button
         holder.buttonAddBlock.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,7 +170,7 @@ public class DayRecyclerViewAdapter extends
         public View mView;
         public TextView textViewDate;
         public TextView textViewSum;
-        public ImageButton buttonAddBlock;
+        public ImageView buttonAddBlock;
         public RecyclerView recyclerView;
 
         public MonitorDay monitorDay;
@@ -183,7 +183,7 @@ public class DayRecyclerViewAdapter extends
             mView = view;
             textViewDate = (TextView) view.findViewById(R.id.textView_date);
             textViewSum = (TextView) view.findViewById(R.id.textView_sum);
-            buttonAddBlock = (ImageButton) view.findViewById(R.id.button_add_block);
+            buttonAddBlock = (ImageView) view.findViewById(R.id.button_add_block);
             recyclerView = (RecyclerView) view.findViewById(R.id.block_list_recyclerview);
 
             ItemTouchHelper.SimpleCallback simpleCallback =

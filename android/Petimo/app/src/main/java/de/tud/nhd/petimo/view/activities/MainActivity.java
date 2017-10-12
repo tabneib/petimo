@@ -34,7 +34,6 @@ import de.tud.nhd.petimo.view.fragments.DemoFragment;
 import de.tud.nhd.petimo.view.fragments.EditTasksFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOffFragment;
 import de.tud.nhd.petimo.view.fragments.ModeOnFragment;
-import de.tud.nhd.petimo.view.fragments.SettingsFragment;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditBlocksMenuFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
@@ -42,7 +41,7 @@ import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapter;
 
 public class MainActivity extends AppCompatActivity
-        implements OnModeFragmentInteractionListener, OnEditTaskFragmentInteractionListener,
+        implements OnModeFragmentInteractionListener,
         OnEditBlocksMenuFragmentInteractionListener {
 
     private static final String TAG = "PetimoMainActivity";
@@ -244,8 +243,9 @@ public class MainActivity extends AppCompatActivity
                     startActivity(intent);
                     return;
                 case EDIT_TASKS_FRAGMENT_TAG:
-                    fragment = EditTasksFragment.getInstance();
-                    break;
+                    intent = new Intent(this, EditTasksActivity.class);
+                    startActivity(intent);
+                    return;
                 case STATISTICS_FRAGMENT_TAG:
                     intent = new Intent(this, StatisticsActivity.class);
                     startActivity(intent);
@@ -338,71 +338,6 @@ public class MainActivity extends AppCompatActivity
             modeOffFragment.updateStartButtonText(catId, taskId);
             controller.updateLastMonitored(catId, taskId);
         }
-    }
-
-    @Override
-    public void onConfirmAddingCatButtonClicked(
-            CategoryListFragment catListFragment, String newCatName, int priority, String note) {
-
-        try{
-            controller.addCategory(newCatName, priority, note);
-        }
-        catch (DbErrorException e){
-            // TODO Notify the user !
-        }
-        catch (InvalidCategoryException e){
-            // TODO Check for this during the user is typing !
-        }
-        catch(InvalidInputNameException e){
-            // TODO Check for this during the user is typing !
-        }
-
-        // TODO display a snack bar to notify the usr
-        // Just for now: display a Toast
-        Toast.makeText(this, "Added new category: " + newCatName, Toast.LENGTH_LONG).show();
-
-        // Update the recyclerView
-        catListFragment.updateView(newCatName);
-
-
-        /* Hard-coded: Re-add the whole CategoryListFragment
-        getActivity().getSupportFragmentManager().beginTransaction().
-                remove(CategoryListFragment.getInstance()).commit();
-
-        getActivity().getSupportFragmentManager().beginTransaction().add(
-                R.id.tasks_list_fragment_container,
-                CategoryListFragment.getInstance()).commit();*/
-
-    }
-
-    @Override
-    public void onConfirmAddingTaskButtonClicked(
-            CategoryRecyclerViewAdapter.ViewHolder viewHolder,
-            int catId, String inputTask, int priority, String note) {
-
-        // Add new task
-        try{
-            controller.addTask(inputTask, catId, priority, note);
-        }
-        catch (InvalidInputNameException e){
-            e.printStackTrace();
-            // TODO
-        }
-        catch (InvalidCategoryException e){
-            e.printStackTrace();
-            // TODO
-        }
-        catch (DbErrorException e){
-            e.printStackTrace();
-            // TODO
-        }
-        // TODO display a snack bar to notify the usr
-        // Just for now: display a Toast
-        Toast.makeText(this, "Added new task: " + inputTask, Toast.LENGTH_LONG).show();
-
-        // Update the recyclerView
-        viewHolder.updateView(inputTask, catId);
-
     }
 
 

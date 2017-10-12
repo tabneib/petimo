@@ -6,7 +6,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:theme="@style/PetimoTheme.Wrapper"
     android:foreground="@drawable/shape_window_dim"
     tools:context="de.tud.nhd.petimo.view.activities.EditBlockActivity">

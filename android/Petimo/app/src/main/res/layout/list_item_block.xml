@@ -29,10 +29,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/timeInfo"
                 android:layout_margin="@dimen/middle_text_margin"/>
 
             <!-- Start time - End time - Duration -->
             <LinearLayout
+                android:id="@+id/timeInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

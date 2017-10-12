@@ -1,85 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v7.widget.CardView
+    android:id="@+id/statistics_menu"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_marginTop="@dimen/sub_pane_padding"
-    android:layout_marginBottom="@dimen/sub_pane_padding">
+    android:layout_marginBottom="@dimen/margin_list_items"
+    card_view:cardBackgroundColor="@color/background_primary"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardElevation="2dp"
+    android:scrollbars="none">
 
-    <!-- Header -->
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="100"
-        android:layout_margin="0dp">
+        android:theme="@style/PetimoTheme.Wrapper">
+
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
             android:orientation="vertical"
-            android:layout_weight="70"
-            android:layout_marginRight="0dp"
-            android:padding="0dp">
+            android:padding="@dimen/pane_padding">
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="20dp"/>
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/background_title_highlight">
-                <TextView
-                    android:id="@+id/textViewCatName"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/text_margin"
-                    android:layout_marginLeft="@dimen/pane_padding"
-                    android:textAppearance="?attr/textAppearanceListItem" />
-            </FrameLayout>
-            <View
-                android:layout_width="1dp"
-                android:layout_height="20dp"/>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="30"
-            android:layout_marginLeft="0dp"
-            android:paddingLeft="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="left"
-            android:orientation="horizontal">
-            <Button
-                android:drawableRight="@drawable/ic_add_circle_outline_black_24dp"
-                android:textSize="@dimen/small_text_size"
-                android:id="@+id/button_add_task"
-                android:text="@string/button_new_task"
-                android:gravity="center_vertical"
+            <TextView
+                android:id="@+id/textViewCatName"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="-4dp"/>
+                android:layout_margin="@dimen/middle_text_margin"
+                android:textSize="@dimen/middle_big_text_size"/>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/task_list_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="0dp"
+                android:background="@color/windowBackground"/>
+
+
         </LinearLayout>
 
-    </LinearLayout>
+
+        <!-- Floating ImageButton -->
+
+        <android.support.v7.widget.CardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_margin="@dimen/pane_padding"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            card_view:cardElevation="6dp"
+            card_view:cardCornerRadius="16dp"
+            card_view:cardBackgroundColor="@color/colorPrimary"
+            android:alpha="0.7">
+
+            <ImageView
+                android:id="@+id/button_add_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_add_white_32dp"/>
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/task_list_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="0dp"
-        android:layout_margin="0dp"
-        android:background="@color/windowBackground"/>
+        </android.support.v7.widget.CardView>
 
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/background_title"
-        android:layout_margin="0dp"/>
-</LinearLayout>
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
+

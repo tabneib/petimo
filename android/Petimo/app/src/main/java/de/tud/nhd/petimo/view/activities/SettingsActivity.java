@@ -18,17 +18,16 @@ import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.libs.HorizontalPicker;
 import de.tud.nhd.petimo.model.db.PetimoDbDemo;
+import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
 import de.tud.nhd.petimo.model.sharedpref.SharedPref;
-import de.tud.nhd.petimo.view.fragments.SettingsFragment;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 
 public class SettingsActivity extends AppCompatActivity {
 
 
     public static final String TAG = "SettingsActivity";
-    private static SettingsFragment _instance;
     private PetimoDbDemo demo;
-    // password to executeDemo demo
+    // Password to executeDemo demo
     private final String md5Pwd = "6b3e58be7169f200c66594f235c0a665";
 
     private HorizontalPicker ovPicker;
@@ -48,13 +47,13 @@ public class SettingsActivity extends AppCompatActivity {
         Spinner langSpinner = (Spinner) findViewById(R.id.spinnerLang);
         langSpinner.setSelection(
                 PetimoController.getInstance().getLangId(
-                        SharedPref.getInstance().getSettingsString(
-                                SharedPref.SETTINGS_LANGUAGE, SharedPref.LANG_EN)));
+                        PetimoSettingsSPref.getInstance().getString(
+                                PetimoSettingsSPref.LANGUAGE, PetimoSettingsSPref.LANG_EN)));
         langSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SharedPref.getInstance().setSettingsString(
-                        SharedPref.SETTINGS_LANGUAGE,
+                PetimoSettingsSPref.getInstance().putString(
+                        PetimoSettingsSPref.LANGUAGE,
                         PetimoController.getInstance().getLangFromId(position));
             }
 
@@ -88,8 +87,6 @@ public class SettingsActivity extends AppCompatActivity {
                                                     for (byte b : digest) {
                                                         sb.append(String.format("%02x", b & 0xff));
                                                     }
-                                                    Log.d(TAG, "digest ==> " + sb.toString());
-
 
                                                     if (sb.toString().equals(md5Pwd)) {
                                                         demo.executeDemo();
@@ -115,13 +112,13 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         ovPicker = (HorizontalPicker) findViewById(R.id.horizontal_picker_ov);
-        ovPicker.setSelectedItem(SharedPref.getInstance().
-                getSettingsInt(SharedPref.SETTINGS_OVERNIGHT_THRESHOLD, 5));
+        ovPicker.setSelectedItem(PetimoSettingsSPref.getInstance().
+                getInt(PetimoSettingsSPref.OVERNIGHT_THRESHOLD, 5));
         ovPicker.setOnItemSelectedListener(new HorizontalPicker.OnItemSelected() {
             @Override
             public void onItemSelected(int index) {
-                SharedPref.getInstance().
-                        setSettingsInt(SharedPref.SETTINGS_OVERNIGHT_THRESHOLD, index);
+                PetimoSettingsSPref.getInstance().
+                        putInt(PetimoSettingsSPref.OVERNIGHT_THRESHOLD, index);
             }
         });
     }
