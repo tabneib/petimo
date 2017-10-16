@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="de.tud.nhd.petimo.view.fragments.TaskSelectorBottomSheet">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey800"/>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark">
+
+
+    </android.support.v7.widget.RecyclerView>
+
+    <View
+        android:id="@+id/dummy_view"
+        android:layout_width="match_parent"
+        android:layout_height="2000dp"
+        android:background="@color/background_primary"/>
+
+</LinearLayout>
+
+

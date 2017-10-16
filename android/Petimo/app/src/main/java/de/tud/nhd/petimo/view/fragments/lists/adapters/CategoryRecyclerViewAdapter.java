@@ -1,12 +1,14 @@
 package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
+import android.app.Activity;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -18,6 +20,7 @@ import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.model.db.MonitorCategory;
 import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
 import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
+import de.tud.nhd.petimo.view.fragments.TaskSelectorBottomSheet;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
@@ -33,19 +36,31 @@ public class CategoryRecyclerViewAdapter extends
 
     private static final String TAG = "CatAdapter";
     public List<MonitorCategory> catList;
-    private CategoryListFragment fragment;
+    private CategoryListFragment catListFragment;
+    private Activity activity;
     private String mode;
     private String selectorMode;
     private boolean onBind = false;
+    private TaskSelectorBottomSheet.Listener mListener;
 
 
     public CategoryRecyclerViewAdapter(
             CategoryListFragment fragment, List<MonitorCategory> items,
             String mode, String selectorMode) {
-        this.fragment = fragment;
+        this.catListFragment = fragment;
         this.catList = items;
         this.mode = mode;
         this.selectorMode = selectorMode;
+    }
+
+    public CategoryRecyclerViewAdapter(
+            Activity activity, List<MonitorCategory> items,
+            String mode, String selectorMode, TaskSelectorBottomSheet.Listener listener) {
+        this.activity = activity;
+        this.catList = items;
+        this.mode = mode;
+        this.selectorMode = selectorMode;
+        this.mListener = listener;
     }
 
     @Override
@@ -60,8 +75,12 @@ public class CategoryRecyclerViewAdapter extends
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_category_select, parent, false);
                 break;
+            case CategoryListFragment.VIEW_MODE:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.list_item_category_view, parent, false);
+                break;
             default:
-                throw new RuntimeException("Display mode is not set.");
+                throw new RuntimeException("Unknown Display Mode: " + mode);
         }
 
         return new ViewHolder(view);
@@ -76,6 +95,9 @@ public class CategoryRecyclerViewAdapter extends
                 break;
             case CategoryListFragment.SELECT_MODE:
                 onBindViewHolderSelectMode(holder, position);
+                break;
+            case CategoryListFragment.VIEW_MODE:
+                onBindViewHolderViewMode(holder, position);
                 break;
             default:
                 throw new RuntimeException("Display mode is not set.");
@@ -102,9 +124,9 @@ public class CategoryRecyclerViewAdapter extends
             public void onClick(View v) {
                 PetimoDialog newTaskDialog = new PetimoDialog()
                         .setIcon(PetimoDialog.ICON_SAVE)
-                        .setTitle(fragment.getActivity().getString(R.string.title_new_task))
+                        .setTitle(catListFragment.getActivity().getString(R.string.title_new_task))
                         .setContentLayout(R.layout.dialog_add_task)
-                        .setPositiveButton(fragment.getActivity().getString(R.string.button_create),
+                        .setPositiveButton(catListFragment.getActivity().getString(R.string.button_create),
                                 new PetimoDialog.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -115,10 +137,10 @@ public class CategoryRecyclerViewAdapter extends
                                                 view.findViewById(R.id.spinnerPriorities);;
                                         try {
                                             mListener = (OnEditTaskFragmentInteractionListener)
-                                                    fragment.getActivity();
+                                                    catListFragment.getActivity();
                                         } catch (ClassCastException e) {
                                             throw new ClassCastException(
-                                                    fragment.getActivity().toString()
+                                                    catListFragment.getActivity().toString()
                                                             + " must implement " +
                                                             "OnEditTaskFragmentInteractionListener");
                                         }
@@ -135,14 +157,14 @@ public class CategoryRecyclerViewAdapter extends
                                                 "");
                                     }
                                 })
-                        .setNegativeButton(fragment.getActivity().getString(R.string.button_cancel),
+                        .setNegativeButton(catListFragment.getActivity().getString(R.string.button_cancel),
                                 new PetimoDialog.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
                                         // do nothing
                                     }
                                 });
-                newTaskDialog.show(fragment.getActivity().getSupportFragmentManager(), null);
+                newTaskDialog.show(catListFragment.getActivity().getSupportFragmentManager(), null);
             }
         });
 
@@ -168,13 +190,13 @@ public class CategoryRecyclerViewAdapter extends
                                 (TaskRecyclerViewAdapter.ViewHolder) viewHolder;
                         PetimoDialog removeTaskDialog = new PetimoDialog()
                                 .setIcon(PetimoDialog.ICON_WARNING)
-                                .setTitle(fragment.getActivity().
+                                .setTitle(catListFragment.getActivity().
                                         getString(R.string.title_remove_task))
-                                .setMessage(fragment.getActivity().
+                                .setMessage(catListFragment.getActivity().
                                         getString(R.string.message_confirm_remove)
                                         + vHolder.taskNameTextView.getText() + "?")
                                 .setPositiveButton(
-                                        fragment.getActivity().getString(R.string.button_yes),
+                                        catListFragment.getActivity().getString(R.string.button_yes),
                                         new PetimoDialog.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
@@ -193,7 +215,7 @@ public class CategoryRecyclerViewAdapter extends
                                             }
                                         })
                                 .setNegativeButton(
-                                        fragment.getActivity().getString(R.string.button_cancel),
+                                        catListFragment.getActivity().getString(R.string.button_cancel),
                                         new PetimoDialog.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
@@ -202,21 +224,21 @@ public class CategoryRecyclerViewAdapter extends
                                         }
                                 );
                         removeTaskDialog.show(
-                                fragment.getActivity().getSupportFragmentManager(), null);
+                                catListFragment.getActivity().getSupportFragmentManager(), null);
                     }
                 };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(holder.taskListRecyclerView);
 
-        holder.taskListRecyclerView.setLayoutManager(new LinearLayoutManager(fragment.getActivity()));
+        holder.taskListRecyclerView.setLayoutManager(new LinearLayoutManager(catListFragment.getActivity()));
         holder.taskListRecyclerView.setAdapter(holder.taskAdapter);
 
 
 
 
-        // Setup the sub-fragment that displays the list of corresponding tasks
-        /*MonitorTaskListFragment taskListFragment = (MonitorTaskListFragment) fragment.getActivity().
+        // Setup the sub-catListFragment that displays the list of corresponding tasks
+        /*MonitorTaskListFragment taskListFragment = (MonitorTaskListFragment) catListFragment.getActivity().
                 getSupportFragmentManager().findFragmentByTag(
                 TAG + "-" + catList.get(position).getName());*/
 
@@ -229,7 +251,7 @@ public class CategoryRecyclerViewAdapter extends
             holder.taskListRecyclerView.setId(genId);
             Log.d(TAG, "TaskListFragment for this postition not yet created, so create, id ===> "+
             holder.taskListRecyclerView.getId());
-            fragment.getActivity().getSupportFragmentManager().beginTransaction().
+            catListFragment.getActivity().getSupportFragmentManager().beginTransaction().
                     add(holder.taskListRecyclerView.getId(), MonitorTaskListFragment.newInstance(
                             1, catList.get(position).getName()),
                             TAG + "-" + catList.get(position).getName()).commit();
@@ -237,19 +259,19 @@ public class CategoryRecyclerViewAdapter extends
         else{
             Log.d(TAG, "TaskListFragment for this postition already created, id ===> "+
                     holder.taskListRecyclerView.getId());
-            fragment.getActivity().getSupportFragmentManager().beginTransaction().
+            catListFragment.getActivity().getSupportFragmentManager().beginTransaction().
                     replace(holder.taskListRecyclerView.getId(), taskListFragment).commit();
         }*/
 
         /*if (taskListFragment == null) {
-            Log.d(TAG, "gonna setup the sub-fragment to display tasks");
+            Log.d(TAG, "gonna setup the sub-catListFragment to display tasks");
             taskListFragment =
                     MonitorTaskListFragment.newInstance(1, catList.get(position).getName());
-            fragment.getActivity().getSupportFragmentManager().beginTransaction().
+            catListFragment.getActivity().getSupportFragmentManager().beginTransaction().
                     add(holder.taskListRecyclerView.getId(), taskListFragment).commit();
         }
         else
-            Log.d(TAG, "sub-fragment already setup for this position !");*/
+            Log.d(TAG, "sub-catListFragment already setup for this position !");*/
 
     }
 
@@ -267,7 +289,7 @@ public class CategoryRecyclerViewAdapter extends
                 PetimoDbWrapper.getInstance().getTasksByCat(catList.get(position).getId()), mode,
                 selectorMode, this, position);
         holder.taskListRecyclerView.setLayoutManager(
-                new LinearLayoutManager(fragment.getActivity()));
+                new LinearLayoutManager(catListFragment.getActivity()));
         holder.taskListRecyclerView.setAdapter(holder.taskAdapter);
 
         ArrayList<Integer> tasks = TaskSelector.getInstance().
@@ -290,6 +312,29 @@ public class CategoryRecyclerViewAdapter extends
             onBind = false;
         }
     }
+
+
+    /**
+     *
+     * @param holder
+     * @param position
+     */
+    private void onBindViewHolderViewMode(final ViewHolder holder, final int position) {
+
+        holder.category = catList.get(position);
+        holder.catTextView.setText(catList.get(position).getName());
+
+        holder.taskAdapter = new TaskRecyclerViewAdapter(
+                PetimoDbWrapper.getInstance().getTasksByCat(catList.get(position).getId()),
+                mode, selectorMode, position, mListener);
+        holder.taskListRecyclerView.setLayoutManager(new GridLayoutManager(this.activity, 2));
+
+        //holder.taskListRecyclerView.setLayoutManager(new LinearLayoutManager(this.activity));
+        holder.taskListRecyclerView.setAdapter(holder.taskAdapter);
+
+
+    }
+
 
     /**
      * BlockListViewHolder that hold the view of a block displaying a category

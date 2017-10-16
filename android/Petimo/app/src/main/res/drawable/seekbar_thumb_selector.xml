@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:enterFadeDuration="100" android:exitFadeDuration="500">
+
+
+
+    <item
+        android:drawable="@drawable/seekbar_thumb_pressed"
+        android:state_focused="true"></item>
+
+
+    <item
+        android:drawable="@drawable/seekbar_thumb_pressed"
+        android:state_pressed="true"> </item>
+
+    <item
+        android:drawable="@drawable/seekbar_thumb"></item>
+
+
+
+</selector>

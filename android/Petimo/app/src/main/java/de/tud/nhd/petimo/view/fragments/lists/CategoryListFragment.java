@@ -31,6 +31,11 @@ public class CategoryListFragment extends Fragment {
 
     public static final String EDIT_MODE = "Edit-mode";
     public static final String SELECT_MODE = "Select-mode";
+    /**
+     * This mode is used by @CategoryRecyclerViewAdapter
+     */
+    public static final String VIEW_MODE = "View-mode";
+
     public String mode;
     public String selectorMode;
 
@@ -168,7 +173,7 @@ public class CategoryListFragment extends Fragment {
             this.catList = PetimoDbWrapper.getInstance().getAllCategories();
             this.adapter = new CategoryRecyclerViewAdapter(this, catList, mode, selectorMode);
             recyclerView.setAdapter(adapter);
-            recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(40));
+            recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(150));
 
         }
         return view;

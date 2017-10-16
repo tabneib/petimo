@@ -12,7 +12,7 @@ import android.widget.TextView;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
 import de.tud.nhd.petimo.utils.PetimoColorUtils;
-import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
+import de.tud.nhd.petimo.view.fragments.TaskSelectorBottomSheet;
 
 import java.util.List;
 
@@ -23,28 +23,40 @@ public class MonitoredTaskRecyclerViewAdapter
     public static final String TAG = "MonitoredTaskAdapter";
 
     public List<String[]> monitoredTaskList;
-    private final OnModeFragmentInteractionListener mListener;
+    private final TaskSelectorBottomSheet.Listener mListener;
     // Default frequency step is 5
     private int freqStep = 5;
     private Context context;
 
+    /*
     private int[] bgColors = {
-            R.color.monitoredTask_bg_50,
-            R.color.monitoredTask_bg_100,
-            R.color.monitoredTask_bg_200,
-            R.color.monitoredTask_bg_300,
-            R.color.monitoredTask_bg_400,
-            R.color.monitoredTask_bg_500,
-            R.color.monitoredTask_bg_600,
-            R.color.monitoredTask_bg_700,
-            R.color.monitoredTask_bg_800,
-            R.color.monitoredTask_bg_900,
-            R.color.monitoredTask_bg_1000,
+            R.color.orange50,
+            R.color.orange100,
+            R.color.orange200,
+            R.color.orange300,
+            R.color.orange400,
+            R.color.orange500,
+            R.color.orange600,
+            R.color.orange700,
+            R.color.orange800,
+            R.color.orange900,
+            R.color.orange1000,
+    };
+    */
+
+    private int[] bgColors = {
+            R.color.grey700,
+            R.color.grey600,
+            R.color.grey500,
+            R.color.grey400,
+            R.color.grey300,
+            R.color.grey200,
+            R.color.grey100,
+            R.color.grey50,
     };
 
-
     public MonitoredTaskRecyclerViewAdapter(Context context,
-            List<String[]> items, OnModeFragmentInteractionListener listener) {
+            List<String[]> items, TaskSelectorBottomSheet.Listener listener) {
         monitoredTaskList = items;
         mListener = listener;
         this.context = context;
@@ -62,8 +74,6 @@ public class MonitoredTaskRecyclerViewAdapter
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = monitoredTaskList.get(position);
         holder.textViewCatTask.setText(
-                PetimoDbWrapper.getInstance().getCatNameById(
-                        Integer.parseInt(monitoredTaskList.get(position)[0])) + " / " +
                         PetimoDbWrapper.getInstance().getTaskNameById(
                         Integer.parseInt(monitoredTaskList.get(position)[1])));
 
@@ -81,7 +91,7 @@ public class MonitoredTaskRecyclerViewAdapter
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            taskSelected(position);
+                taskSelected(position);
             }
         });
 
@@ -93,7 +103,7 @@ public class MonitoredTaskRecyclerViewAdapter
      */
     private void taskSelected(int position){
         if (null != mListener) {
-            mListener.onLastMonitoredTaskSelected(
+            mListener.onTaskSelected(
                     Integer.parseInt(monitoredTaskList.get(position)[0]),
                     Integer.parseInt(monitoredTaskList.get(position)[1]));
         }

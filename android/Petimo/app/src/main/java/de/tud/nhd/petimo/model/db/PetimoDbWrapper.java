@@ -412,7 +412,7 @@ public class PetimoDbWrapper {
      * Fetch the name of the given task
      * Database version: V.2
      * @param taskId ID of the given task
-     * @return name of the given task
+     * @return name of the given task, or null if no task is found
      */
     public String getTaskNameById(int taskId){
         String selection = PetimoContract.Tasks._ID + " = ?";
@@ -420,7 +420,7 @@ public class PetimoDbWrapper {
         Cursor cursor = readableDb.query(PetimoContract.Tasks.TABLE_NAME,
                 new String[]{PetimoContract.Tasks.COLUMN_NAME_NAME}, selection, selectionArgs,
                 null, null,null);
-        String taskName = "";
+        String taskName = null;
         while (cursor.moveToNext())
             taskName = cursor.getString(cursor.getColumnIndexOrThrow(
                     PetimoContract.Tasks.COLUMN_NAME_NAME));

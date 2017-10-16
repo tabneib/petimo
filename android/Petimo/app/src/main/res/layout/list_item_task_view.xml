@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <android.support.v7.widget.CardView
     android:id="@+id/statistics_menu"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -7,26 +9,30 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/margin_list_items_half"
     android:layout_marginBottom="@dimen/margin_list_items_half"
-    android:layout_marginRight="@dimen/margin_list_items"
-    android:layout_marginLeft="@dimen/margin_list_items"
+    android:layout_marginRight="@dimen/margin_list_items_half"
+    android:layout_marginLeft="@dimen/margin_list_items_half"
     card_view:cardBackgroundColor="@color/background_primary"
     card_view:cardCornerRadius="5dp"
     card_view:cardElevation="2dp"
     android:scrollbars="none">
 
     <FrameLayout
-        android:id="@+id/item_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background_title_highlight">
+        android:layout_height="match_parent">
+
+
         <TextView
-            android:id="@+id/textViewCatTask"
+            android:id="@+id/textViewTaskName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/container_padding"
             android:layout_gravity="center"
             android:textStyle="bold"
-            android:layout_margin="@dimen/container_padding"
-            android:textSize="@dimen/big_text_size"/>
+            android:textSize="@dimen/big_text_size"
+            android:alpha="0.6"/>
+
     </FrameLayout>
+
+
 
 </android.support.v7.widget.CardView>

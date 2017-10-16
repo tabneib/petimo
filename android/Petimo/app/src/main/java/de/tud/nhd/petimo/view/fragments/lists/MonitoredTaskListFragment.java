@@ -62,7 +62,7 @@ public class MonitoredTaskListFragment extends Fragment {
 
         // Set the dayAdapter
         if (view instanceof RecyclerView) {
-            adapter = new MonitoredTaskRecyclerViewAdapter(getActivity(),
+            /*adapter = new MonitoredTaskRecyclerViewAdapter(getActivity(),
                     PetimoController.getInstance().getMonitoredTasks(), mListener);
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
@@ -71,7 +71,7 @@ public class MonitoredTaskListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(adapter);
+            recyclerView.setAdapter(adapter);*/
             // TODO : Put this into a async task !
         }
         return view;

@@ -7,10 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -35,15 +32,15 @@ public class DayGroupedRecyclerViewAdapter extends
 
     private int[] bgColors = {
             R.color.background_primary,
-            R.color.monitoredTask_bg_50,
-            R.color.monitoredTask_bg_75,
-            R.color.monitoredTask_bg_100,
-            R.color.monitoredTask_bg_150,
-            R.color.monitoredTask_bg_200,
-            R.color.monitoredTask_bg_250,
-            R.color.monitoredTask_bg_300,
-            R.color.monitoredTask_bg_350,
-            R.color.monitoredTask_bg_400,
+            R.color.orange50,
+            R.color.orange75,
+            R.color.orange100,
+            R.color.orange150,
+            R.color.orange200,
+            R.color.orange250,
+            R.color.orange300,
+            R.color.orange350,
+            R.color.orange400,
     };
 
     /**

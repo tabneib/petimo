@@ -12,6 +12,9 @@
     <dimen name="large_text_margin">12dp</dimen>
 
     <dimen name="header_text_size">17dp</dimen>
+    <dimen name="xxxlarge_text_size">30dp</dimen>
+    <dimen name="xxlarge_text_size">26dp</dimen>
+    <dimen name="xlarge_text_size">23dp</dimen>
     <dimen name="big_text_size">20dp</dimen>
     <dimen name="middle_big_text_size">18dp</dimen>
     <dimen name="primary_text_size">16dp</dimen>
@@ -29,8 +32,11 @@
     <dimen name="dialog_content_padding">8dp</dimen>
 
     <dimen name="margin_list_items">12dp</dimen>
+    <dimen name="margin_list_items_half">6dp</dimen>
 
     <dimen name="container_padding">8dp</dimen>
     <dimen name="container_padding_single">4dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="list_item_spacing">16dp</dimen>
+    <dimen name="list_item_spacing_half">8dp</dimen>
 </resources>

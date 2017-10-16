@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Step used to determine the background of displayed monitored tasks. Unit: times-->
-    <integer name="monitored_task_freq_step">10</integer>
+    <integer name="monitored_task_freq_step">5</integer>
     <!-- Step used to determine the background of displayed monitor blocks. Unit: minutes-->
     <integer name="monitor_block_duration_step">30</integer>
 </resources>

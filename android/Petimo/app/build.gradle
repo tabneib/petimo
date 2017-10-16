@@ -34,5 +34,6 @@ dependencies {
     compile 'com.android.support:design:25.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
+    compile "biz.laenger.android:vpbs:0.0.3"
     testCompile 'junit:junit:4.12'
 }

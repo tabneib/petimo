@@ -12,6 +12,7 @@ import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.model.db.MonitorTask;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
 import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
+import de.tud.nhd.petimo.view.fragments.TaskSelectorBottomSheet;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
 import java.util.List;
@@ -30,11 +31,22 @@ public class TaskRecyclerViewAdapter extends
     private int catPosition;
     public List<MonitorTask> taskList;
     private boolean onBind = false;
+    private TaskSelectorBottomSheet.Listener mListener;
+
 
     public TaskRecyclerViewAdapter(List<MonitorTask> items, String mode, String selectorMode,
                                    CategoryRecyclerViewAdapter catAdapter, int catPosition) {
         this.taskList = items;
         this.catAdapter = catAdapter;
+        this.catPosition = catPosition;
+        this.mode = mode;
+        this.selectorMode = selectorMode;
+    }
+
+    public TaskRecyclerViewAdapter(List<MonitorTask> items, String mode, String selectorMode,
+                                   int catPosition, TaskSelectorBottomSheet.Listener listener) {
+        this.taskList = items;
+        this.mListener = listener;
         this.catPosition = catPosition;
         this.mode = mode;
         this.selectorMode = selectorMode;
@@ -51,6 +63,11 @@ public class TaskRecyclerViewAdapter extends
             case CategoryListFragment.SELECT_MODE:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_task_select, parent, false);
+
+                break;
+            case CategoryListFragment.VIEW_MODE:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.list_item_task_view, parent, false);
 
                 break;
             default:
@@ -88,6 +105,17 @@ public class TaskRecyclerViewAdapter extends
                     holder.taskCheckBox.setChecked(false);
                     onBind = false;
                 }
+                break;
+            case CategoryListFragment.VIEW_MODE:
+                holder.task = taskList.get(position);
+                holder.taskNameTextView.setText(taskList.get(position).getName());
+                // TODO: add listener
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListener.onTaskSelected(holder.task.getCatId(), holder.task.getId());
+                    }
+                });
                 break;
             default:
                 throw new RuntimeException("Display mode is not set.");

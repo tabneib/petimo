@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="70dp"></corners>
+            <size android:height="60dp"></size>
+            <stroke android:color="@color/background_title" android:width="2dp"></stroke>
+            <solid android:color="@android:color/transparent"></solid>
+            <!-- <solid android:color="@color/windowBackground"></solid> -->
+
+        </shape>
+    </item>
+
+    <!--
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+            <shape>
+                <corners android:radius="5dp" />
+                <solid android:color="@android:color/holo_red_light"></solid>
+            </shape>
+        </clip>
+    </item>
+    -->
+
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:radius="70dp"></corners>
+                <size android:height="60dp"></size>
+                <!-- <solid android:color="@android:color/transparent"></solid>
+                <stroke android:color="@color/colorPrimary" android:width="2dp"></stroke> -->
+                <stroke android:color="@color/background_title" android:width="2dp"></stroke>                    <solid android:color="@color/windowBackground"></solid>
+
+                <gradient android:type="linear"
+                          android:centerX="100%"
+                          android:gradientRadius="90"
+                          android:startColor="@android:color/transparent"
+                          android:endColor="@color/colorPrimaryLightXXX" ></gradient>
+
+            </shape>
+        </clip>
+    </item>
+
+</layer-list>

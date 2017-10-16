@@ -45,10 +45,9 @@
                 android:layout_margin="@dimen/middle_pane_padding"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                card_view:cardElevation="10dp"
+                card_view:cardElevation="8dp"
                 card_view:cardCornerRadius="18dp"
-                card_view:cardBackgroundColor="@color/colorPrimary"
-                android:alpha="0.7">
+                card_view:cardBackgroundColor="@color/colorPrimaryLightX">
 
                 <ImageView
                     android:id="@+id/button_add_cat"

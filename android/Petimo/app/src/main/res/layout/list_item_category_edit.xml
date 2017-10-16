@@ -60,8 +60,7 @@
             android:layout_height="wrap_content"
             card_view:cardElevation="6dp"
             card_view:cardCornerRadius="16dp"
-            card_view:cardBackgroundColor="@color/colorPrimary"
-            android:alpha="0.7">
+            card_view:cardBackgroundColor="@color/colorPrimaryLightX">
 
             <ImageView
                 android:id="@+id/button_add_task"

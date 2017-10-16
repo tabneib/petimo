@@ -6,30 +6,48 @@
     <!-- Red A700
     <color name="colorPrimary">#D50000</color>-->
     <!-- Orange 800 -->
-    <color name="colorPrimary">#EF6C00</color>
+    <color name="colorPrimary">@color/orange800</color>
+    <color name="colorPrimaryLight">@color/orange700</color>
+    <!-- Orange 600 -->
+    <color name="colorPrimaryLightX">@color/orange600</color>
+    <!-- Orange 400 -->
+    <color name="colorPrimaryLightXX">@color/orange400</color>
+    <!-- Orange 200 -->
+    <color name="colorPrimaryLightXXX">@color/orange200</color>
     <!-- Grey 900 -->
-    <color name="colorPrimaryDark">#212121</color>
+    <color name="colorPrimaryDark">@color/grey900</color>
     <!-- Orange 800 -->
-    <color name="colorAccent">#EF6C00</color>
+    <color name="colorAccent">@color/orange800</color>
     <!-- Grey 200-->
     <!-- <color name="windowBackground">#FBE9E7</color> -->
-    <color name="windowBackground">#EEEEEE</color>
+    <color name="windowBackground">@color/grey200</color>
     <!-- Grey 100 -->
-    <color name="textColorPrimary">#F5F5F5</color>
+    <color name="textColorPrimary">@color/grey100</color>
     <!-- Grey 900 -->
-    <color name="textColor">#212121</color>
+    <color name="textColor">@color/grey900</color>
     <!-- Grey 700 -->
-    <color name="textColorSecondary">#616161</color>
+    <color name="textColorSecondary">@color/grey700</color>
 
     <!-- Custom #################################################################################-->
 
     <!-- Grey 50 -->
-    <color name="background_primary">#FAFAFA</color>
+    <color name="background_primary">@color/grey50</color>
     <!-- Grey 300, 200, 100, 500 -->
-    <color name="background_title">#E0E0E0</color>
-    <color name="background_title_highlight">#EEEEEE</color>
-    <color name="background_title_highlight_white">#F5F5F5</color>
-    <color name="background_title_shadow" >#9E9E9E</color>
+    <color name="background_title">@color/grey300</color>
+    <color name="background_title_highlight">@color/grey200</color>
+    <color name="background_title_highlight_white">@color/grey100</color>
+    <color name="background_title_shadow" >@color/grey500</color>
+
+    <!-- Main Slider ############################################################################-->
+
+    <color name="background_main_slider">@color/navigationBarColor</color>
+    <!-- -->
+    <color name="background_main_slider_progress">@color/background_primary</color>
+    <color name="main_slider_border">@color/grey300</color>
+    <color name="main_slider_thumb_start">@color/grey200</color>
+    <color name="main_slider_thumb_end">@color/grey500</color>
+    <color name="main_slider_thumb_pressed_start">@color/orange300</color>
+    <color name="main_slider_thumb_pressed_end">@color/orange600</color>
 
 
     <!-- Red A700
@@ -39,29 +57,40 @@
 
 
     <!-- Navigation Bar ################-->
-    <!-- Grey 800 -->
-    <color name="navigationBarColor">#424242</color>
+    <!-- Grey 900 -->
+    <color name="navigationBarColor">#212121</color>
     <!-- <color name="background_selected_item">#D50000</color> -->
 
 
     <!-- Monitored Task Backgrounds ####-->
     <!-- Orange -->
-    <color name="monitoredTask_bg_50">#FFF3E0</color>
-    <color name="monitoredTask_bg_75">#FFE8D0</color>
-    <color name="monitoredTask_bg_100">#FFE0B2</color>
-    <color name="monitoredTask_bg_150">#FFDEA1</color>
-    <color name="monitoredTask_bg_200">#FFCC80</color>
-    <color name="monitoredTask_bg_250">#FFC26E</color>
-    <color name="monitoredTask_bg_300">#FFB74D</color>
-    <color name="monitoredTask_bg_350">#FFAF39</color>
-    <color name="monitoredTask_bg_400">#FFA726</color>
+    <color name="orange50">#FFF3E0</color>
+    <color name="orange75">#FFE8D0</color>
+    <color name="orange100">#FFE0B2</color>
+    <color name="orange150">#FFDEA1</color>
+    <color name="orange200">#FFCC80</color>
+    <color name="orange250">#FFC26E</color>
+    <color name="orange300">#FFB74D</color>
+    <color name="orange350">#FFAF39</color>
+    <color name="orange400">#FFA726</color>
 
-    <color name="monitoredTask_bg_500">#FF9800</color>
-    <color name="monitoredTask_bg_600">#FB8C00</color>
-    <color name="monitoredTask_bg_700">#F57C00</color>
-    <color name="monitoredTask_bg_800">#EF6C00</color>
-    <color name="monitoredTask_bg_900">#E65100</color>
+    <color name="orange500">#FF9800</color>
+    <color name="orange600">#FB8C00</color>
+    <color name="orange700">#F57C00</color>
+    <color name="orange800">#EF6C00</color>
+    <color name="orange900">#E65100</color>
     <!-- manually chosen color, not exact-->
-    <color name="monitoredTask_bg_1000">#A83b00</color>
+    <color name="orange1000">#A83b00</color>
 
+
+    <color name="grey50">#FAFAFA</color>
+    <color name="grey100">#F5F5F5</color>
+    <color name="grey200">#EEEEEE</color>
+    <color name="grey300">#E0E0E0</color>
+    <color name="grey400">#BDBDBD</color>
+    <color name="grey500">#9E9E9E</color>
+    <color name="grey600">#757575</color>
+    <color name="grey700">#616161</color>
+    <color name="grey800">#424242</color>
+    <color name="grey900">#212121</color>
 </resources>
