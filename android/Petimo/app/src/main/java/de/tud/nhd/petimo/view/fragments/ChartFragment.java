@@ -294,6 +294,9 @@ public class ChartFragment extends Fragment
     }
 
 
+    /**
+     *
+     */
     private class DayAxisValueFormatter implements IAxisValueFormatter {
 
         private BarLineChartBase<?> chart;
@@ -329,6 +332,9 @@ public class ChartFragment extends Fragment
         }
     }
 
+    /**
+     *
+     */
     private class TimeValueFormatter implements IValueFormatter {
 
         private int linePosition;
@@ -342,11 +348,15 @@ public class ChartFragment extends Fragment
         @Override
         public String getFormattedValue(float value, Entry entry, int dataSetIndex,
                                         ViewPortHandler viewPortHandler) {
-            //Log.d("foobar", "dataSetIndex ===> " + dataSetIndex);
-
-            //Log.d("foobar", "entry.getX() ===> " + entry.getX());
-            //Log.d("foobar", "orig long ===> " + this.durations.get(dataSetIndex));
-            return PetimoTimeUtils.getTimeFromMs(this.durations.get((int)entry.getX()));
+            String durationStr =
+                    PetimoTimeUtils.getTimeFromMs(this.durations.get((int)entry.getX()));
+            // We don't want to spam the graph with tons of "0:00" :)
+            // We don't directly check duration == 0 because there are cases in which duration != 0
+            // but durationStr is still 0:00 ;)
+            if (durationStr.equals("0:00"))
+                return "";
+            else
+                return durationStr;
         }
     }
 

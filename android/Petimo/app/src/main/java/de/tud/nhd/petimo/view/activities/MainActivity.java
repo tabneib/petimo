@@ -420,7 +420,7 @@ public class MainActivity extends AppCompatActivity
 
         if (PetimoMonitorSPref.getInstance().isMonitoring()){
 
-            // There is on-going monitor ---------------------------------------------------------->
+            // There is odn-going monitor ---------------------------------------------------------->
 
             final String[] monitorInfo = PetimoController.getInstance().getLiveMonitorInfo();
 
