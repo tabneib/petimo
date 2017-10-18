@@ -52,13 +52,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tud.nhd.petimo.view.activities.MainActivity"/>
         </activity>
-        <activity android:name=".view.activities.EditTasksActivity"
-                  android:label="@string/menu_manage_tasks"
-                  android:parentActivityName=".view.activities.MainActivity"
-                  android:theme="@style/PetimoTheme.Light">
+        <activity
+            android:name=".view.activities.EditTasksActivity"
+            android:label="@string/menu_manage_tasks"
+            android:parentActivityName=".view.activities.MainActivity"
+            android:theme="@style/PetimoTheme.Light">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tud.nhd.petimo.view.activities.MainActivity"/>
+        </activity>
+        <activity android:name=".view.activities.ModifyTasksActivity"
+                  android:label="@string/menu_manage_tasks"
+                  android:parentActivityName=".view.activities.EditTasksActivity"
+                  android:theme="@style/PetimoTheme.Light">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tud.nhd.petimo.view.activities.EditTasksActivity"/>
         </activity>
     </application>
 

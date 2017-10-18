@@ -49,6 +49,8 @@
     <color name="main_slider_thumb_pressed_start">@color/orange300</color>
     <color name="main_slider_thumb_pressed_end">@color/orange600</color>
 
+    <!-- Icons ##################################################################################-->
+    <color name="icon_inactive">@color/grey500</color>
 
     <!-- Red A700
     <color name="background_title_underline">#D50000</color>-->

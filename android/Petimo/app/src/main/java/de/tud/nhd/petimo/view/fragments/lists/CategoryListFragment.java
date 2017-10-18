@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.tud.nhd.petimo.R;
@@ -19,6 +20,7 @@ import de.tud.nhd.petimo.model.db.MonitorCategory;
 import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapter;
+import de.tud.nhd.petimo.view.fragments.lists.adapters.TaskRecyclerViewAdapter;
 
 /**
  * A fragment representing a list of Items.
@@ -26,13 +28,17 @@ import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapt
 public class CategoryListFragment extends Fragment {
 
     public static final String TAG = "CatListFragment";
-    public static final String MODE = "MODE";
-    public static final String SELECTOR_MODE = "SELECTOR_MODE";
+    public static final String ARG_MODE = "ARG_MODE";
+    public static final String ARG_SELECTOR_MODE = "ARG_SELECTOR_MODE";
+    public static final String ARG_CAT_ID = "CAT_ID";
 
     public static final String EDIT_MODE = "Edit-mode";
     public static final String SELECT_MODE = "Select-mode";
+    public static final String MODIFY_MODE = "Modify-mode";
+
     /**
-     * This mode is used by @CategoryRecyclerViewAdapter
+     * This mode is used by @CategoryRecyclerViewAdapter to crate the CatAdapter, so has nothing
+     * to do with this fragment. It is still placed here beside other modes.
      */
     public static final String VIEW_MODE = "View-mode";
 
@@ -60,8 +66,8 @@ public class CategoryListFragment extends Fragment {
         // TODO: I still cannot figure out the cause of this bug, so I comment out the code fragment
         CategoryListFragment fragment = new CategoryListFragment();
         Bundle args = new Bundle();
-        args.putString(MODE, mode);
-        args.putString(SELECTOR_MODE, selectorMode);
+        args.putString(ARG_MODE, mode);
+        args.putString(ARG_SELECTOR_MODE, selectorMode);
         fragment.setArguments(args);
 
         return fragment;
@@ -79,8 +85,8 @@ public class CategoryListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null){
-            this.mode = args.getString(MODE);
-            this.selectorMode = args.getString(SELECTOR_MODE);
+            this.mode = args.getString(ARG_MODE);
+            this.selectorMode = args.getString(ARG_SELECTOR_MODE);
         }
     }
 
@@ -90,6 +96,8 @@ public class CategoryListFragment extends Fragment {
         switch (mode){
             case EDIT_MODE:
                 return createEditModeView(inflater, container, savedInstanceState);
+            case MODIFY_MODE:
+                return createModifyModeView(inflater, container, savedInstanceState);
             case SELECT_MODE:
                 return createSelectModeView(inflater, container, savedInstanceState);
             default:
@@ -118,8 +126,38 @@ public class CategoryListFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
+            this.catList = PetimoDbWrapper.getInstance().getAllCategories();
+            this.adapter = new CategoryRecyclerViewAdapter(this, catList, mode, selectorMode);
+            recyclerView.setAdapter(adapter);
+            recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(150));
+
+        }
+        return view;
+    }
+
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
+    private View createModifyModeView(LayoutInflater inflater, ViewGroup container,
+                                    Bundle savedInstanceState){
+        final View view = inflater.inflate(R.layout.list_fragment_category, container, false);
+
+        // Set the dayAdapter
+        if (view instanceof RecyclerView) {
+            Context context = view.getContext();
+            RecyclerView recyclerView = (RecyclerView) view;
+            if (mColumnCount <= 1) {
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            } else {
+                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+            }
+
             ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
-                    new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                    new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
                         @Override
                         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder
                                 viewHolder, RecyclerView.ViewHolder target) {
@@ -147,13 +185,14 @@ public class CategoryListFragment extends Fragment {
                                                             // Delete the category
                                                             PetimoDbWrapper.getInstance().
                                                                     removeCategory(
-                                                                    adapter.catList.get(vHolder.
-                                                                            getLayoutPosition()).
-                                                                            getId());
+                                                                            adapter.catList.get(vHolder.
+                                                                                    getLayoutPosition()).
+                                                                                    getId());
                                                             adapter.notifyItemRemoved(
                                                                     vHolder.getLayoutPosition());
                                                             adapter.catList.remove(
                                                                     vHolder.getLayoutPosition());
+                                                            getActivity().onBackPressed();
                                                         }
                                                     })
                                             .setNegativeButton(getString(R.string.button_cancel),
@@ -170,14 +209,17 @@ public class CategoryListFragment extends Fragment {
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
             itemTouchHelper.attachToRecyclerView(recyclerView);
 
-            this.catList = PetimoDbWrapper.getInstance().getAllCategories();
+            // Only get the given Cat
+            //this.catList = PetimoDbWrapper.getInstance().getAllCategories();
+            this.catList = new ArrayList<>();
+            this.catList.add(PetimoDbWrapper.getInstance().
+                    getCatById(getArguments().getInt(CategoryListFragment.ARG_CAT_ID)));
             this.adapter = new CategoryRecyclerViewAdapter(this, catList, mode, selectorMode);
             recyclerView.setAdapter(adapter);
-            recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(150));
-
         }
         return view;
     }
+
 
     /**
      *
@@ -220,17 +262,23 @@ public class CategoryListFragment extends Fragment {
 
     /**
      * Update the recyclerView in case a new category is added into the data
-     * @param newCatName Name of the newly added category
      */
-    public void updateView(String newCatName){
+    public void updateView(){
         // Update the category list of the recyclerView and force it to rebind all items
-        this.catList.add(0, PetimoDbWrapper.getInstance().getCatById(
-                PetimoDbWrapper.getInstance().getCatIdFromName(newCatName)));
-        this.adapter.notifyItemInserted(0);
-        this.adapter.notifyDataSetChanged();
+        /*if (newCatName != null){
+            this.catList.add(0, PetimoDbWrapper.getInstance().getCatById(
+                    PetimoDbWrapper.getInstance().getCatIdFromName(newCatName)));
+            this.adapter.notifyItemInserted(0);
+        }
 
+        this.adapter.notifyDataSetChanged();
+        */
         this.catList.clear();
-        this.catList.addAll(PetimoDbWrapper.getInstance().getAllCategories());
+        if (getArguments().getInt(ARG_CAT_ID) != 0)
+            this.catList.add(PetimoDbWrapper.getInstance().
+                    getCatById(getArguments().getInt(CategoryListFragment.ARG_CAT_ID)));
+        else
+            this.catList.addAll(PetimoDbWrapper.getInstance().getAllCategories());
         // bug: this.catList now points to other arrayList object, while dayAdapter.catList still
         // points to the old object
         //this.catList = new ArrayList<>(PetimoController.getInstance().getAllCats());
@@ -257,4 +305,38 @@ public class CategoryListFragment extends Fragment {
             }
         }
     }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     */
+    public interface OnEditTaskListener {
+
+        /**
+         * Call-back method which is called when the user confirm adding a new task
+         * @param viewHolder
+         * @param catId
+         * @param inputTaskName
+         * @param priority
+         */
+        void onConfirmAddingTaskButtonClicked(
+                CategoryRecyclerViewAdapter.ViewHolder viewHolder,
+                int catId, String inputTaskName, int priority, String note);
+  }
+
+    public interface OnModifyTaskListener{
+        void onConfirmEditingTaskButtonClicked(
+                TaskRecyclerViewAdapter taskAdapter, int position,
+                int taskId, String inputTaskName, int priority, String note);
+
+        void onConfirmEditingCatButtonClicked(
+                CategoryListFragment catListFragment,
+                int catId, String newCatName, int priority, String note);
+
+    }
+
+
+
 }

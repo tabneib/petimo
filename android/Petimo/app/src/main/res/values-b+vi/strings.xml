@@ -94,8 +94,10 @@
     <string name="title_new_monitor_block">Thêm Giám Sát</string>
     <string name="title_new_category">Thêm Nhóm Việc</string>
     <string name="title_remove_category">Xóa Nhóm Việc</string>
+    <string name="title_edit_category">Edit Category</string>
     <string name="title_new_task">Thêm Công Việc</string>
     <string name="title_remove_task">Xóa Công Việc</string>
+    <string name="title_edit_task">Edit Task</string>
     <string name="title_remove_block">Xóa Giám Sát</string>
     <string name="title_clear_monitored_task_list">Xóa Danh Sách Công Việc Đã Giám Sát</string>
     <string name="title_start_monitor">Bắt Đầu Giám Sát?</string>

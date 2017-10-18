@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -17,16 +16,17 @@ import de.tud.nhd.petimo.controller.exception.DbErrorException;
 import de.tud.nhd.petimo.controller.exception.InvalidCategoryException;
 import de.tud.nhd.petimo.controller.exception.InvalidInputNameException;
 import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
-import de.tud.nhd.petimo.view.fragments.listener.OnEditTaskFragmentInteractionListener;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapter;
 
 public class EditTasksActivity extends AppCompatActivity
-        implements OnEditTaskFragmentInteractionListener {
+        implements CategoryListFragment.OnEditTaskListener {
 
     private static final String TAG = "EditTasksActivity";
+    private static final String TASK_LIST_FRAGMENT_TAG = "TASK_LIST_FRAGMENT_TAG";
     private ImageView addCatButton;
-    private CategoryListFragment catListFragment;
+    CategoryListFragment catListFragment;
+
     Toolbar mToolbar;
 
     @Override
@@ -39,10 +39,17 @@ public class EditTasksActivity extends AppCompatActivity
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        catListFragment = CategoryListFragment.getInstance(
-                CategoryListFragment.EDIT_MODE, null);
-        getSupportFragmentManager().beginTransaction().add(
-                R.id.cat_list_fragment_container, catListFragment).commit();
+        catListFragment = (CategoryListFragment)
+                getSupportFragmentManager().findFragmentByTag(TASK_LIST_FRAGMENT_TAG);
+        if (catListFragment == null){
+            catListFragment = CategoryListFragment.getInstance(
+                    CategoryListFragment.EDIT_MODE, null);
+            getSupportFragmentManager().beginTransaction().add(
+                    R.id.cat_list_fragment_container, catListFragment, TASK_LIST_FRAGMENT_TAG).commit();
+        }
+        else
+            getSupportFragmentManager().beginTransaction().replace(
+                    R.id.cat_list_fragment_container, catListFragment, TASK_LIST_FRAGMENT_TAG).commit();
 
         addCatButton = (ImageView) findViewById(R.id.button_add_cat);
 
@@ -58,7 +65,6 @@ public class EditTasksActivity extends AppCompatActivity
                                 new PetimoDialog.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        OnEditTaskFragmentInteractionListener mListener;
                                         EditText catInput = (EditText)
                                                 view.findViewById(R.id.editTextCatName);
                                         Spinner prioritySpinner = (Spinner)
@@ -82,6 +88,15 @@ public class EditTasksActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CategoryListFragment catListFragment = (CategoryListFragment)
+                getSupportFragmentManager().findFragmentByTag(TASK_LIST_FRAGMENT_TAG);
+        if (catListFragment != null)
+            catListFragment.updateView();
     }
 
     @Override
@@ -117,7 +132,7 @@ public class EditTasksActivity extends AppCompatActivity
         Toast.makeText(this, "Added new category: " + newCatName, Toast.LENGTH_LONG).show();
 
         // Update the recyclerView
-        catListFragment.updateView(newCatName);
+        catListFragment.updateView();
 
 
         /* Hard-coded: Re-add the whole CategoryListFragment

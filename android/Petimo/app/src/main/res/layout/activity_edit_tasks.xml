@@ -22,7 +22,9 @@
             android:background="@color/colorPrimary"
             android:elevation="4dp"
 
-            app:popupTheme="@style/PetimoTheme.Light.OverFlowMenu" />
+            app:popupTheme="@style/PetimoTheme.Light.OverFlowMenu" >
+
+            </android.support.v7.widget.Toolbar>
 
         <RelativeLayout
             android:layout_width="match_parent"

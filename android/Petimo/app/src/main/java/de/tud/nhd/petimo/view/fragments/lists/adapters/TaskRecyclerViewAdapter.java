@@ -6,15 +6,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.model.db.MonitorTask;
-import de.tud.nhd.petimo.model.sharedpref.PetimoSPref;
 import de.tud.nhd.petimo.model.sharedpref.TaskSelector;
 import de.tud.nhd.petimo.view.fragments.TaskSelectorBottomSheet;
+import de.tud.nhd.petimo.view.fragments.dialogs.PetimoDialog;
 import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,15 +64,17 @@ public class TaskRecyclerViewAdapter extends
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_task_edit, parent, false);
                 break;
+            case CategoryListFragment.MODIFY_MODE:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.list_item_task_modify, parent, false);
+                break;
             case CategoryListFragment.SELECT_MODE:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_task_select, parent, false);
-
                 break;
             case CategoryListFragment.VIEW_MODE:
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_task_view, parent, false);
-
                 break;
             default:
                 throw new RuntimeException("Display mode is not set.");
@@ -78,11 +84,17 @@ public class TaskRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        holder.position = position;
         switch (mode){
             case CategoryListFragment.EDIT_MODE:
                 holder.task = taskList.get(position);
                 holder.taskNameTextView.setText(taskList.get(position).getName());
                 break;
+            case CategoryListFragment.MODIFY_MODE:
+                holder.task = taskList.get(position);
+                holder.taskNameTextView.setText(taskList.get(position).getName());
+                break;
+
             case CategoryListFragment.SELECT_MODE:
                 holder.task = taskList.get(position);
                 holder.taskCheckBox.setText(taskList.get(position).getName());
@@ -127,14 +139,33 @@ public class TaskRecyclerViewAdapter extends
         return taskList.size();
     }
 
+    TaskRecyclerViewAdapter getAdapter(){
+        return this;
+    }
+
+    /**
+     *
+     * @param editedTask
+     * @param position
+     */
+    public void updateView(MonitorTask editedTask, int position){
+        this.taskList.remove(position);
+        this.taskList.add(position, editedTask);
+        notifyItemChanged(position);
+    }
+
     /**
      * BlockListViewHolder that holds a task item to display
      * TODO adapt according to display mode!
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
+        public int position;
         // Edit mode
         public TextView taskNameTextView;
+
+        // Modify mode
+        public ImageView editButton;
 
         // Select mode
         public CheckBox taskCheckBox;
@@ -147,11 +178,74 @@ public class TaskRecyclerViewAdapter extends
             mView = view;
             // Edit Mode
             taskNameTextView = (TextView) view.findViewById(R.id.textViewTaskName);
+            // Modify Mode
+            editButton = (ImageView) view.findViewById(R.id.imageView_edit);
             // Select Mode
             taskCheckBox = (CheckBox) view.findViewById(R.id.checkboxTask);
 
             switch (mode){
                 case CategoryListFragment.EDIT_MODE:
+                    break;
+                case CategoryListFragment.MODIFY_MODE:
+                    editButton.setOnClickListener(new View.OnClickListener(){
+
+                        @Override
+                        public void onClick(View v) {
+                            PetimoDialog newTaskDialog = new PetimoDialog()
+                                    .setIcon(PetimoDialog.ICON_SAVE)
+                                    .setTitle(catAdapter.catListFragment.getActivity().
+                                            getString(R.string.title_edit_task))
+                                    .setContentLayout(R.layout.dialog_add_task)
+                                    .setOnViewCreatedTask(new PetimoDialog.OnViewCreatedTask() {
+                                        @Override
+                                        public void execute(View view) {
+                                            ((TextView) view.findViewById(R.id.editTextTaskName)).
+                                                    setText(task.getName());
+                                            Spinner spinner = (Spinner)
+                                                    view.findViewById(R.id.spinnerPriorities);
+                                            if (task.getPriority() < spinner.getAdapter().getCount())
+                                                spinner.setSelection(task.getPriority());
+                                        }
+                                    })
+                                    .setPositiveButton(catAdapter.catListFragment.getActivity().
+                                                    getString(R.string.button_ok),
+                                            new PetimoDialog.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    CategoryListFragment.OnModifyTaskListener mListener;
+                                                    EditText taskInput = (EditText)
+                                                            view.findViewById(R.id.editTextTaskName);
+                                                    Spinner prioritySpinner = (Spinner)
+                                                            view.findViewById(R.id.spinnerPriorities);;
+                                                    try {
+                                                        mListener = (CategoryListFragment.OnModifyTaskListener)
+                                                                catAdapter.catListFragment.getActivity();
+                                                    } catch (ClassCastException e) {
+                                                        throw new ClassCastException(
+                                                                catAdapter.catListFragment.getActivity().toString()
+                                                                        + " must implement " +
+                                                                        "CategoryListFragment." +
+                                                                        "OnModifyTaskListener");
+                                                    }
+                                                    mListener.onConfirmEditingTaskButtonClicked(
+                                                            getAdapter(), position, task.getId(),
+                                                            taskInput.getText().toString(),
+                                                            prioritySpinner.getSelectedItemPosition(),
+                                                            "");
+                                                }
+                                            })
+                                    .setNegativeButton(catAdapter.catListFragment.getActivity().getString(R.string.button_cancel),
+                                            new PetimoDialog.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    // do nothing
+                                                }
+                                            });
+                            newTaskDialog.show(catAdapter.catListFragment.getActivity().
+                                    getSupportFragmentManager(), null);
+                        }
+                    });
+
                     break;
                 case CategoryListFragment.SELECT_MODE:
 

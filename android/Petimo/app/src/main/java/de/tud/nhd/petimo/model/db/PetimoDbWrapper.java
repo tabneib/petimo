@@ -235,6 +235,59 @@ public class PetimoDbWrapper {
             return ResponseCode.OK;
     }
 
+
+    //<---------------------------------------------------------------------------------------------
+    // Core - Database - Modify Data
+    //--------------------------------------------------------------------------------------------->
+
+    /**
+     *
+     * @param catId
+     * @param name
+     * @param priority
+     * @param note
+     * @return
+     */
+    public ResponseCode modifyCategory(final int catId, String name, int priority, String note)
+            throws DbErrorException{
+        ContentValues values = new ContentValues();
+        values.put(PetimoContract.Categories.COLUMN_NAME_NAME, name);
+        values.put(PetimoContract.Categories.COLUMN_NAME_PRIORITY, priority);
+        values.put(PetimoContract.Categories.COLUMN_NAME_NOTE, note);
+
+        if (writableDb.update(PetimoContract.Categories.TABLE_NAME, values,
+                PetimoContract.Categories._ID + " = ?", new String[]{Integer.toString(catId)})
+                == -1)
+            throw new DbErrorException("Some DB error has occured, please try again");
+        else
+            return ResponseCode.OK;
+    }
+
+
+    /**
+     *
+     * @param taskId
+     * @param name
+     * @param priority
+     * @param note
+     * @return
+     */
+    public ResponseCode modifyTask(final int taskId, String name, int priority, String note)
+            throws DbErrorException{
+        ContentValues values = new ContentValues();
+        values.put(PetimoContract.Tasks.COLUMN_NAME_NAME, name);
+        values.put(PetimoContract.Tasks.COLUMN_NAME_PRIORITY, priority);
+        values.put(PetimoContract.Tasks.COLUMN_NAME_NOTE, note);
+
+        if (writableDb.update(PetimoContract.Tasks.TABLE_NAME, values,
+                PetimoContract.Tasks._ID + " = ?", new String[]{Integer.toString(taskId)})
+                == -1)
+            throw new DbErrorException("Some DB error has occured, please try again");
+        else
+            return ResponseCode.OK;
+    }
+
+
     //<---------------------------------------------------------------------------------------------
     // Core - Database - Fetching Data
     //--------------------------------------------------------------------------------------------->

@@ -30,7 +30,7 @@
                 android:id="@+id/overflow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/overflow_icon"
+                android:background="@drawable/action_overflow"
                 android:layout_gravity="right"/>
         </android.support.v7.widget.Toolbar>
 

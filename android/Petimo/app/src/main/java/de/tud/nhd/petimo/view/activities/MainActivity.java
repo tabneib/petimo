@@ -4,12 +4,9 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Paint;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +16,6 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Chronometer;
@@ -44,9 +40,7 @@ import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.utils.PetimoContextWrapper;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.SlideButton;
-import de.tud.nhd.petimo.view.fragments.ModeOffFragment;
 import de.tud.nhd.petimo.view.fragments.TaskSelectorBottomSheet;
-import de.tud.nhd.petimo.view.fragments.listener.OnModeFragmentInteractionListener;
 
 public class MainActivity extends AppCompatActivity
         implements TaskSelectorBottomSheet.Listener{
@@ -489,7 +483,6 @@ public class MainActivity extends AppCompatActivity
 
             // Chronometer not showing
             chronometer.setVisibility(View.INVISIBLE);
-
 
 
         }

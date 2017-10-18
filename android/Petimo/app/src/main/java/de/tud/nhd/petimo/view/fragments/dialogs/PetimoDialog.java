@@ -25,7 +25,9 @@ public class PetimoDialog extends DialogFragment {
 
     public Context context;
 
+
     private String selectorMode;
+    private OnViewCreatedTask onViewCreatedTask = null;
 
     private String title;
     //private String subtitle;
@@ -144,7 +146,12 @@ public class PetimoDialog extends DialogFragment {
         });
         if (negativeButton == null)
             buttonNegative.setVisibility(View.INVISIBLE);
+
+        // Execute onViewCreatedTask if any
+        if (this.onViewCreatedTask != null)
+            this.onViewCreatedTask.execute(view);
     }
+
 
     public PetimoDialog setTitle(String title) {
         this.title = title;
@@ -209,6 +216,11 @@ public class PetimoDialog extends DialogFragment {
         return this;
     }
 
+    public PetimoDialog setOnViewCreatedTask(OnViewCreatedTask task){
+        this.onViewCreatedTask = task;
+        return this;
+    }
+
     /*public void show(){
         show(getActivity().getSupportFragmentManager(), TAG);
     }*/
@@ -218,5 +230,12 @@ public class PetimoDialog extends DialogFragment {
      */
     public static abstract class OnClickListener{
         public abstract void onClick(View view);
+    }
+
+    /**
+     * Task to be executed upon viewCreated() is called
+     */
+    public static abstract class OnViewCreatedTask{
+        public abstract void execute(View view);
     }
 }

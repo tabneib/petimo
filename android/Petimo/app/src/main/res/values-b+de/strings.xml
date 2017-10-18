@@ -95,8 +95,10 @@
     <string name="title_new_monitor_block">New Monitor Block</string>
     <string name="title_new_category">New Category</string>
     <string name="title_remove_category">Remove Category</string>
+    <string name="title_edit_category">Edit Category</string>
     <string name="title_new_task">New Task</string>
     <string name="title_remove_task">Remove Task</string>
+    <string name="title_edit_task">Edit Task</string>
     <string name="title_remove_block">Remove Block</string>
     <string name="title_clear_monitored_task_list">Clear Saved Monitored Task List</string>
     <string name="title_start_monitor">Start Monitor?</string>
@@ -266,4 +268,5 @@
     <string name="title_activity_admin">AdminActivity</string>
 
 
+    <string name="love">LOVE DIUUU!!!  D loves M</string>
 </resources>
