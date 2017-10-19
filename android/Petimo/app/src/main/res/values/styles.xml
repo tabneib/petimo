@@ -12,7 +12,6 @@
         <item name="android:navigationBarColor">@color/navigationBarColor</item>
         <item name="android:windowBackground">@color/windowBackground</item>
         <item name="android:spinnerStyle">@style/PetimoTheme.Light.Spinner</item>
-        <item name="bottomSheetDialogTheme">@style/PetimoBottomSheetDialogTheme</item>
         <!--  From AppCompat v7:21+ onwards the standard theme attributes needs to be used WITHOUT
          the "android:" prefix in the styles -->
         <item name="editTextStyle">@style/PetimoTheme.Light.EditText</item>
@@ -134,16 +133,6 @@
         <item name="android:layout_marginTop">@dimen/middle_large_pane_padding</item>
         <item name="android:layout_marginLeft">@dimen/middle_large_pane_padding</item>
         <item name="android:layout_marginRight">@dimen/middle_large_pane_padding</item>
-    </style>
-
-    <style name="PetimoBottomSheetDialogTheme"
-           parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/PetimoModalStyle</item>
-    </style>
-
-    <style name="PetimoModalStyle"
-           parent="Widget.Design.BottomSheet.Modal">
-        <item name="behavior_peekHeight">300dp</item>
     </style>
 
 </resources>

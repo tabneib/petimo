@@ -33,8 +33,7 @@
                 android:id="@+id/task_list_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="0dp"
-                android:background="@color/windowBackground"/>
+                android:padding="0dp"/>
 
 
         </LinearLayout>

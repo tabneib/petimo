@@ -3,11 +3,13 @@
 
 
 <LinearLayout
+    android:id="@+id/container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bottom_sheet_bg_transition"
     tools:context="de.tud.nhd.petimo.view.fragments.TaskSelectorBottomSheet">
 
     <View
@@ -19,17 +21,14 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark">
+        android:layout_height="match_parent">
 
 
     </android.support.v7.widget.RecyclerView>
 
     <View
-        android:id="@+id/dummy_view"
         android:layout_width="match_parent"
-        android:layout_height="2000dp"
-        android:background="@color/background_primary"/>
+        android:layout_height="2000dp"/>
 
 </LinearLayout>
 

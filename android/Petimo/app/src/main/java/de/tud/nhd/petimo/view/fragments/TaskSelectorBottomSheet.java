@@ -3,6 +3,7 @@ package de.tud.nhd.petimo.view.fragments;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.db.PetimoDbWrapper;
@@ -30,8 +34,12 @@ public class TaskSelectorBottomSheet extends BottomSheetDialogFragment {
     private Listener mListener;
     public MonitoredTaskRecyclerViewAdapter adapter;
     private int mHistoryColumnCount = 2;
+
+    private static final String ARG_FULL_EXPANDED = "ARG_FULL_EXPANDED";
+    private static final String ARG_TRANSITION_STARTED = "ARG_TRANSITION_STARTED";
+
     RecyclerView recyclerView;
-    View dummyView;
+    LinearLayout container;
     CategoryRecyclerViewAdapter manualAdapter;
     MonitoredTaskRecyclerViewAdapter historyAdapter;
 
@@ -40,8 +48,7 @@ public class TaskSelectorBottomSheet extends BottomSheetDialogFragment {
     // TODO: Customize parameters
     public static TaskSelectorBottomSheet newInstance() {
         final TaskSelectorBottomSheet fragment = new TaskSelectorBottomSheet();
-        final Bundle args = new Bundle();
-        fragment.setArguments(args);
+        fragment.setArguments(new Bundle());
         return fragment;
     }
 
@@ -56,7 +63,7 @@ public class TaskSelectorBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        dummyView = view.findViewById(R.id.dummy_view);
+        container = (LinearLayout) view.findViewById(R.id.container);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         historyAdapter = new MonitoredTaskRecyclerViewAdapter(getActivity(),
                 PetimoController.getInstance().getMonitoredTasks(), mListener);
@@ -91,7 +98,6 @@ public class TaskSelectorBottomSheet extends BottomSheetDialogFragment {
 
         BottomSheetDialog dialog = (BottomSheetDialog)
                 super.onCreateDialog(savedInstanceState);
-
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
@@ -154,8 +160,16 @@ public class TaskSelectorBottomSheet extends BottomSheetDialogFragment {
                 getActivity(), mHistoryColumnCount));
 
         recyclerView.setAdapter(historyAdapter);
-        recyclerView.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimaryDark));
-        dummyView.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimaryDark));
+
+        // Only start transition if arrive this state from the fully expanded state !
+        if (getArguments().getBoolean(ARG_FULL_EXPANDED) &&
+                getArguments().getBoolean(ARG_TRANSITION_STARTED) ){
+            TransitionDrawable transition =
+                    (TransitionDrawable) container.getBackground();
+            transition.reverseTransition(400);
+        }
+        getArguments().putBoolean(ARG_TRANSITION_STARTED, true);
+        getArguments().putBoolean(ARG_FULL_EXPANDED, false);
     }
 
     /**
@@ -165,8 +179,14 @@ public class TaskSelectorBottomSheet extends BottomSheetDialogFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         recyclerView.setAdapter(manualAdapter);
-        recyclerView.setBackgroundColor(getActivity().getResources().getColor(R.color.windowBackground));
-        dummyView.setBackgroundColor(getActivity().getResources().getColor(R.color.windowBackground));
+
+        // Only start transition if we arrive this state from the not fully expanded state !
+        if (!getArguments().getBoolean(ARG_FULL_EXPANDED)){
+            TransitionDrawable transition =
+                    (TransitionDrawable) container.getBackground();
+            transition.startTransition(200);
+        }
+        getArguments().putBoolean(ARG_FULL_EXPANDED, true);
     }
 
     //TODO: remove this

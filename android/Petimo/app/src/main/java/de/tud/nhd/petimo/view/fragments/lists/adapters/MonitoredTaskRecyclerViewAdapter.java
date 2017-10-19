@@ -75,6 +75,51 @@ public class MonitoredTaskRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+
+        holder.cardView.animate().scaleXBy(-0.1f).
+                scaleYBy(-0.1f).setDuration(0).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                holder.cardView.animate().scaleXBy(0.1f).
+                        scaleYBy(0.1f).setDuration(300).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+
         holder.mItem = monitoredTaskList.get(position);
         holder.textViewCatTask.setText(
                         PetimoDbWrapper.getInstance().getTaskNameById(
