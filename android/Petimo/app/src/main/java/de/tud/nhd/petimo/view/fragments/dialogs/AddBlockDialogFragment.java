@@ -117,7 +117,7 @@ public class AddBlockDialogFragment extends Fragment {
                                             date, selectedHour, selectedMinute);
                                     // Reset end time
                                     manualTime[1] = 0;
-                                    endButton.setText(getActivity().getString(R.string.loading_text));
+                                    endButton.setText(getActivity().getString(R.string.nothing_text));
                                 }
                                 else
                                     Toast.makeText(

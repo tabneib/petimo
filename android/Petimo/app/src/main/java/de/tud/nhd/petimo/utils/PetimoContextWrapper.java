@@ -21,7 +21,6 @@ public class PetimoContextWrapper extends ContextWrapper {
     @SuppressWarnings("deprecation")
     public static ContextWrapper wrapLanguage(Context context, String language) {
 
-        Log.d("foo", "wrapLanguage is called!");
         Configuration config = context.getResources().getConfiguration();
         Locale sysLocale = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

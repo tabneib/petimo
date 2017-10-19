@@ -157,7 +157,7 @@
 
 
     <!-- Other strings ##########################################################################-->
-    <string name="loading_text">loading..</string>
+    <string name="nothing_text">...</string>
     <string name="hello_blank_fragment">Under construction</string>
 
 

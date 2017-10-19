@@ -53,8 +53,6 @@ public class TaskSelector extends PetimoSettingsSPref {
      * @return
      */
     public ArrayList<Integer> getSelectedTasks(String mode) throws IllegalStateException {
-        Log.d("foobar", "activeMode ===> " + activeMode);
-        Log.d("foobar", "going to get selected tasks, mode ===> " + mode);
 
         // If there is ongoing transaction, so we only work on the copy of selected task list
         if (activeMode != null){
@@ -110,13 +108,10 @@ public class TaskSelector extends PetimoSettingsSPref {
      * @throws IllegalStateException
      */
     public void startTransaction(String mode) throws IllegalStateException {
-        Log.d("foobar", "activeMode ===> " + activeMode);
-        Log.d("foobar", "starting transaction mode ===> " + mode);
         if (activeMode == null) {
             // Make a copy of the corresponding Shared Pref
             tmpSelectedTask = this.getSelectedTasks(mode);
             this.activeMode = mode;
-            Log.d("foobar", "activeMode set to ===> " + activeMode);
         }
         else
             throw new IllegalStateException(

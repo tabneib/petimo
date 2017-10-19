@@ -72,7 +72,7 @@ public class TaskSelectorBottomSheet extends BottomSheetDialogFragment {
                 PetimoDbWrapper.getInstance().getAllCategories(),
                 CategoryListFragment.VIEW_MODE, null, mListener);
 
-        setupHistoryRecView();
+        setupHistoryRecView(true);
     }
 
     @Override
@@ -146,7 +146,7 @@ public class TaskSelectorBottomSheet extends BottomSheetDialogFragment {
             setupManualRecView();
             //Toast.makeText(getActivity(), "STATE_EXPANDED", Toast.LENGTH_SHORT).show();
         else if (newState == BottomSheetBehavior.STATE_COLLAPSED)
-                setupHistoryRecView();
+                setupHistoryRecView(false);
         else if (newState == BottomSheetBehavior.STATE_HIDDEN)
             // The user drag down to hide the bottomSheet
             dismiss();
@@ -155,11 +155,15 @@ public class TaskSelectorBottomSheet extends BottomSheetDialogFragment {
     /**
      *
      */
-    private void setupHistoryRecView(){
-        recyclerView.setLayoutManager(new GridLayoutManager(
-                getActivity(), mHistoryColumnCount));
+    private void setupHistoryRecView(boolean init){
 
-        recyclerView.setAdapter(historyAdapter);
+        // By initialization of the bottomSheet, setup the history recyclerView but no transition
+        if (init){
+            recyclerView.setLayoutManager(new GridLayoutManager(
+                    getActivity(), mHistoryColumnCount));
+
+            recyclerView.setAdapter(historyAdapter);
+        }
 
         // Only start transition if arrive this state from the fully expanded state !
         if (getArguments().getBoolean(ARG_FULL_EXPANDED) &&
@@ -167,26 +171,36 @@ public class TaskSelectorBottomSheet extends BottomSheetDialogFragment {
             TransitionDrawable transition =
                     (TransitionDrawable) container.getBackground();
             transition.reverseTransition(400);
+
+            recyclerView.setLayoutManager(new GridLayoutManager(
+                    getActivity(), mHistoryColumnCount));
+
+            recyclerView.setAdapter(historyAdapter);
         }
         getArguments().putBoolean(ARG_TRANSITION_STARTED, true);
         getArguments().putBoolean(ARG_FULL_EXPANDED, false);
+
+
     }
 
     /**
      *
      */
     private void setupManualRecView(){
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        recyclerView.setAdapter(manualAdapter);
 
         // Only start transition if we arrive this state from the not fully expanded state !
         if (!getArguments().getBoolean(ARG_FULL_EXPANDED)){
             TransitionDrawable transition =
                     (TransitionDrawable) container.getBackground();
             transition.startTransition(200);
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+            recyclerView.setAdapter(manualAdapter);
         }
         getArguments().putBoolean(ARG_FULL_EXPANDED, true);
+
     }
 
     //TODO: remove this

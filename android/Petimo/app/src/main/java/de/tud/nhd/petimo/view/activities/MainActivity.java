@@ -47,13 +47,6 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "PetimoMainActivity";
 
-    public static final String EDIT_BLOCKS_ACTIVITY_TAG = TAG + "VIEW_BLOCKS_FRAGMENT_TAG";
-    public static final String EDIT_TASKS_ACTIVITY_TAG = TAG + "EDIT_TASKS_ACTIVITY_TAG";
-    public static final String STATISTICS_ACTIVITY_TAG = TAG + "STATISTICS_ACTIVITY_TAG";
-    public static final String SETTINGS_ACTIVITY_TAG = TAG + "SETTINGS_ACTIVITY_TAG";
-    public static final String MODE_OFF_FRAGMENT_TAG = TAG + "MODE_OFF_FRAGMENT_TAG";
-    public static final String MODE_ON_FRAGMENT_TAG = TAG + "MODE_ON_FRAGMENT_TAG";
-
     public static final String BOTTOM_SHEET_FRAGMENT_TAG = "BOTTOM_SHEET_FRAGMENT_TAG";
 
     // arguments TAGs
@@ -68,7 +61,6 @@ public class MainActivity extends AppCompatActivity
 
     FrameLayout activityLayout;
     ImageView imageMainCircle;
-    HorizontalScrollView scrollViewTask;
     FrameLayout textViewCatContainer;
     FrameLayout textViewTaskContainer;
     TextView textViewCat;
@@ -156,6 +148,19 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try{
+            updateMainCircle();
+            updateSlider();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
 
     //--------------------------------------------------------------------------------------------->
     //  New Design
@@ -238,8 +243,7 @@ public class MainActivity extends AppCompatActivity
                         else{
                             stopMonitor(System.currentTimeMillis());
                         }
-                        updateMainCircle();
-                        updateSlider();
+
                     }
                 }
                 else if (seekBar.getProgress() == seekBar.getMax()){
@@ -459,6 +463,8 @@ public class MainActivity extends AppCompatActivity
             // Update Start/Stop Time
             textViewStartTime.setTextColor(getResources().getColor(R.color.colorPrimary));
             textViewStopTime.setTextColor(getResources().getColor(R.color.background_title));
+            textViewStartTime.setText(getString(R.string.now));
+            textViewStopTime.setText(getString(R.string.now));
             ((TextView) findViewById(R.id.stop_header)).setTextColor(
                     getResources().getColor(R.color.background_title));
 
@@ -568,6 +574,10 @@ public class MainActivity extends AppCompatActivity
      * @param stopTime
      */
     private void stopMonitor(long stopTime){
+        // Reset Start and End Time
+        getIntent().removeExtra(ARG_MANUAL_START_TIME);
+        getIntent().removeExtra(ARG_MANUAL_STOP_TIME);
+
         try {
             // update the monitored task list
             controller.updateMonitoredTaskList();
@@ -594,47 +604,6 @@ public class MainActivity extends AppCompatActivity
     // Handle Callback Listeners
     //<---------------------------------------------------------------------------------------------
 
-
-    /*
-    @Override
-    public void onConfirmStartButtonClicked(int catId, int taskId, long startTime) {
-        // Start the monitor
-        try {
-            controller.monitor(catId, taskId, startTime, -1);
-        } catch (InvalidCategoryException e){
-            // TODO
-        } catch (DbErrorException e){
-            // TODO
-        }
-    }
-*/
-    /*
-    @Override
-    public void onConfirmStopButtonClicked(long stopTime) {
-        // Stop the monitor
-        try {
-            // update the monitored task list
-            controller.updateMonitoredTaskList();
-            // store the last monitored cat/task
-            controller.updateLastMonitored();
-            // add the monitored block
-            controller.monitor(-1, -1, 0, stopTime);
-        } catch (DbErrorException e) {
-            // TODO
-        } catch (InvalidCategoryException e) {
-            // TODO
-        }
-        // Switch to OffModeActivity
-        Intent intent = new Intent(this, MonitorResultActivity.class);
-        startActivity(intent);
-    }
-    @Override
-    public void onLastMonitoredTaskSelected(int catId, int taskId) {
-
-    }
-*/
-
-
     @Override
     public void onTaskSelected(int catId, int taskId) {
         // Update view
@@ -649,32 +618,12 @@ public class MainActivity extends AppCompatActivity
 
         // Notify Controller
         controller.updateLastMonitored(catId, taskId);
-
-        /*ModeOffFragment modeOffFragment = (ModeOffFragment)
-                getSupportFragmentManager().findFragmentByTag(MODE_OFF_FRAGMENT_TAG);
-        if (modeOffFragment != null){
-            modeOffFragment.updateAllSpinner(catId, taskId);
-            modeOffFragment.updateStartButtonText(catId, taskId);
-            controller.updateLastMonitored(catId, taskId);
-        }*/
     }
 
 
     //--------------------------------------------------------------------------------------------->
     //  Drawer
     //<---------------------------------------------------------------------------------------------
-
-
-
-    /*
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // TODO Hard-coded, no item should be selected !
-        drawerList.setItemChecked(0, true);
-    }
-    */
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {

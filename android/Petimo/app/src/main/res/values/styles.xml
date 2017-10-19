@@ -123,6 +123,12 @@
         <item name="android:layout_margin">@dimen/sub_middle_pane_padding</item>
     </style>
 
+    <style name="PetimoTheme.Light.DatePickerButton" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:background">@drawable/button_datepicker_selector</item>
+        <item name="android:textColor">@drawable/button_text_datepicker_selector</item>
+        <item name="android:layout_margin">@dimen/sub_middle_pane_padding</item>
+    </style>
+
     <style name="PetimoThemePopupWindow">
         <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>

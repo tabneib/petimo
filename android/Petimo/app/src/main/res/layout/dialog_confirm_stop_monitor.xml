@@ -14,7 +14,7 @@
         android:background="@color/background_title_highlight">
         <TextView
             android:id="@+id/textViewCatTask"
-            android:text="@string/loading_text"
+            android:text="@string/nothing_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -48,7 +48,7 @@
 
                     <TextView
                         android:id="@+id/textViewStartTime"
-                        android:text="@string/loading_text"
+                        android:text="@string/nothing_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/text_margin" />
@@ -74,7 +74,7 @@
                         android:format12Hour="@null"/>
                     <TextView
                         android:id="@+id/textViewStopTime"
-                        android:text="@string/loading_text"
+                        android:text="@string/nothing_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/text_margin" />

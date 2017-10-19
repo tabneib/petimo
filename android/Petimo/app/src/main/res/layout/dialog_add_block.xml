@@ -12,10 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/pane_padding"
-        android:background="@color/background_title">
+        android:background="@color/background_title_highlight">
         <TextView
             android:id="@+id/textViewDate"
-            android:text="@string/loading_text"
+            android:text="@string/nothing_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -64,6 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:layout_gravity="center">
 
         <TextView
@@ -72,10 +73,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/sub_pane_padding"/>
         <Button
-            android:text="@string/loading_text"
-            android:background="@color/background_title_highlight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:text="@string/nothing_text"
+            style="@style/PetimoTheme.Light.DatePickerButton"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_datepicker_height"
             android:id="@+id/button_start" />
         <TextView
             android:text="@string/colon_to"
@@ -83,10 +84,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/sub_pane_padding" />
         <Button
-            android:text="@string/loading_text"
-            android:background="@color/background_title_highlight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:text="@string/nothing_text"
+            style="@style/PetimoTheme.Light.DatePickerButton"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_datepicker_height"
             android:id="@+id/button_end" />
 
     </LinearLayout>

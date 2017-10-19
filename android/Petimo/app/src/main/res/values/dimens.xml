@@ -46,5 +46,6 @@
     <dimen name="icon_circle_large">48dp</dimen>
     <dimen name="button_width">92dp</dimen>
     <dimen name="button_height">36dp</dimen>
+    <dimen name="button_datepicker_height">30dp</dimen>
 
 </resources>

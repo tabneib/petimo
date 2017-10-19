@@ -52,6 +52,10 @@
 
         <!-- Dialog buttons -->
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/large_pane_padding"
+            android:background="@color/background_primary" />
         <LinearLayout
             android:id="@+id/buttons"
             android:layout_width="match_parent"
