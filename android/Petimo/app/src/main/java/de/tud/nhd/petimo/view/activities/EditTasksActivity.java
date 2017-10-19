@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -24,7 +25,7 @@ public class EditTasksActivity extends AppCompatActivity
 
     private static final String TAG = "EditTasksActivity";
     private static final String TASK_LIST_FRAGMENT_TAG = "TASK_LIST_FRAGMENT_TAG";
-    private ImageView addCatButton;
+    private RelativeLayout addCatButton;
     CategoryListFragment catListFragment;
 
     Toolbar mToolbar;
@@ -51,14 +52,13 @@ public class EditTasksActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(
                     R.id.cat_list_fragment_container, catListFragment, TASK_LIST_FRAGMENT_TAG).commit();
 
-        addCatButton = (ImageView) findViewById(R.id.button_add_cat);
+        addCatButton = (RelativeLayout) findViewById(R.id.button_add_cat);
 
         addCatButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 PetimoDialog newCatDialog = new PetimoDialog()
-                        .setIcon(PetimoDialog.ICON_SAVE)
                         .setTitle(getString(R.string.title_new_category))
                         .setContentLayout(R.layout.dialog_add_category)
                         .setPositiveButton(getString(R.string.button_create),

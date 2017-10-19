@@ -6,6 +6,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -68,7 +69,6 @@ public class DayRecyclerViewAdapter extends
                         AddBlockDialogFragment.newInstance(holder.monitorDay.getDate());
 
                 PetimoDialog addBlockDialog = PetimoDialog.newInstance(fragment.getActivity())
-                        .setIcon(PetimoDialog.ICON_SAVE)
                         .setTitle(fragment.getActivity().
                                 getString(R.string.title_new_monitor_block))
                         .setContentFragment(addBlockFragment)
@@ -170,7 +170,7 @@ public class DayRecyclerViewAdapter extends
         public View mView;
         public TextView textViewDate;
         public TextView textViewSum;
-        public ImageView buttonAddBlock;
+        public FrameLayout buttonAddBlock;
         public RecyclerView recyclerView;
 
         public MonitorDay monitorDay;
@@ -183,7 +183,7 @@ public class DayRecyclerViewAdapter extends
             mView = view;
             textViewDate = (TextView) view.findViewById(R.id.textView_date);
             textViewSum = (TextView) view.findViewById(R.id.textView_sum);
-            buttonAddBlock = (ImageView) view.findViewById(R.id.button_add_block);
+            buttonAddBlock = (FrameLayout) view.findViewById(R.id.button_add_block);
             recyclerView = (RecyclerView) view.findViewById(R.id.block_list_recyclerview);
 
             ItemTouchHelper.SimpleCallback simpleCallback =
@@ -203,7 +203,6 @@ public class DayRecyclerViewAdapter extends
                             final BlockRecyclerViewAdapter.BlockListViewHolder vHolder =
                                     (BlockRecyclerViewAdapter.BlockListViewHolder) viewHolder;
                             PetimoDialog removeBlockDialog = new PetimoDialog()
-                                    .setIcon(android.R.drawable.ic_dialog_alert)
                                     .setTitle(fragment.getActivity().getString(
                                             R.string.title_remove_block))
                                     .setMessage(fragment.getActivity().

@@ -87,10 +87,10 @@
 
 
     <style name="PetimoTheme.Light.Header.Dialog">
-        <item name="android:background">@color/colorPrimary</item>
-        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:background">@color/background_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/middle_big_text_size</item>
         <item name="android:padding">@dimen/dialog_header_padding</item>
-        <item name="android:paddingLeft">@dimen/sub_pane_padding</item>
     </style>
 
 
@@ -116,6 +116,12 @@
 
     <style name="PetimoTheme.Light.Button" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:padding">@dimen/middle_large_pane_padding</item>
+    </style>
+
+    <style name="PetimoTheme.Light.DialogButton" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:background">@drawable/button_dialog_selector</item>
+        <item name="android:textColor">@drawable/button_text_dialog_selector</item>
+        <item name="android:layout_margin">@dimen/pane_padding</item>
     </style>
 
     <style name="PetimoThemePopupWindow">

@@ -131,7 +131,6 @@ public class CategoryRecyclerViewAdapter extends
             @Override
             public void onClick(View v) {
                 PetimoDialog newTaskDialog = new PetimoDialog()
-                        .setIcon(PetimoDialog.ICON_SAVE)
                         .setTitle(catListFragment.getActivity().getString(R.string.title_new_task))
                         .setContentLayout(R.layout.dialog_add_task)
                         .setPositiveButton(catListFragment.getActivity().getString(R.string.button_create),
@@ -222,7 +221,6 @@ public class CategoryRecyclerViewAdapter extends
                         final TaskRecyclerViewAdapter.ViewHolder vHolder =
                                 (TaskRecyclerViewAdapter.ViewHolder) viewHolder;
                         PetimoDialog removeTaskDialog = new PetimoDialog()
-                                .setIcon(PetimoDialog.ICON_WARNING)
                                 .setTitle(catListFragment.getActivity().
                                         getString(R.string.title_remove_task))
                                 .setMessage(catListFragment.getActivity().
@@ -393,7 +391,6 @@ public class CategoryRecyclerViewAdapter extends
                         @Override
                         public void onClick(View v) {
                             PetimoDialog newCatDialog = new PetimoDialog()
-                                    .setIcon(PetimoDialog.ICON_SAVE)
                                     .setTitle(catListFragment.getActivity().
                                             getString(R.string.title_edit_category))
                                     .setContentLayout(R.layout.dialog_add_category)
@@ -409,7 +406,7 @@ public class CategoryRecyclerViewAdapter extends
                                         }
                                     })
                                     .setPositiveButton(catListFragment.getActivity().
-                                                    getString(R.string.button_create),
+                                                    getString(R.string.button_ok),
                                             new PetimoDialog.OnClickListener() {
                                                 @Override
                                                 public void onClick(View view) {

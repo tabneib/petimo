@@ -174,7 +174,6 @@ public class CategoryListFragment extends Fragment {
                                     PetimoDialog.newInstance(getActivity())
                                             .setTitle(getActivity().getString(
                                                     R.string.title_remove_category))
-                                            .setIcon(android.R.drawable.ic_dialog_alert)
                                             .setMessage(getActivity().
                                                     getString(R.string.message_confirm_remove) +
                                                     vHolder.category.getName() + "?")
@@ -334,9 +333,5 @@ public class CategoryListFragment extends Fragment {
         void onConfirmEditingCatButtonClicked(
                 CategoryListFragment catListFragment,
                 int catId, String newCatName, int priority, String note);
-
     }
-
-
-
 }

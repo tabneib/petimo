@@ -1,0 +1,6 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true" android:drawable="@drawable/ic_setting_active_24dp"></item>
+    <item android:drawable="@drawable/ic_setting_inactive_24dp"></item>
+
+</selector>

@@ -11,11 +11,11 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/pane_padding"
         android:orientation="vertical"
-        android:background="@color/background_title">
-
+        android:background="@color/background_title_highlight">
 
         <CheckBox
             android:id="@+id/checkboxCat"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

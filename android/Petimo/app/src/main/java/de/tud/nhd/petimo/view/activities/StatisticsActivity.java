@@ -251,7 +251,6 @@ public class StatisticsActivity extends AppCompatActivity
                     PetimoDialog taskSelectorDialog =
                             PetimoDialog.newInstance(getBaseContext(), true)
                                     .setSelectorMode(PetimoSPref.Consts.STATISTICS)
-                                    .setIcon(PetimoDialog.ICON_SAVE)
                                     .setTitle(getString(R.string.title_select_tasks_to_display))
                                     .setContentFragment(catListFragment)
                                     .setPositiveButton(getString(R.string.button_ok),

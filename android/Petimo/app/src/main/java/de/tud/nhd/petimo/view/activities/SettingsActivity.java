@@ -70,7 +70,6 @@ public class SettingsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         PetimoDialog demoDialog = PetimoDialog.newInstance(getBaseContext())
-                                .setIcon(PetimoDialog.ICON_WARNING)
                                 .setTitle("Enter Password")
                                 .setContentLayout(R.layout.dialog_demo)
                                 .setPositiveButton("Execute Demo",

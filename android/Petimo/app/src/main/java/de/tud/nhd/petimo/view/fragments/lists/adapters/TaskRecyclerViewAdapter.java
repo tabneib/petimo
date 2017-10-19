@@ -192,7 +192,6 @@ public class TaskRecyclerViewAdapter extends
                         @Override
                         public void onClick(View v) {
                             PetimoDialog newTaskDialog = new PetimoDialog()
-                                    .setIcon(PetimoDialog.ICON_SAVE)
                                     .setTitle(catAdapter.catListFragment.getActivity().
                                             getString(R.string.title_edit_task))
                                     .setContentLayout(R.layout.dialog_add_task)

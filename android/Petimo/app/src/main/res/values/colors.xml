@@ -51,6 +51,7 @@
 
     <!-- Icons ##################################################################################-->
     <color name="icon_inactive">@color/grey500</color>
+    <color name="button_inactive">@color/grey500</color>
 
     <!-- Red A700
     <color name="background_title_underline">#D50000</color>-->

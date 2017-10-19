@@ -2,6 +2,7 @@ package de.tud.nhd.petimo.view.fragments.dialogs;
 
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -38,7 +39,6 @@ public class PetimoDialog extends DialogFragment {
     private String negativeButton;
     private PetimoDialog.OnClickListener posListener;
     private PetimoDialog.OnClickListener negListener;
-    private int iconDrawableId;
     private boolean canceledOnTouchOutside = false;
     public boolean fullScreen = false;
 
@@ -49,14 +49,6 @@ public class PetimoDialog extends DialogFragment {
     private FrameLayout contentContainer;
     private Button buttonPositive;
     private Button buttonNegative;
-
-    // Icon Constants
-    public static final int ICON_WARNING = android.R.drawable.ic_dialog_alert;
-    public static final int ICON_ERROR = 0;
-    public static final int ICON_SAVE = R.drawable.ic_save_white_36dp;
-    public static final int ICON_TIME_EMPTY = R.drawable.ic_hourglass_empty_white_36dp;
-    public static final int ICON_TIME_FULL = R.drawable.ic_hourglass_full_white_36dp;
-
 
 
 
@@ -99,7 +91,8 @@ public class PetimoDialog extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+        getDialog().getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
         if (!canceledOnTouchOutside)
             getDialog().setCanceledOnTouchOutside(false);
 
@@ -110,10 +103,6 @@ public class PetimoDialog extends DialogFragment {
         buttonPositive = (Button) getView().findViewById(R.id.button_positive);
         buttonNegative = (Button) getView().findViewById(R.id.button_negative);
 
-        if (iconDrawableId != 0){
-            dialogIcon = (ImageButton) getView().findViewById(R.id.dialog_icon);
-            dialogIcon.setBackground(getResources().getDrawable(iconDrawableId, null));
-        }
 
         textViewTitle.setText(title);
 
@@ -193,11 +182,6 @@ public class PetimoDialog extends DialogFragment {
         /*if (buttonNegative != null)
             buttonNegative.setText(negativeButton);*/
         this.negListener = negListener;
-        return this;
-    }
-
-    public PetimoDialog setIcon(int id){
-        this.iconDrawableId = id;
         return this;
     }
 

@@ -39,4 +39,11 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="list_item_spacing">16dp</dimen>
     <dimen name="list_item_spacing_half">8dp</dimen>
+
+    <!-- Icons ##################################################################################-->
+
+    <dimen name="icon_circle_large">48dp</dimen>
+    <dimen name="button_width">86dp</dimen>
+    <dimen name="button_height">36dp</dimen>
+
 </resources>
