@@ -1,5 +1,8 @@
 package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
+import android.animation.Animator;
+import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -125,7 +129,57 @@ public class TaskRecyclerViewAdapter extends
                 holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mListener.onTaskSelected(holder.task.getCatId(), holder.task.getId());
+
+                        holder.itemContainer.setBackgroundColor(
+                                ((Context) mListener).getResources().getColor(
+                                        R.color.colorPrimaryLightXX));
+                        holder.cardView.animate().scaleXBy(-0.2f).
+                                scaleYBy(-0.2f).setDuration(100).
+                                setListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                holder.cardView.animate().scaleXBy(0.2f).
+                                        scaleYBy(0.2f).setDuration(100).
+                                        setListener(new Animator.AnimatorListener() {
+                                    @Override
+                                    public void onAnimationStart(Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        mListener.onTaskSelected(
+                                                holder.task.getCatId(), holder.task.getId());
+                                    }
+
+                                    @Override
+                                    public void onAnimationCancel(Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animator animation) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+
+                            }
+                        });
+
                     }
                 });
                 break;
@@ -170,6 +224,10 @@ public class TaskRecyclerViewAdapter extends
         // Select mode
         public CheckBox taskCheckBox;
 
+        // View Mode
+        public FrameLayout itemContainer;
+        public CardView cardView;
+
         // Common
         public MonitorTask task;
 
@@ -182,6 +240,9 @@ public class TaskRecyclerViewAdapter extends
             editButton = (ImageView) view.findViewById(R.id.imageView_edit);
             // Select Mode
             taskCheckBox = (CheckBox) view.findViewById(R.id.checkboxTask);
+            // View Mode
+            itemContainer = (FrameLayout) view.findViewById(R.id.item_container);
+            cardView = (CardView) view.findViewById(R.id.cardView);
 
             switch (mode){
                 case CategoryListFragment.EDIT_MODE:

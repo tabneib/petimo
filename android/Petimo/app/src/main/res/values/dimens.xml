@@ -26,6 +26,7 @@
     <dimen name="large_pane_padding">16dp</dimen>
     <dimen name="middle_large_pane_padding">12dp</dimen>
     <dimen name="middle_pane_padding">8dp</dimen>
+    <dimen name="sub_middle_pane_padding">6dp</dimen>
     <dimen name="pane_padding">4dp</dimen>
     <dimen name="sub_pane_padding">2dp</dimen>
     <dimen name="dialog_header_padding">8dp</dimen>
@@ -43,7 +44,7 @@
     <!-- Icons ##################################################################################-->
 
     <dimen name="icon_circle_large">48dp</dimen>
-    <dimen name="button_width">86dp</dimen>
+    <dimen name="button_width">92dp</dimen>
     <dimen name="button_height">36dp</dimen>
 
 </resources>

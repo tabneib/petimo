@@ -1,7 +1,10 @@
 package de.tud.nhd.petimo.view.fragments.lists.adapters;
 
+import android.animation.Animator;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,7 +94,53 @@ public class MonitoredTaskRecyclerViewAdapter
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                taskSelected(position);
+                holder.itemContainer.setBackgroundColor(
+                        context.getResources().getColor(R.color.colorPrimaryLight));
+                holder.cardView.animate().scaleXBy(-0.2f).
+                    scaleYBy(-0.2f).setDuration(100).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        holder.cardView.animate().scaleXBy(0.2f).
+                                scaleYBy(0.2f).setDuration(100).setListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                taskSelected(position);
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+
+
             }
         });
 
@@ -120,12 +169,14 @@ public class MonitoredTaskRecyclerViewAdapter
         // CatId | TaskId | Time | Frequency
         public String[] mItem;
         public FrameLayout itemContainer;
+        public CardView cardView;
 
         public ViewHolder(View view) {
             super(view);
             this.view = view;
             textViewCatTask = (TextView) view.findViewById(R.id.textViewCatTask);
             itemContainer = (FrameLayout) view.findViewById(R.id.item_container);
+            cardView = (CardView) view.findViewById(R.id.cardView);
         }
 
         @Override

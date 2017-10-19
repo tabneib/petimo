@@ -121,7 +121,7 @@
     <style name="PetimoTheme.Light.DialogButton" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:background">@drawable/button_dialog_selector</item>
         <item name="android:textColor">@drawable/button_text_dialog_selector</item>
-        <item name="android:layout_margin">@dimen/pane_padding</item>
+        <item name="android:layout_margin">@dimen/sub_middle_pane_padding</item>
     </style>
 
     <style name="PetimoThemePopupWindow">
