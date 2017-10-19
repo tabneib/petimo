@@ -128,6 +128,14 @@ public class DayRecyclerViewAdapter extends
                 holder.blockAdapter = new BlockRecyclerViewAdapter(
                         fragment.getActivity(), dayList.get(position).getMonitorBlocks());
 
+                // Swipe to Delete is enable?
+                if (PetimoSettingsSPref.getInstance().
+                        getBoolean(PetimoSettingsSPref.MONITORED_BLOCKS_LOCK, false))
+                    holder.itemTouchHelper.attachToRecyclerView(holder.recyclerView);
+                else
+                    holder.itemTouchHelper.attachToRecyclerView(null);
+
+
                 break;
 
             default:
@@ -145,13 +153,6 @@ public class DayRecyclerViewAdapter extends
                 break;
         }
         // Set dayAdapter for the recyclerView displaying block list
-
-        // Swipe to Delete is enable?
-        if (PetimoSettingsSPref.getInstance().
-                getBoolean(PetimoSettingsSPref.MONITORED_BLOCKS_LOCK, false))
-            holder.itemTouchHelper.attachToRecyclerView(holder.recyclerView);
-        else
-            holder.itemTouchHelper.attachToRecyclerView(null);
 
 
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(fragment.getActivity()));

@@ -225,6 +225,14 @@
 
 
     <!-- The navigation drawer -->
+    <FrameLayout
+        android:id="@+id/left_drawer"
+        android:layout_gravity="start"
+        android:layout_width="240dp"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+    <!--
     <ListView
         android:id="@+id/left_drawer"
         style="@style/PetimoTheme"
@@ -234,6 +242,6 @@
         android:choiceMode="none"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
-        android:background="@color/navigationBarColor"/>
+        android:background="@color/navigationBarColor"/>-->
 
 </android.support.v4.widget.DrawerLayout>

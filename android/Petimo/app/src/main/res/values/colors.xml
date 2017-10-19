@@ -70,6 +70,10 @@
     <color name="navigationBarColor">#212121</color>
     <!-- <color name="background_selected_item">#D50000</color> -->
 
+    <color name="drawer_icon_color">@color/grey300</color>
+    <color name="drawer_item_text_color">@color/grey300</color>
+
+
 
     <!-- Monitored Task Backgrounds ####-->
     <!-- Orange -->

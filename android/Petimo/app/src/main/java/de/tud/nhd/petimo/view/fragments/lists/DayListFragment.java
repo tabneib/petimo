@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
 import de.tud.nhd.petimo.model.db.MonitorBlock;
+import de.tud.nhd.petimo.model.sharedpref.PetimoMonitorSPref;
 import de.tud.nhd.petimo.model.sharedpref.PetimoSettingsSPref;
 import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
@@ -114,10 +115,10 @@ public class DayListFragment extends Fragment {
      */
     public void refreshList(){
         dayAdapter.dayList = PetimoController.getInstance().getDaysFromRange(Consts.EDIT_BLOCK,
-                fromDate, toDate, SharedPref.getInstance().getSettingsBoolean(
-                        SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
-                SharedPref.getInstance().getSettingsBoolean(
-                        SharedPref.SETTINGS_MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false));
+                fromDate, toDate, PetimoSettingsSPref.getInstance().getBoolean(
+                        PetimoSettingsSPref.MONITORED_BLOCKS_SHOW_EMPTY_DAYS, true),
+                PetimoSettingsSPref.getInstance().getBoolean(
+                        PetimoSettingsSPref.MONITORED_BLOCKS_SHOW_SELECTED_TASKS, false));
         dayAdapter.notifyDataSetChanged();
     }
 

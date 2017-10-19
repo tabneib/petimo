@@ -23,7 +23,7 @@ import de.tud.nhd.petimo.view.fragments.lists.adapters.CategoryRecyclerViewAdapt
 public class EditTasksActivity extends AppCompatActivity
         implements CategoryListFragment.OnEditTaskListener {
 
-    private static final String TAG = "EditTasksActivity";
+    public static final String TAG = "EditTasksActivity";
     private static final String TASK_LIST_FRAGMENT_TAG = "TASK_LIST_FRAGMENT_TAG";
     private RelativeLayout addCatButton;
     CategoryListFragment catListFragment;

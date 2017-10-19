@@ -141,4 +141,23 @@
         <item name="android:layout_marginRight">@dimen/middle_large_pane_padding</item>
     </style>
 
+    <!-- Navigatio Drawer #######################################################################-->
+
+    <style name="PetimoTheme.Light.DrawerItemContainer">
+        <item name="android:paddingRight">@dimen/pane_padding</item>
+        <item name="android:paddingLeft">@dimen/pane_padding</item>
+        <item name="android:paddingBottom">@dimen/middle_large_pane_padding</item>
+        <item name="android:paddingTop">@dimen/middle_large_pane_padding</item>
+
+    </style>
+
+    <style name="PetimoTheme.Light.DrawerItemText">
+        <item name="android:textColor">@color/drawer_item_text_color</item>
+        <item name="android:textSize">@dimen/middle_big_text_size</item>
+    </style>
+
+    <style name="PetimoTheme.Light.DrawerItemIcon">
+        <item name="android:layout_marginRight">@dimen/middle_large_pane_padding</item>
+    </style>
+
 </resources>

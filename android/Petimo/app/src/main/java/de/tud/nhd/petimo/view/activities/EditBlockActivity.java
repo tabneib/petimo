@@ -37,7 +37,7 @@ public class EditBlockActivity extends AppCompatActivity
         implements PetimoDatePickerMenu.OnDateRangeChangeListener,
         OnEditDayFragmentInteractionListener{
 
-    private static final String TAG = "EditBlocksActivity";
+    public static final String TAG = "EditBlocksActivity";
     private static final String DAY_LIST_FRAGMENT_TAG = TAG + "-DayListFragment";
     private static final String MENU_FRAGMENT_TAG = TAG + "-menu";
 

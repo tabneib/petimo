@@ -64,6 +64,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         // Demo
+        demo = new PetimoDbDemo(getApplicationContext());
         Button demoButton = (Button) findViewById(R.id.button_demo);
         demoButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -72,7 +73,7 @@ public class SettingsActivity extends AppCompatActivity {
                         PetimoDialog demoDialog = PetimoDialog.newInstance(getBaseContext())
                                 .setTitle("Enter Password")
                                 .setContentLayout(R.layout.dialog_demo)
-                                .setPositiveButton("Execute Demo",
+                                .setPositiveButton("Exec Demo",
                                         new PetimoDialog.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
@@ -100,7 +101,10 @@ public class SettingsActivity extends AppCompatActivity {
                                                                 Toast.LENGTH_LONG).show();
                                                 }
                                                 catch (Exception e){
-                                                    e.getMessage();
+                                                    Toast.makeText(getBaseContext(),
+                                                            "Cannot execute demo. Some error occurred",
+                                                            Toast.LENGTH_LONG).show();
+                                                    e.printStackTrace();
                                                 }
 
                                             }

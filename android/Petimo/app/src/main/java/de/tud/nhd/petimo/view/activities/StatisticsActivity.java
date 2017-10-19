@@ -49,7 +49,7 @@ import de.tud.nhd.petimo.view.fragments.lists.CategoryListFragment;
 public class StatisticsActivity extends AppCompatActivity
         implements ChartFragment.ChartDataProvider{
 
-    private static final String TAG = "StatisticsActivity";
+    public static final String TAG = "StatisticsActivity";
     public static final String LINE_CHART_FRAGMENT_TAG = TAG + "LineChart-Fragment";
 
     private ChartFragment lineChartFragment;

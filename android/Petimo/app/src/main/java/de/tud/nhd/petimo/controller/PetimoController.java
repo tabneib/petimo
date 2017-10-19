@@ -39,7 +39,6 @@ public class PetimoController {
     private static final String TAG = "PetimoController";
     private static PetimoController _instance;
     private PetimoDbWrapper dbWrapper;
-    private SharedPref sharedPref;
     private PetimoSettingsSPref settingsPref;
     private PetimoMonitorSPref monitorPref;
     private TaskSelector taskSelector;
@@ -53,15 +52,16 @@ public class PetimoController {
     // -------------------------------------------------------------------------------------------->
 
     private PetimoController(Context context){
+
+        // TODO: Make SharedPref unused then remove this
         try{
-            PetimoDbWrapper.setContext(context);
             SharedPref.initialize(context);
         }
         catch (Exception e){
             e.printStackTrace();
         }
+        PetimoDbWrapper.setContext(context);
         this.dbWrapper = PetimoDbWrapper.getInstance();
-        this.sharedPref = SharedPref.getInstance();
         PetimoSPref.initialize(context);
         this.settingsPref = PetimoSettingsSPref.getInstance();
         this.monitorPref = PetimoMonitorSPref.getInstance();
@@ -135,7 +135,7 @@ public class PetimoController {
                     "End time lays before start time: " + end + " < " + start);
         return this.dbWrapper.insertMonitorBlock(
                 taskId, catId, start, end, end - start, date, PetimoTimeUtils.getWeekDay(date),
-                isOverNight(date, start, end), sharedPref.getOvThreshold(), MonitorBlock.ACTIVE,
+                isOverNight(date, start, end), settingsPref.getOvThreshold(), MonitorBlock.ACTIVE,
                 note);
     }
 
@@ -160,11 +160,11 @@ public class PetimoController {
             int catId, int taskId, long startTime, long stopTime)
             throws DbErrorException, InvalidCategoryException {
         //Date current = new Date();
-        if (!sharedPref.isMonitoring()){
+        if (!monitorPref.isMonitoring()){
             // Case there is no ongoing monitor
             //sharedPref.setLiveMonitor(inputCat, inputTask, getLiveDate(current), current.getTime());
-            sharedPref.setLiveMonitor(catId, taskId,
-                    getDateFromMillis(startTime, sharedPref.getOvThreshold()), startTime);
+            monitorPref.setLiveMonitor(catId, taskId,
+                    getDateFromMillis(startTime, settingsPref.getOvThreshold()), startTime);
             return ResponseCode.OK;
         }
         else{
@@ -172,15 +172,15 @@ public class PetimoController {
             // In this case all given arguments are ignored.
             // TODO Check for startDate and end date !
             // TODO If the monitor go to another day so add multiple blocks !
-            long start = sharedPref.getMonitorStart();
-            int date = sharedPref.getMonitorDate();
-            catId = sharedPref.getMonitorCatId();
-            taskId = sharedPref.getMonitorTaskId();
-            sharedPref.clearLiveMonitor();
+            long start = monitorPref.getMonitorStart();
+            int date = monitorPref.getMonitorDate();
+            catId = monitorPref.getMonitorCatId();
+            taskId = monitorPref.getMonitorTaskId();
+            monitorPref.clearLiveMonitor();
             ResponseCode rCode =  this.dbWrapper.insertMonitorBlock(
                     taskId, catId, start, stopTime, stopTime - start,
                     date, PetimoTimeUtils.getWeekDay(date), isOverNight(date, start, stopTime),
-                    sharedPref.getSettingsInt(SharedPref.SETTINGS_OVERNIGHT_THRESHOLD, 6),
+                    settingsPref.getInt(settingsPref.OVERNIGHT_THRESHOLD, 6),
                     MonitorBlock.ACTIVE, "");
             return rCode;
         }
@@ -191,23 +191,23 @@ public class PetimoController {
      * This must be called just before stopping the monitor
      */
     public void updateMonitoredTaskList(){
-        this.sharedPref.updateMonitoredTask(this.sharedPref.getMonitorCatId(),
-                this.sharedPref.getMonitorTaskId(), System.currentTimeMillis());
+        this.monitorPref.updateMonitoredTask(this.monitorPref.getMonitorCatId(),
+                this.monitorPref.getMonitorTaskId(), System.currentTimeMillis());
     }
 
     /**
      * update the last monitored cat/task to the current one
      */
     public void updateLastMonitored(){
-        this.sharedPref.setLastMonitored(
-                sharedPref.getMonitorCatId(), sharedPref.getMonitorTaskId());
+        this.monitorPref.setLastMonitored(
+                monitorPref.getMonitorCatId(), monitorPref.getMonitorTaskId());
     }
 
     /**
      * update the last monitored cat/task to the given one
      */
     public void updateLastMonitored(int catId, int taskId){
-        this.sharedPref.setLastMonitored(catId, taskId);
+        this.monitorPref.setLastMonitored(catId, taskId);
     }
 
     /**
@@ -216,11 +216,11 @@ public class PetimoController {
      */
     public void updateUsrMonitoredTasksSortOrder(String sortOrder){
         switch (sortOrder){
-            case SharedPref.FREQUENCY:
-                sharedPref.setUsrMonitoredSortOrder(SharedPref.FREQUENCY);
+            case PetimoSPref.Consts.FREQUENCY:
+                settingsPref.setUsrMonitoredSortOrder(PetimoSPref.Consts.FREQUENCY);
                 break;
             default:
-                sharedPref.setUsrMonitoredSortOrder(SharedPref.TIME);
+                settingsPref.setUsrMonitoredSortOrder(PetimoSPref.Consts.TIME);
         }
     }
     //<---------------------------------------------------------------------------------------------
@@ -327,15 +327,15 @@ public class PetimoController {
      * @return  the string, or null if there is no ongoing monitor
      */
     public String[] getLiveMonitorInfo(){
-        if (!sharedPref.isMonitoring())
+        if (!monitorPref.isMonitoring())
             return null;
         else
             return new String[] {
-                    PetimoDbWrapper.getInstance().getCatNameById(sharedPref.getMonitorCatId()),
-                    PetimoDbWrapper.getInstance().getTaskNameById(sharedPref.getMonitorTaskId()),
-                    PetimoTimeUtils.getDateStrFromInt(sharedPref.getMonitorDate()),
-                    PetimoTimeUtils.getDayTimeFromMsTime(sharedPref.getMonitorStart()),
-                    Long.toString(sharedPref.getMonitorStart())};
+                    PetimoDbWrapper.getInstance().getCatNameById(monitorPref.getMonitorCatId()),
+                    PetimoDbWrapper.getInstance().getTaskNameById(monitorPref.getMonitorTaskId()),
+                    PetimoTimeUtils.getDateStrFromInt(monitorPref.getMonitorDate()),
+                    PetimoTimeUtils.getDayTimeFromMsTime(monitorPref.getMonitorStart()),
+                    Long.toString(monitorPref.getMonitorStart())};
     }
 
     /**
@@ -344,7 +344,7 @@ public class PetimoController {
      */
     public ArrayList<String[]> getMonitoredTasks(){
         ArrayList<String[]> monitoredTasks =
-                sharedPref.getMonitored(sharedPref.getUsrMonitoredSortOrder());
+                monitorPref.getMonitored(settingsPref.getUsrMonitoredSortOrder());
         if (monitoredTasks == null)
             return new ArrayList<>();
         else
@@ -357,7 +357,7 @@ public class PetimoController {
      * @return
      */
     public int[] getLastMonitoredTask(){
-        int[] lastCatTask = sharedPref.getLastMonitoredTask();
+        int[] lastCatTask = monitorPref.getLastMonitoredTask();
         if (lastCatTask[0] != -1 && lastCatTask[1] != -1) {
             return new int[]{
                     dbWrapper.getAllCatIds().indexOf(lastCatTask[0]),
@@ -413,7 +413,7 @@ public class PetimoController {
      * @return
      */
     public int isOverNight(int date, long start, long end){
-        return sharedPref.getOvThreshold();
+        return settingsPref.getOvThreshold();
     }
 
     /**
@@ -435,8 +435,8 @@ public class PetimoController {
                 && startTimeMillis <= todayBlocks.get(0).getEnd())
             return false;
 
-        currentHour = currentHour < sharedPref.getOvThreshold() ? currentHour + 24 : currentHour;
-        hour = hour < sharedPref.getOvThreshold() ? hour + 24 : hour;
+        currentHour = currentHour < settingsPref.getOvThreshold() ? currentHour + 24 : currentHour;
+        hour = hour < settingsPref.getOvThreshold() ? hour + 24 : hour;
 
         if (currentHour > hour)
             return true;
@@ -467,7 +467,7 @@ public class PetimoController {
      * @return
      */
     public boolean checkValidLiveStopTime(int hour, int minute){
-        return checkValidLiveStopTime(hour, minute, sharedPref.getMonitorStart());
+        return checkValidLiveStopTime(hour, minute, monitorPref.getMonitorStart());
     }
 
 
@@ -489,8 +489,8 @@ public class PetimoController {
         int currentMinute = PetimoTimeUtils.getCurrentMinute();
 
         // change the format of hours to 24+
-        currentHour = currentHour < sharedPref.getOvThreshold() ? currentHour + 24 : currentHour;
-        hour = hour < sharedPref.getOvThreshold() ? hour + 24 : hour;
+        currentHour = currentHour < settingsPref.getOvThreshold() ? currentHour + 24 : currentHour;
+        hour = hour < settingsPref.getOvThreshold() ? hour + 24 : hour;
 
         // Check if the stop time is not in the future
         if (currentHour < hour)
@@ -541,11 +541,9 @@ public class PetimoController {
      */
     public boolean checkValidManualTime(int date, int hour, int minute){
 
-        Log.d(TAG, "checkValidManualTime: date/hour/minute ===> " + date + " / "+ hour + " / " + minute);
         long startTimeMillis = PetimoTimeUtils.getTimeMillisFromHM(date, hour, minute);
         // Check if the chosen time is not between any pair of existed start/stop time
         List<MonitorBlock> todayBlocks = dbWrapper.getBlocksByRange(date, date);
-        Log.d(TAG, "checkValidManualTime: todayBlocks size ===> " + todayBlocks.size());
         for (MonitorBlock block : todayBlocks)
             Log.d(TAG, block.toXml(0));
         if (todayBlocks == null || todayBlocks.isEmpty())
@@ -566,20 +564,20 @@ public class PetimoController {
      */
     public int getLangId(String lang){
         switch (lang){
-            case SharedPref.LANG_EN:
-            case SharedPref.LANG_DE:
-            case SharedPref.LANG_VI:
-                return SharedPref.LANGUAGES.indexOf(lang);
+            case PetimoSettingsSPref.LANG_EN:
+            case PetimoSettingsSPref.LANG_DE:
+            case PetimoSettingsSPref.LANG_VI:
+                return PetimoSettingsSPref.LANGS.indexOf(lang);
             default:
-                return SharedPref.LANGUAGES.indexOf(SharedPref.LANG_EN);
+                return PetimoSettingsSPref.LANGS.indexOf(PetimoSettingsSPref.LANG_EN);
         }
     }
 
     public String getLangFromId(int id){
-        if (id < SharedPref.LANGUAGES.size() && id >= 0)
-            return SharedPref.LANGUAGES.get(id);
+        if (id < PetimoSettingsSPref.LANGS.size() && id >= 0)
+            return PetimoSettingsSPref.LANGS.get(id);
         else
-            return SharedPref.LANG_EN;
+            return PetimoSettingsSPref.LANG_EN;
     }
 
 

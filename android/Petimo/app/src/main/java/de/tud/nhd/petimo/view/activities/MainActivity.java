@@ -16,13 +16,9 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Chronometer;
 import android.widget.FrameLayout;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -40,12 +36,14 @@ import de.tud.nhd.petimo.model.sharedpref.SharedPref;
 import de.tud.nhd.petimo.utils.PetimoContextWrapper;
 import de.tud.nhd.petimo.utils.PetimoTimeUtils;
 import de.tud.nhd.petimo.view.SlideButton;
+import de.tud.nhd.petimo.view.fragments.DrawerFragment;
 import de.tud.nhd.petimo.view.fragments.TaskSelectorBottomSheet;
 
 public class MainActivity extends AppCompatActivity
-        implements TaskSelectorBottomSheet.Listener{
+        implements TaskSelectorBottomSheet.Listener,
+        DrawerFragment.OnFragmentInteractionListener{
 
-    private static final String TAG = "PetimoMainActivity";
+    public static final String TAG = "MainActivity";
 
     public static final String BOTTOM_SHEET_FRAGMENT_TAG = "BOTTOM_SHEET_FRAGMENT_TAG";
 
@@ -76,8 +74,8 @@ public class MainActivity extends AppCompatActivity
     private View.OnClickListener selectTaskOnClickListener = null;
 
     private String[] titleList;
-    private DrawerLayout drawerLayout;
-    private ListView drawerList;
+    public DrawerLayout drawerLayout;
+    private FrameLayout drawerFragmentContainer;
     private ActionBarDrawerToggle drawerToggle;
 
 
@@ -107,9 +105,22 @@ public class MainActivity extends AppCompatActivity
         //-------------------- Navigation Drawer -------------------------------------------------->
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerList = (ListView) findViewById(R.id.left_drawer);
-        drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, titleList));
-        drawerList.setOnItemClickListener(new OnDrawerItemClickListener());
+        drawerFragmentContainer = (FrameLayout) findViewById(R.id.left_drawer);
+
+
+        DrawerFragment drawerFragment = (DrawerFragment) getSupportFragmentManager().
+                findFragmentByTag(DrawerFragment.TAG);
+        if (drawerFragment == null){
+            drawerFragment = DrawerFragment.newInstance(TAG);
+            getSupportFragmentManager().beginTransaction().add(
+                    drawerFragmentContainer.getId(), drawerFragment, DrawerFragment.TAG).commit();
+        }
+        else
+            getSupportFragmentManager().beginTransaction().replace(
+                    drawerFragmentContainer.getId(), drawerFragment, DrawerFragment.TAG).commit();
+
+        //drawerFragmentContainer.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, titleList));
+        //drawerFragmentContainer.setOnItemClickListener(new OnDrawerItemClickListener());
 
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
                 R.string.drawer_open, R.string.drawer_close){
@@ -506,24 +517,30 @@ public class MainActivity extends AppCompatActivity
      * @param text
      */
     private void setTaskText(String text){
-        if (text.length() < 17) {
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            params.gravity = Gravity.CENTER;
-            textViewTaskContainer.setLayoutParams(params);
-            textViewTask.setText(text);
-        } else {
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            params.gravity = Gravity.NO_GRAVITY;
-            textViewTaskContainer.setLayoutParams(params);
-            textViewTask.setText(text);
+        try{
+            if (text.length() < 17) {
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                params.gravity = Gravity.CENTER;
+                textViewTaskContainer.setLayoutParams(params);
+                textViewTask.setText(text);
+            } else {
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                params.gravity = Gravity.NO_GRAVITY;
+                textViewTaskContainer.setLayoutParams(params);
+                textViewTask.setText(text);
+            }
+            // Refresh the layout of the textview. This force recomputing the width of the textView
+            ViewGroup.LayoutParams tvParams = textViewTask.getLayoutParams();
+            tvParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            textViewTask.setLayoutParams(tvParams);
+            textViewTask.invalidate();
         }
-        // Refresh the layout of the textview. This force recomputing the width of the textView
-        ViewGroup.LayoutParams tvParams = textViewTask.getLayoutParams();
-        tvParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        textViewTask.setLayoutParams(tvParams);
-        textViewTask.invalidate();
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -625,6 +642,7 @@ public class MainActivity extends AppCompatActivity
     //  Drawer
     //<---------------------------------------------------------------------------------------------
 
+
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -637,6 +655,7 @@ public class MainActivity extends AppCompatActivity
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
     }
+
 
 
     /**
@@ -692,6 +711,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
@@ -703,17 +723,23 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onItemClick() {
+        drawerLayout.closeDrawer(drawerFragmentContainer);
+    }
+
     /**
      *
      */
+    /*
     private class OnDrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             triggerActivity(position);
             // Close the drawer
-            drawerLayout.closeDrawer(drawerList);
-            /*if(position != 1 && position != 2)
-                setTitle(titleList[position]);*/
+            drawerLayout.closeDrawer(drawerFragmentContainer);
+            //if(position != 1 && position != 2)
+            //    setTitle(titleList[position]);
         }
     }
 
