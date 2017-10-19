@@ -16,6 +16,11 @@
     <color name="colorPrimaryLightXXX">@color/orange200</color>
     <!-- Grey 900 -->
     <color name="colorPrimaryDark">@color/grey900</color>
+    <color name="colorPrimaryDarkLight">@color/grey800</color>
+    <color name="colorPrimaryDarkLightX">@color/grey700</color>
+    <color name="colorPrimaryDarkLightXX">@color/grey600</color>
+
+
     <!-- Orange 800 -->
     <color name="colorAccent">@color/orange800</color>
     <!-- Grey 200-->

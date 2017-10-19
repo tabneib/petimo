@@ -27,8 +27,7 @@ public class MonitorResultActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MonitorResultActivity.this, MainActivity.class);
-                MonitorResultActivity.this.startActivity(intent);
+                onBackPressed();
             }
         });
         blockListFragment = BlockListFragment.newInstance(

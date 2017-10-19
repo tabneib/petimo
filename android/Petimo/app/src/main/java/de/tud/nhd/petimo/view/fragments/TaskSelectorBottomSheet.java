@@ -50,7 +50,7 @@ public class TaskSelectorBottomSheet extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(
-                R.layout.fragment_taskselectorbottomsheet_list_dialog, container, false);
+                R.layout.fragment_taskselectorbottomsheet, container, false);
     }
 
     @Override
