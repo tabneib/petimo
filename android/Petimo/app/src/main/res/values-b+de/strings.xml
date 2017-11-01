@@ -157,7 +157,7 @@
 
 
     <!-- Other strings ##########################################################################-->
-    <string name="nothing_text">loading..</string>
+    <string name="nothing_text">...</string>
     <string name="hello_blank_fragment">Under construction</string>
 
 
@@ -268,5 +268,4 @@
     <string name="title_activity_admin">AdminActivity</string>
 
 
-    <string name="love">LOVE DIUUU!!!  D loves M</string>
 </resources>

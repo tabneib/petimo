@@ -116,7 +116,7 @@ public class MonitorBlock {
             indent = indent + "\t";
 
         String xml = indent + "<MonitorBlock id='" + this.id + "' task='" + taskName +
-                "' category='" + catName + "' start='" + "' task_id='" + taskId +
+                "' category='" + catName + "' task_id='" + taskId +
                 "' category_id='" + catId + "' start='" +
                 PetimoTimeUtils.getDayTimeFromMsTime(this.start) + "' end='" +
                 PetimoTimeUtils.getDayTimeFromMsTime(this.end) + "' duration='" +

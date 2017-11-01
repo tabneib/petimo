@@ -29,6 +29,8 @@ public class MonitorDay {
         this.monitorBlocks = monitorBlocks;
         // TODO: Make a list of
 
+        Log.d("foobar", toXml(0));
+
     }
 
     /**

@@ -241,7 +241,7 @@ public class PetimoController {
         int startDateInt = PetimoTimeUtils.getDateIntFromCalendar(startDate);
         int endDateInt = PetimoTimeUtils.getDateIntFromCalendar(endDate);
 
-        ArrayList<Integer> selectedTasks = new ArrayList<>();
+        ArrayList<Integer> selectedTasks;
         if (showSelectedTasks)
             selectedTasks = taskSelector.getSelectedTasks(mode);
         else
@@ -258,7 +258,7 @@ public class PetimoController {
                     // The list will not contain empty days
                     return dayList;
                 dates = PetimoTimeUtils.getDateIntFromRange(startDate, endDate);
-                // Reverse order
+                // Reverse date order
                 ListIterator<Integer> iterator = dates.listIterator(dates.size());
                 while (iterator.hasPrevious()){
                     int day = iterator.previous();
@@ -301,7 +301,7 @@ public class PetimoController {
             String mode, int startDate, int endDate,
             boolean displayEmptyDay, boolean showSelectedTasks){
         return getDaysFromRange(mode, PetimoTimeUtils.getCalendarFromDateInt(startDate),
-                PetimoTimeUtils.getCalendarFromDateInt(PetimoTimeUtils.getTodayDate()),
+                PetimoTimeUtils.getCalendarFromDateInt(endDate),
                 displayEmptyDay, showSelectedTasks);
     }
 
@@ -382,13 +382,10 @@ public class PetimoController {
      * @return the monitor date as an integer
      */
     private int getDateFromMillis(long time, int ovThreshold){
-        Date date = new Date(time);
-        int dateInt = PetimoTimeUtils.getDateIntFromDate(date);
-        int hours = PetimoTimeUtils.getHourFromDate(date);
-        if (hours < ovThreshold)
-            // the user is working overnight
-            dateInt--;
-        return dateInt;
+        Calendar cal = Calendar.getInstance();
+        if (cal.get(Calendar.HOUR) < ovThreshold)
+            cal.add(Calendar.DATE, -1);
+        return PetimoTimeUtils.getDateIntFromCalendar(cal);
     }
 
 
