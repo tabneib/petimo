@@ -238,8 +238,12 @@ public class PetimoController {
             String mode, Calendar startDate, Calendar endDate,
             boolean displayEmptyDay, boolean showSelectedTasks){
 
+        Log.d("foobar", "getDaysFromRange()");
+
         int startDateInt = PetimoTimeUtils.getDateIntFromCalendar(startDate);
         int endDateInt = PetimoTimeUtils.getDateIntFromCalendar(endDate);
+        Log.d("foobar", "getDaysFromRange() startDate ===> " + startDateInt);
+        Log.d("foobar", "getDaysFromRange() endDate   ===> " + endDateInt);
 
         ArrayList<Integer> selectedTasks;
         if (showSelectedTasks)
@@ -383,6 +387,7 @@ public class PetimoController {
      */
     private int getDateFromMillis(long time, int ovThreshold){
         Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time);
         if (cal.get(Calendar.HOUR) < ovThreshold)
             cal.add(Calendar.DATE, -1);
         return PetimoTimeUtils.getDateIntFromCalendar(cal);

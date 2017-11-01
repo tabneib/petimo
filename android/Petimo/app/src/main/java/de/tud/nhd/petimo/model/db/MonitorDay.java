@@ -27,10 +27,6 @@ public class MonitorDay {
     public MonitorDay(int date, List<MonitorBlock> monitorBlocks){
         this.date = date;
         this.monitorBlocks = monitorBlocks;
-        // TODO: Make a list of
-
-        Log.d("foobar", toXml(0));
-
     }
 
     /**

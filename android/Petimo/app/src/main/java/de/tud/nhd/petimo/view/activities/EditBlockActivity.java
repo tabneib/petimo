@@ -85,7 +85,7 @@ public class EditBlockActivity extends AppCompatActivity
 
         // Attach the fragment to display day list
         getSupportFragmentManager().beginTransaction().add(
-                R.id.day_list_fragment_container, DayListFragment.newInstance(),
+                R.id.day_list_fragment_container, DayListFragment.newInstance(fromCalendar, toCalendar),
                 DAY_LIST_FRAGMENT_TAG).commit();
 
         // Attach the menu fragment
@@ -343,7 +343,8 @@ public class EditBlockActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().remove(dayListFragment).commit();
 
         getSupportFragmentManager().beginTransaction().add(
-                R.id.day_list_fragment_container, DayListFragment.newInstance(),
+                R.id.day_list_fragment_container,
+                DayListFragment.newInstance(fromCalendar, toCalendar),
                 DAY_LIST_FRAGMENT_TAG).commit();
     }
 

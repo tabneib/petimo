@@ -6,9 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.Calendar;
 
 import de.tud.nhd.petimo.R;
 import de.tud.nhd.petimo.controller.PetimoController;
@@ -39,8 +42,8 @@ public class DayListFragment extends Fragment {
     // default is linear layout
     private int mColumnCount = 1;
     // default is the last 1 week
-    private int fromDate = PetimoTimeUtils.getTodayDate()-6;
-    private int toDate = PetimoTimeUtils.getTodayDate();
+    private int fromDate;
+    private int toDate;
 
     private OnEditDayFragmentInteractionListener mListener;
 
@@ -56,16 +59,13 @@ public class DayListFragment extends Fragment {
     public DayListFragment() {
     }
 
-    public static DayListFragment newInstance(int fromDate, int toDate) {
+    public static DayListFragment newInstance(Calendar fromDate, Calendar toDate) {
         DayListFragment fragment = new DayListFragment();
         Bundle args = new Bundle();
-        args.putInt(FROM_DATE, fromDate);
-        args.putInt(TO_DATE, toDate);
+        args.putInt(FROM_DATE, PetimoTimeUtils.getDateIntFromCalendar(fromDate));
+        args.putInt(TO_DATE, PetimoTimeUtils.getDateIntFromCalendar(toDate));
+        fragment.setArguments(args);
         return fragment;
-    }
-
-    public static DayListFragment newInstance() {
-        return new DayListFragment();
     }
 
     @Override
@@ -100,6 +100,7 @@ public class DayListFragment extends Fragment {
     }
 
     private DayRecyclerViewAdapter generateDayAdapter(){
+
         return new DayRecyclerViewAdapter(
                 this, PetimoController.getInstance().getDaysFromRange(Consts.EDIT_BLOCK,
                 fromDate, toDate, PetimoSettingsSPref.getInstance().getBoolean(
