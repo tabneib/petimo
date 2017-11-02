@@ -388,7 +388,7 @@ public class PetimoController {
     private int getDateFromMillis(long time, int ovThreshold){
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
-        if (cal.get(Calendar.HOUR) < ovThreshold)
+        if (cal.get(Calendar.HOUR_OF_DAY) < ovThreshold)
             cal.add(Calendar.DATE, -1);
         return PetimoTimeUtils.getDateIntFromCalendar(cal);
     }
