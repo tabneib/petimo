@@ -16,19 +16,30 @@ This App is pretty simple just like its philosophy. You create tasks and monitor
     <th width='50%'> <b>Managing monitored time slots</b></th>
   </tr>
   <tr>
-    <th width='50%'> <img src='img/screen-monitoring.png' width='80%' /> </th>  
-    <th width='50%'> <img src='img/screen-monitored_tasks.png' width='80%' /> </th>
+    <th width='50%'> <img src='img/screen-monitoring.png' width='60%' /> </th>  
+    <th width='50%'> <img src='img/screen-monitored_tasks.png' width='60%' /> </th>
   </tr>
-    <th colspan="2"><br></th>
   <tr>
+     <th colspan="2"><br></th>
   </tr>
   <tr>
     <th width='50%'> <b>Line graph of monitored tasks</b></th>  
     <th width='50%'> <b>Managing tasks to monitor</b></th>
   </tr>
   <tr>
-    <th width='50%'> <img src='img/screen-statistics.png' width='80%' /> </th>  
-    <th width='50%'> <img src='img/screen-manage_tasks.png' width='80%' /> </th>
+    <th width='50%'> <img src='img/screen-statistics.png' width='60%' /> </th>  
+    <th width='50%'> <img src='img/screen-manage_tasks.png' width='60%' /> </th>
+  </tr>
+    <tr>
+     <th colspan="2"><br></th>
+  </tr>
+  <tr>
+    <th width='50%'> <b>Main menu</b></th>  
+    <th width='50%'> <b></b></th>
+  </tr>
+  <tr>
+    <th width='50%'> <img src='img/screen-menu.png' width='60%' /> </th>  
+    <th width='50%'> </th>
   </tr>
 </table>
 
