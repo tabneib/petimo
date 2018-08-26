@@ -1,5 +1,5 @@
 
-## __Pe__rsonal __Ti__me __Mo__nitor  
+## [Pe]rsonal [Ti]me [Mo]nitor  
 
 ### What is it
 A little Android app I created to replace my CLI Python app which did basically the same task in a much more uncomfortable way. I personally have used this app during my whole study and up to now. It does give me an good overview of how efficient I am for different tasks. 
